@@ -13,14 +13,20 @@ class CategoryController extends Controller
     public function index()
     {
         //
-    }
+        try
+        {
+            $categories = Category::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+            return response(['message' => 'teste'])
+        }
+        catch(\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Categories not found',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
@@ -28,23 +34,54 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try
+        {
+            //
+        $data = $request->all();
+
+        // Make validation with Validator
+        $validator = Validator::make($data, [
+            'name' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response($validator->errors(), 400);
+        }
+
+        $category = Category::create($data);
+
+        return response($category, 201);
+        } 
+        catch (\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Category not created',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Category $category, int $id)
     {
         //
-    }
+        try
+        {
+            $category = Category::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
+            return response($category);
+        }
+        catch(\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Category not found',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
@@ -52,7 +89,38 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        try
+        {
+            //
+        $data = $request->all();
+
+        // Make validation with Validator
+        $validator = Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'description' => 'string|max:255',
+            'image' => 'url|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response($validator->errors(), 400);
+        }
+
+        $category = Category::findOrFail($id);
+
+        $category->update($data);
+
+        return response($category, 200);
+        } 
+        catch(\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Category not updated',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
@@ -61,5 +129,23 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //
+        try
+        {
+            $category = Category::findOrFail($id);
+
+            $category->delete();
+
+            return response($category, 200);
+
+        }
+        catch(Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Category not deleted',
+                    'error' => $e->getMessage()
+                ], 
+            404);
+        }   
     }
 }

@@ -17,10 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(EquipmentController::class)->group(function () {
     Route::get('/equipments', 'index');
-    Route::get('/equipment/{id}', 'show');
-    Route::post('/equipment', 'store');
-    Route::put('/equipment/{id}', 'update');
-    Route::delete('/equipment/{id}', 'destroy');
+    Route::get('/equipments/{id}', 'show');
+    Route::post('/equipments', 'store');
+    Route::put('/equipments/{id}', 'update');
+    Route::delete('/equipments/{id}', 'destroy');
+});
+
+Route::fallback(function (){
+    abort(404, 'API resource not found');
 });
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

@@ -13,14 +13,9 @@ class EquipmentController extends Controller
     public function index()
     {
         //
-    }
+        $equipments = Equipment::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response($equipments, 200);
     }
 
     /**
@@ -28,23 +23,58 @@ class EquipmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try
+        {
+            //
+        $data = $request->all();
+
+        // Make validation with Validator
+        $validator = Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'description' => 'string|max:255',
+            'image' => 'url|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response($validator->errors(), 400);
+        }
+
+        $equipment = Equipment::create($data);
+
+        return response($equipment, 201);
+        } 
+        catch (\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Equipment not created',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Equipment $equipment)
+    public function show(Equipment $equipment, int $id)
     {
         //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Equipment $equipment)
-    {
-        //
+        try
+        {
+            $equipment = Equipment::findOrFail($id);
+        
+            return response($equipment, 200);
+        } 
+        catch (\Exception $e) 
+        {
+            return response(
+                [
+                    'message' => 'Equipment not found',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
@@ -53,6 +83,38 @@ class EquipmentController extends Controller
     public function update(Request $request, Equipment $equipment)
     {
         //
+        try
+        {
+
+            $data = $request->all();
+
+            // Make validation with Validator
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'description' => 'string|max:255',
+                'image' => 'url|max:255',
+                'category_id' => 'required|exists:categories,id',
+                'status' => 'required|boolean',
+            ]);
+    
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
+
+            $equipment = Equipment::findOrFail($id);
+
+            $equipment->update($data);
+
+            return response($equipment, 200);
+        }
+        catch(\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Equipment not updated',
+                    'error' => $e->getMessage()
+                ], 404);
+        }
     }
 
     /**
@@ -61,5 +123,22 @@ class EquipmentController extends Controller
     public function destroy(Equipment $equipment)
     {
         //
+        try
+        {
+            $equipment = Equipment::findOrFail($id);
+
+            $equipment->delete();
+
+            return response($equipment, 200);
+        }
+        catch(\Exception $e)
+        {
+            return response(
+                [
+                    'message' => 'Equipment not deleted',
+                    'error' => $e->getMessage()
+                ], 
+            404);
+        }
     }
 }

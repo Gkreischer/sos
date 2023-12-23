@@ -28,4 +28,9 @@ class Part extends Model
     {
         return $this->belongsToMany(Equipment::class, 'equipment_part', 'part_id', 'equipment_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

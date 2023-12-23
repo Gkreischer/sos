@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('equipment_id')->constrained('equipments');
             $table->index('part_id');
             $table->foreignId('part_id')->constrained('parts');
-            $table->timestamps();
         });
     }
 

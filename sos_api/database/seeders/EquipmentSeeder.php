@@ -21,7 +21,6 @@ class EquipmentSeeder extends Seeder
             'category_id' => 1,
             'description' => 'Notebook',
             'image' => 'https://photos.enjoei.com.br/venda-macbook-air-77657590/800x800/czM6Ly9waG90b3MuZW5qb2VpLmNvbS5ici9wcm9kdWN0cy8yNzk1OTQxMy83ZWRlZDM3YWUyMWVkNmZkZWY3YjgyZjI5NTZjNWM1Yi5qcGc',
-            'status' => 0,
         ]);
 
         // Obter algumas partes aleatórias

@@ -16,9 +16,39 @@ class ImageSeeder extends Seeder
         //
         DB::table('images')->insert([
             [
-                'name' => 'sos',
-                'path' => 'https://m.media-amazon.com/images/I/71egRzue3tL.jpg',
+                'name' => 'test',
+                'path' => 'https://w0.peakpx.com/wallpaper/106/535/HD-wallpaper-pc-gamer.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'test',
+                'path' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyX7-jVcQX29dow6EIxZeZupwBcc36ZLUSwg&usqp=CAU',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+        DB::table('image_part')->insert([
+            [
+                'image_id' => 1,
+                'part_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        DB::table('equipment_image')->insert([
+            [
+                'image_id' => 2,
                 'equipment_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        DB::table('image_tasking')->insert([
+            [
+                'image_id' => 1,
                 'tasking_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),

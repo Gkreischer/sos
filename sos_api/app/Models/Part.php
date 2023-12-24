@@ -33,4 +33,9 @@ class Part extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+    public function tasking()
+    {
+        return $this->belongsToMany(Tasking::class, 'part_tasking', 'part_id', 'tasking_id');
+    }
 }

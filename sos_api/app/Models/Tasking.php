@@ -36,4 +36,9 @@ class Tasking extends Model
     {
         return $this->belongsTo(Equipment::class);
     }
+
+    public function parts()
+    {
+        return $this->belongsToMany(Part::class, 'part_tasking');
+    }
 }

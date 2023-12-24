@@ -15,12 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('path');
-            $table->unsignedBigInteger('equipment_id')->nullable();
-            $table->foreign('equipment_id')->references('id')->on('equipments');
-            $table->unsignedBigInteger('part_id')->nullable();
-            $table->foreign('part_id')->references('id')->on('parts');
-            $table->unsignedBigInteger('tasking_id')->nullable();
-            $table->foreign('tasking_id')->references('id')->on('taskings');
             $table->timestamps();
         });
     }

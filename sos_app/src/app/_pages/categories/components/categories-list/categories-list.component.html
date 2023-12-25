@@ -1,0 +1,14 @@
+<ion-content color="light">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Categorias</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item *ngFor="let category of categories | async">
+          <ion-label>{{ category.name }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

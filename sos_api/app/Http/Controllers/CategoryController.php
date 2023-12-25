@@ -17,7 +17,7 @@ class CategoryController extends Controller
         {
             $categories = Category::all();
 
-            return response(['message' => 'teste'])
+            return response($categories);
         }
         catch(\Exception $e)
         {

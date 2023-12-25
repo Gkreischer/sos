@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\ForceJsonResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +17,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(EquipmentController::class)->group(function () {
-    Route::get('/equipments', 'index');
-    Route::get('/equipments/{id}', 'show');
-    Route::post('/equipments', 'store');
-    Route::put('/equipments/{id}', 'update');
-    Route::delete('/equipments/{id}', 'destroy');
+Route::middleware(['json.response'])->group( function () {
+    
+    Route::controller(EquipmentController::class)->group(function () {
+        Route::get('/equipments', 'index');
+        Route::get('/equipments/{id}', 'show');
+        Route::post('/equipments', 'store');
+        Route::put('/equipments/{id}', 'update');
+        Route::delete('/equipments/{id}', 'destroy');
+    });
+    
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/categories', 'index');
+        Route::get('/categories/{id}', 'show');
+        Route::post('/categories', 'store');
+        Route::put('/categories/{id}', 'update');
+        Route::delete('/categories/{id}', 'destroy');
+    });
+
+    Route::fallback(function (){
+        abort(404, 'API resource not found');
+    });
 });
 
-Route::fallback(function (){
-    abort(404, 'API resource not found');
-});
+
+
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     //return $request->user();

@@ -9,7 +9,7 @@ import { CategoryService } from 'src/app/_services/category.service';
   styleUrls: ['./categories-list.component.scss'],
 })
 export class CategoriesListComponent implements OnInit {
-  categories!: Observable<Category[]>;
+  categories?: Observable<Category[]>;
 
   constructor(private categoryService: CategoryService) {}
 

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Categorias</ion-title>
+    <ion-title>Equipamentos</ion-title>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -8,11 +8,11 @@
 </ion-header>
 
 <ion-content color="light">
-  <ion-card *ngIf="(categories | async) as categories">
+  <ion-card *ngIf="(equipments | async) as equipments">
     <ion-card-content>
       <ion-list lines="none">
-        <ion-item *ngFor="let category of categories">
-          <ion-label>{{ category.name }}</ion-label>
+        <ion-item *ngFor="let equipment of equipments">
+          <ion-label>{{ equipment.name }}</ion-label>
         </ion-item>
       </ion-list>
     </ion-card-content>

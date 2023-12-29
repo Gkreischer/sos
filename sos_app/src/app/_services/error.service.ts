@@ -9,6 +9,7 @@ export class ErrorService {
   constructor() {}
 
   public handleError(error: HttpErrorResponse) {
+    console.log(error);
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error);
@@ -17,7 +18,7 @@ export class ErrorService {
       // The response body may contain clues as to what went wrong.
       console.error(`Backend returned code ${error.status}, body was: `, error);
     }
-    let err = JSON.stringify(error).replace(/"/g, '');
+    let err = JSON.stringify(error.error.message).replace(/"/g, '');
     // Return an observable with a user-facing error message.
     return throwError(() => new Error(err));
   }

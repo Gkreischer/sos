@@ -124,7 +124,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, int $id)
     {
         //
         try
@@ -136,14 +136,27 @@ class CategoryController extends Controller
             return response($category, 200);
 
         }
+        // Make an exception for QueryException
+        catch(\Illuminate\Database\QueryException $e)
+        {
+            if($e->getCode() === '23000') {
+                return response(
+                    [
+                        'message' => 'Não foi possível deletar a categoria pois ela já está sendo utilizada',
+                        'error' => $e->getMessage()
+                    ], 
+                422);
+            }
+            
+        }
         catch(Exception $e)
         {
             return response(
                 [
-                    'message' => 'Category not deleted',
+                    'message' => 'Não foi possível deletar a categoria',
                     'error' => $e->getMessage()
                 ], 
-            404);
+            422);
         }   
     }
 }

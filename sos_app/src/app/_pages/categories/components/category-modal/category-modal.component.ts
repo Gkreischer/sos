@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from 'src/app/_models/Category';
+import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
@@ -19,7 +20,8 @@ export class CategoryModalComponent implements OnInit {
     private modalService: ModalService,
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit() {
@@ -83,6 +85,46 @@ export class CategoryModalComponent implements OnInit {
           2000,
           'danger'
         );
+      },
+    });
+  }
+
+  async confirmDeleteCategory() {
+    console.log('deletando');
+    await this.alertService.presentAlert(
+      'Atenção',
+      '',
+      'Tem certeza que deseja excluir esta categoria?',
+      [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {},
+        },
+        {
+          text: 'Confirmar',
+          role: 'confirm',
+          handler: () => {
+            this.deleteCategory(this.category);
+          },
+        },
+      ]
+    );
+  }
+
+  deleteCategory(category: Category) {
+    this.categoryService.deleteCategory(category).subscribe({
+      next: () => {
+        this.closeModal();
+        this.toastService.presentToast(
+          'Categoria deletada com sucesso!',
+          'bottom',
+          2000,
+          'success'
+        );
+      },
+      error: (err) => {
+        this.toastService.presentToast(err, 'bottom', 2000, 'danger');
       },
     });
   }

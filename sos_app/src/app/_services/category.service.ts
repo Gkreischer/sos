@@ -73,4 +73,20 @@ export class CategoryService {
         catchError(this.errorService.handleError)
       );
   }
+
+  deleteCategory(category: Category) {
+    return this.http
+      .delete(`${environment.baseUrl}/categories/${category.id}`, {
+        headers: httpHeaders,
+      })
+      .pipe(
+        tap(() => {
+          const newCategories = this.categoriesSubject.value.filter(
+            (categoryListItem) => categoryListItem.id !== category.id
+          );
+          this.categoriesSubject.next(newCategories);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
 }

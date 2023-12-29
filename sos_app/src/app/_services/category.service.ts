@@ -34,4 +34,43 @@ export class CategoryService {
         catchError(this.errorService.handleError)
       );
   }
+
+  addCategory(category: Category) {
+    return this.http
+      .post<Category>(`${environment.baseUrl}/categories`, category, {
+        headers: httpHeaders,
+      })
+      .pipe(
+        tap((category) => {
+          return this.categoriesSubject.next([
+            ...this.categoriesSubject.value,
+            category,
+          ]);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
+
+  updateCategory(category: Category) {
+    return this.http
+      .put<Category>(
+        `${environment.baseUrl}/categories/${category.id}`,
+        category,
+        {
+          headers: httpHeaders,
+        }
+      )
+      .pipe(
+        tap((updatedCategory) => {
+          const newCategories = this.categoriesSubject.value.map((category) => {
+            if (category.id === updatedCategory.id) {
+              return updatedCategory;
+            }
+            return category;
+          });
+          return this.categoriesSubject.next(newCategories);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
 }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/_models/Category';
 import { CategoryService } from 'src/app/_services/category.service';
+import { ModalService } from 'src/app/_services/modal.service';
+import { CategoryModalComponent } from '../category-modal/category-modal.component';
 
 @Component({
   selector: 'app-categories-list',
@@ -11,14 +13,22 @@ import { CategoryService } from 'src/app/_services/category.service';
 export class CategoriesListComponent implements OnInit {
   categories?: Observable<Category[]>;
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit() {
     this.getCategories();
   }
 
+  openModal(category: Category) {
+    this.modalService.openModal(CategoryModalComponent, { category: category });
+  }
+
   getCategories() {
-    this.categories = this.categoryService.getCategories();
-    this.categories.subscribe((data) => console.log(data));
+    this.categoryService.getCategories().subscribe(() => {
+      this.categories = this.categoryService.categories;
+    });
   }
 }

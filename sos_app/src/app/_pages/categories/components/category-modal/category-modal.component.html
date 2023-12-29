@@ -1,6 +1,7 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Welcome</ion-title>
+    <ion-title *ngIf="!category">Adicionar Categoria</ion-title>
+    <ion-title *ngIf="category">Editar Categoria</ion-title>
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -10,5 +11,34 @@
 </ion-header>
 
 <ion-content>
-
+  <form
+    [formGroup]="categoryForm"
+    (ngSubmit)="this.category ? update() : submit()"
+  >
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-input formControlName="name" placeholder="Nome"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button
+            *ngIf="!category"
+            type="submit"
+            expand="block"
+            [disabled]="!this.categoryForm.valid"
+            >Salvar</ion-button
+          >
+          <ion-button
+            *ngIf="category"
+            type="submit"
+            expand="block"
+            [disabled]="!this.categoryForm.valid"
+            >Atualizar</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

@@ -8,8 +8,7 @@ import { EquipmentService } from 'src/app/_services/equipment.service';
   templateUrl: './equipments-list.component.html',
   styleUrls: ['./equipments-list.component.scss'],
 })
-export class EquipmentsListComponent  implements OnInit {
-
+export class EquipmentsListComponent implements OnInit {
   equipments!: Observable<Equipment[]>;
 
   constructor(private equipmentService: EquipmentService) {}
@@ -19,8 +18,8 @@ export class EquipmentsListComponent  implements OnInit {
   }
 
   getEquipments() {
-    this.equipments = this.equipmentService.getEquipments();
-    this.equipments.subscribe((data) => console.log(data));
+    this.equipmentService.getEquipments().subscribe(() => {
+      this.equipments = this.equipmentService.equipments;
+    });
   }
-
 }

@@ -10,10 +10,9 @@ const httpHeaders = new HttpHeaders({
   Accept: 'application/json',
 });
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EquipmentService {
-
   equipmentsSubject = new BehaviorSubject<Equipment[]>([]);
 
   constructor(private http: HttpClient, private errorService: ErrorService) {}
@@ -24,7 +23,7 @@ export class EquipmentService {
 
   getEquipments() {
     return this.http
-      .get<Equipment[]>(`${environment.baseUrl}/categories`, {
+      .get<Equipment[]>(`${environment.baseUrl}/equipments`, {
         headers: httpHeaders,
       })
       .pipe(

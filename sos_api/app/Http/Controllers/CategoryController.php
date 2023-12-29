@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -15,7 +16,8 @@ class CategoryController extends Controller
         //
         try
         {
-            $categories = Category::all();
+            // Get all categories sorted by name
+            $categories = Category::orderBy('name')->get();
 
             return response($categories);
         }
@@ -87,7 +89,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, int $id)
     {
         try
         {
@@ -97,10 +99,6 @@ class CategoryController extends Controller
         // Make validation with Validator
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
-            'description' => 'string|max:255',
-            'image' => 'url|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'status' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {

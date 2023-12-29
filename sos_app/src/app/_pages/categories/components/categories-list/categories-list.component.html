@@ -8,10 +8,15 @@
 </ion-header>
 
 <ion-content color="light">
-  <ion-card *ngIf="(categories | async) as categories">
+  <ion-card *ngIf="categories | async as categories">
     <ion-card-content>
       <ion-list lines="none">
-        <ion-item *ngFor="let category of categories">
+        <ion-item
+          button="true"
+          detail="true"
+          *ngFor="let category of categories"
+          (click)="openModal(category)"
+        >
           <ion-label>{{ category.name }}</ion-label>
         </ion-item>
       </ion-list>

@@ -32,10 +32,6 @@ export class CategoryModalComponent implements OnInit {
   }
 
   patchForm() {
-    this.categoryForm.addControl(
-      'id',
-      this.formBuilder.control(this.category.id)
-    );
     this.categoryForm.patchValue(this.category);
   }
 
@@ -68,25 +64,27 @@ export class CategoryModalComponent implements OnInit {
   }
 
   update() {
-    this.categoryService.updateCategory(this.categoryForm.value).subscribe({
-      next: () => {
-        this.closeModal();
-        this.toastService.presentToast(
-          'Categoria criada com sucesso!',
-          'bottom',
-          2000,
-          'success'
-        );
-      },
-      error: () => {
-        this.toastService.presentToast(
-          'Erro ao criar categoria!',
-          'bottom',
-          2000,
-          'danger'
-        );
-      },
-    });
+    this.categoryService
+      .updateCategory(this.categoryForm.value, this.category.id)
+      .subscribe({
+        next: () => {
+          this.closeModal();
+          this.toastService.presentToast(
+            'Categoria criada com sucesso!',
+            'bottom',
+            2000,
+            'success'
+          );
+        },
+        error: () => {
+          this.toastService.presentToast(
+            'Erro ao criar categoria!',
+            'bottom',
+            2000,
+            'danger'
+          );
+        },
+      });
   }
 
   async confirmDeleteCategory() {

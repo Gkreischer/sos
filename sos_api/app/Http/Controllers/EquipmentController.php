@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EquipmentController extends Controller
 {
@@ -12,11 +13,10 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        //
         $equipments = Equipment::all();
-
+    
         return response($equipments, 200);
-    }
+    }   
 
     /**
      * Store a newly created resource in storage.
@@ -80,7 +80,7 @@ class EquipmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Equipment $equipment)
+    public function update(Request $request, int $id)
     {
         //
         try
@@ -91,10 +91,10 @@ class EquipmentController extends Controller
             // Make validation with Validator
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'description' => 'string|max:255',
-                'image' => 'url|max:255',
+                'description' => 'string|max:255|nullable',
                 'category_id' => 'required|exists:categories,id',
-                'status' => 'required|boolean',
+                'user_id' => 'required|exists:users,id',
+                'obs' => 'string|max:255|nullable',
             ]);
     
             if ($validator->fails()) {
@@ -104,6 +104,9 @@ class EquipmentController extends Controller
             $equipment = Equipment::findOrFail($id);
 
             $equipment->update($data);
+
+            // Recarrega as relações após a atualização
+            $equipment->load(['category', 'parts', 'user']);
 
             return response($equipment, 200);
         }

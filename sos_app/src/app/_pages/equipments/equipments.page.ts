@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalService } from 'src/app/_services/modal.service';
+import { EquipmentModalComponent } from './equipment-modal/equipment-modal.component';
 
 @Component({
   selector: 'app-equipments',
@@ -6,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./equipments.page.scss'],
 })
 export class EquipmentsPage implements OnInit {
+  constructor(private modalService: ModalService) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  openModal() {
+    this.modalService.openModal(EquipmentModalComponent);
   }
-
 }

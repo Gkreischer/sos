@@ -33,4 +33,42 @@ export class EquipmentService {
         catchError(this.errorService.handleError)
       );
   }
+
+  addEquipment(equipment: Equipment) {
+    return this.http
+      .post<Equipment>(`${environment.baseUrl}/equipments`, equipment, {
+        headers: httpHeaders,
+      })
+      .pipe(
+        tap((equipment) => {
+          return this.equipmentsSubject.next([
+            ...this.equipmentsSubject.value,
+            equipment,
+          ]);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
+
+  updateEquipment(equipment: Equipment, id: number) {
+    return this.http
+      .put<Equipment>(`${environment.baseUrl}/equipments/${id}`, equipment, {
+        headers: httpHeaders,
+      })
+      .pipe(
+        tap((updatedEquipment) => {
+          const newEquipments = this.equipmentsSubject.value.map(
+            (equipment) => {
+              if (equipment.id === updatedEquipment.id) {
+                return updatedEquipment;
+              }
+              return equipment;
+            }
+          );
+          console.log(newEquipments);
+          return this.equipmentsSubject.next(newEquipments);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
 }

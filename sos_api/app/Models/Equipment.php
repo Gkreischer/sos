@@ -17,7 +17,13 @@ class Equipment extends Model
         'description',
         'image',
         'category_id',
-        'status'
+        'obs'
+    ];
+
+    protected $with = [
+        'category',
+        'parts',
+        'user',
     ];
 
     public function category()
@@ -37,7 +43,7 @@ class Equipment extends Model
 
     public function images()
     {
-        return $this->hasMany(Image::class);
+        return $this->belongsToMany(Image::class, 'equipment_image', 'equipment_id', 'image_id');
     }
 
     public function taskings()

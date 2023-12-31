@@ -8,10 +8,15 @@
 </ion-header>
 
 <ion-content color="light">
-  <ion-card *ngIf="(equipments | async) as equipments">
+  <ion-card *ngIf="equipments | async as equipments">
     <ion-card-content>
       <ion-list lines="none">
-        <ion-item *ngFor="let equipment of equipments">
+        <ion-item
+          button="true"
+          detail="true"
+          *ngFor="let equipment of equipments"
+          (click)="openModal(equipment)"
+        >
           <ion-label>{{ equipment.name }}</ion-label>
         </ion-item>
       </ion-list>

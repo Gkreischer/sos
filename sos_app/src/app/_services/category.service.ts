@@ -51,15 +51,11 @@ export class CategoryService {
       );
   }
 
-  updateCategory(category: Category) {
+  updateCategory(category: Category, id: number) {
     return this.http
-      .put<Category>(
-        `${environment.baseUrl}/categories/${category.id}`,
-        category,
-        {
-          headers: httpHeaders,
-        }
-      )
+      .put<Category>(`${environment.baseUrl}/categories/${id}`, category, {
+        headers: httpHeaders,
+      })
       .pipe(
         tap((updatedCategory) => {
           const newCategories = this.categoriesSubject.value.map((category) => {

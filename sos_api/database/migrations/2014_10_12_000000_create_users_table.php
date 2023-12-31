@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('cpf');
-            $table->string('nome_fantasia');
-            $table->string('razao_social');
+            $table->string('fantasy_name');
+            $table->string('corporate_name');
             $table->string('cnpj');
             $table->string('cep');
             $table->string('address');

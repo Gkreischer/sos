@@ -3,10 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/_models/Category';
 import { Equipment } from 'src/app/_models/Equipment';
+import { User } from 'src/app/_models/User';
 import { CategoryService } from 'src/app/_services/category.service';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
   selector: 'app-equipment-modal',
@@ -22,7 +24,8 @@ export class EquipmentModalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
     private equipmentService: EquipmentService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -101,6 +104,36 @@ export class EquipmentModalComponent implements OnInit {
           'danger'
         );
       },
+    });
+  }
+
+  get clientName() {
+    return this.formEquipment.get('user_name')?.value;
+  }
+
+  searchClient() {
+    let clientName = this.clientName;
+    console.log(clientName);
+
+    if (clientName.length == 0) {
+      return;
+    }
+    this.userService.getUserByName(clientName).subscribe((user) => {
+      console.log('recebido', user);
+
+      if (!user) {
+        this.toastService.presentToast(
+          'Usuário não encontrado',
+          'bottom',
+          2000,
+          'warning'
+        );
+        this.formEquipment.get('user_name')?.patchValue('');
+        this.formEquipment.get('user_id')?.patchValue(null);
+        return;
+      }
+
+      this.formEquipment.get('user_id')?.patchValue(user.id.toString());
     });
   }
 }

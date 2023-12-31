@@ -17,6 +17,7 @@ class Equipment extends Model
         'description',
         'image',
         'category_id',
+        'user_id',
         'obs'
     ];
 

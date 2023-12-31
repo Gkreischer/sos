@@ -34,7 +34,6 @@ class EquipmentController extends Controller
             'description' => 'string|max:255',
             'image' => 'url|max:255',
             'category_id' => 'required|exists:categories,id',
-            'status' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -42,6 +41,8 @@ class EquipmentController extends Controller
         }
 
         $equipment = Equipment::create($data);
+
+        $equipment->load(['category',  'user', 'images']);
 
         return response($equipment, 201);
         } 

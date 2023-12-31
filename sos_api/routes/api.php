@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ForceJsonResponse;
@@ -33,6 +34,13 @@ Route::middleware(['json.response'])->group( function () {
         Route::post('/categories', 'store');
         Route::put('/categories/{id}', 'update');
         Route::delete('/categories/{id}', 'destroy');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        
+        Route::get('/users', 'index');
+        Route::get('/users/{id}', 'show');
+        Route::post('/users/name/{name}', 'getUserByName');
     });
 
     Route::fallback(function (){

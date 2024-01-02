@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title *ngIf="!user">Adicionar Usuário</ion-title>
+    <ion-title *ngIf="user">Editar Usuário</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../_models/User';
-import { catchError, tap } from 'rxjs';
+import { catchError, tap, BehaviorSubject } from 'rxjs';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
 
@@ -14,10 +14,29 @@ const httpOptions = new HttpHeaders({
   providedIn: 'root',
 })
 export class UserService {
+  usersSubject = new BehaviorSubject<User[]>([]);
+
   constructor(
     private httpClient: HttpClient,
     private errorService: ErrorService
   ) {}
+
+  get users() {
+    return this.usersSubject.asObservable();
+  }
+
+  getUsers() {
+    return this.httpClient
+      .get<User[]>(`${environment.baseUrl}/users`, {
+        headers: httpOptions,
+      })
+      .pipe(
+        tap((users) => {
+          return this.usersSubject.next(users);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
 
   getUser(user: User, id: number) {
     return this.httpClient

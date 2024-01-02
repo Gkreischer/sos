@@ -1,0 +1,19 @@
+<ion-content color="light">
+  <ion-card *ngIf="users | async as users">
+    <ion-card-content>
+      <ion-list>
+        <ion-item
+          button="true"
+          detail="true"
+          *ngFor="let user of users"
+          (click)="openModal(user)"
+        >
+          <ion-label>
+            <h2>{{ user.name }}</h2>
+            <p>{{ user.phone | formatPhone }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

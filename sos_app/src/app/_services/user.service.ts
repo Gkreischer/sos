@@ -90,4 +90,20 @@ export class UserService {
       );
     
   }
+
+  deleteUser(user: User) {
+    return this.httpClient
+      .delete(`${environment.baseUrl}/users/${user.id}`, {
+        headers: httpOptions,
+      })
+      .pipe(
+        tap(() => {
+          const newUsers = this.usersSubject.value.filter(
+            (userListItem) => userListItem.id !== user.id
+          );
+          this.usersSubject.next(newUsers);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
 }

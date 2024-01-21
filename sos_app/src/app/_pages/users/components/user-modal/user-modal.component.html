@@ -70,4 +70,9 @@
       </ion-row>
     </ion-grid>
   </form>
+  <ion-fab *ngIf="user" slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="danger" (click)="confirmDeleteUser()">
+      <ion-icon name="trash"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

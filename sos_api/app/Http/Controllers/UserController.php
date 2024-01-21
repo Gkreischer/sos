@@ -106,9 +106,36 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user, int $id)
     {
         //
+        try {
+            $user = User::findOrFail($id);
+
+            $user->delete();
+
+            return response($user, 200);
+        }
+        // Make an exception for QueryException
+        catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return response(
+                    [
+                        'message' => 'Não foi possível deletar o usuário pois ele já está sendo utilizado ',
+                        'error' => $e->getMessage()
+                    ],
+                    422
+                );
+            }
+        } catch (Exception $e) {
+            return response(
+                [
+                    'message' => 'Não foi possível deletar o usuário',
+                    'error' => $e->getMessage()
+                ],
+                422
+            );
+        }
     }
 
     public function getUserByName(Request $request)

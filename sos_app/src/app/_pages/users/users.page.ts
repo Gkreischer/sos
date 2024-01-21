@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalService } from 'src/app/_services/modal.service';
+import { UserModalComponent } from './components/user-modal/user-modal.component';
 
 @Component({
   selector: 'app-users',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsersPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private modalService: ModalService
+  ) { }
 
   ngOnInit() {
+  }
+
+  openModal() {
+    this.modalService.openModal(UserModalComponent);
   }
 
 }

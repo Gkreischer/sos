@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,20 +15,19 @@ class CategoryController extends Controller
     public function index()
     {
         //
-        try
-        {
+        try {
             // Get all categories sorted by name
             $categories = Category::orderBy('name')->get();
 
             return response($categories);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Categories not found',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
@@ -36,31 +36,30 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
+        try {
             //
-        $data = $request->all();
+            $data = $request->all();
 
-        // Make validation with Validator
-        $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-        ]);
+            // Make validation with Validator
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+            ]);
 
-        if ($validator->fails()) {
-            return response($validator->errors(), 400);
-        }
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
 
-        $category = Category::create($data);
+            $category = Category::create($data);
 
-        return response($category, 201);
-        } 
-        catch (\Exception $e)
-        {
+            return response($category, 201);
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Category not created',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
@@ -70,19 +69,18 @@ class CategoryController extends Controller
     public function show(Category $category, int $id)
     {
         //
-        try
-        {
+        try {
             $category = Category::findOrFail($id);
 
             return response($category);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Category not found',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
@@ -91,33 +89,32 @@ class CategoryController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        try
-        {
+        try {
             //
-        $data = $request->all();
+            $data = $request->all();
 
-        // Make validation with Validator
-        $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-        ]);
+            // Make validation with Validator
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+            ]);
 
-        if ($validator->fails()) {
-            return response($validator->errors(), 400);
-        }
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
 
-        $category = Category::findOrFail($id);
+            $category = Category::findOrFail($id);
 
-        $category->update($data);
+            $category->update($data);
 
-        return response($category, 200);
-        } 
-        catch(\Exception $e)
-        {
+            return response($category, 200);
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Category not updated',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
@@ -127,36 +124,32 @@ class CategoryController extends Controller
     public function destroy(Category $category, int $id)
     {
         //
-        try
-        {
+        try {
             $category = Category::findOrFail($id);
 
             $category->delete();
 
             return response($category, 200);
-
         }
         // Make an exception for QueryException
-        catch(\Illuminate\Database\QueryException $e)
-        {
-            if($e->getCode() === '23000') {
+        catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') {
                 return response(
                     [
                         'message' => 'Não foi possível deletar a categoria pois ela já está sendo utilizada',
                         'error' => $e->getMessage()
-                    ], 
-                422);
+                    ],
+                    422
+                );
             }
-            
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Não foi possível deletar a categoria',
                     'error' => $e->getMessage()
-                ], 
-            422);
-        }   
+                ],
+                422
+            );
+        }
     }
 }

@@ -18,8 +18,8 @@ use App\Http\Middleware\ForceJsonResponse;
 |
 */
 
-Route::middleware(['json.response'])->group( function () {
-    
+Route::middleware(['json.response'])->group(function () {
+
     Route::controller(EquipmentController::class)->group(function () {
         Route::get('/equipments', 'index');
         Route::get('/equipments/{id}', 'show');
@@ -27,7 +27,7 @@ Route::middleware(['json.response'])->group( function () {
         Route::put('/equipments/{id}', 'update');
         Route::delete('/equipments/{id}', 'destroy');
     });
-    
+
     Route::controller(CategoryController::class)->group(function () {
         Route::get('/categories', 'index');
         Route::get('/categories/{id}', 'show');
@@ -37,13 +37,14 @@ Route::middleware(['json.response'])->group( function () {
     });
 
     Route::controller(UserController::class)->group(function () {
-        
+
         Route::get('/users', 'index');
         Route::get('/users/{id}', 'show');
         Route::post('/users/name/{name}', 'getUserByName');
+        Route::put('/users/{id}', 'update');
     });
 
-    Route::fallback(function (){
+    Route::fallback(function () {
         abort(404, 'API resource not found');
     });
 });

@@ -28,6 +28,6 @@ export class UsersListComponent implements OnInit {
   }
 
   openModal(user: User) {
-    this.modalService.openModal(UserModalComponent, user);
+    this.modalService.openModal(UserModalComponent, {user: user});
   }
 }

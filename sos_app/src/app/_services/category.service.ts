@@ -57,10 +57,10 @@ export class CategoryService {
         headers: httpHeaders,
       })
       .pipe(
-        tap((updatedCategory) => {
+        tap((categoryReceived) => {
           const newCategories = this.categoriesSubject.value.map((category) => {
-            if (category.id === updatedCategory.id) {
-              return updatedCategory;
+            if (category.id === categoryReceived.id) {
+              return categoryReceived;
             }
             return category;
           });

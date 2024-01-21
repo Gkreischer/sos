@@ -68,4 +68,26 @@ export class UserService {
         catchError(this.errorService.handleError)
       );
   }
+
+  updateUser(user: User, id: number) {
+    console.log(`${environment.baseUrl}/users/${id}`)
+    return this.httpClient
+      .put<User>(`${environment.baseUrl}/users/${id}`, user, {
+        headers: httpOptions,
+      })
+      .pipe(
+        tap((userReceived) => {
+          const newUsers = this.usersSubject.value.map((user) => {
+            if (user.id === userReceived.id) {
+              return userReceived;
+            }
+            return user;
+          })
+
+          return this.usersSubject.next(newUsers);
+        }),
+        catchError(this.errorService.handleError)
+      );
+    
+  }
 }

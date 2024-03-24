@@ -10,7 +10,7 @@
 <ion-content color="light">
   <ion-card *ngIf="equipments | async as equipments">
     <ion-card-content>
-      <ion-list lines="none">
+      <ion-list lines="none"  *ngIf="equipments.length > 0">
         <ion-item
           button="true"
           detail="true"
@@ -23,6 +23,7 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      <p *ngIf="equipments.length == 0">Nenhum equipamento encontrado</p>
     </ion-card-content>
   </ion-card>
 </ion-content>

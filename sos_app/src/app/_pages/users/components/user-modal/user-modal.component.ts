@@ -30,15 +30,15 @@ export class UserModalComponent implements OnInit {
       name: ['', [Validators.required]],
       email: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      address: ['', [Validators.required]],
-      cpf: ['', [Validators.required]],
-      corporate_name: ['', [Validators.required]],
-      fantasy_name: ['', [Validators.required]],
-      cnpj: ['', [Validators.required]],
-      cep: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      country: ['', [Validators.required]]
+      address: [''],
+      cpf: [''],
+      corporate_name: [''],
+      fantasy_name: [''],
+      cnpj: [''],
+      cep: [''],
+      city: [''],
+      state: [''],
+      country: ['']
     });
   }
 

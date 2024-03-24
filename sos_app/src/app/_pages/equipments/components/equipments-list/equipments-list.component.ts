@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Equipment } from 'src/app/_models/Equipment';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
-import { EquipmentModalComponent } from '../../equipment-modal/equipment-modal.component';
+import { EquipmentModalComponent } from '../equipment-modal/equipment-modal.component';
 
 @Component({
   selector: 'app-equipments-list',

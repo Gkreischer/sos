@@ -8,7 +8,9 @@
           *ngFor="let category of categories"
           (click)="openModal(category)"
         >
-          <ion-label>{{ category.name }}</ion-label>
+          <ion-label>
+            <h3>{{ category.name }}</h3>
+          </ion-label>
         </ion-item>
       </ion-list>
       <p *ngIf="categories.length == 0">Nenhuma categoria cadastrada</p>

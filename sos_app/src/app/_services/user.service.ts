@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 
 const httpOptions = new HttpHeaders({
   'Content-Type': 'application/json',
-  Accept: 'application/json',
+  'Accept': 'application/json',
 });
 
 @Injectable({

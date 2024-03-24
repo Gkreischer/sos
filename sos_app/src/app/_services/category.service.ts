@@ -7,7 +7,7 @@ import { ErrorService } from './error.service';
 
 const httpHeaders = new HttpHeaders({
   'Content-Type': 'application/json',
-  Accept: 'application/json',
+  'Accept': 'application/json',
 });
 
 @Injectable({

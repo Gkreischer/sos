@@ -68,7 +68,7 @@ export class EquipmentModalComponent implements OnInit {
         next: () => {
           this.closeModal();
           this.toastService.presentToast(
-            'Equipamento criado com sucesso!',
+            'Equipamento editado com sucesso!',
             'bottom',
             2000,
             'success'

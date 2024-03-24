@@ -8,7 +8,7 @@ import { EquipmentsPageRoutingModule } from './equipments-routing.module';
 
 import { EquipmentsPage } from './equipments.page';
 import { EquipmentsListComponent } from './components/equipments-list/equipments-list.component';
-import { EquipmentModalComponent } from './equipment-modal/equipment-modal.component';
+import { EquipmentModalComponent } from './components/equipment-modal/equipment-modal.component';
 
 @NgModule({
   imports: [

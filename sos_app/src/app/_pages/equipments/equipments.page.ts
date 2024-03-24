@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
-import { EquipmentModalComponent } from './equipment-modal/equipment-modal.component';
+import { EquipmentModalComponent } from './components/equipment-modal/equipment-modal.component';
 
 @Component({
   selector: 'app-equipments',

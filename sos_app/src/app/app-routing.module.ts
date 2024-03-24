@@ -13,21 +13,26 @@ const routes: Routes = [
       import('./_pages/home/home.module').then((m) => m.HomePageModule),
   },
   {
-    path: 'categories',
+    path: 'categorias',
     loadChildren: () =>
       import('./_pages/categories/categories.module').then(
         (m) => m.CategoriesPageModule
       ),
   },
   {
-    path: 'equipments',
+    path: 'equipamentos',
     loadChildren: () =>
       import('./_pages/equipments/equipments.module').then(
         (m) => m.EquipmentsPageModule
       ),
-  },  {
-    path: 'users',
+  },
+  {
+    path: 'usuarios',
     loadChildren: () => import('./_pages/users/users.module').then( m => m.UsersPageModule)
+  },
+  {
+    path: 'ordem-servico',
+    loadChildren: () => import('./_pages/order/order.module').then( m => m.OrderPageModule)
   },
 
 ];

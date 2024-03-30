@@ -1,10 +1,10 @@
 <ion-card>
   <ion-card-content>
     <ion-list>
-      <ion-item lines="none" detail="true" button="true">
+      <ion-item lines="none" detail="true" button="true" *ngFor="let order of (orders$ | async) as orders">
         <ion-label>
-          <h3>Ordem de Serviço</h3>
-          <p>Nome do cliente</p>
+          <h3>{{ order.title }}</h3>
+          <p>{{ order.user_id }}</p>
         </ion-label>
       </ion-item>
     </ion-list>

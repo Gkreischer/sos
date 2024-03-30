@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             TaskingSeeder::class,
             ImageSeeder::class,
             PartTaskingSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

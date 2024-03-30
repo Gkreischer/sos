@@ -6,7 +6,13 @@ import { OrderPage } from './order.page';
 const routes: Routes = [
   {
     path: '',
-    component: OrderPage
+    component: OrderPage,
+    children: [
+      {
+        path: 'order-detail/:id',
+        loadChildren: () => import('./order-detail/order-detail.module').then(m => m.OrderDetailPageModule)
+      }
+    ]
   }
 ];
 

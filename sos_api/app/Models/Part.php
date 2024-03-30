@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Part extends Model
 {
@@ -34,8 +37,8 @@ class Part extends Model
         return $this->hasMany(Image::class);
     }
 
-    public function tasking()
+    public function orders() : BelongsToMany
     {
-        return $this->belongsToMany(Tasking::class, 'part_tasking', 'part_id', 'tasking_id');
+        return $this->belongsToMany(Order::class);
     }
 }

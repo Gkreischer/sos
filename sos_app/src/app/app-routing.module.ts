@@ -33,7 +33,8 @@ const routes: Routes = [
   {
     path: 'ordem-servico',
     loadChildren: () => import('./_pages/orders/order.module').then( m => m.OrderPageModule)
-  },
+  }
+
 
 
 ];

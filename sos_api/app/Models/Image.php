@@ -14,7 +14,6 @@ class Image extends Model
         'path',
         'equipment_id',
         'part_id',
-        'tasking_id',
     ];
 
     public function equipment()
@@ -27,8 +26,4 @@ class Image extends Model
         return $this->belongsTo(Part::class);
     }
 
-    public function tasking()
-    {
-        return $this->belongsTo(Tasking::class);
-    }
 }

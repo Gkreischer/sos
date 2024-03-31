@@ -4,6 +4,7 @@ import { Equipment } from '../_models/Equipment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
+import { User } from '@ionic/cli';
 
 const httpHeaders = new HttpHeaders({
   'Content-Type': 'application/json',
@@ -24,6 +25,19 @@ export class EquipmentService {
   getEquipments() {
     return this.http
       .get<Equipment[]>(`${environment.baseUrl}/equipments`, {
+        headers: httpHeaders,
+      })
+      .pipe(
+        tap((equipments) => {
+          return this.equipmentsSubject.next(equipments);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
+
+  getUserEquipments(user: User) {
+    return this.http
+      .get<Equipment[]>(`${environment.baseUrl}/users/${user.id}/equipments`, {
         headers: httpHeaders,
       })
       .pipe(

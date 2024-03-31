@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title *ngIf="!orderId">Adicionar Ordem de Serviço</ion-title>
+    <ion-title *ngIf="orderId">Editar Ordem de Serviço</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  {{orderForm.value | json}}
+  <form [formGroup]="orderForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item lines="none" detail="true" button="true" (click)="selectClientId()">
+              <ion-label *ngIf="!clientSelected">Selecionar o cliente</ion-label>
+              <ion-label *ngIf="clientSelected"><span class="ion-text-bold">Selecionado:</span> {{ clientSelected.name }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="equipments$">
+        <ion-col>
+          <ion-select formControlName="equipment_id">
+            <ion-select-option *ngFor="let equipment of (equipments$ | async) as equipments" value="{{equipment.id}}">{{equipment.name}}</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-input fill="outline" formControlName="title" placeholder="Título"></ion-input> 
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

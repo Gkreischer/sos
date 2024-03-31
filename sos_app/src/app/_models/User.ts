@@ -1,3 +1,5 @@
+import { Equipment } from "./Equipment";
+
 export interface User {
   id: number;
   name: string;
@@ -13,6 +15,7 @@ export interface User {
   image: string;
   fantasy_name: string;
   phone: string;
+  equipments: Array<Equipment>;
   corporate_name: string;
   created_at: Date;
   updated_at: Date;

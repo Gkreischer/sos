@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -124,7 +125,7 @@ class EquipmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Equipment $equipment)
+    public function destroy(Equipment $equipment, int $id)
     {
         //
         try
@@ -143,6 +144,21 @@ class EquipmentController extends Controller
                     'error' => $e->getMessage()
                 ], 
             404);
+        }
+    }
+
+    public function getUserEquipments(int $id) {
+        try
+        {
+            $equipments = Equipment::where('user_id', $id)->get();
+            
+            return response($equipments, 200);
+        } catch(Exception $e) {
+            return response(
+                [
+                    'message' => 'Erro ao obter os equipamentos do usuario',
+                    'error' => $e->getMessage()
+                ], 500);
         }
     }
 }

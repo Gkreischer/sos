@@ -27,6 +27,7 @@ Route::middleware(['json.response'])->group(function () {
         Route::post('/equipments', 'store');
         Route::put('/equipments/{id}', 'update');
         Route::delete('/equipments/{id}', 'destroy');
+        Route::get('/users/{id}/equipments', 'getUserEquipments');
     });
 
     Route::controller(CategoryController::class)->group(function () {

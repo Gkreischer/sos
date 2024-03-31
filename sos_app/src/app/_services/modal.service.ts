@@ -17,10 +17,11 @@ export class ModalService {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
+      return data;
     }
   }
 
-  closeModal() {
-    this.modalController.dismiss();
+  closeModal(data?: any, role?: 'confirm' | 'cancel') {
+    this.modalController.dismiss(data, role);
   }
 }

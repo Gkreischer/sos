@@ -1,3 +1,12 @@
+<ion-toolbar *ngIf="returnClientIdMode">
+  <ion-title>Selecione um usuario</ion-title>
+  <ion-buttons slot="start">
+    <ion-button (click)="closeModal()">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+
 <ion-content color="light">
   <ion-card *ngIf="users | async as users">
     <ion-card-content>
@@ -6,7 +15,7 @@
           button="true"
           detail="true"
           *ngFor="let user of users"
-          (click)="openModal(user)"
+          (click)="returnClientIdMode ? returnClient(user) : openModal(user)"
         >
           <ion-label>
             <h3>{{ user.name }}</h3>

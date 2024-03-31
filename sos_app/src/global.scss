@@ -31,4 +31,11 @@ ion-item {
 
 ion-modal {
     --height: 100%;
+    --width: 85%;
+    justify-content: end;
+    --backdrop-opacity: 0.8;
+}
+
+.ion-text-bold {
+    font-weight: bold !important;
 }

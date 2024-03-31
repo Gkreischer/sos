@@ -13,9 +13,9 @@ class OrderController extends Controller
         try
         {
 
-            $order = Order::all();
+            $orders = Order::all();
 
-            return response($order);
+            return response($orders);
 
         }catch(Exception $e)
         {

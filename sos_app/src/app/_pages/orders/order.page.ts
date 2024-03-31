@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
+import { OrderModalComponent } from './components/order-modal/order-modal.component';
 
 @Component({
   selector: 'app-order',
@@ -13,6 +14,10 @@ export class OrderPage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  addOrder() {
+    this.modalService.openModal(OrderModalComponent);
   }
 
 }

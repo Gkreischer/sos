@@ -11,7 +11,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $with = ['user', 'equipment', 'parts'];
+    protected $with = ['user', 'equipment'];
 
     protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', ];
 

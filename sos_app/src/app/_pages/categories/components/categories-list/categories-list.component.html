@@ -1,5 +1,8 @@
 <ion-content color="light">
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>Categorias cadastradas</ion-card-title>
+    </ion-card-header>
     <ion-card-content *ngIf="categories | async as categories">
       <ion-list lines="none" *ngIf="categories.length > 0">
         <ion-item

@@ -46,13 +46,5 @@ class ImageSeeder extends Seeder
             ],
         ]);
 
-        DB::table('image_tasking')->insert([
-            [
-                'image_id' => 1,
-                'tasking_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
     }
 }

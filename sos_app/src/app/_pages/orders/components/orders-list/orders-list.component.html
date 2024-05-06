@@ -1,10 +1,14 @@
 <ion-card>
   <ion-card-content>
     <ion-list>
-      <ion-item lines="none" detail="true" button="true" *ngFor="let order of (orders$ | async) as orders" (click)="openModal(order)">
-        <ion-label>
+      <ion-item  detail="true" button="true" *ngFor="let order of (orders$ | async) as orders" (click)="openModal(order)">
+        <div>
+          <h1>{{ order.id }}</h1>
+        </div>
+        <ion-label class="ion-padding-start">
           <h3>{{ order.title }}</h3>
-          <p>{{ order.user_id }}</p>
+          <p>{{ order.user.name }}</p>
+          <p>{{ order.created_at | date: 'short' }}</p>
         </ion-label>
       </ion-item>
     </ion-list>

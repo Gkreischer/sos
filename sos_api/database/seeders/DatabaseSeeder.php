@@ -29,9 +29,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             EquipmentSeeder::class,
-            TaskingSeeder::class,
             ImageSeeder::class,
-            PartTaskingSeeder::class,
             OrderSeeder::class,
         ]);
     }

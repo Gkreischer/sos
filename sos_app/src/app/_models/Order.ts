@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export interface Order {
     id: string;
     title: string;
@@ -9,6 +11,7 @@ export interface Order {
     service_price: number;
     description: string;
     status: number;
+    user: User;
     created_at: Date;
     updated_at: Date;
 }

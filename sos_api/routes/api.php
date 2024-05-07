@@ -49,6 +49,10 @@ Route::middleware(['json.response'])->group(function () {
     
     Route::controller(OrderController::class)->group(function () {
         Route::get('/orders', 'getAll');
+        Route::get('/orders/opened', 'getOpenedOrders');
+        Route::get('/orders/in-progress', 'getInProgressOrders');
+        Route::get('/orders/finished', 'getFinishedOrders');
+        Route::get('/orders/develired', 'getDeveliredOrders');
     });
 
     Route::fallback(function () {

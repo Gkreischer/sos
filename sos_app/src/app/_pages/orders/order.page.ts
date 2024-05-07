@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
 import { OrderModalComponent } from './components/order-modal/order-modal.component';
+import { OrderStatus } from 'src/app/_models/OrderStatus';
 
 @Component({
   selector: 'app-order',
@@ -8,6 +9,8 @@ import { OrderModalComponent } from './components/order-modal/order-modal.compon
   styleUrls: ['./order.page.scss'],
 })
 export class OrderPage implements OnInit {
+
+  statusFilter!: OrderStatus;
 
   constructor(
     private modalService: ModalService
@@ -18,6 +21,10 @@ export class OrderPage implements OnInit {
 
   addOrder() {
     this.modalService.openModal(OrderModalComponent);
+  }
+
+  filterByStatus(status: OrderStatus) {
+    this.statusFilter = status;
   }
 
 }

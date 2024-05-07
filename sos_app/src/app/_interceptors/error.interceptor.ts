@@ -31,7 +31,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 console.log('Error code: ', err.status);
             }
             
-            return throwError(() => new Error('An error occurred. Please try again later.'));
+            return throwError(() => err);
         })
     );
   }

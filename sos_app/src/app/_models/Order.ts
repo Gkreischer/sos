@@ -1,3 +1,4 @@
+import { OrderStatus } from "./OrderStatus";
 import { User } from "./User";
 
 export interface Order {
@@ -10,7 +11,7 @@ export interface Order {
     technician_id: number;
     service_price: number;
     description: string;
-    status: number;
+    status: OrderStatus;
     user: User;
     created_at: Date;
     updated_at: Date;

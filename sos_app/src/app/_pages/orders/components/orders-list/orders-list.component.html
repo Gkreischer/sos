@@ -1,20 +1,25 @@
-<ion-card>
-  <ion-card-content>
-    <ion-list>
-      <ion-item  detail="true" button="true" *ngFor="let order of (orders$ | async) as orders" (click)="openModal(order)">
-        <div>
-          <h1>{{ order.id }}</h1>
-        </div>
-        <ion-label class="ion-padding-start">
-          <h3>{{ order.title }}</h3>
-          <p>{{ order.user.name }}</p>
-          <p>{{ order.created_at | date: 'short' }}</p>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+@if (orders$ | async; as orders) {
+  <ion-card>
+    <ion-card-content>
+      <ion-list >
+  @if(orders.length > 0) {
+    
+          <ion-item lines="inset" detail="true" button="true" *ngFor="let order of orders" (click)="openModal(order)">
+            <div class="ion-margin-horizontal">
+              <h1>{{ order.id }}</h1>
+            </div>
+            <ion-label class="ion-padding-start">
+              <h3>{{ order.title }}</h3>
+              <p>{{ order.user.name }}</p>
+              <p>{{ order.created_at | date: 'short' }}</p>
+            </ion-label>
+          </ion-item>
+        
+  } @else {
+    <ion-item lines="none">Nenhuma ordem encontrada</ion-item>
+  }
 
-<ion-content>
-  
-</ion-content>
+    </ion-list>
+    </ion-card-content>
+  </ion-card>
+}

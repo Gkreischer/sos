@@ -21,8 +21,30 @@ export class OrderService {
     return this.ordersSubject.asObservable();
   }
 
-  getAll() {
-    return this.http.get<Order[]>(`${environment.baseUrl}/orders`).pipe(
+  getOrdersStatusOpened() {
+    return this.http.get<Order[]>(`${environment.baseUrl}/orders/opened`).pipe(
+      tap(
+        (res) => {
+          return this.ordersSubject.next(res);
+        }
+      ),
+      catchError(this.errorService.handleError)
+    );
+  }
+
+  getOrdersStatusInProgress() {
+    return this.http.get<Order[]>(`${environment.baseUrl}/orders/in-progress`).pipe(
+      tap(
+        (res) => {
+          return this.ordersSubject.next(res);
+        }
+      ),
+      catchError(this.errorService.handleError)
+    );
+  }
+
+  getOrdersStatusFinished() {
+    return this.http.get<Order[]>(`${environment.baseUrl}/orders/finished`).pipe(
       tap(
         (res) => {
           return this.ordersSubject.next(res);

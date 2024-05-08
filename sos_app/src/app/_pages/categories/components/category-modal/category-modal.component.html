@@ -11,7 +11,9 @@
 </ion-header>
 
 <ion-content>
-  <form
+  <ion-card>
+    <ion-card-content>
+      <form
     [formGroup]="categoryForm"
     (ngSubmit)="this.category ? update() : submit()"
   >
@@ -41,6 +43,8 @@
       </ion-row>
     </ion-grid>
   </form>
+    </ion-card-content>
+  </ion-card>
   <ion-fab *ngIf="category" slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button color="danger" (click)="confirmDeleteCategory()">
       <ion-icon name="trash"></ion-icon>

@@ -11,65 +11,69 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="userForm" (ngSubmit)="this.user ? update() : submit()">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="name" placeholder="Nome"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="email" placeholder="Email"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="phone" placeholder="Telefone"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="address" placeholder="Endereço"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="cpf" placeholder="CPF"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="cnpj" placeholder="CNPJ"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="cep" placeholder="CEP"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="city" placeholder="Cidade"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="state" placeholder="Estado"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="country" placeholder="País"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button type="submit" color="primary" expand="block" [disabled]="!this.userForm.valid">Salvar</ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </form>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="userForm" (ngSubmit)="this.user ? update() : submit()">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="Nome" formControlName="name"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="Email" formControlName="email" placeholder="Email"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="Telefone" formControlName="phone" placeholder="Telefone"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="Endereço" formControlName="address" placeholder="Endereço"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="CPF" formControlName="cpf" placeholder="CPF"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="CNPJ" formControlName="cnpj" placeholder="CNPJ"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="CEP" formControlName="cep" placeholder="CEP"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="Cidade" formControlName="city" placeholder="Cidade"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="Estado" formControlName="state" placeholder="Estado"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input labelPlacement="floating" label="País" formControlName="country" placeholder="País"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button type="submit" color="primary" expand="block" [disabled]="!this.userForm.valid">Salvar</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
   <ion-fab *ngIf="user" slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button color="danger" (click)="confirmDeleteUser()">
       <ion-icon name="trash"></ion-icon>

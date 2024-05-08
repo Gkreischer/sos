@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
                 'name' => 'admin',
                 'email' => 'admin@localhost',
                 'password' => Hash::make('teste123'),
-                'user_type' => 2,
+                'type' => 100,
                 'cpf' => '14065716799',
                 'fantasy_name' => 'GK Informática',
                 'corporate_name' => 'GkInfo Serviços',

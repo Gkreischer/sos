@@ -8,6 +8,8 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { User} from 'src/app/_models/User';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { Equipment } from 'src/app/_models/Equipment';
+import { OrderService } from 'src/app/_services/order.service';
+import { Order } from 'src/app/_models/Order';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -16,6 +18,7 @@ import { Equipment } from 'src/app/_models/Equipment';
 export class OrderModalComponent  implements OnInit {
 
   orderId?: number;
+  orderReceived!: Order;
   orderForm!: FormGroup;
   categories$?: Observable<Category[]>;
   equipments$?: Observable<Equipment[]>;
@@ -24,11 +27,12 @@ export class OrderModalComponent  implements OnInit {
   constructor(
     private modalService: ModalService,
     private formBuilder: FormBuilder,
-    private equipmentService: EquipmentService
+    private equipmentService: EquipmentService,
+    private orderService: OrderService
   ) { }
 
   ngOnInit() {
-    this.getOrderId();
+    this.getOrderDetailsById();
     this.mountForm();
   }
 
@@ -56,8 +60,19 @@ export class OrderModalComponent  implements OnInit {
     this.equipments$ = this.equipmentService.getUserEquipments(this.clientSelected!);
   }
 
-  getOrderId() {
-    console.log(this.orderId);
+  getOrderDetailsById() {
+    if(!this.orderId) {
+      return;
+    }
+
+    this.orderService.getById(this.orderId).subscribe((order) => {
+      this.orderReceived = order;
+      order.equipment_id = order.equipment_id?.toString();
+      this.orderForm.patchValue(order);
+      this.clientSelected = order.user;
+      this.getUserEquipments();
+      console.log('ordem recebida', order)
+    })
   }
 
   async selectClientId() {

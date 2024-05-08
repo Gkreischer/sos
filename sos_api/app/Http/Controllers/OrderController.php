@@ -100,4 +100,21 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
+    public function getById(int $id)
+    {
+        try
+        {
+            $order = Order::with('equipment.parts')->findOrFail($id);
+
+            return response($order);
+
+        } catch (Exception $e) {
+
+            return response([
+                'message' => 'Nao foi possivel carregar a ordem de serviço',
+                'error' => $e->getMessage()
+            ], 404);
+        }
+    }
 }

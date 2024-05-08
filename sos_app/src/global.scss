@@ -91,8 +91,9 @@ ion-item {
 
 ion-modal {
   --height: 100%;
-  --width: 85%;
-  justify-content: end;
+  @media screen and (min-width: 1200px) {
+    --width: 85%;
+  }
   --backdrop-opacity: 0.8;
 }
 

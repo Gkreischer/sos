@@ -11,6 +11,7 @@ import { ErrorService } from './error.service';
 export class OrderService {
 
   private ordersSubject: BehaviorSubject<Order[]> = new BehaviorSubject<Order[]>([]);
+  private orderSubject: BehaviorSubject<Order> = new BehaviorSubject<Order>({} as Order);
 
   constructor(
     private http: HttpClient,
@@ -19,6 +20,10 @@ export class OrderService {
 
   get orders$() {
     return this.ordersSubject.asObservable();
+  }
+
+  get order$() {
+    return this.orderSubject.asObservable();
   }
 
   getOrdersStatusOpened() {
@@ -48,6 +53,17 @@ export class OrderService {
       tap(
         (res) => {
           return this.ordersSubject.next(res);
+        }
+      ),
+      catchError(this.errorService.handleError)
+    );
+  }
+
+  getById(id: number) {
+    return this.http.get<Order>(`${environment.baseUrl}/orders/${id}`).pipe(
+      tap(
+        (res) => {
+          return this.orderSubject.next(res);
         }
       ),
       catchError(this.errorService.handleError)

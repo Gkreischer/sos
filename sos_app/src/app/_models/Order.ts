@@ -1,3 +1,4 @@
+import { Equipment } from "./Equipment";
 import { OrderStatus } from "./OrderStatus";
 import { User } from "./User";
 
@@ -6,6 +7,7 @@ export interface Order {
     title: string;
     user_id: string;
     equipment_id: string;
+    equipment: Equipment;
     total_price: number;
     parts_price: number;
     technician_id: number;

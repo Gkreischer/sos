@@ -53,6 +53,7 @@ Route::middleware(['json.response'])->group(function () {
         Route::get('/orders/in-progress', 'getInProgressOrders');
         Route::get('/orders/finished', 'getFinishedOrders');
         Route::get('/orders/develired', 'getDeveliredOrders');
+        Route::get('/orders/{id}', 'getById');
     });
 
     Route::fallback(function () {

@@ -32,14 +32,6 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(int $id)
@@ -161,6 +153,23 @@ class UserController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível obter o usuário',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getStaffUsers() {
+
+        try
+        {
+            $users = User::where('type', 2)->orWhere('type', 100)->get();
+
+            return response($users, 200);
+        }
+        catch (Exception $e)
+        {
+            return response([
+                'message' => 'Não foi possível obter os usuários da equipe',
                 'error' => $e->getMessage()
             ], 500);
         }

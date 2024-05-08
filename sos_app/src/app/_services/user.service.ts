@@ -15,6 +15,7 @@ const httpOptions = new HttpHeaders({
 })
 export class UserService {
   usersSubject = new BehaviorSubject<User[]>([]);
+  staffSubject = new BehaviorSubject<User[]>([]);
 
   constructor(
     private httpClient: HttpClient,
@@ -25,6 +26,10 @@ export class UserService {
     return this.usersSubject.asObservable();
   }
 
+  get staff() {
+    return this.staffSubject.asObservable();
+  }
+
   getUsers() {
     return this.httpClient
       .get<User[]>(`${environment.baseUrl}/users`, {
@@ -33,6 +38,19 @@ export class UserService {
       .pipe(
         tap((users) => {
           return this.usersSubject.next(users);
+        }),
+        catchError(this.errorService.handleError)
+      );
+  }
+
+  getStaffUsers() {
+    return this.httpClient
+      .get<User[]>(`${environment.baseUrl}/users/staff`, {
+        headers: httpOptions,
+      })
+      .pipe(
+        tap((users) => {
+          return this.staffSubject.next(users);
         }),
         catchError(this.errorService.handleError)
       );

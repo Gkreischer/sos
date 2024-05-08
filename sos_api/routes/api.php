@@ -41,6 +41,7 @@ Route::middleware(['json.response'])->group(function () {
     Route::controller(UserController::class)->group(function () {
 
         Route::get('/users', 'index');
+        Route::get('/users/staff', 'getStaffUsers');
         Route::get('/users/{id}', 'show');
         Route::post('/users/name/{name}', 'getUserByName');
         Route::put('/users/{id}', 'update');

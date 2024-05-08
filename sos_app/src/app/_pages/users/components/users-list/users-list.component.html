@@ -8,9 +8,9 @@
 </ion-toolbar>
 
 <ion-content color="light">
-  <ion-card *ngIf="users | async as users">
+  <ion-card *ngIf="staffUsers | async as users">
     <ion-card-header>
-      <ion-card-title>Usuários cadastrados</ion-card-title>
+      <ion-card-title>Equipe</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list *ngIf="users.length > 0">

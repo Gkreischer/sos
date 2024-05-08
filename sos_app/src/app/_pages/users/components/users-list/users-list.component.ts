@@ -12,7 +12,7 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
 })
 export class UsersListComponent implements OnInit {
   
-  users!: Observable<User[]>;
+  staffUsers!: Observable<User[]>;
   returnClientIdMode: boolean = false;
 
   constructor(
@@ -21,12 +21,12 @@ export class UsersListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getUsers();
+    this.getStaffUsers();
   }
 
-  getUsers() {
-    this.userService.getUsers().subscribe((users) => {
-      this.users = this.userService.users;
+  getStaffUsers() {
+    this.userService.getStaffUsers().subscribe((users) => {
+      this.staffUsers = this.userService.staff;
     });
   }
 

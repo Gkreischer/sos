@@ -10,6 +10,7 @@ import { EquipmentService } from 'src/app/_services/equipment.service';
 import { Equipment } from 'src/app/_models/Equipment';
 import { OrderService } from 'src/app/_services/order.service';
 import { Order } from 'src/app/_models/Order';
+import { AlertService } from 'src/app/_services/alert.service';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -28,7 +29,8 @@ export class OrderModalComponent  implements OnInit {
     private modalService: ModalService,
     private formBuilder: FormBuilder,
     private equipmentService: EquipmentService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -86,8 +88,32 @@ export class OrderModalComponent  implements OnInit {
     }
   }
 
+  submit() {
+    console.log(this.orderForm.value);
+  }
+
+  update() {
+    console.log(this.orderForm.value);
+  }
   closeModal() {
     this.modalService.closeModal();
+  }
+
+  showAlertCancelOrder() {
+    this.alertService.presentAlert('Atenção', 'Essa operação não poderá ser desfeita', 'Você deseja cancelar a ordem de serviço?', [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        handler: () => {}
+      },
+      {
+        text: 'Confirmar',
+        role: 'confirm',
+        handler: () => {
+          this.closeModal();
+      }
+      }
+    ])
   }
 
 }

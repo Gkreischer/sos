@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content color="light">
   <app-order-categories (statusSelected)="filterByStatus($event)"></app-order-categories>
   <app-orders-list [orderStatus]="statusFilter"></app-orders-list>
 </ion-content>

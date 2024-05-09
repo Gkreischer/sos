@@ -107,8 +107,8 @@
 
 // END FONTS
 
-* {
-    font-family: 'Nunito', sans-serif;
+*, ion-label {
+    font-family: 'Nunito', sans-serif !important;
 }
 
 ion-item {

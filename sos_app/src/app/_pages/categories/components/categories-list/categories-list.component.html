@@ -1,22 +1,26 @@
-<ion-content color="light">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Categorias cadastradas</ion-card-title>
-    </ion-card-header>
-    <ion-card-content *ngIf="categories | async as categories">
-      <ion-list lines="none" *ngIf="categories.length > 0">
-        <ion-item
-          button="true"
-          detail="true"
-          *ngFor="let category of categories"
-          (click)="openModal(category)"
-        >
-          <ion-label>
-            <h3>{{ category.name }}</h3>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-      <p *ngIf="categories.length == 0">Nenhuma categoria cadastrada</p>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
+@if(categories | async; as categories) {
+  <ion-content color="light">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Categorias cadastradas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none" *ngIf="categories.length > 0">
+          <ion-item
+            button="true"
+            detail="true"
+            *ngFor="let category of categories"
+            (click)="openModal(category)"
+          >
+            <ion-label>
+              <h3>{{ category.name }}</h3>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <p *ngIf="categories.length == 0">Nenhuma categoria cadastrada</p>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+}
+
+

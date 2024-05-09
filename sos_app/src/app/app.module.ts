@@ -11,6 +11,7 @@ import { ErrorInterceptor } from './_interceptors/error.interceptor';
 
 import localePtBr from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { LoadingBarInterceptor } from './_interceptors/loading-bar.interceptor';
 
 registerLocaleData(localePtBr);
 
@@ -27,6 +28,11 @@ registerLocaleData(localePtBr);
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingBarInterceptor,
       multi: true,
     },
     {provide: LOCALE_ID, useValue: 'pt' }

@@ -8,25 +8,20 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function getAll($props) 
+    public function getAll($props)
     {
-        try
-        {
+        try {
 
-            if($props) 
-            {
+            if ($props) {
                 $orders = Order::where($props)->get();
             }
 
-            if(!isset($props))
-            {
+            if (!isset($props)) {
                 $orders = Order::all();
             }
 
             return response($orders);
-
-        }catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Nao foi possivel carregar as ordens de serviço',
                 'error' => $e->getMessage()
@@ -34,10 +29,10 @@ class OrderController extends Controller
         }
     }
 
-    public function getOpenedOrders() {
+    public function getOpenedOrders()
+    {
 
-        try
-        {
+        try {
             $orders = Order::where('status', 0)->get();
 
             return response($orders);
@@ -50,14 +45,13 @@ class OrderController extends Controller
         }
     }
 
-    public function getInProgressOrders() {
+    public function getInProgressOrders()
+    {
 
-        try
-        {
+        try {
             $orders = Order::where('status', 1)->get();
 
             return response($orders);
-
         } catch (Exception $e) {
 
             return response([
@@ -67,14 +61,13 @@ class OrderController extends Controller
         }
     }
 
-    public function getFinishedOrders() {
-        
-        try
-        {
+    public function getFinishedOrders()
+    {
+
+        try {
             $orders = Order::where('status', 2)->get();
 
             return response($orders);
-
         } catch (Exception $e) {
 
             return response([
@@ -84,14 +77,13 @@ class OrderController extends Controller
         }
     }
 
-    public function getDeveliredOrders() {
-        
-        try
-        {
+    public function getDeveliredOrders()
+    {
+
+        try {
             $orders = Order::where('status', 3)->get();
 
             return response($orders);
-
         } catch (Exception $e) {
 
             return response([
@@ -102,19 +94,26 @@ class OrderController extends Controller
     }
 
     public function getById(int $id)
-    {
-        try
-        {
-            $order = Order::with('equipment.parts')->findOrFail($id);
+{
+    try {
+        // Buscar a ordem de serviço com as partes relacionadas
+        $order = Order::with('parts')->findOrFail($id);
 
-            return response($order);
-
-        } catch (Exception $e) {
-
-            return response([
-                'message' => 'Nao foi possivel carregar a ordem de serviço',
-                'error' => $e->getMessage()
-            ], 404);
+        // Adicionar quantidade e preço para cada parte
+        foreach ($order->parts as $part) {
+            $pivotData = $part->pivot;
+            $part->quantity = $pivotData->quantity;
+            $part->price = $pivotData->price;
+            $part->updated_at = $pivotData->updated_at;
+            unset($part->pivot); // Remover o objeto pivot da parte
         }
+
+        return response()->json($order);
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Não foi possível carregar a ordem de serviço',
+            'error' => $e->getMessage()
+        ], 404);
     }
+}
 }

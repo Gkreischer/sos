@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('path');
+            $table->foreignId('order_id')->nullable()->constrained('orders');
+            $table->foreignId('part_id')->nullable()->constrained('parts');
+            $table->foreignId('equipment_id')->nullable()->constrained('equipments');
             $table->timestamps();
         });
     }

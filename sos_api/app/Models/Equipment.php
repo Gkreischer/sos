@@ -24,18 +24,12 @@ class Equipment extends Model
 
     protected $with = [
         'category',
-        'parts',
         'user',
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function parts(): BelongsToMany
-    {
-        return $this->belongsToMany(Part::class, 'equipment_part', 'equipment_id', 'part_id');
     }
 
     public function user()

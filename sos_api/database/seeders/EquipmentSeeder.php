@@ -23,10 +23,6 @@ class EquipmentSeeder extends Seeder
             'description' => 'Notebook',
         ]);
 
-        // Obter algumas partes aleatórias
-        $parts = Part::inRandomOrder()->limit(rand(1, 5))->get();
-
-        // Associar as partes ao equipamento
-        $equipment->parts()->attach($parts);
+      
     }
 }

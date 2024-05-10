@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             EquipmentSeeder::class,
             ImageSeeder::class,
             OrderSeeder::class,
+            OrderPartSeeder::class
         ]);
     }
 }

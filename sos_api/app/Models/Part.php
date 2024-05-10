@@ -27,11 +27,6 @@ class Part extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function equipments()
-    {
-        return $this->belongsToMany(Equipment::class, 'equipment_part', 'part_id', 'equipment_id');
-    }
-
     public function images()
     {
         return $this->hasMany(Image::class);
@@ -39,6 +34,6 @@ class Part extends Model
 
     public function orders() : BelongsToMany
     {
-        return $this->belongsToMany(Order::class);
+        return $this->belongsToMany(Order::class, 'orders_parts', 'part_id', 'order_id')->withPivot('quantity', 'price')->withTimestamps();
     }
 }

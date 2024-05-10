@@ -28,23 +28,6 @@ class ImageSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
-        DB::table('image_part')->insert([
-            [
-                'image_id' => 1,
-                'part_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
-
-        DB::table('equipment_image')->insert([
-            [
-                'image_id' => 2,
-                'equipment_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
 
     }
 }

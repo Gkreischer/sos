@@ -130,7 +130,8 @@
                     {
                     <ion-item>
                       <ion-label>{{ part.name }}</ion-label>
-                      <ion-note slot="end" color="warning">{{ part.quantity }}</ion-note>
+                      <ion-note slot="end">{{ part.quantity }} X</ion-note>
+                      <ion-note slot="end">{{ part.price | currency : "R$" }}</ion-note>
                     </ion-item>
                     }
                   </ion-list>
@@ -138,6 +139,11 @@
                     Valor total das peças:
                     {{ orderReceived.parts_price | currency : "R$" }}
                   </p>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-button color="secondary" expand="block" type="button" (click)="openModalAddPart()">Adicionar material</ion-button>
                 </ion-col>
               </ion-row>
             </ion-grid>

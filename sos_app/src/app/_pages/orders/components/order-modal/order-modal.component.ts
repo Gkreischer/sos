@@ -11,6 +11,7 @@ import { Equipment } from 'src/app/_models/Equipment';
 import { OrderService } from 'src/app/_services/order.service';
 import { Order } from 'src/app/_models/Order';
 import { AlertService } from 'src/app/_services/alert.service';
+import { ModalAddPartComponent } from '../modal-add-part/modal-add-part.component';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -114,6 +115,19 @@ export class OrderModalComponent  implements OnInit {
       }
       }
     ])
+  }
+
+  async openModalAddPart() {
+    const modalData = await this.modalService.openModal(ModalAddPartComponent, {
+      orderId: this.orderId
+    });
+
+    if(modalData) {
+      console.log('recebido', modalData)
+    }
+    
+
+
   }
 
 }

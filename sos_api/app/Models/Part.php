@@ -12,7 +12,7 @@ class Part extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $with = ['category'];
 
     protected $fillable = [
         'name',

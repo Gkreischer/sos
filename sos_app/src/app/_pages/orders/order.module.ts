@@ -10,6 +10,7 @@ import { OrderPage } from './order.page';
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
 import { OrderModalComponent } from './components/order-modal/order-modal.component';
 import { OrderCategoriesComponent } from './components/order-categories/order-categories.component';
+import { ModalAddPartComponent } from './components/modal-add-part/modal-add-part.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { OrderCategoriesComponent } from './components/order-categories/order-ca
     OrderPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [OrderPage, OrdersListComponent, OrderModalComponent, OrderCategoriesComponent]
+  declarations: [OrderPage, OrdersListComponent, OrderModalComponent, OrderCategoriesComponent, ModalAddPartComponent]
 })
 export class OrderPageModule {}

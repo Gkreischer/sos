@@ -8,17 +8,16 @@ use Illuminate\Http\Request;
 
 class PartController extends Controller
 {
-    public function search(Request $request) {
-        try
-        {   
+    public function search(Request $request)
+    {
+        try {
 
             $data = $request->all();
 
-            $parts = Part::where('name', 'like', '%'.$data['search'].'%')->get();
-            
-            return response($parts);
+            $parts = Part::where('name', 'like', '%' . $data['search'] . '%')->get();
 
-        } catch(Exception $e) {
+            return response($parts);
+        } catch (Exception $e) {
             return response([
                 'message' => 'Nao foi possível encontrar as pecas',
                 'error' => $e->getMessage(),
@@ -26,4 +25,19 @@ class PartController extends Controller
         }
     }
 
+    public function getAll()
+    {
+
+        try {
+            $parts = Part::all();
+
+            return response($parts);
+        } catch (Exception $e) {
+
+            return response([
+                'message' => 'Nao foi possível encontrar as pecas',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

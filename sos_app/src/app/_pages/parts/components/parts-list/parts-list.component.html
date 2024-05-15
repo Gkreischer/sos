@@ -1,0 +1,23 @@
+@if(parts | async; as parts) {
+   <ion-card>
+    <ion-card-header>
+      <ion-card-title>Materiais cadastrados</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @if(parts.length > 0 ) {
+          @for(part of parts; track $index) {
+            <ion-item button="true" detail="true" (click)="openModalEdit(part)">
+              <ion-label>
+                <h3>{{ part.name }}</h3>
+                <p>{{ part.price | currency : "R$" }}</p>
+              </ion-label>
+            </ion-item>
+          }
+        } @else {
+          <ion-item>Nenhum material cadastrado</ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+   </ion-card>
+}

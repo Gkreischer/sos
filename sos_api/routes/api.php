@@ -59,6 +59,7 @@ Route::middleware(['json.response'])->group(function () {
     });
 
     Route::controller(PartController::class)->group(function() {
+        Route::Get('/parts', 'getAll');
         Route::post('/parts/search', 'search');
     });
 

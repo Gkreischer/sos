@@ -33,7 +33,12 @@ const routes: Routes = [
   {
     path: 'ordem-servico',
     loadChildren: () => import('./_pages/orders/order.module').then( m => m.OrderPageModule)
+  },
+  {
+    path: 'materiais',
+    loadChildren: () => import('./_pages/parts/parts.module').then( m => m.PartsPageModule)
   }
+
 
 
 

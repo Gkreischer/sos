@@ -15,15 +15,29 @@ const httpOptions = {
 export class PartService {
 
   partsSearchedSubject: BehaviorSubject<Part[]> = new BehaviorSubject<Part[]>([]);
+  partsSubject: BehaviorSubject<Part[]> = new BehaviorSubject<Part[]>([]);
 
   get partsSearch() {
     return this.partsSearchedSubject.asObservable();
+  }
+
+  get parts() {
+    return this.partsSubject.asObservable();
   }
 
   constructor(
     private http: HttpClient,
     private errorService: ErrorService
   ) { }
+
+  getParts() {
+    return this.http.get<Part[]>(`${environment.baseUrl}/parts`, httpOptions).pipe(
+      tap((parts) => {
+        return this.partsSubject.next(parts);
+      }),
+      catchError(this.errorService.handleError)
+    );
+  }
 
   search(name: string) {
     return this.http.post<Part[]>(`${environment.baseUrl}/parts/search`, {search: name}, httpOptions).pipe(

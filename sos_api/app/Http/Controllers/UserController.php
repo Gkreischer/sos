@@ -130,6 +130,25 @@ class UserController extends Controller
         }
     }
 
+    public function store(Request $request) {
+        
+        try {
+
+            $data = $request->all();
+            
+            $user = User::create($data);
+
+            return response($user);
+
+        } catch(Exception $e) {
+
+            return response([
+                'message' => 'Não foi possível criar o usuário',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function getUserByName(Request $request)
     {
         try {

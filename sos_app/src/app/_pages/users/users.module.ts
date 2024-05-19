@@ -10,6 +10,7 @@ import { UsersPage } from './users.page';
 import { UsersListComponent } from './components/users-list/users-list.component';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { PipesModule } from 'src/app/_modules/pipes/pipes.module';
+import { MaskitoDirective } from '@maskito/angular';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { PipesModule } from 'src/app/_modules/pipes/pipes.module';
     IonicModule,
     UsersPageRoutingModule,
     PipesModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaskitoDirective
   ],
   declarations: [UsersPage, UsersListComponent, UserModalComponent],
 })

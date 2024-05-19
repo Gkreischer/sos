@@ -13,8 +13,18 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
+      {{userForm.value | json}}
       <form [formGroup]="userForm" (ngSubmit)="this.user ? update() : submit()">
         <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-select labelPlacement="floating" label="Tipo" formControlName="type" placeholder="Tipo">
+                <ion-select-option value="0">Cliente</ion-select-option>
+                <ion-select-option value="1">Equipe</ion-select-option>
+                <ion-select-option value="100">Administrador</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
           <ion-row>
             <ion-col>
               <ion-input labelPlacement="floating" label="Nome" formControlName="name"></ion-input>
@@ -27,7 +37,7 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input labelPlacement="floating" label="Telefone" formControlName="phone" placeholder="Telefone"></ion-input>
+              <ion-input [maskito]="phoneOptions" [maskitoElement]="maskPredicate" labelPlacement="floating" label="Telefone" formControlName="phone" placeholder="Telefone"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -67,7 +77,8 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button type="submit" color="primary" expand="block" [disabled]="!this.userForm.valid">Cadastrar</ion-button>
+              <ion-button *ngIf="user" type="submit" color="primary" expand="block" [disabled]="!this.userForm.valid">Atualizar</ion-button>
+              <ion-button *ngIf="!user" type="submit" color="primary" expand="block" [disabled]="!this.userForm.valid">Cadastrar</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

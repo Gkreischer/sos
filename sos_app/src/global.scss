@@ -135,14 +135,3 @@ ion-modal {
     font-family: 'Nunito', sans-serif !important;
   }
 }
-
-ion-input, ion-select, ion-textarea {
-  .label-text-wrapper {
-    color: white !important;
-  }
-}
-
-ion-select::part(label) {
-  --color: white;
-  color: white;
-}

@@ -87,6 +87,23 @@ export class UserService {
       );
   }
 
+  addUser(user: User) {
+    return this.httpClient.post<User>(
+      `${environment.baseUrl}/users/add`,
+      user,
+      {
+        headers: httpOptions,
+      }
+    )
+    .pipe(
+      tap((userReceived) => {
+        const newUsers = [userReceived, ...this.usersSubject.value];
+        return this.usersSubject.next(newUsers);
+      }),
+      catchError(this.errorService.handleError)
+    )
+  }
+
   updateUser(user: User, id: number) {
     console.log(`${environment.baseUrl}/users/${id}`)
     return this.httpClient

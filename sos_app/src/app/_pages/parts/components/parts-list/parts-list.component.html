@@ -8,7 +8,10 @@
         @if(parts.length > 0 ) {
           @for(part of parts; track $index) {
             <ion-item button="true" detail="true" (click)="openModalEdit(part)">
-              <ion-label>
+              <ion-avatar>
+                <ion-img [src]="part.image"></ion-img>
+              </ion-avatar>
+              <ion-label class="ion-padding-start">
                 <h3>{{ part.name }}</h3>
                 <p>{{ part.price | currency : "R$" }}</p>
               </ion-label>

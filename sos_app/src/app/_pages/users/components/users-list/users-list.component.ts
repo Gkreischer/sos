@@ -6,11 +6,11 @@ import { UserService } from 'src/app/_services/user.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 
 @Component({
-  selector: 'app-users-list',
-  templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss'],
+  selector: 'app-staff-list',
+  templateUrl: './staff-list.component.html',
+  styleUrls: ['./staff-list.component.scss'],
 })
-export class UsersListComponent implements OnInit {
+export class StaffListComponent implements OnInit {
   
   staffUsers!: Observable<User[]>;
   returnClientIdMode: boolean = false;

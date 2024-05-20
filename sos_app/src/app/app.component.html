@@ -8,9 +8,10 @@
 
           <ion-menu-toggle
             auto-hide="false"
-            *ngFor="let p of appPages; let i = index"
+            
           >
             <ion-item
+            *ngFor="let p of appPages; let i = index"
               routerDirection="root"
               [routerLink]="[p.url]"
               lines="none"
@@ -25,6 +26,7 @@
               ></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
+            
           </ion-menu-toggle>
         </ion-list>
       </ion-content>

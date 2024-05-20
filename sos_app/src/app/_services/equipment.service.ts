@@ -6,10 +6,9 @@ import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
 import { User } from '@ionic/cli';
 
-const httpHeaders = new HttpHeaders({
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-});
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
 @Injectable({
   providedIn: 'root',
 })
@@ -24,9 +23,7 @@ export class EquipmentService {
 
   getEquipments() {
     return this.http
-      .get<Equipment[]>(`${environment.baseUrl}/equipments`, {
-        headers: httpHeaders,
-      })
+      .get<Equipment[]>(`${environment.baseUrl}/equipments`, httpOptions)
       .pipe(
         tap((equipments) => {
           return this.equipmentsSubject.next(equipments);
@@ -37,9 +34,7 @@ export class EquipmentService {
 
   getUserEquipments(user: User) {
     return this.http
-      .get<Equipment[]>(`${environment.baseUrl}/users/${user.id}/equipments`, {
-        headers: httpHeaders,
-      })
+      .get<Equipment[]>(`${environment.baseUrl}/users/${user.id}/equipments`, httpOptions)
       .pipe(
         tap((equipments) => {
           return this.equipmentsSubject.next(equipments);
@@ -50,9 +45,7 @@ export class EquipmentService {
 
   addEquipment(equipment: Equipment) {
     return this.http
-      .post<Equipment>(`${environment.baseUrl}/equipments`, equipment, {
-        headers: httpHeaders,
-      })
+      .post<Equipment>(`${environment.baseUrl}/equipments`, equipment, httpOptions)
       .pipe(
         tap((equipment) => {
           return this.equipmentsSubject.next([
@@ -66,9 +59,7 @@ export class EquipmentService {
 
   updateEquipment(equipment: Equipment, id: number) {
     return this.http
-      .put<Equipment>(`${environment.baseUrl}/equipments/${id}`, equipment, {
-        headers: httpHeaders,
-      })
+      .put<Equipment>(`${environment.baseUrl}/equipments/${id}`, equipment, httpOptions)
       .pipe(
         tap((updatedEquipment) => {
           const newEquipments = this.equipmentsSubject.value.map(

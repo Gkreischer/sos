@@ -5,10 +5,9 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
 
-const httpHeaders = new HttpHeaders({
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-});
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +23,7 @@ export class CategoryService {
 
   getCategories() {
     return this.http
-      .get<Category[]>(`${environment.baseUrl}/categories`, {
-        headers: httpHeaders,
-      })
+      .get<Category[]>(`${environment.baseUrl}/categories`, httpOptions)
       .pipe(
         tap((categories) => {
           return this.categoriesSubject.next(categories);
@@ -37,9 +34,7 @@ export class CategoryService {
 
   addCategory(category: Category) {
     return this.http
-      .post<Category>(`${environment.baseUrl}/categories`, category, {
-        headers: httpHeaders,
-      })
+      .post<Category>(`${environment.baseUrl}/categories`, category, httpOptions)
       .pipe(
         tap((category) => {
           return this.categoriesSubject.next([
@@ -53,9 +48,7 @@ export class CategoryService {
 
   updateCategory(category: Category, id: number) {
     return this.http
-      .put<Category>(`${environment.baseUrl}/categories/${id}`, category, {
-        headers: httpHeaders,
-      })
+      .put<Category>(`${environment.baseUrl}/categories/${id}`, category, httpOptions)
       .pipe(
         tap((categoryReceived) => {
           const newCategories = this.categoriesSubject.value.map((category) => {
@@ -72,9 +65,7 @@ export class CategoryService {
 
   deleteCategory(category: Category) {
     return this.http
-      .delete(`${environment.baseUrl}/categories/${category.id}`, {
-        headers: httpHeaders,
-      })
+      .delete(`${environment.baseUrl}/categories/${category.id}`, httpOptions)
       .pipe(
         tap(() => {
           const newCategories = this.categoriesSubject.value.filter(

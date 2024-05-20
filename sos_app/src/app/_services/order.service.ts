@@ -1,10 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Order } from '../_models/Order';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
 
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +30,7 @@ export class OrderService {
   }
 
   getOrdersStatusOpened() {
-    return this.http.get<Order[]>(`${environment.baseUrl}/orders/opened`).pipe(
+    return this.http.get<Order[]>(`${environment.baseUrl}/orders/opened`, httpOptions).pipe(
       tap(
         (res) => {
           return this.ordersSubject.next(res);
@@ -38,7 +41,7 @@ export class OrderService {
   }
 
   getOrdersStatusInProgress() {
-    return this.http.get<Order[]>(`${environment.baseUrl}/orders/in-progress`).pipe(
+    return this.http.get<Order[]>(`${environment.baseUrl}/orders/in-progress`, httpOptions).pipe(
       tap(
         (res) => {
           return this.ordersSubject.next(res);
@@ -49,7 +52,7 @@ export class OrderService {
   }
 
   getOrdersStatusFinished() {
-    return this.http.get<Order[]>(`${environment.baseUrl}/orders/finished`).pipe(
+    return this.http.get<Order[]>(`${environment.baseUrl}/orders/finished`, httpOptions).pipe(
       tap(
         (res) => {
           return this.ordersSubject.next(res);
@@ -60,7 +63,7 @@ export class OrderService {
   }
 
   getById(id: number) {
-    return this.http.get<Order>(`${environment.baseUrl}/orders/${id}`).pipe(
+    return this.http.get<Order>(`${environment.baseUrl}/orders/${id}`, httpOptions).pipe(
       tap(
         (res) => {
           return this.orderSubject.next(res);

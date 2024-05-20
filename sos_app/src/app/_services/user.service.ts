@@ -5,10 +5,9 @@ import { catchError, tap, BehaviorSubject } from 'rxjs';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
 
-const httpOptions = new HttpHeaders({
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-});
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
 
 @Injectable({
   providedIn: 'root',
@@ -32,9 +31,7 @@ export class UserService {
 
   getUsers() {
     return this.httpClient
-      .get<User[]>(`${environment.baseUrl}/users`, {
-        headers: httpOptions,
-      })
+      .get<User[]>(`${environment.baseUrl}/users`, httpOptions)
       .pipe(
         tap((users) => {
           return this.usersSubject.next(users);
@@ -45,9 +42,7 @@ export class UserService {
 
   getStaffUsers() {
     return this.httpClient
-      .get<User[]>(`${environment.baseUrl}/users/staff`, {
-        headers: httpOptions,
-      })
+      .get<User[]>(`${environment.baseUrl}/users/staff`, httpOptions)
       .pipe(
         tap((users) => {
           return this.staffSubject.next(users);
@@ -58,9 +53,7 @@ export class UserService {
 
   getUser(user: User, id: number) {
     return this.httpClient
-      .get<User>(`${environment.baseUrl}/users/${id}`, {
-        headers: httpOptions,
-      })
+      .get<User>(`${environment.baseUrl}/users/${id}`, httpOptions)
       .pipe(
         tap((user) => {
           return user;
@@ -70,14 +63,11 @@ export class UserService {
   }
 
   getUserByName(userName: string) {
-    console.log(userName);
     return this.httpClient
       .post<User>(
         `${environment.baseUrl}/users/name/${userName}`,
         { name: userName },
-        {
-          headers: httpOptions,
-        }
+        httpOptions
       )
       .pipe(
         tap((user) => {
@@ -91,9 +81,7 @@ export class UserService {
     return this.httpClient.post<User>(
       `${environment.baseUrl}/users/add`,
       user,
-      {
-        headers: httpOptions,
-      }
+      httpOptions
     )
     .pipe(
       tap((userReceived) => {
@@ -107,9 +95,7 @@ export class UserService {
   updateUser(user: User, id: number) {
     console.log(`${environment.baseUrl}/users/${id}`)
     return this.httpClient
-      .put<User>(`${environment.baseUrl}/users/${id}`, user, {
-        headers: httpOptions,
-      })
+      .put<User>(`${environment.baseUrl}/users/${id}`, user, httpOptions)
       .pipe(
         tap((userReceived) => {
           const newUsers = this.usersSubject.value.map((user) => {
@@ -128,9 +114,7 @@ export class UserService {
 
   deleteUser(user: User) {
     return this.httpClient
-      .delete(`${environment.baseUrl}/users/${user.id}`, {
-        headers: httpOptions,
-      })
+      .delete(`${environment.baseUrl}/users/${user.id}`, httpOptions)
       .pipe(
         tap(() => {
           const newUsers = this.usersSubject.value.filter(

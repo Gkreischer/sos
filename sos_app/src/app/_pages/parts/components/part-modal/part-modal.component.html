@@ -39,15 +39,15 @@
           }
           <ion-row>
             <ion-col>
-              <ion-input labelPlacement="floating" label="Descrição"  formControlName="description"></ion-input>
+              <ion-textarea labelPlacement="floating" rows="5" label="Descrição"  formControlName="description"></ion-textarea>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
               @if(!partId) {
-                <ion-button expand="block" type="submit" >Salvar</ion-button>
+                <ion-button expand="block" type="submit" [disabled]="!formPart.valid">Salvar</ion-button>
               } @else {
-                <ion-button expand="block" type="submit" >Atualizar</ion-button>
+                <ion-button expand="block" type="submit" [disabled]="!formPart.valid">Atualizar</ion-button>
               }
             </ion-col>
           </ion-row>

@@ -30,7 +30,7 @@ export class PartsListComponent  implements OnInit {
   }
 
   openModalEdit(part: Part) {
-    this.modalService.openModal(PartModalComponent, { part: part});
+    this.modalService.openModal(PartModalComponent, { partId: part.id});
   }
 
 }

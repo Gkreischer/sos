@@ -25,6 +25,22 @@ class PartController extends Controller
         }
     }
 
+    public function getById(int $id) {
+
+        try {
+            $part = Part::findOrFail($id);
+
+            return response($part);
+
+        } catch (Exception $e) {
+
+            return response([
+                'message' => 'Nao foi possível encontrar a peca',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function getAll()
     {
 
@@ -36,6 +52,23 @@ class PartController extends Controller
 
             return response([
                 'message' => 'Nao foi possível encontrar as pecas',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, int $id) {
+
+        try {
+            $part = Part::findOrFail($id);
+
+            $part->update($request->all());
+
+            return response($part);
+            
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Nao foi possível encontrar a peca',
                 'error' => $e->getMessage(),
             ], 500);
         }

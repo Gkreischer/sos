@@ -23,7 +23,7 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input labelPlacement="floating" label="Preço"  formControlName="price"></ion-input>
+              <ion-input [maskito]="currencyOptions" [maskitoElement]="maskPredicate"  labelPlacement="floating" label="Preço"  formControlName="price" type="string"></ion-input>
             </ion-col>
           </ion-row>
           @if (categories | async; as categories) {

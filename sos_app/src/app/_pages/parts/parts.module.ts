@@ -9,6 +9,7 @@ import { PartsPageRoutingModule } from './parts-routing.module';
 import { PartsPage } from './parts.page';
 import { PartsListComponent } from './components/parts-list/parts-list.component';
 import { PartModalComponent } from './components/part-modal/part-modal.component';
+import { MaskitoDirective } from '@maskito/angular';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { PartModalComponent } from './components/part-modal/part-modal.component
     FormsModule,
     IonicModule,
     PartsPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaskitoDirective
   ],
   declarations: [PartsPage, PartsListComponent, PartModalComponent]
 })

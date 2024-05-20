@@ -24,6 +24,7 @@ class Part extends Model
 
     protected $casts = [
         'price' => 'float',
+        'category_id' => 'string',
     ];
 
     public function category()

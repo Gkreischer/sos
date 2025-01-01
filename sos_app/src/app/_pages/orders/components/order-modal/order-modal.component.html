@@ -105,7 +105,7 @@
                   <ion-row>
                     <ion-col>
                       <ion-button expand="block" color="danger" (click)="showAlertCancelOrder()"
-                        >Cancelar</ion-button
+                        >Encerrar</ion-button
                       >
                     </ion-col>
                   </ion-row>
@@ -128,10 +128,16 @@
                   <ion-list>
                     @for (part of orderReceived.parts; track $index )
                     {
-                    <ion-item>
+                    <ion-item class="ion-padding-start">
+                      
                       <ion-label>{{ part.name }}</ion-label>
                       <ion-note slot="end">{{ part.quantity }} X</ion-note>
                       <ion-note slot="end">{{ part.price | currency : "R$" }}</ion-note>
+                      <ion-buttons slot="end">
+                        <ion-button color="danger" fill="clear">
+                          <ion-icon name="trash" color="danger"></ion-icon>
+                        </ion-button>
+                      </ion-buttons>
                     </ion-item>
                     }
                   </ion-list>

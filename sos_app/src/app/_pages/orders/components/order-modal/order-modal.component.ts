@@ -101,7 +101,7 @@ export class OrderModalComponent  implements OnInit {
   }
 
   showAlertCancelOrder() {
-    this.alertService.presentAlert('Atenção', 'Essa operação não poderá ser desfeita', 'Você deseja cancelar a ordem de serviço?', [
+    this.alertService.presentAlert('Atenção', 'Essa operação não poderá ser desfeita', 'Você deseja encerrar a ordem de serviço?', [
       {
         text: 'Cancelar',
         role: 'cancel',

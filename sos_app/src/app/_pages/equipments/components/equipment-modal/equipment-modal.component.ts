@@ -34,7 +34,6 @@ export class EquipmentModalComponent implements OnInit {
       this.formEquipment.get('user_name')?.patchValue(this.equipment.user.name);
       this.formEquipment.patchValue(this.equipment);
       this.formEquipment.get('user_name')?.disable();
-      console.log(this.equipment);
     }
     this.getCategories();
   }

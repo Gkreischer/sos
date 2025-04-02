@@ -14,6 +14,7 @@ import {
   maskitoRemoveOnBlurPlugin,
   maskitoNumberOptionsGenerator
 } from '@maskito/kit';
+import { PhotoService } from 'src/app/_services/photo.service';
 
 @Component({
   selector: 'app-part-modal',
@@ -41,7 +42,8 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
     private partService: PartService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private photoService: PhotoService
   ) { }
 
   ngOnInit() {
@@ -60,11 +62,11 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     this.partService.getPartById(this.partId).subscribe((part) => {
       this.part = this.partService.part;
       this.formPart.patchValue(part);
+      console.log(part);
     })
   }
 
   submit() {
-
   }
 
   formatPrice() {
@@ -78,12 +80,34 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   }
 
   update() {
-    this.formatPrice();
+    const verifyImageWasChanged = this.verifyIfImageWasSelected();
+    console.log(verifyImageWasChanged);
+    if(verifyImageWasChanged) {
+      this.uploadImage();
+    }
     this.partService.update(this.formPart.value, this.partId).subscribe((part) => {
-      console.log('partReceived', part)
-      this.modalService.closeModal();
-      this.toastService.presentToast('Material atualizado com sucesso!', 'bottom', 3000, 'success');
-    })
+      console.log(part);
+      this.toastService.presentToast('Parte atualizada com sucesso', 'bottom', 3000, 'success');
+    });
+  }
+
+  async uploadImage() {
+    const response = await this.photoService.startUpload();
+
+    if(!response) {
+      this.toastService.presentToast('Nenhum arquivo selecionado', 'bottom', 3000, 'danger');
+      return;
+    }
+    this.formPart.get('image')?.setValue(response.imagePath);
+    this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
+  }
+
+  verifyIfImageWasSelected() {
+    let imageBlob = this.formPart.get('image')?.value as string;
+    if(imageBlob.startsWith('blob')) {
+      return true;
+    }
+    return;
   }
 
   getCategories() {
@@ -94,6 +118,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
 
   mountForm() {
     this.formPart = this.formBuilder.group({
+      id: [''],
       name: ['', [Validators.required]],
       price: ['', [Validators.required]],
       description: [''],
@@ -104,6 +129,16 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
 
   closeModal() {
     this.modalService.closeModal();
+  }
+
+  async selectImage() {
+    const image = await this.photoService.selectImage();
+
+    if(!image) {
+      return;
+    }
+
+    this.formPart.get('image')?.setValue(image.webviewPath);
   }
 
 }

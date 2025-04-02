@@ -4,6 +4,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -60,10 +61,14 @@ Route::middleware(['json.response'])->group(function () {
     });
 
     Route::controller(PartController::class)->group(function() {
-        Route::Get('/parts', 'getAll');
+        Route::get('/parts', 'getAll');
         Route::post('/parts/search', 'search');
         Route::get('/parts/{id}', 'getById');
         Route::put('/parts/{id}', 'update');
+    });
+    
+    Route::controller(PhotoController::class)->group(function() {
+        Route::post('/photos', 'store');
     });
 
     Route::fallback(function () {

@@ -25,6 +25,7 @@ class PartFactory extends Factory
             'description' => $this->faker->sentence(),
             'image' => $this->faker->imageUrl(),
             'category_id' => 1,
+            'price' => $this->faker->numberBetween(1, 1000),
         ];
     }
 }

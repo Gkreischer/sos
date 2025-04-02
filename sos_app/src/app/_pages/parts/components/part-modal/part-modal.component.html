@@ -18,6 +18,21 @@
         <ion-grid>
           <ion-row>
             <ion-col>
+              <ion-card>
+                <ion-img [src]="formPart.get('image')?.value"></ion-img>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-button (click)="selectImage()">
+                <ion-icon name="camera"></ion-icon>
+                <ion-label>Selecionar foto</ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
               <ion-input labelPlacement="floating" label="Nome" formControlName="name"></ion-input>
             </ion-col>
           </ion-row>

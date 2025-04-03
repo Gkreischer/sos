@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Part;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class PartController extends Controller
@@ -66,9 +67,16 @@ class PartController extends Controller
 
             return response($part);
             
-        } catch (Exception $e) {
+        } 
+        catch(ModelNotFoundException $e) {
             return response([
-                'message' => 'Nao foi possível encontrar a peca',
+                'message' => 'Peça não encontrada',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
+        catch (Exception $e) {
+            return response([
+                'message' => 'Erro ao atualizar a peça',
                 'error' => $e->getMessage(),
             ], 500);
         }

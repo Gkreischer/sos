@@ -14,7 +14,7 @@ class PhotoController extends Controller
             $path = $photo->store('public/images');
             $publicPath = Storage::url($path);
             return response([
-                'imagePath' => $publicPath,
+                'imagePath' => url($publicPath),
                 'message' => 'Foto salva com sucesso',
             ], 200);
         } catch (\Exception $e) {

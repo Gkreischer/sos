@@ -13,16 +13,17 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      {{formPart.value | json}}
       <form [formGroup] = "formPart" (ngSubmit)="!part ? submit() : update()">
         <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-card>
-                <ion-img [src]="formPart.get('image')?.value"></ion-img>
-              </ion-card>
-            </ion-col>
-          </ion-row>
+          @if(this.formPart.get('image')?.value) {
+            <ion-row>
+              <ion-col>
+                <ion-card>
+                  <ion-img [src]="formPart.get('image')?.value"></ion-img>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          }
           <ion-row class="ion-text-center">
             <ion-col>
               <ion-button (click)="selectImage()">

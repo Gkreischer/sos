@@ -21,7 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       retry(2), // retry a failed request up to 2 times
         catchError((err: HttpErrorResponse) => {
-            this.toastService.presentToast(err.message, 'bottom', 2000, 'danger');
+            this.toastService.presentToast(err.error.message, 'bottom', 2000, 'danger');
             if (err.status === 0) {
                 //client-side or network error
                 console.log('An error occurred:', err.error.message);
@@ -31,7 +31,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 console.log('Error code: ', err.status);
             }
             
-            return throwError(() => err);
+            return throwError(() => err.error.message);
         })
     );
   }

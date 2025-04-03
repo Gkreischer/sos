@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MaskitoElementPredicate, MaskitoOptions } from '@maskito/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Category } from 'src/app/_models/Category';
 import { Part } from 'src/app/_models/Part';
 import { CategoryService } from 'src/app/_services/category.service';
@@ -21,17 +21,19 @@ import { PhotoService } from 'src/app/_services/photo.service';
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
 })
-export class PartModalComponent  implements OnInit, AfterViewInit {
+export class PartModalComponent  implements OnInit, AfterViewInit, OnDestroy {
 
   partId!: number;
   part!: Observable<Part>;
   categories!: Observable<Category[]>;
   formPart!: FormGroup;
 
+  partSubscription!: Subscription;
+
   currencyOptions: MaskitoOptions = maskitoNumberOptionsGenerator({
     prefix: 'R$ ',
     precision: 2,
-    thousandSeparator: '',
+    thousandSeparator: '.',
   });
 
 readonly maskPredicate: MaskitoElementPredicate = async (el) =>
@@ -49,7 +51,6 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   ngOnInit() {
     this.mountForm();
     this.getCategories();
-    
   }
 
   ngAfterViewInit(): void {
@@ -59,7 +60,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   }
 
   getPartData() {
-    this.partService.getPartById(this.partId).subscribe((part) => {
+    this.partSubscription = this.partService.getPartById(this.partId).subscribe((part) => {
       this.part = this.partService.part;
       this.formPart.patchValue(part);
       console.log(part);
@@ -69,23 +70,14 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   submit() {
   }
 
-  formatPrice() {
-    const price = this.formPart.get('price')!.value;
 
-    if(price) {
-      const formattedValue = price.replace('R$', '').replace(',', '.');
-      this.formPart.get('price')?.setValue(formattedValue);
-      this.formPart.get('price')?.updateValueAndValidity();
-    }
-  }
-
-  update() {
+  async update() {
     const verifyImageWasChanged = this.verifyIfImageWasSelected();
     console.log(verifyImageWasChanged);
     if(verifyImageWasChanged) {
-      this.uploadImage();
+      await this.uploadImage();
     }
-    this.partService.update(this.formPart.value, this.partId).subscribe((part) => {
+    this.partSubscription = this.partService.update(this.formPart.value, this.partId).subscribe((part) => {
       console.log(part);
       this.toastService.presentToast('Parte atualizada com sucesso', 'bottom', 3000, 'success');
     });
@@ -139,6 +131,10 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     }
 
     this.formPart.get('image')?.setValue(image.webviewPath);
+  }
+
+  ngOnDestroy(): void {
+    if(this.partSubscription) this.partSubscription.unsubscribe();
   }
 
 }

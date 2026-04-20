@@ -94,26 +94,32 @@ class OrderController extends Controller
     }
 
     public function getById(int $id)
-{
-    try {
-        // Buscar a ordem de serviço com as partes relacionadas
-        $order = Order::with('parts')->findOrFail($id);
+    {
+        try {
+            // Buscar a ordem de serviço com as partes relacionadas
+            $order = Order::findOrFail($id);
 
-        // Adicionar quantidade e preço para cada parte
-        foreach ($order->parts as $part) {
-            $pivotData = $part->pivot;
-            $part->quantity = $pivotData->quantity;
-            $part->price = $pivotData->price;
-            $part->updated_at = $pivotData->updated_at;
-            unset($part->pivot); // Remover o objeto pivot da parte
+            return response($order);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Não foi possível carregar a ordem de serviço',
+                'error' => $e->getMessage()
+            ], 404);
         }
-
-        return response()->json($order);
-    } catch (Exception $e) {
-        return response()->json([
-            'message' => 'Não foi possível carregar a ordem de serviço',
-            'error' => $e->getMessage()
-        ], 404);
     }
-}
+
+    public function update(int $id, Request $request) {
+        try {
+            $order = Order::findOrFail($id);
+
+            $order->update($request->all());
+
+            return response($order);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Não foi possível atualizar a ordem de serviço',
+                'error' => $e->getMessage()
+            ], 404);
+        }
+    }
 }

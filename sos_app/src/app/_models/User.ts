@@ -1,10 +1,9 @@
-import { Equipment } from "./Equipment";
-import { UserType } from "./UserType";
+import { Equipment } from './Equipment';
+import { UserType } from './UserType';
 
 export interface User {
   id: number;
   name: string;
-  type: UserType;
   email: string;
   address: string;
   cep: string;

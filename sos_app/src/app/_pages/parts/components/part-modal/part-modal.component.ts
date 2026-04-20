@@ -12,7 +12,7 @@ import {
   maskitoAddOnFocusPlugin,
   maskitoPrefixPostprocessorGenerator,
   maskitoRemoveOnBlurPlugin,
-  maskitoNumberOptionsGenerator
+  maskitoNumberOptionsGenerator,
 } from '@maskito/kit';
 import { PhotoService } from 'src/app/_services/photo.service';
 
@@ -21,8 +21,7 @@ import { PhotoService } from 'src/app/_services/photo.service';
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
 })
-export class PartModalComponent  implements OnInit, AfterViewInit, OnDestroy {
-
+export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
   partId!: number;
   part!: Observable<Part>;
   categories!: Observable<Category[]>;
@@ -36,8 +35,8 @@ export class PartModalComponent  implements OnInit, AfterViewInit, OnDestroy {
     thousandSeparator: '.',
   });
 
-readonly maskPredicate: MaskitoElementPredicate = async (el) =>
-  (el as HTMLIonInputElement).getInputElement();
+  readonly maskPredicate: MaskitoElementPredicate = async (el) =>
+    (el as unknown as HTMLIonInputElement).getInputElement();
 
   constructor(
     private modalService: ModalService,
@@ -45,8 +44,8 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     private categoryService: CategoryService,
     private partService: PartService,
     private toastService: ToastService,
-    private photoService: PhotoService
-  ) { }
+    private photoService: PhotoService,
+  ) {}
 
   ngOnInit() {
     this.mountForm();
@@ -54,40 +53,53 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   }
 
   ngAfterViewInit(): void {
-    if(this.partId) {
+    if (this.partId) {
       this.getPartData();
     }
   }
 
   getPartData() {
-    this.partSubscription = this.partService.getPartById(this.partId).subscribe((part) => {
-      this.part = this.partService.part;
-      this.formPart.patchValue(part);
-      console.log(part);
-    })
+    this.partSubscription = this.partService
+      .getPartById(this.partId)
+      .subscribe((part) => {
+        this.part = this.partService.part;
+        this.formPart.patchValue(part);
+        console.log(part);
+      });
   }
 
-  submit() {
-  }
-
+  submit() {}
 
   async update() {
     const verifyImageWasChanged = this.verifyIfImageWasSelected();
     console.log(verifyImageWasChanged);
-    if(verifyImageWasChanged) {
+    if (verifyImageWasChanged) {
       await this.uploadImage();
     }
-    this.partSubscription = this.partService.update(this.formPart.value, this.partId).subscribe((part) => {
-      console.log(part);
-      this.toastService.presentToast('Parte atualizada com sucesso', 'bottom', 3000, 'success');
-    });
+    this.partSubscription = this.partService
+      .update(this.formPart.value, this.partId)
+      .subscribe((part) => {
+        console.log(part);
+        this.toastService.presentToast(
+          'Parte atualizada com sucesso',
+          'bottom',
+          3000,
+          'success',
+        );
+        this.modalService.closeModal();
+      });
   }
 
   async uploadImage() {
     const response = await this.photoService.startUpload();
 
-    if(!response) {
-      this.toastService.presentToast('Nenhum arquivo selecionado', 'bottom', 3000, 'danger');
+    if (!response) {
+      this.toastService.presentToast(
+        'Nenhum arquivo selecionado',
+        'bottom',
+        3000,
+        'danger',
+      );
       return;
     }
     this.formPart.get('image')?.setValue(response.imagePath);
@@ -96,7 +108,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
 
   verifyIfImageWasSelected() {
     let imageBlob = this.formPart.get('image')?.value as string;
-    if(imageBlob.startsWith('blob')) {
+    if (imageBlob.startsWith('blob')) {
       return true;
     }
     return;
@@ -105,7 +117,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   getCategories() {
     this.categoryService.getCategories().subscribe(() => {
       this.categories = this.categoryService.categories;
-    })
+    });
   }
 
   mountForm() {
@@ -115,7 +127,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
       price: ['', [Validators.required]],
       description: [''],
       image: [''],
-      category_id: ['', [Validators.required]]
+      category_id: ['', [Validators.required]],
     });
   }
 
@@ -126,7 +138,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   async selectImage() {
     const image = await this.photoService.selectImage();
 
-    if(!image) {
+    if (!image) {
       return;
     }
 
@@ -134,7 +146,6 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
   }
 
   ngOnDestroy(): void {
-    if(this.partSubscription) this.partSubscription.unsubscribe();
+    if (this.partSubscription) this.partSubscription.unsubscribe();
   }
-
 }

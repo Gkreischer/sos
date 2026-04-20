@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class OrderSeeder extends Seeder
 {
@@ -26,8 +27,8 @@ class OrderSeeder extends Seeder
             'parts_price' => 100.00,
             'service_price' => 100.00,
             'technician_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
     }
 }

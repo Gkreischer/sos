@@ -14,35 +14,39 @@
   <ion-card>
     <ion-card-content>
       <form
-    [formGroup]="categoryForm"
-    (ngSubmit)="this.category ? update() : submit()"
-  >
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-input formControlName="name" placeholder="Nome"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button
-            *ngIf="!category"
-            type="submit"
-            expand="block"
-            [disabled]="!this.categoryForm.valid"
-            >Cadastrar</ion-button
-          >
-          <ion-button
-            *ngIf="category"
-            type="submit"
-            expand="block"
-            [disabled]="!this.categoryForm.valid"
-            >Atualizar</ion-button
-          >
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </form>
+        [formGroup]="categoryForm"
+        (ngSubmit)="this.category ? update() : submit()"
+      >
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                formControlName="name"
+                placeholder="Nome"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                *ngIf="!category"
+                type="submit"
+                expand="block"
+                [disabled]="!this.categoryForm.valid"
+                >Cadastrar</ion-button
+              >
+              <ion-button
+                *ngIf="category"
+                type="submit"
+                expand="block"
+                [disabled]="!this.categoryForm.valid"
+                >Atualizar</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
     </ion-card-content>
   </ion-card>
   <ion-fab *ngIf="category" slot="fixed" vertical="bottom" horizontal="end">

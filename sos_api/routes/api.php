@@ -58,6 +58,7 @@ Route::middleware(['json.response'])->group(function () {
         Route::get('/orders/finished', 'getFinishedOrders');
         Route::get('/orders/develired', 'getDeveliredOrders');
         Route::get('/orders/{id}', 'getById');
+        Route::put('/orders/{id}', 'update');
     });
 
     Route::controller(PartController::class)->group(function() {

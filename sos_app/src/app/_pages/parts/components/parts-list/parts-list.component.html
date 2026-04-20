@@ -1,19 +1,20 @@
-@if(parts | async; as parts) {
-   <ion-card>
+@if (parts | async; as parts) {
+  <ion-card>
     <ion-card-header>
       <ion-card-title>Materiais cadastrados</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        @if(parts.length > 0 ) {
-          @for(part of parts; track $index) {
+        @if (parts.length > 0) {
+          @for (part of parts; track $index) {
             <ion-item button="true" detail="true" (click)="openModalEdit(part)">
               <ion-avatar>
                 <ion-img [src]="part.image"></ion-img>
               </ion-avatar>
               <ion-label class="ion-padding-start">
+                <h3 class="ion-text-bold">{{ part.category.name }}</h3>
                 <h3>{{ part.name }}</h3>
-                <p>{{ part.price | currency : "R$" }}</p>
+                <p>{{ part.price | currency: "R$" }}</p>
               </ion-label>
             </ion-item>
           }
@@ -22,5 +23,5 @@
         }
       </ion-list>
     </ion-card-content>
-   </ion-card>
+  </ion-card>
 }

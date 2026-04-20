@@ -24,7 +24,7 @@ class Part extends Model
     ];
 
     protected $casts = [
-        'price' => 'float',
+        'price' => 'decimal:2',
         'category_id' => 'string',
     ];
 
@@ -45,10 +45,5 @@ class Part extends Model
     public function images()
     {
         return $this->hasMany(Image::class);
-    }
-
-    public function orders() : BelongsToMany
-    {
-        return $this->belongsToMany(Order::class, 'orders_parts', 'part_id', 'order_id')->withPivot('quantity', 'price')->withTimestamps();
     }
 }

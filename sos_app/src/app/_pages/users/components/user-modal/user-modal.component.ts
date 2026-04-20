@@ -1,12 +1,18 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MaskitoElementPredicate, MaskitoOptions } from '@maskito/core';
+import { Observable } from 'rxjs';
+import { Category } from 'src/app/_models/Category';
 import { User } from 'src/app/_models/User';
 import { UserType } from 'src/app/_models/UserType';
 import { AlertService } from 'src/app/_services/alert.service';
+import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { UserService } from 'src/app/_services/user.service';
+import { IonHeader } from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
@@ -14,37 +20,64 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class UserModalComponent implements OnInit {
   user!: User;
+  categories!: Observable<Category[]>;
 
   userForm!: FormGroup;
 
   phoneOptions: MaskitoOptions = {
-    mask: ({value}) => {
-        
+    mask: ({ value }) => {
       const inputValue = value?.replace(/\D/g, '');
 
       if (inputValue.length <= 10) {
-        return ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-      } else {  
-        return ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-      }      
-      
+        return [
+          '(',
+          /\d/,
+          /\d/,
+          ')',
+          ' ',
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          '-',
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+        ];
+      } else {
+        return [
+          '(',
+          /\d/,
+          /\d/,
+          ')',
+          ' ',
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          '-',
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+        ];
+      }
     },
-} as MaskitoOptions;
+  } as MaskitoOptions;
 
-readonly maskPredicate: MaskitoElementPredicate = async (el) =>
-  (el as HTMLIonInputElement).getInputElement();
-
-
+  readonly maskPredicate: MaskitoElementPredicate = async (el) =>
+    (el as unknown as HTMLIonInputElement).getInputElement();
 
   constructor(
     private modalService: ModalService,
     private userService: UserService,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private alertService: AlertService
-    ) {
-    
-  }
+    private alertService: AlertService,
+    private categoryService: CategoryService,
+  ) {}
 
   mountForm() {
     this.userForm = this.fb.group({
@@ -60,28 +93,22 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
       city: [''],
       state: [''],
       type: ['', [Validators.required]],
-      country: ['']
+      country: [''],
     });
   }
 
   ngOnInit() {
     this.mountForm();
     if (this.user) {
-
       this.patchForm();
+      this.getCategories();
     }
   }
 
   patchForm() {
     const user = this.user;
-    user.type = this.convertTypeUserToString();
     this.userForm.patchValue(this.user);
   }
-
-  convertTypeUserToString() {
-    return this.user.type.toString() as unknown as UserType;
-  }
-
 
   closeModal() {
     this.modalService.closeModal();
@@ -94,30 +121,30 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
         'Usuário criado com sucesso!',
         'bottom',
         2000,
-        'success'
+        'success',
       );
-    })
+    });
   }
 
   update() {
     this.userService.updateUser(this.userForm.value, this.user.id).subscribe({
       next: () => {
-          this.closeModal();
-          this.toastService.presentToast(
-            'Usuário criado com sucesso!',
-            'bottom',
-            2000,
-            'success'
-          );
-        },
-        error: () => {
-          this.toastService.presentToast(
-            'Erro ao criar o usuário!',
-            'bottom',
-            2000,
-            'danger'
-          );
-        },
+        this.closeModal();
+        this.toastService.presentToast(
+          'Usuário criado com sucesso!',
+          'bottom',
+          2000,
+          'success',
+        );
+      },
+      error: () => {
+        this.toastService.presentToast(
+          'Erro ao criar o usuário!',
+          'bottom',
+          2000,
+          'danger',
+        );
+      },
     });
   }
 
@@ -140,7 +167,7 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
             this.deleteUser(this.user);
           },
         },
-      ]
+      ],
     );
   }
 
@@ -148,17 +175,23 @@ readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     this.userService.deleteUser(user).subscribe({
       next: (user) => {
         this.closeModal();
-        console.log(user)
+        console.log(user);
         this.toastService.presentToast(
           'Usuário deletado com sucesso!',
           'bottom',
           2000,
-          'success'
+          'success',
         );
       },
       error: (err) => {
         this.toastService.presentToast(err, 'bottom', 2000, 'danger');
       },
+    });
+  }
+
+  getCategories() {
+    this.categoryService.getCategories().subscribe(() => {
+      this.categories = this.categoryService.categories;
     });
   }
 }

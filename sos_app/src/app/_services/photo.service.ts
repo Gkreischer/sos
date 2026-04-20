@@ -33,6 +33,10 @@ export class PhotoService {
       resultType: CameraResultType.Uri, // file-based data; provides best performance
       source: CameraSource.Prompt, // automatically take a new photo with the camera
       quality: 100, // highest quality (0 to 100)
+      promptLabelCancel: 'Cancelar',
+      promptLabelPhoto: 'Selecionar foto',
+      promptLabelPicture: 'Tirar foto',
+      promptLabelHeader: 'Selecione uma opção',
     });
 
     if (!selectedImage) {
@@ -87,56 +91,61 @@ export class PhotoService {
       reader.readAsDataURL(blob);
     });
 
-    public async startUpload(): Promise<{ imagePath: string; message: string } | null> {
-      return new Promise((resolve, reject) => {
-        this.file.subscribe(async (file) => {
-          if (!file) {
-            reject("Nenhum arquivo selecionado");
-            return;
+  public async startUpload(): Promise<{
+    imagePath: string;
+    message: string;
+  } | null> {
+    return new Promise((resolve, reject) => {
+      this.file.subscribe(async (file) => {
+        if (!file) {
+          reject('Nenhum arquivo selecionado');
+          return;
+        }
+
+        try {
+          // Lê o arquivo salvo no diretório
+          const fileData = await Filesystem.readFile({
+            path: file.name,
+            directory: Directory.Data,
+          });
+
+          // Converte de base64 para um blob
+          const byteCharacters = atob(fileData.data as string);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
           }
-    
-          try {
-            // Lê o arquivo salvo no diretório
-            const fileData = await Filesystem.readFile({
-              path: file.name,
-              directory: Directory.Data,
-            });
-    
-            // Converte de base64 para um blob
-            const byteCharacters = atob(fileData.data as string);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: "image/jpeg" });
-    
-            // Cria o FormData e envia a requisição
-            const formData = new FormData();
-            formData.append("image", blob, file.name);
-    
-            console.log("Enviando FormData:", formData);
-    
-            this.http
-              .post<{ imagePath: string; message: string }>(`${environment.baseUrl}/photos`, formData)
-              .pipe(
-                tap((response) => {
-                  console.log("Upload realizado:", response);
-                  resolve(response); // Retorna o objeto para o método que chamou
-                }),
-                catchError((error) => {
-                  console.error("Erro no upload:", error);
-                  reject(error);
-                  return [];
-                })
-              )
-              .subscribe();
-          } catch (error) {
-            console.error("Erro ao ler o arquivo:", error);
-            reject(error);
-          }
-        });
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'image/jpeg' });
+
+          // Cria o FormData e envia a requisição
+          const formData = new FormData();
+          formData.append('image', blob, file.name);
+
+          console.log('Enviando FormData:', formData);
+
+          this.http
+            .post<{ imagePath: string; message: string }>(
+              `${environment.baseUrl}/photos`,
+              formData,
+            )
+            .pipe(
+              tap((response) => {
+                console.log('Upload realizado:', response);
+                resolve(response); // Retorna o objeto para o método que chamou
+              }),
+              catchError((error) => {
+                console.error('Erro no upload:', error);
+                reject(error);
+                return [];
+              }),
+            )
+            .subscribe();
+        } catch (error) {
+          console.error('Erro ao ler o arquivo:', error);
+          reject(error);
+        }
       });
-    }
-    
+    });
+  }
 }

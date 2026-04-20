@@ -13,13 +13,16 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      <form [formGroup] = "formPart" (ngSubmit)="!part ? submit() : update()">
+      <form [formGroup]="formPart" (ngSubmit)="!part ? submit() : update()">
         <ion-grid>
-          @if(this.formPart.get('image')?.value) {
+          @if (this.formPart.get("image")?.value) {
             <ion-row>
               <ion-col>
                 <ion-card>
-                  <ion-img [src]="formPart.get('image')?.value"></ion-img>
+                  <ion-img
+                    width="25%"
+                    [src]="formPart.get('image')?.value"
+                  ></ion-img>
                 </ion-card>
               </ion-col>
             </ion-row>
@@ -34,20 +37,42 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input labelPlacement="floating" label="Nome" formControlName="name"></ion-input>
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
+                label="Nome"
+                formControlName="name"
+              ></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input [maskito]="currencyOptions" [maskitoElement]="maskPredicate"  labelPlacement="floating" label="Preço"  formControlName="price" type="string"></ion-input>
+              <ion-input
+                [maskito]="currencyOptions"
+                [maskitoElement]="maskPredicate"
+                labelPlacement="floating"
+                label="Preço"
+                formControlName="price"
+                type="string"
+                fill="outline"
+              ></ion-input>
             </ion-col>
           </ion-row>
           @if (categories | async; as categories) {
             <ion-row>
               <ion-col>
-                <ion-select label="Categoria" labelPlacement="floating" formControlName="category_id" okText="Confirmar" cancelText="Cancelar">
-                  @for(category of categories; track $index) {
-                    <ion-select-option value="{{ category.id }}">{{ category.name }}</ion-select-option>
+                <ion-select
+                  label="Categoria"
+                  labelPlacement="floating"
+                  formControlName="category_id"
+                  okText="Confirmar"
+                  cancelText="Cancelar"
+                  fill="outline"
+                >
+                  @for (category of categories; track $index) {
+                    <ion-select-option value="{{ category.id }}">{{
+                      category.name
+                    }}</ion-select-option>
                   }
                 </ion-select>
               </ion-col>
@@ -55,15 +80,31 @@
           }
           <ion-row>
             <ion-col>
-              <ion-textarea labelPlacement="floating" rows="5" label="Descrição"  formControlName="description"></ion-textarea>
+              <ion-textarea
+                labelPlacement="floating"
+                rows="5"
+                label="Descrição"
+                formControlName="description"
+                fill="outline"
+              ></ion-textarea>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              @if(!partId) {
-                <ion-button expand="block" type="submit" [disabled]="!formPart.valid">Salvar</ion-button>
+              @if (!partId) {
+                <ion-button
+                  expand="block"
+                  type="submit"
+                  [disabled]="!formPart.valid"
+                  >Salvar</ion-button
+                >
               } @else {
-                <ion-button expand="block" type="submit" [disabled]="!formPart.valid">Atualizar</ion-button>
+                <ion-button
+                  expand="block"
+                  type="submit"
+                  [disabled]="!formPart.valid"
+                  >Atualizar</ion-button
+                >
               }
             </ion-col>
           </ion-row>
@@ -71,5 +112,4 @@
       </form>
     </ion-card-content>
   </ion-card>
-  
 </ion-content>

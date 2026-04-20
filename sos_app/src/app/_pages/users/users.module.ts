@@ -20,7 +20,7 @@ import { UsersListComponent } from './components/users-list/users-list.component
     UsersPageRoutingModule,
     PipesModule,
     ReactiveFormsModule,
-    MaskitoDirective
+    MaskitoDirective,
   ],
   declarations: [UsersPage, UsersListComponent, UserModalComponent],
 })

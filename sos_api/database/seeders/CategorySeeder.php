@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 class CategorySeeder extends Seeder
 {
     /**
@@ -22,8 +22,8 @@ class CategorySeeder extends Seeder
             ],
             [
                 'name' => 'Notebook',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
         ]);
     }

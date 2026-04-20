@@ -8,18 +8,17 @@ import { OrderStatus } from 'src/app/_models/OrderStatus';
   templateUrl: './order-categories.component.html',
   styleUrls: ['./order-categories.component.scss'],
 })
-export class OrderCategoriesComponent  implements OnInit {
-
-  status!: Order['status'];
+export class OrderCategoriesComponent implements OnInit {
+  status!: Order['order_status'];
   @Output() statusSelected = new EventEmitter<OrderStatus>();
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
 
   selectStatusOrders(event: Event) {
     let value = (event.target as SegmentChangeEventDetail).value!.toString();
-    switch(value) {
+    switch (value) {
       case 'opened':
         this.status = OrderStatus.CREATED;
         break;
@@ -30,9 +29,8 @@ export class OrderCategoriesComponent  implements OnInit {
 
       case 'finished':
         this.status = OrderStatus.FINISHED;
-      break;
+        break;
     }
     this.statusSelected.emit(this.status);
   }
-
 }

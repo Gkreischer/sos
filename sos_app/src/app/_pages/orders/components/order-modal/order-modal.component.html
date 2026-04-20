@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title *ngIf="!orderId">Adicionar Ordem de Serviço</ion-title>
-    <ion-title *ngIf="orderId">Editar Ordem de Serviço</ion-title>
+    <ion-title *ngIf="orderId">Atualizar Ordem de Serviço</ion-title>
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -14,28 +14,36 @@
   {{ orderForm.value | json }}
   <ion-grid>
     <ion-row>
-      <ion-col size="12" [sizeLg]="orderReceived ? 6 : 12">
+      <ion-col size="12">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Informações</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <form [formGroup]="orderForm" (ngSubmit)="!orderId ? submit() : update()">
+            <form
+              [formGroup]="orderForm"
+              (ngSubmit)="!orderId ? submit() : update()"
+            >
               <ion-grid>
                 <ion-row>
                   <ion-col>
                     <ion-list>
                       <ion-item
+                        fill="outline"
                         lines="none"
                         detail="true"
                         button="true"
                         [disabled]="orderReceived"
                         (click)="selectClientId()"
                       >
-                        <ion-label *ngIf="!clientSelected"
+                        <ion-label
+                          class="ion-padding-start"
+                          *ngIf="!clientSelected"
                           >Selecionar o cliente</ion-label
                         >
-                        <ion-label *ngIf="clientSelected"
+                        <ion-label
+                          *ngIf="clientSelected"
+                          class="ion-padding-start"
                           ><span class="ion-text-bold">Cliente:</span>
                           {{ clientSelected.name }}</ion-label
                         >
@@ -43,21 +51,22 @@
                     </ion-list>
                   </ion-col>
                 </ion-row>
-                <ion-row *ngIf="equipments$">
+                <ion-row>
                   <ion-col>
                     <ion-select
+                      *ngIf="equipments$"
+                      fill="outline"
                       formControlName="equipment_id"
                       labelPlacement="floating"
                       label="Equipamento"
                       okText="confirmar"
                       cancelText="cancelar"
-                      
                     >
                       <ion-select-option
                         *ngFor="
                           let equipment of equipments$ | async as equipments
                         "
-                        value="{{ equipment.id }}"
+                        [value]="orderReceived && orderReceived.equipment_id"
                         >{{ equipment.name }}</ion-select-option
                       >
                     </ion-select>
@@ -70,6 +79,7 @@
                       placeholder="Título"
                       label="Título da OS"
                       labelPlacement="floating"
+                      fill="outline"
                     ></ion-input>
                   </ion-col>
                 </ion-row>
@@ -81,6 +91,7 @@
                       label="Descrição"
                       labelPlacement="floating"
                       rows="8"
+                      fill="outline"
                     ></ion-textarea>
                   </ion-col>
                 </ion-row>
@@ -91,20 +102,24 @@
                       label="Observação"
                       labelPlacement="floating"
                       rows="5"
+                      fill="outline"
                     ></ion-textarea>
                   </ion-col>
                 </ion-row>
                 <ion-row>
                   <ion-col>
-                    <ion-button expand="block" color="primary"
-                      >{{ !orderId ? "Cadastrar" : "Editar" }}</ion-button
-                    >
+                    <ion-button type="submit" expand="block" color="primary">{{
+                      !orderId ? "Cadastrar" : "Atualizar"
+                    }}</ion-button>
                   </ion-col>
                 </ion-row>
-                @if(orderReceived) {
+                @if (orderReceived) {
                   <ion-row>
                     <ion-col>
-                      <ion-button expand="block" color="danger" (click)="showAlertCancelOrder()"
+                      <ion-button
+                        expand="block"
+                        color="danger"
+                        (click)="showAlertCancelOrder()"
                         >Encerrar</ion-button
                       >
                     </ion-col>
@@ -115,49 +130,98 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      @if(orderReceived && orderReceived.parts.length > 0) {
-      <ion-col size="12" sizeLg="6">
-        <ion-card color="warning">
-          <ion-card-header>
-            <ion-card-title>Peças orçadas</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col size="12">
-                  <ion-list>
-                    @for (part of orderReceived.parts; track $index )
-                    {
-                    <ion-item class="ion-padding-start">
-                      
-                      <ion-label>{{ part.name }}</ion-label>
-                      <ion-note slot="end">{{ part.quantity }} X</ion-note>
-                      <ion-note slot="end">{{ part.price | currency : "R$" }}</ion-note>
-                      <ion-buttons slot="end">
-                        <ion-button color="danger" fill="clear">
-                          <ion-icon name="trash" color="danger"></ion-icon>
-                        </ion-button>
-                      </ion-buttons>
-                    </ion-item>
-                    }
-                  </ion-list>
-                  <p>
-                    Valor total das peças:
-                    {{ orderReceived.parts_price | currency : "R$" }}
-                  </p>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col>
-                  <ion-button color="secondary" expand="block" type="button" (click)="openModalAddPart()">Adicionar material</ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
+      @if (orderReceived && orderReceived.order_parts.length > 0) {
+        <ion-col size="12">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Peças orçadas</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-list lines="none">
+                      <form [formGroup]="orderForm">
+                        <table formArrayName="parts">
+                          <thead>
+                            <tr>
+                              <td scope="col">Nome da peça</td>
+                              <td scope="col"></td>
+                              <td scope="col">Quantidade</td>
+                              <td scope="col">Preço unitário</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (
+                              part of parts.controls;
+                              let i = $index;
+                              track i
+                            ) {
+                              <tr [formGroupName]="i">
+                                <td>
+                                  <ion-input
+                                    [value]="part.value.name"
+                                    labelPlacement="floating"
+                                    disabled
+                                    fill="outline"
+                                  ></ion-input>
+                                </td>
+
+                                <td with="20px">X</td>
+
+                                <td>
+                                  <ion-input
+                                    (change)="this.patchFormTotalPrice()"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    formControlName="quantity"
+                                    fill="outline"
+                                  >
+                                  </ion-input>
+                                </td>
+
+                                <td>
+                                  {{ part.value.price | currency: "R$" }}
+                                </td>
+
+                                <td slot="end">
+                                  <ion-button
+                                    color="danger"
+                                    (click)="removePart(i)"
+                                  >
+                                    <ion-icon name="trash"></ion-icon>
+                                  </ion-button>
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </form>
+                    </ion-list>
+                    <p>
+                      <span class="ion-text-bold">Valor total das peças:</span>
+                      {{ totalPartsPrice | currency: "R$" }}
+                    </p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-button
+                      color="secondary"
+                      expand="block"
+                      type="button"
+                      [disabled]="this.orderForm.get('parts')?.invalid"
+                      (click)="openModalAddPart()"
+                      >Adicionar material</ion-button
+                    >
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
       }
-      
     </ion-row>
   </ion-grid>
 </ion-content>

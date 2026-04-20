@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
+use Carbon\Carbon;
 class UserSeeder extends Seeder
 {
     /**
@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
                 'name' => 'admin',
                 'email' => 'admin@localhost',
                 'password' => Hash::make('teste123'),
-                'type' => 100,
                 'cpf' => '14065716799',
                 'fantasy_name' => 'GK Informática',
                 'corporate_name' => 'GkInfo Serviços',
@@ -33,8 +32,8 @@ class UserSeeder extends Seeder
                 'state' => 'SP',
                 'country' => 'Brasil',
                 'image' => 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745',
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
 
         ]);

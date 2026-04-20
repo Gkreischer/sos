@@ -14,12 +14,16 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-searchbar (ionInput)="search($event)" placeholder="Insira o nome ou categoria" [debounce]="500"></ion-searchbar>
+          <ion-searchbar
+            (ionInput)="search($event)"
+            placeholder="Insira o nome ou categoria"
+            [debounce]="500"
+          ></ion-searchbar>
         </ion-col>
       </ion-row>
     </ion-grid>
   </form>
-  @if(parts) {
+  @if (parts) {
     <ion-grid>
       <ion-row>
         <ion-col>
@@ -29,15 +33,30 @@
       <ion-row>
         <ion-col>
           <ion-list>
-            @for(part of (parts | async); track $index) {
-              <ion-item button="true" detail="true" detail="true" detailIcon="add-circle" (click)="addPart(part)">
+            @for (part of parts | async; track $index) {
+              <ion-item
+                button="true"
+                detail="true"
+                detail="true"
+                detailIcon="add-circle"
+                (click)="addPart(part)"
+              >
                 <ion-label class="ion-padding-horizontal">
+                  <h3 class="ion-text-bold">{{ part.category.name }}</h3>
                   <h3>{{ part.name }}</h3>
-                  <p slot="end">{{ part.price | currency : "R$" }}</p>
+                  <p slot="end">{{ part.price | currency: "R$" }}</p>
                 </ion-label>
               </ion-item>
             }
           </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  } @else {
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-note>Nenhuma peça encontrada</ion-note>
         </ion-col>
       </ion-row>
     </ion-grid>

@@ -16,32 +16,43 @@ const routes: Routes = [
     path: 'categorias',
     loadChildren: () =>
       import('./_pages/categories/categories.module').then(
-        (m) => m.CategoriesPageModule
+        (m) => m.CategoriesPageModule,
       ),
   },
   {
     path: 'equipamentos',
     loadChildren: () =>
       import('./_pages/equipments/equipments.module').then(
-        (m) => m.EquipmentsPageModule
+        (m) => m.EquipmentsPageModule,
       ),
   },
   {
     path: 'usuarios',
-    loadChildren: () => import('./_pages/users/users.module').then( m => m.UsersPageModule)
+    loadChildren: () =>
+      import('./_pages/users/users.module').then((m) => m.UsersPageModule),
   },
   {
     path: 'ordem-servico',
-    loadChildren: () => import('./_pages/orders/order.module').then( m => m.OrderPageModule)
+    loadChildren: () =>
+      import('./_pages/orders/order.module').then((m) => m.OrderPageModule),
   },
   {
     path: 'materiais',
-    loadChildren: () => import('./_pages/parts/parts.module').then( m => m.PartsPageModule)
-  }
-
-
-
-
+    loadChildren: () =>
+      import('./_pages/parts/parts.module').then((m) => m.PartsPageModule),
+  },
+  {
+    path: 'configuracoes',
+    loadChildren: () =>
+      import('./_pages/settings/settings.module').then(
+        (m) => m.SettingsPageModule,
+      ),
+  },
+  {
+    path: 'imprimir/:id',
+    loadChildren: () =>
+      import('./_pages/print/print.module').then((m) => m.PrintPageModule),
+  },
 ];
 
 @NgModule({

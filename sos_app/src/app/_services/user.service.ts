@@ -14,19 +14,14 @@ const httpOptions = {
 })
 export class UserService {
   usersSubject = new BehaviorSubject<User[]>([]);
-  staffSubject = new BehaviorSubject<User[]>([]);
 
   constructor(
     private httpClient: HttpClient,
-    private errorService: ErrorService
+    private errorService: ErrorService,
   ) {}
 
   get users() {
     return this.usersSubject.asObservable();
-  }
-
-  get staff() {
-    return this.staffSubject.asObservable();
   }
 
   getUsers() {
@@ -36,64 +31,37 @@ export class UserService {
         tap((users) => {
           return this.usersSubject.next(users);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 
-  getStaffUsers() {
+  getUserByDesc(description: string) {
     return this.httpClient
-      .get<User[]>(`${environment.baseUrl}/users/staff`, httpOptions)
-      .pipe(
-        tap((users) => {
-          return this.staffSubject.next(users);
-        }),
-        catchError(this.errorService.handleError)
-      );
-  }
-
-  getUser(user: User, id: number) {
-    return this.httpClient
-      .get<User>(`${environment.baseUrl}/users/${id}`, httpOptions)
+      .post<
+        User[]
+      >(`${environment.baseUrl}/users/description/${description}`, description, httpOptions)
       .pipe(
         tap((user) => {
-          return user;
+          return this.usersSubject.next(user);
         }),
-        catchError(this.errorService.handleError)
-      );
-  }
-
-  getUserByName(userName: string) {
-    return this.httpClient
-      .post<User>(
-        `${environment.baseUrl}/users/name/${userName}`,
-        { name: userName },
-        httpOptions
-      )
-      .pipe(
-        tap((user) => {
-          return user;
-        }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 
   addUser(user: User) {
-    return this.httpClient.post<User>(
-      `${environment.baseUrl}/users/add`,
-      user,
-      httpOptions
-    )
-    .pipe(
-      tap((userReceived) => {
-        const newUsers = [userReceived, ...this.usersSubject.value];
-        return this.usersSubject.next(newUsers);
-      }),
-      catchError(this.errorService.handleError)
-    )
+    return this.httpClient
+      .post<User>(`${environment.baseUrl}/users/add`, user, httpOptions)
+      .pipe(
+        tap((userReceived) => {
+          const newUsers = [userReceived, ...this.usersSubject.value];
+          return this.usersSubject.next(newUsers);
+        }),
+        catchError(this.errorService.handleError),
+      );
   }
 
   updateUser(user: User, id: number) {
-    console.log(`${environment.baseUrl}/users/${id}`)
+    console.log(`${environment.baseUrl}/users/${id}`);
     return this.httpClient
       .put<User>(`${environment.baseUrl}/users/${id}`, user, httpOptions)
       .pipe(
@@ -103,13 +71,12 @@ export class UserService {
               return userReceived;
             }
             return user;
-          })
+          });
 
           return this.usersSubject.next(newUsers);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
-    
   }
 
   deleteUser(user: User) {
@@ -118,11 +85,11 @@ export class UserService {
       .pipe(
         tap(() => {
           const newUsers = this.usersSubject.value.filter(
-            (userListItem) => userListItem.id !== user.id
+            (userListItem) => userListItem.id !== user.id,
           );
           this.usersSubject.next(newUsers);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 }

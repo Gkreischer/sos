@@ -155,7 +155,34 @@ table {
 }
 
 ion-input,
-ion-textarea,
-ion-select {
+ion-textarea {
   --color: black !important;
+}
+
+ion-select::part(text) {
+  color: black;
+}
+
+.full-button {
+  height: 100%;
+  margin: 0;
+}
+
+.full-modal {
+  width: 100%;
+  --width: 100%;
+  --max-width: 100%;
+}
+
+ion-modal {
+  --backdrop-opacity: 0.6 !important;
+}
+
+ion-list {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+hr {
+  background-color: black;
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\BrlDecimalCast;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,9 +16,9 @@ class Order extends Model
     use HasFactory;
 
 
-    protected $with = ['user', 'equipment', 'orderParts', 'images', 'status'];
+    protected $with = ['user', 'equipment', 'orderParts', 'images', 'status', 'technician'];
 
-    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', ];
+    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount'];
 
     public function user() : BelongsTo
     {
@@ -42,4 +44,17 @@ class Order extends Model
     {
         return $this->belongsTo(OrderStatus::class);
     }
+
+    public function technician() : BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    protected $casts = [
+        'discount' => BrlDecimalCast::class,
+        'service_price' => BrlDecimalCast::class,
+        'parts_price' => 'decimal:2',
+        'total_price' => 'decimal:2',
+    ];
+
 }

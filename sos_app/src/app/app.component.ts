@@ -12,6 +12,7 @@ export class AppComponent {
     { title: 'Materiais', url: '/materiais', icon: 'hardware-chip' },
     { title: 'Ordem de Serviço', url: '/ordem-servico', icon: 'layers' },
     { title: 'Usuários', url: '/usuarios', icon: 'people' },
+    { title: 'Configurações', url: '/configuracoes', icon: 'settings' },
   ];
   constructor() {}
 }

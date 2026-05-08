@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Category } from 'src/app/_models/Category';
 import { Equipment } from 'src/app/_models/Equipment';
 import { User } from 'src/app/_models/User';
+import { UsersListComponent } from 'src/app/_pages/users/components/users-list/users-list.component';
 import { CategoryService } from 'src/app/_services/category.service';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -25,7 +26,7 @@ export class EquipmentModalComponent implements OnInit {
     private categoryService: CategoryService,
     private equipmentService: EquipmentService,
     private toastService: ToastService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
@@ -70,7 +71,7 @@ export class EquipmentModalComponent implements OnInit {
             'Equipamento editado com sucesso!',
             'bottom',
             2000,
-            'success'
+            'success',
           );
         },
         error: () => {
@@ -78,7 +79,7 @@ export class EquipmentModalComponent implements OnInit {
             'Erro ao criar equipamento!',
             'bottom',
             2000,
-            'danger'
+            'danger',
           );
         },
       });
@@ -92,7 +93,7 @@ export class EquipmentModalComponent implements OnInit {
           'Equipamento criado com sucesso!',
           'bottom',
           2000,
-          'success'
+          'success',
         );
       },
       error: () => {
@@ -100,7 +101,7 @@ export class EquipmentModalComponent implements OnInit {
           'Erro ao criar equipamento!',
           'bottom',
           2000,
-          'danger'
+          'danger',
         );
       },
     });
@@ -110,29 +111,21 @@ export class EquipmentModalComponent implements OnInit {
     return this.formEquipment.get('user_name')?.value;
   }
 
-  searchClient() {
-    let clientName = this.clientName;
-    console.log(clientName);
+  async searchClient() {
+    let modalSelectUser = await this.modalService.openModal(
+      UsersListComponent,
+      {
+        returnClientIdMode: true,
+      },
+    );
 
-    if (clientName.length == 0) {
+    if (!modalSelectUser) {
       return;
     }
-    this.userService.getUserByName(clientName).subscribe((user) => {
-      console.log('recebido', user);
 
-      if (!user) {
-        this.toastService.presentToast(
-          'Usuário não encontrado',
-          'bottom',
-          2000,
-          'warning'
-        );
-        this.formEquipment.get('user_name')?.patchValue('');
-        this.formEquipment.get('user_id')?.patchValue(null);
-        return;
-      }
-
-      this.formEquipment.get('user_id')?.patchValue(user.id.toString());
-    });
+    this.formEquipment
+      .get('user_id')
+      ?.patchValue(modalSelectUser.id.toString());
+    this.formEquipment.get('user_name')?.patchValue(modalSelectUser.name);
   }
 }

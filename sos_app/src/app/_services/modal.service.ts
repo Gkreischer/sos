@@ -7,10 +7,11 @@ import { ModalController } from '@ionic/angular';
 export class ModalService {
   constructor(private modalController: ModalController) {}
 
-  async openModal(component: any, props?: Object) {
+  async openModal(component: any, props?: Object, cssClass?: string) {
     const modal = await this.modalController.create({
       component: component,
       componentProps: props,
+      cssClass: `${cssClass}`,
     });
     modal.present();
 

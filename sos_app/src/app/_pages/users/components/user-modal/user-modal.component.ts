@@ -1,7 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MaskitoElementPredicate, MaskitoOptions } from '@maskito/core';
+import {
+  MaskitoElementPredicate,
+  MaskitoOptions,
+  maskitoTransform,
+} from '@maskito/core';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/_models/Category';
 import { User } from 'src/app/_models/User';
@@ -12,6 +16,10 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { UserService } from 'src/app/_services/user.service';
 import { IonHeader } from '@ionic/angular/standalone';
+import { cnpjMask } from 'src/app/_masks/cnpjMask';
+import { phoneMask } from 'src/app/_masks/phoneMask';
+import { cepMask } from 'src/app/_masks/cepMask';
+import { cpfMask } from 'src/app/_masks/cpfMask';
 
 @Component({
   selector: 'app-user-modal',
@@ -24,48 +32,10 @@ export class UserModalComponent implements OnInit {
 
   userForm!: FormGroup;
 
-  phoneOptions: MaskitoOptions = {
-    mask: ({ value }) => {
-      const inputValue = value?.replace(/\D/g, '');
-
-      if (inputValue.length <= 10) {
-        return [
-          '(',
-          /\d/,
-          /\d/,
-          ')',
-          ' ',
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          '-',
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-        ];
-      } else {
-        return [
-          '(',
-          /\d/,
-          /\d/,
-          ')',
-          ' ',
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          '-',
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-        ];
-      }
-    },
-  } as MaskitoOptions;
+  cnpjMask = cnpjMask;
+  phoneMask = phoneMask;
+  cepMask = cepMask;
+  cpfMask = cpfMask;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
@@ -107,6 +77,9 @@ export class UserModalComponent implements OnInit {
 
   patchForm() {
     const user = this.user;
+    this.user.cpf = maskitoTransform(this.user.cpf, cpfMask);
+    this.user.cnpj = maskitoTransform(this.user.cnpj, cnpjMask);
+    this.user.cep = maskitoTransform(this.user.cep, cepMask);
     this.userForm.patchValue(this.user);
   }
 

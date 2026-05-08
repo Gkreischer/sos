@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Equipment;
+use App\Models\Order;
 use Illuminate\Database\Seeder;
 use App\Models\Part;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,11 +22,11 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        
+        Category::factory()->count(10)->create();
+        User::factory()->count(20)->create();
 
-        $this->call([
-            UserSeeder::class,
-            CategorySeeder::class,
-        ]);
+        Equipment::factory()->count(50)->create();
 
         // Chame o seeder de Part após CategorySeeder
         Part::factory()->count(50)->create();
@@ -30,9 +34,16 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EquipmentSeeder::class,
             ImageSeeder::class,
+            OrderStatusSeeder::class,
             OrderSeeder::class,
             OrderPartSeeder::class,
-            OrderStatusSeeder::class,
+        ]);
+
+        
+        Order::factory()->count(20)->create();
+
+        $this->call([
+            RolesAndPermissionsSeeder::class,
         ]);
     }
 }

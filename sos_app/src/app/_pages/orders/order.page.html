@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content color="light">
-  <app-order-categories (statusSelected)="filterByStatus($event)"></app-order-categories>
-  <app-orders-list [orderStatus]="statusFilter"></app-orders-list>
+  <app-order-filter></app-order-filter>
+  <app-orders-list></app-orders-list>
 </ion-content>
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button class="ion-margin-end" (click)="addOrder()">

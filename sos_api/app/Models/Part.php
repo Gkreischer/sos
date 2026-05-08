@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\BrlDecimalCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,18 +25,9 @@ class Part extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
+        'price' => BrlDecimalCast::class,
         'category_id' => 'string',
     ];
-
-    protected function price() : Attribute
-    {
-        return Attribute::make(
-            // Remove R$ from the price and change the decimal separator to a dot
-            get: fn (string $value) => $value,
-            set: fn (string $value) => trim(preg_replace('/R\$/', '', $value)),
-        );
-    }
 
     public function category()
     {
@@ -45,5 +37,9 @@ class Part extends Model
     public function images()
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function order() {
+        return $this->belongsToMany(Order::class, 'orders_parts');
     }
 }

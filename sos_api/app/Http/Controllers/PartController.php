@@ -46,7 +46,7 @@ class PartController extends Controller
     {
 
         try {
-            $parts = Part::all();
+            $parts = Part::orderBy('created_at', 'desc')->get();
 
             return response($parts);
         } catch (Exception $e) {

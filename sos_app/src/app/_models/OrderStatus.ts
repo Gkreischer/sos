@@ -1,6 +1,5 @@
-export enum OrderStatus {
-  CREATED = 0,
-  IN_PROGRESS = 1,
-  FINISHED = 2,
-  DELIVERED = 3,
+export interface OrderStatus {
+  id: number;
+  name: string;
+  description: string;
 }

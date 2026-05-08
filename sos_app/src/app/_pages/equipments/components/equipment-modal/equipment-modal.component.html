@@ -14,81 +14,94 @@
   <ion-card>
     <ion-card-content>
       <form
-    [formGroup]="formEquipment"
-    (ngSubmit)="this.equipment ? update() : submit()"
-  >
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-input
-            type="text"
-            formControlName="user_name"
-            label="Nome do cliente"
-            labelPlacement="floating"
-            (ionChange)="searchClient()"
-          ></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input
-            type="text"
-            formControlName="name"
-            label="Nome do equipamento"
-            labelPlacement="floating"
-          ></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-select
-            *ngIf="categories | async as categories"
-            label="Categoria"
-            formControlName="category_id"
-            labelPlacement="floating"
-            okText="Confirmar"
-            cancelText="Cancelar"
-          >
-            <ion-select-option
-              *ngFor="let category of categories"
-              [value]="category.id"
-              >{{ category.name }}</ion-select-option
-            >
-          </ion-select>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-textarea
-            label="Descrição"
-            labelPlacement="floating"
-            formControlName="description"
-            rows="5"
-          ></ion-textarea>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-textarea
-            label="Observação"
-            labelPlacement="floating"
-            formControlName="obs"
-            rows="5"
-          ></ion-textarea>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button *ngIf="!equipment" type="submit" expand="block"
-            >Cadastrar</ion-button
-          >
-          <ion-button *ngIf="equipment" type="submit" expand="block"
-            >Editar</ion-button
-          >
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </form>
+        [formGroup]="formEquipment"
+        (ngSubmit)="this.equipment ? update() : submit()"
+      >
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                type="text"
+                formControlName="user_name"
+                label="Nome do cliente"
+                labelPlacement="floating"
+                (click)="searchClient()"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                type="text"
+                formControlName="name"
+                label="Nome do equipamento"
+                labelPlacement="floating"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-select
+                *ngIf="categories | async as categories"
+                label="Categoria"
+                formControlName="category_id"
+                labelPlacement="floating"
+                okText="Confirmar"
+                cancelText="Cancelar"
+                fill="outline"
+              >
+                <ion-select-option
+                  *ngFor="let category of categories"
+                  [value]="category.id"
+                  >{{ category.name }}</ion-select-option
+                >
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-textarea
+                label="Descrição"
+                labelPlacement="floating"
+                formControlName="description"
+                rows="5"
+                fill="outline"
+              ></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-textarea
+                fill="outline"
+                label="Observação"
+                labelPlacement="floating"
+                formControlName="obs"
+                rows="5"
+              ></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                *ngIf="!equipment"
+                type="submit"
+                expand="block"
+                [disabled]="!this.formEquipment.valid"
+                >Cadastrar</ion-button
+              >
+              <ion-button
+                *ngIf="equipment"
+                type="submit"
+                expand="block"
+                [disabled]="!this.formEquipment.valid"
+                >Editar</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -4,6 +4,7 @@ import { Order } from '../_models/Order';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
+import { OrderFilter } from '../_models/OrderFilter';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -32,31 +33,18 @@ export class OrderService {
     return this.orderSubject.asObservable();
   }
 
-  getOrdersStatusOpened() {
+  getAll() {
     return this.http
-      .get<Order[]>(`${environment.baseUrl}/orders/opened`, httpOptions)
+      .get<Order[]>(`${environment.baseUrl}/orders`, httpOptions)
       .pipe(
-        tap((res) => {
-          return this.ordersSubject.next(res);
-        }),
+        tap((res) => this.ordersSubject.next(res)),
         catchError(this.errorService.handleError),
       );
   }
 
-  getOrdersStatusInProgress() {
+  getOrderByFilter(orderFilter: OrderFilter) {
     return this.http
-      .get<Order[]>(`${environment.baseUrl}/orders/in-progress`, httpOptions)
-      .pipe(
-        tap((res) => {
-          return this.ordersSubject.next(res);
-        }),
-        catchError(this.errorService.handleError),
-      );
-  }
-
-  getOrdersStatusFinished() {
-    return this.http
-      .get<Order[]>(`${environment.baseUrl}/orders/finished`, httpOptions)
+      .post<Order[]>(`${environment.baseUrl}/orders/search`, orderFilter)
       .pipe(
         tap((res) => {
           return this.ordersSubject.next(res);
@@ -81,7 +69,34 @@ export class OrderService {
       .put<Order>(`${environment.baseUrl}/orders/${id}`, order, httpOptions)
       .pipe(
         tap((res) => {
-          return this.orderSubject.next(res);
+          console.log('recebendo res', res);
+          const orders = this.ordersSubject.getValue();
+
+          const updatedOrders = orders.map((order) => {
+            if (order.id === id) {
+              return res;
+            }
+
+            return order;
+          });
+
+          this.ordersSubject.next(updatedOrders);
+          this.orderSubject.next(res);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  create(order: Order) {
+    return this.http
+      .post<Order>(`${environment.baseUrl}/orders`, order, httpOptions)
+      .pipe(
+        tap((res) => {
+          console.log('recebendo res', res);
+          const orders = this.ordersSubject.getValue();
+          orders.push(res);
+          this.ordersSubject.next(orders);
+          this.orderSubject.next(res);
         }),
         catchError(this.errorService.handleError),
       );

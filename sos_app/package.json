@@ -34,8 +34,10 @@
     "@ionic/pwa-elements": "^3.3.0",
     "@maskito/angular": "^2.3.2",
     "@maskito/core": "^2.3.2",
+    "@maskito/kit": "^2.3.2",
     "@maskito/phone": "^2.3.2",
     "ionicons": "^7.0.0",
+    "ngx-print": "1.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

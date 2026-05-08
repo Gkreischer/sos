@@ -1,0 +1,169 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Dados do seu negócio</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      {{ form.value | json }}
+      <form
+        [formGroup]="form"
+        (ngSubmit)="businessAlreadyExists ? update() : submit()"
+      >
+        <ion-grid>
+          @if (this.form.get("image")?.value) {
+            <ion-row>
+              <ion-col>
+                <ion-card>
+                  <ion-img
+                    width="25%"
+                    [src]="form.get('image')?.value"
+                  ></ion-img>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          }
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-button (click)="selectImage()">
+                <ion-icon name="camera"></ion-icon>
+                <ion-label>Selecionar foto</ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Nome"
+                formControlName="name"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                [maskito]="cnpjMask"
+                [maskitoElement]="maskPredicate"
+                labelPlacement="floating"
+                fill="outline"
+                label="CNPJ"
+                formControlName="cnpj"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Email"
+                formControlName="email"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                type="url"
+                labelPlacement="floating"
+                fill="outline"
+                label="Site"
+                formControlName="website"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Telefone"
+                formControlName="phone"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" sizeXl="10">
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Endereço"
+                formControlName="address"
+              ></ion-input>
+            </ion-col>
+            <ion-col size="12" sizeXl="2">
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Número"
+                formControlName="address_number"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                [maskito]="cepMask"
+                [maskitoElement]="maskPredicate"
+                labelPlacement="floating"
+                fill="outline"
+                label="CEP"
+                formControlName="cep"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Cidade"
+                formControlName="city"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="Estado"
+                formControlName="state"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                labelPlacement="floating"
+                fill="outline"
+                label="País"
+                formControlName="country"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                expand="block"
+                type="submit"
+                [disabled]="form.invalid"
+              >
+                Salvar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

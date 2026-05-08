@@ -11,54 +11,38 @@
 
 <ion-content>
   <form>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-searchbar
-            (ionInput)="search($event)"
-            placeholder="Insira o nome ou categoria"
-            [debounce]="500"
-          ></ion-searchbar>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-searchbar
+      (ionInput)="search($event)"
+      placeholder="Insira o nome ou categoria"
+      [debounce]="500"
+    ></ion-searchbar>
   </form>
   @if (parts) {
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-note>Selecione abaixo a peça desejada</ion-note>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            @for (part of parts | async; track $index) {
-              <ion-item
-                button="true"
-                detail="true"
-                detail="true"
-                detailIcon="add-circle"
-                (click)="addPart(part)"
-              >
-                <ion-label class="ion-padding-horizontal">
-                  <h3 class="ion-text-bold">{{ part.category.name }}</h3>
-                  <h3>{{ part.name }}</h3>
-                  <p slot="end">{{ part.price | currency: "R$" }}</p>
-                </ion-label>
-              </ion-item>
-            }
-          </ion-list>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  } @else {
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-note>Nenhuma peça encontrada</ion-note>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Peças</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          @for (part of parts | async; track $index) {
+            <ion-item
+              button="true"
+              detail="true"
+              detail="true"
+              detailIcon="add-circle"
+              (click)="addPart(part)"
+            >
+              <ion-label class="ion-padding-horizontal">
+                <h3 class="ion-text-bold">{{ part.category.name }}</h3>
+                <h3>{{ part.name }}</h3>
+                <p slot="end">{{ part.price | currency: "R$" }}</p>
+              </ion-label>
+            </ion-item>
+          } @empty {
+            Nenhuma peça encontrada
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   }
 </ion-content>

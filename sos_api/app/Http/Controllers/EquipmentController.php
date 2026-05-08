@@ -14,9 +14,17 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        $equipments = Equipment::all();
+        try
+        {
+            $equipments = Equipment::orderBy('created_at', 'desc')->get();
     
-        return response($equipments, 200);
+            return response($equipments, 200);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar as equipamentos',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }   
 
     /**
@@ -33,7 +41,6 @@ class EquipmentController extends Controller
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
             'description' => 'string|max:255',
-            'image' => 'url|max:255',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -43,7 +50,7 @@ class EquipmentController extends Controller
 
         $equipment = Equipment::create($data);
 
-        $equipment->load(['category',  'user', 'images']);
+        $equipment->load(['category',  'user']);
 
         return response($equipment, 201);
         } 

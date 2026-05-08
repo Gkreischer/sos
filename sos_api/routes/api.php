@@ -1,14 +1,18 @@
 <?php
 
+use App\Http\Controllers\BusinessInfoController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ForceJsonResponse;
+use App\Models\BusinessInfo;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +49,7 @@ Route::middleware(['json.response'])->group(function () {
         Route::get('/users', 'index');
         Route::get('/users/staff', 'getStaffUsers');
         Route::get('/users/{id}', 'show');
-        Route::post('/users/name/{name}', 'getUserByName');
+        Route::post('/users/description/{description}', 'getUserByDescription');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'destroy');
         Route::post('/users/add', 'store');
@@ -53,12 +57,15 @@ Route::middleware(['json.response'])->group(function () {
     
     Route::controller(OrderController::class)->group(function () {
         Route::get('/orders', 'getAll');
+        Route::post('/orders', 'store');
         Route::get('/orders/opened', 'getOpenedOrders');
         Route::get('/orders/in-progress', 'getInProgressOrders');
         Route::get('/orders/finished', 'getFinishedOrders');
         Route::get('/orders/develired', 'getDeveliredOrders');
         Route::get('/orders/{id}', 'getById');
         Route::put('/orders/{id}', 'update');
+        Route::get('/orders/status/{status_id}', 'getOrderByStatus');
+        Route::post('/orders/search', 'searchByFilter');
     });
 
     Route::controller(PartController::class)->group(function() {
@@ -71,6 +78,14 @@ Route::middleware(['json.response'])->group(function () {
     Route::controller(PhotoController::class)->group(function() {
         Route::post('/photos', 'store');
     });
+
+    Route::controller(OrderStatusController::class)->group(function() {
+        Route::get('/order-status', 'index');
+    });
+
+    Route::controller(BusinessInfoController::class)->group(function() {
+        Route::get('/settings/business-info', 'getBusinessInfo');
+        Route::put('/settings/business-info', 'storeBusinessInfo');});
 
     Route::fallback(function () {
         abort(404, 'API resource not found');

@@ -23,8 +23,8 @@ class PartFactory extends Factory
             //
             'name' => $this->faker->name(),
             'description' => $this->faker->sentence(),
-            'image' => $this->faker->imageUrl(),
-            'category_id' => 1,
+            'image' => 'https://picsum.photos/200/300',
+            'category_id' => $this->faker->numberBetween(1, 10),
             'price' => $this->faker->numberBetween(1, 1000),
         ];
     }

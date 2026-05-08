@@ -1,6 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MaskitoElementPredicate, MaskitoOptions } from '@maskito/core';
+import {
+  MaskitoElementPredicate,
+  MaskitoOptions,
+  maskitoTransform,
+} from '@maskito/core';
 import { Observable, Subscription } from 'rxjs';
 import { Category } from 'src/app/_models/Category';
 import { Part } from 'src/app/_models/Part';
@@ -8,13 +12,8 @@ import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { ToastService } from 'src/app/_services/toast.service';
-import {
-  maskitoAddOnFocusPlugin,
-  maskitoPrefixPostprocessorGenerator,
-  maskitoRemoveOnBlurPlugin,
-  maskitoNumberOptionsGenerator,
-} from '@maskito/kit';
 import { PhotoService } from 'src/app/_services/photo.service';
+import priceMask from 'src/app/_masks/priceMask';
 
 @Component({
   selector: 'app-part-modal',
@@ -29,11 +28,7 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   partSubscription!: Subscription;
 
-  currencyOptions: MaskitoOptions = maskitoNumberOptionsGenerator({
-    prefix: 'R$ ',
-    precision: 2,
-    thousandSeparator: '.',
-  });
+  priceMask: MaskitoOptions = priceMask;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();

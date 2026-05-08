@@ -12,6 +12,8 @@ class OrderParts extends Model
 
     protected $table = 'orders_parts';
 
+    protected $fillable = ['order_id', 'name', 'quantity', 'price'];
+
     public function order() : BelongsTo
     {
         return $this->belongsTo(Order::class);

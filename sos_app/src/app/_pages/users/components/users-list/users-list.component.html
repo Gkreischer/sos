@@ -8,9 +8,14 @@
 </ion-toolbar>
 
 <ion-content color="light">
-  <ion-card *ngIf="staffUsers | async as users">
+  <app-user-filter></app-user-filter>
+  <ion-card *ngIf="users | async as users">
     <ion-card-header>
-      <ion-card-title>Equipe</ion-card-title>
+      <ion-card-title>Lista de usuários</ion-card-title>
+      <ion-card-subtitle
+        >Aqui você pode ver todos os usuários cadastrados, sua equipe, seus
+        clientes e etc.</ion-card-subtitle
+      >
     </ion-card-header>
     <ion-card-content>
       <ion-list *ngIf="users.length > 0">

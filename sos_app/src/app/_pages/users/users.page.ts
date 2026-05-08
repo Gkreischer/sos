@@ -8,16 +8,11 @@ import { UserModalComponent } from './components/user-modal/user-modal.component
   styleUrls: ['./users.page.scss'],
 })
 export class UsersPage implements OnInit {
+  constructor(private modalService: ModalService) {}
 
-  constructor(
-    private modalService: ModalService
-  ) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
-
-  openModal() {
+  addUser() {
     this.modalService.openModal(UserModalComponent);
   }
-
 }

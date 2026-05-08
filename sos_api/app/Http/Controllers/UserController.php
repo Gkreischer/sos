@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -149,16 +150,18 @@ class UserController extends Controller
         }
     }
 
-    public function getUserByName(Request $request)
+    public function getUserByDescription(Request $request)
     {
         try {
 
             $data = $request->all();
 
+            Log::info($data);
+
             $validator = Validator::make(
                 $data,
                 [
-                    'name' => 'required|max:255'
+                    'description' => 'required|max:255'
                 ]
             );
 
@@ -166,7 +169,7 @@ class UserController extends Controller
                 return response($validator->errors(), 400);
             }
 
-            $user = User::where('name', $data['name'])->first();
+            $user = User::where('name', 'LIKE', '%' . $data['description'] . '%')->orWhere('phone', 'LIKE', '%' . $data['description'] . '%')->orWhere('email', 'LIKE', '%' . $data['description'] . '%')->get();
 
             return response($user, 200);
         } catch (Exception $e) {
@@ -181,7 +184,7 @@ class UserController extends Controller
 
         try
         {
-            $users = User::where('type', 2)->orWhere('type', 100)->get();
+            $users = User::all();
 
             return response($users, 200);
         }

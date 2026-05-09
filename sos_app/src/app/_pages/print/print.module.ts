@@ -9,6 +9,7 @@ import { PrintPageRoutingModule } from './print-routing.module';
 import { PrintPage } from './print.page';
 import { OrderPrintComponent } from './components/order-print/order-print.component';
 import { NgxPrintDirective } from 'ngx-print';
+import { FormatPhonePipe } from 'src/app/_pipes/format-phone.pipe';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { NgxPrintDirective } from 'ngx-print';
     IonicModule,
     PrintPageRoutingModule,
     NgxPrintDirective,
+    FormatPhonePipe,
   ],
   declarations: [PrintPage, OrderPrintComponent],
 })

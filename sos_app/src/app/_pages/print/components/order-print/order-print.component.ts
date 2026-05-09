@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { phoneMask } from 'src/app/_masks/phoneMask';
 import { BusinessInfoInterface } from 'src/app/_models/BusinessInfo';
 import { Order } from 'src/app/_models/Order';
 import { OrderService } from 'src/app/_services/order.service';
@@ -16,7 +17,7 @@ export class OrderPrintComponent implements OnInit {
   orderService = inject(OrderService);
   settingService = inject(SettingService);
 
-  order!: Observable<Order>;
+  orderInfo!: Observable<Order>;
   businessInfo!: Observable<BusinessInfoInterface>;
 
   orderPrintStyle = {
@@ -37,12 +38,14 @@ export class OrderPrintComponent implements OnInit {
 
   getOrderData() {
     this.orderService.getById(+this.getOrderId()!).subscribe((order) => {
-      this.order = this.orderService.order$;
+      console.log(order);
+      this.orderInfo = this.orderService.order$;
     });
   }
 
   getBusinessInfo() {
     this.settingService.getBusinessInfo().subscribe((data) => {
+      console.log(data);
       this.businessInfo = this.settingService.businessInfo$;
     });
   }

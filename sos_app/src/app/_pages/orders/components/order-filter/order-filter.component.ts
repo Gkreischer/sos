@@ -1,6 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MaskitoElementPredicate } from '@maskito/core';
 import { Observable } from 'rxjs';
+import { dateMask } from 'src/app/_masks/dateMask';
 import { OrderStatus } from 'src/app/_models/OrderStatus';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderService } from 'src/app/_services/order.service';
@@ -19,6 +21,11 @@ export class OrderFilterComponent implements OnInit {
 
   form!: FormGroup;
 
+  dateMask = dateMask;
+
+  readonly maskPredicate: MaskitoElementPredicate = async (el) =>
+    (el as unknown as HTMLIonInputElement).getInputElement();
+
   constructor() {}
 
   ngOnInit() {
@@ -30,6 +37,8 @@ export class OrderFilterComponent implements OnInit {
     this.form = this.formBuilder.group({
       status_id: [''],
       search: [''],
+      start_date: [''],
+      end_date: [''],
     });
   }
 

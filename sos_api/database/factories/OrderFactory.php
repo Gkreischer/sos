@@ -25,6 +25,8 @@ class OrderFactory extends Factory
                 'obs' => $this->faker->sentence(),
                 'technician_id' => $this->faker->numberBetween(1, 5),
                 'equipment_id' => 1,
+                'diagnostic' => $this->faker->sentence(),
+                'service_description' => $this->faker->sentence(),
                 'service_price' => $this->faker->numberBetween(1, 1000),
                 'parts_price' => $this->faker->numberBetween(1, 1000),
                 'total_price' => $this->faker->numberBetween(1, 1000),

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignId('status_id')->constrained('order_status');
             $table->text('description');
             $table->text('obs')->nullable();
+            $table->text('service_description')->nullable();
+            $table->text('diagnostic')->nullable();
             $table->decimal('parts_price', 10, 2)->default(0.00);
             $table->decimal('service_price', 10, 2)->default(0.00);
             $table->decimal('total_price', 10, 2)->default(0.00);

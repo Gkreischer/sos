@@ -43,6 +43,30 @@
             </ion-button>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-input
+              labelPlacement="floating"
+              fill="outline"
+              label="De:"
+              type="text"
+              formControlName="start_date"
+              [maskito]="dateMask"
+              [maskitoElement]="maskPredicate"
+            ></ion-input>
+          </ion-col>
+          <ion-col>
+            <ion-input
+              labelPlacement="floating"
+              fill="outline"
+              label="Até:"
+              type="text"
+              formControlName="end_date"
+              [maskito]="dateMask"
+              [maskitoElement]="maskPredicate"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
       </ion-grid>
     </form>
   </ion-card-content>

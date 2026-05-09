@@ -19,6 +19,7 @@ import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import priceMask from 'src/app/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/money.service';
 import { Router } from '@angular/router';
+import { dateMask } from 'src/app/_masks/dateMask';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -34,7 +35,9 @@ export class OrderModalComponent implements OnInit {
   technicianSelected?: User;
   orderStatuses$?: Observable<OrderStatus[]>;
   selectOrderStatusDisabled = false;
+
   priceMask = priceMask;
+  dateMask = dateMask;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
@@ -52,6 +55,7 @@ export class OrderModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('id', this.orderId);
     this.getOrderDetailsById();
     this.mountForm();
     this.patchFormTotalPrice();
@@ -91,6 +95,8 @@ export class OrderModalComponent implements OnInit {
       user_id: ['', [Validators.required]],
       technician_id: [''],
       status_id: [this.orderId ? this.orderId : 1, [Validators.required]],
+      service_description: [''],
+      diagnostic: [''],
       parts: this.formBuilder.array([]),
       obs: [''],
       service_price: [0],
@@ -182,12 +188,14 @@ export class OrderModalComponent implements OnInit {
       returnClientIdMode: true,
     });
 
-    if (client) {
-      console.log('clientRecebido', client);
-      this.orderForm.get('user_id')?.setValue(client.id);
-      this.clientSelected = client;
-      this.getUserEquipments();
+    if (!client) {
+      return;
     }
+
+    console.log('clientRecebido', client);
+    this.orderForm.get('user_id')?.setValue(client.id);
+    this.clientSelected = client;
+    this.getUserEquipments();
   }
 
   async selectTechnicianId() {

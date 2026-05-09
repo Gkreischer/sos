@@ -8,10 +8,10 @@ import { UsersPageRoutingModule } from './users-routing.module';
 
 import { UsersPage } from './users.page';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
-import { PipesModule } from 'src/app/_modules/pipes/pipes.module';
 import { MaskitoDirective } from '@maskito/angular';
 import { UsersListComponent } from './components/users-list/users-list.component';
 import { UserFilterComponent } from './components/user-filter/user-filter.component';
+import { FormatPhonePipe } from 'src/app/_pipes/format-phone.pipe';
 
 @NgModule({
   imports: [
@@ -19,9 +19,9 @@ import { UserFilterComponent } from './components/user-filter/user-filter.compon
     FormsModule,
     IonicModule,
     UsersPageRoutingModule,
-    PipesModule,
     ReactiveFormsModule,
     MaskitoDirective,
+    FormatPhonePipe,
   ],
   declarations: [
     UsersPage,

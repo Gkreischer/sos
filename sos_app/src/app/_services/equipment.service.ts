@@ -4,7 +4,7 @@ import { Equipment } from '../_models/Equipment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
-import { User } from '@ionic/cli';
+import { User } from '../_models/User';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

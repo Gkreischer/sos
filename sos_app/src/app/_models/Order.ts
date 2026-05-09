@@ -14,8 +14,12 @@ export interface Order {
   technician_id: number;
   technician: User;
   service_price: number;
+  service_description: string;
+  diagnostic: string;
   order_parts: Part[];
   description: string;
+  discount: number;
+  obs: string;
   status_id: number;
   status: OrderStatus;
   user: User;

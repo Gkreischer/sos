@@ -93,8 +93,8 @@ export class OrderService {
       .pipe(
         tap((res) => {
           console.log('recebendo res', res);
-          const orders = this.ordersSubject.getValue();
-          orders.push(res);
+          let orders = this.ordersSubject.getValue();
+          orders = [res, ...orders];
           this.ordersSubject.next(orders);
           this.orderSubject.next(res);
         }),

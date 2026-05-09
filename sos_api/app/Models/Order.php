@@ -18,7 +18,7 @@ class Order extends Model
 
     protected $with = ['user', 'equipment', 'orderParts', 'images', 'status', 'technician'];
 
-    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount'];
+    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic'];
 
     public function user() : BelongsTo
     {

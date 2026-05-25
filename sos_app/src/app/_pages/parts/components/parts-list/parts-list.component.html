@@ -9,21 +9,34 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        @if (parts.length > 0) {
-          @for (part of parts; track $index) {
-            <ion-item button="true" detail="true" (click)="openModalEdit(part)">
-              <ion-avatar>
-                <ion-img [src]="part.image"></ion-img>
-              </ion-avatar>
-              <ion-label class="ion-padding-start">
-                <h3 class="ion-text-bold">{{ part.category.name }}</h3>
-                <h3>{{ part.name }}</h3>
-                <p>{{ part.price | currency: "R$" }}</p>
-              </ion-label>
-            </ion-item>
-          }
-        } @else {
-          <ion-item>Nenhum material cadastrado</ion-item>
+        @for (part of parts; track $index) {
+          <ion-item button="true" detail="true" (click)="openModalEdit(part)">
+            <ion-avatar>
+              <ion-img [src]="part.image"></ion-img>
+            </ion-avatar>
+            <ion-label class="ion-padding-start">
+              <h3 class="ion-text-bold">{{ part.category.name }}</h3>
+              <h3>{{ part.name }}</h3>
+              <p>{{ part.price | currency: "R$" }}</p>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Nenhum material encontrado</h2>
+            </ion-label>
+          </ion-item>
+        }
+        @if (infiniteScroll()) {
+          <ion-item>
+            <ion-infinite-scroll
+              (ionInfinite)="onIonInfinite($event)"
+              loadingText="Carregando..."
+              loadingSpinner="bubbles"
+            >
+              <ion-infinite-scroll-content></ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+          </ion-item>
         }
       </ion-list>
     </ion-card-content>

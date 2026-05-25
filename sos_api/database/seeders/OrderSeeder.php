@@ -27,7 +27,7 @@ class OrderSeeder extends Seeder
             'service_price' => 100.00,
             'technician_id' => 1,
             'status_id' => 1,
-            'created_at' => Carbon::now(),
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => Carbon::now()
         ]);
     }

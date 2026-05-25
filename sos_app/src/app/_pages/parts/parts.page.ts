@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PartModalComponent } from './components/part-modal/part-modal.component';
 
@@ -6,18 +6,16 @@ import { PartModalComponent } from './components/part-modal/part-modal.component
   selector: 'app-parts',
   templateUrl: './parts.page.html',
   styleUrls: ['./parts.page.scss'],
+  standalone: false,
 })
 export class PartsPage implements OnInit {
+  modalService = inject(ModalService);
 
-  constructor(
-    private modalService: ModalService
-  ) { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   addPart() {
     this.modalService.openModal(PartModalComponent);
   }
-
 }

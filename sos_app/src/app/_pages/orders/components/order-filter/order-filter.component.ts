@@ -1,27 +1,32 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
 import { Observable } from 'rxjs';
-import { dateMask } from 'src/app/_masks/dateMask';
-import { OrderStatus } from 'src/app/_models/OrderStatus';
+import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderService } from 'src/app/_services/order.service';
+
+import { OrderFilter } from 'src/app/_interfaces/OrderFilter';
+import dateMask from 'src/app/_masks/dateMask';
 
 @Component({
   selector: 'app-order-filter',
   templateUrl: './order-filter.component.html',
   styleUrls: ['./order-filter.component.scss'],
+  standalone: false,
 })
 export class OrderFilterComponent implements OnInit {
   orderService = inject(OrderService);
 
   orderStatusService = inject(OrderStatusService);
   formBuilder = inject(FormBuilder);
-  ordersStatuses$?: Observable<OrderStatus[]>;
+  ordersStatuses$?: Observable<OrderStatusInterface[]>;
 
   form!: FormGroup;
 
   dateMask = dateMask;
+
+  enableInfiniteScroll = signal(true);
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
@@ -43,14 +48,11 @@ export class OrderFilterComponent implements OnInit {
   }
 
   search() {
-    this.orderService.getOrderByFilter(this.form.value).subscribe((orders) => {
-      console.log('orders searched', orders);
-    });
+    this.orderService.setOrderFilter(this.form.value);
   }
 
   getOrderStatuses() {
     this.orderStatusService.getOrderStatuses().subscribe((data) => {
-      console.log('order Statuses', data);
       this.ordersStatuses$ = this.orderStatusService.order_statuses;
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
 
@@ -6,18 +6,16 @@ import { CategoryModalComponent } from './components/category-modal/category-mod
   selector: 'app-categories',
   templateUrl: './categories.page.html',
   styleUrls: ['./categories.page.scss'],
+  standalone: false,
 })
 export class CategoriesPage implements OnInit {
+  modalService = inject(ModalService);
 
-  constructor(
-    private modalService: ModalService
-  ) { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   openModal() {
     this.modalService.openModal(CategoryModalComponent);
   }
-
 }

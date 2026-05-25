@@ -6,6 +6,7 @@ use App\Models\Part;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PartController extends Controller
 {
@@ -26,13 +27,13 @@ class PartController extends Controller
         }
     }
 
-    public function getById(int $id) {
+    public function getById(int $id)
+    {
 
         try {
             $part = Part::findOrFail($id);
 
             return response($part);
-
         } catch (Exception $e) {
 
             return response([
@@ -46,7 +47,7 @@ class PartController extends Controller
     {
 
         try {
-            $parts = Part::orderBy('created_at', 'desc')->get();
+            $parts = Part::orderBy('created_at', 'desc')->paginate(20);
 
             return response($parts);
         } catch (Exception $e) {
@@ -58,7 +59,8 @@ class PartController extends Controller
         }
     }
 
-    public function update(Request $request, int $id) {
+    public function update(Request $request, int $id)
+    {
 
         try {
             $part = Part::findOrFail($id);
@@ -66,18 +68,38 @@ class PartController extends Controller
             $part->update($request->all());
 
             return response($part);
-            
-        } 
-        catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response([
                 'message' => 'Peça não encontrada',
                 'error' => $e->getMessage(),
             ], 404);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Erro ao atualizar a peça',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getPartByDescFilter(Request $request)
+    {
+
+        try {
+
+            $data = $request->all();
+
+            $part = Part::query()
+                ->when(!empty($data['description']), function ($query) use ($data) {
+                    $query->where('name', 'LIKE', '%' . $data['description'] . '%')
+                        ->orWhere('description', 'LIKE', '%' . $data['description'] . '%');
+                })
+                ->paginate(20);
+
+            return response($part, 200);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível obter a peça',
+                'error' => $e->getMessage()
             ], 500);
         }
     }

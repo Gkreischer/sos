@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { CategoriesListComponent } from './categories-list.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('CategoriesListComponent', () => {
   let component: CategoriesListComponent;
@@ -9,8 +11,9 @@ describe('CategoriesListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoriesListComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [CategoriesListComponent],
+      imports: [IonicModule.forRoot()],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CategoriesListComponent);

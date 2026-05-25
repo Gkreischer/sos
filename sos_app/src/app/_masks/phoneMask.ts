@@ -1,7 +1,8 @@
 import { MaskitoOptions } from '@maskito/core';
 
 export const phoneMask: MaskitoOptions = {
-  mask: ({ value }) => {
+  mask: (state) => {
+    const { value } = state;
     const inputValue = value?.replace(/\D/g, '');
 
     if (inputValue.length <= 10) {

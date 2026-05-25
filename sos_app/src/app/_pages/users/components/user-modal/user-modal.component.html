@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!user">Adicionar Usuário</ion-title>
-    <ion-title *ngIf="user">Editar Usuário</ion-title>
+    @if (!user) {
+      <ion-title>Adicionar Usuário</ion-title>
+    } @else {
+      <ion-title *ngIf="user">Editar Usuário</ion-title>
+    }
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -13,24 +16,30 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      {{ userForm.value | json }}
       <form [formGroup]="userForm" (ngSubmit)="this.user ? update() : submit()">
         <ion-grid>
           <ion-row>
+            @let types = userTypes | async;
             <ion-col size="12" sizeLg="3">
-              <ion-select
-                fill="outline"
-                labelPlacement="floating"
-                label="Tipo"
-                formControlName="type"
-                placeholder="Tipo"
-              >
-                @for (category of categories | async; track $index) {
-                  <ion-select-option [value]="category.id">{{
-                    category.name
-                  }}</ion-select-option>
-                }
-              </ion-select>
+              @if (types) {
+                <ion-select
+                  fill="outline"
+                  labelPlacement="floating"
+                  label="Tipo"
+                  formControlName="type_id"
+                  placeholder="Tipo"
+                >
+                  @for (type of types; track type.id) {
+                    <ion-select-option [value]="type.id">{{
+                      type.name
+                    }}</ion-select-option>
+                  } @empty {
+                    <ion-select-option disabled="true">
+                      Nenhum tipo cadastrado
+                    </ion-select-option>
+                  }
+                </ion-select>
+              }
             </ion-col>
             <ion-col>
               <ion-input
@@ -63,17 +72,7 @@
               ></ion-input>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-input
-                fill="outline"
-                labelPlacement="floating"
-                label="Endereço"
-                formControlName="address"
-                placeholder="Endereço"
-              ></ion-input>
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col>
               <ion-input
@@ -101,6 +100,17 @@
             </ion-col>
           </ion-row>
           <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
+                label="Endereço"
+                formControlName="address"
+                placeholder="Endereço"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
             <ion-col size="12" sizeLg="3">
               <ion-input
                 fill="outline"
@@ -116,13 +126,22 @@
               <ion-input
                 fill="outline"
                 labelPlacement="floating"
+                label="Bairro"
+                formControlName="district"
+                placeholder="Bairro"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
                 label="Cidade"
                 formControlName="city"
                 placeholder="Cidade"
               ></ion-input>
             </ion-col>
-          </ion-row>
-          <ion-row>
             <ion-col>
               <ion-input
                 fill="outline"
@@ -144,22 +163,24 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button
-                *ngIf="user"
-                type="submit"
-                color="primary"
-                expand="block"
-                [disabled]="!this.userForm.valid"
-                >Atualizar</ion-button
-              >
-              <ion-button
-                *ngIf="!user"
-                type="submit"
-                color="primary"
-                expand="block"
-                [disabled]="!this.userForm.valid"
-                >Cadastrar</ion-button
-              >
+              @if (!user) {
+                <ion-button
+                  type="submit"
+                  color="primary"
+                  expand="block"
+                  [disabled]="!this.userForm.valid"
+                  >Cadastrar</ion-button
+                >
+              } @else {
+                <ion-button
+                  *ngIf="user"
+                  type="submit"
+                  color="primary"
+                  expand="block"
+                  [disabled]="!this.userForm.valid"
+                  >Atualizar</ion-button
+                >
+              }
             </ion-col>
           </ion-row>
         </ion-grid>

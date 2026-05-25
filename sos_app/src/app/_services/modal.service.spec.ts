@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ModalService } from './modal.service';
+import { IonicModule } from '@ionic/angular';
 
 describe('ModalService', () => {
   let service: ModalService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [IonicModule.forRoot()],
+    });
     service = TestBed.inject(ModalService);
   });
 

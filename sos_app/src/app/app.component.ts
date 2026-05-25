@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  standalone: false,
 })
 export class AppComponent {
   public appPages = [
@@ -12,6 +13,7 @@ export class AppComponent {
     { title: 'Materiais', url: '/materiais', icon: 'hardware-chip' },
     { title: 'Ordem de Serviço', url: '/ordem-servico', icon: 'layers' },
     { title: 'Usuários', url: '/usuarios', icon: 'people' },
+    { title: 'Relatórios', url: '/relatorios', icon: 'bar-chart' },
     { title: 'Configurações', url: '/configuracoes', icon: 'settings' },
   ];
   constructor() {}

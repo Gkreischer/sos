@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Category } from 'src/app/_models/Category';
+import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
@@ -9,25 +9,27 @@ import { CategoryModalComponent } from '../category-modal/category-modal.compone
   selector: 'app-categories-list',
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.scss'],
+  standalone: false,
 })
 export class CategoriesListComponent implements OnInit {
-  categories?: Observable<Category[]>;
+  categoryService = inject(CategoryService);
+  modalService = inject(ModalService);
 
-  constructor(
-    private categoryService: CategoryService,
-    private modalService: ModalService
-  ) {}
+  categories?: Observable<CategoryInterface[]>;
+
+  constructor() {}
 
   ngOnInit() {
     this.getCategories();
   }
 
-  openModal(category: Category) {
+  openModal(category: CategoryInterface) {
     this.modalService.openModal(CategoryModalComponent, { category: category });
   }
 
   getCategories() {
-    this.categoryService.getCategories().subscribe(() => {
+    this.categoryService.getCategories().subscribe((res) => {
+      console.log(res);
       this.categories = this.categoryService.categories;
     });
   }

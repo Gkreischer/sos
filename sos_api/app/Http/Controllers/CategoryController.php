@@ -17,7 +17,7 @@ class CategoryController extends Controller
         //
         try {
             // Get all categories sorted by name
-            $categories = Category::orderBy('name')->get();
+            $categories = Category::orderBy('name')->select('id', 'name')->get();
 
             return response($categories);
         } catch (\Exception $e) {

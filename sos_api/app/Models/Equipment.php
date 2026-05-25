@@ -42,8 +42,8 @@ class Equipment extends Model
         return $this->belongsToMany(Image::class, 'equipment_image', 'equipment_id', 'image_id');
     }
 
-    public function orders() : HasMany
+    public function orders(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'equipment_id');
     }
 }

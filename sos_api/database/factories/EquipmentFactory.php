@@ -20,8 +20,8 @@ class EquipmentFactory extends Factory
             'name' => $this->faker->word(),
             'description' => $this->faker->sentence(),
             'obs' => $this->faker->sentence(),
-            'user_id' => $this->faker->numberBetween(1, 10),
-            'category_id' => $this->faker->numberBetween(1, 10),
+            'user_id' => $this->faker->numberBetween(1, 50),
+            'category_id' => $this->faker->numberBetween(1, 20),
         ];
     }
 }

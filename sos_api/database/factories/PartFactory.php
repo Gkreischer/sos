@@ -24,7 +24,7 @@ class PartFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->sentence(),
             'image' => 'https://picsum.photos/200/300',
-            'category_id' => $this->faker->numberBetween(1, 10),
+            'category_id' => $this->faker->numberBetween(1, 20),
             'price' => $this->faker->numberBetween(1, 1000),
         ];
     }

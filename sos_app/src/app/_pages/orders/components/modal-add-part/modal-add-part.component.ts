@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SearchbarCustomEvent } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { Part } from 'src/app/_models/Part';
+import { PartInterface } from 'src/app/_interfaces/PartInterface';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 
@@ -9,15 +9,15 @@ import { PartService } from 'src/app/_services/part.service';
   selector: 'app-modal-add-part',
   templateUrl: './modal-add-part.component.html',
   styleUrls: ['./modal-add-part.component.scss'],
+  standalone: false,
 })
-export class ModalAddPartComponent  implements OnInit {
+export class ModalAddPartComponent implements OnInit {
+  modalService = inject(ModalService);
+  partService = inject(PartService);
 
-  parts!: Observable<Part[]>;
+  parts!: Observable<PartInterface[]>;
 
-  constructor(
-    private modalService: ModalService,
-    private partService: PartService
-  ) { }
+  constructor() {}
 
   ngOnInit() {}
 
@@ -28,19 +28,16 @@ export class ModalAddPartComponent  implements OnInit {
   search(event: Event) {
     let value = (event as SearchbarCustomEvent).target.value!.toString();
 
-    if(!value) {
+    if (!value) {
       return;
     }
 
-    this.partService.search(value).subscribe(res => {
+    this.partService.search(value).subscribe((res) => {
       this.parts = this.partService.partsSearchedSubject;
-      console.log(res);
     });
   }
 
-  addPart(part: Part) {
-    console.log('cliquei')
+  addPart(part: PartInterface) {
     this.modalService.closeModal(part, 'confirm');
   }
-
 }

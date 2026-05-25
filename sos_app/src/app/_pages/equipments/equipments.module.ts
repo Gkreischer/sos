@@ -9,6 +9,7 @@ import { EquipmentsPageRoutingModule } from './equipments-routing.module';
 import { EquipmentsPage } from './equipments.page';
 import { EquipmentsListComponent } from './components/equipments-list/equipments-list.component';
 import { EquipmentModalComponent } from './components/equipment-modal/equipment-modal.component';
+import { EquipmentFilterComponent } from './components/equipment-filter/equipment-filter.component';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { EquipmentModalComponent } from './components/equipment-modal/equipment-
     EquipmentsPage,
     EquipmentsListComponent,
     EquipmentModalComponent,
+    EquipmentFilterComponent,
   ],
 })
 export class EquipmentsPageModule {}

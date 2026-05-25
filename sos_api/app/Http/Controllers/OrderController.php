@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderParts;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class OrderController extends Controller
 {
@@ -13,7 +16,7 @@ class OrderController extends Controller
     {
         try {
 
-            $orders = Order::orderBy('created_at', 'desc')->limit(30)->get();
+            $orders = Order::orderBy('created_at', 'desc')->paginate(20);
             return response($orders);
         } catch (Exception $e) {
             return response([
@@ -38,47 +41,71 @@ class OrderController extends Controller
         }
     }
 
-    public function update(int $id, Request $request) {
+    public function update(int $id, Request $request)
+    {
         try {
-            $order = Order::findOrFail($id);
 
-            if(!empty($request->parts)) {
-                $parts = $request->parts;
+            $order = DB::transaction(function () use ($id, $request) {
 
-                foreach ($parts as $part) {
-                    OrderParts::updateOrCreate(
-                        [
-                            'order_id' => $order->id,
-                        ],
-                        [
-                            'name' => $part['name'],
-                            'quantity' => $part['quantity'],
-                            'price' => $part['price'],
-                        ]
-                    );
+                $order = Order::findOrFail($id);
+
+                if ($request->has('parts')) {
+
+                    // IDs das peças enviadas pelo frontend
+                    $ids = collect($request->parts)
+                        ->pluck('id')
+                        ->filter()
+                        ->toArray();
+
+                    // Remove peças que não existem mais
+                    $order->orderParts()
+                        ->when(!empty($ids), function ($query) use ($ids) {
+                            $query->whereNotIn('id', $ids);
+                        })
+                        ->when(empty($ids), function ($query) {
+                            // Remove todas se frontend enviar []
+                            $query->whereNotNull('id');
+                        })
+                        ->delete();
+
+                    // Atualiza ou cria peças
+                    foreach ($request->parts as $part) {
+
+                        $order->orderParts()->updateOrCreate(
+                            [
+                                'id' => $part['id'] ?? null,
+                            ],
+                            [
+                                'name' => $part['name'],
+                                'quantity' => $part['quantity'],
+                                'price' => $part['price'],
+                            ]
+                        );
+                    }
                 }
-            }
-            $order->update($request->all());
-            $order->load('user', 'equipment', 'orderParts', 'images', 'status');
+
+                // Atualiza ordem
+                $order->update(
+                    $request->except('parts')
+                );
+
+                // Recarrega relacionamentos
+                $order->load(
+                    'user',
+                    'equipment',
+                    'orderParts',
+                    'images',
+                    'status'
+                );
+
+                return $order;
+            });
 
             return response($order);
         } catch (Exception $e) {
+
             return response([
                 'message' => 'Não foi possível atualizar a ordem de serviço',
-                'error' => $e->getMessage()
-            ], 404);
-        }
-    }
-
-    public function getOrderByStatus(int $status_id)
-    {
-        try {
-            $orders = Order::where('status_id', $status_id)->get();
-
-            return response($orders);
-        } catch (Exception $e) {
-            return response([
-                'message' => 'Não foi possível carregar as ordens de serviço',
                 'error' => $e->getMessage()
             ], 404);
         }
@@ -91,32 +118,74 @@ class OrderController extends Controller
             $status_id = $request->status_id;
             $search_term = trim($request->search);
 
+            $start_date = !empty($request->start_date)
+                ? Carbon::createFromFormat('d/m/Y', trim($request->start_date))->startOfDay()
+                : null;
+
+            $end_date = !empty($request->end_date)
+                ? Carbon::createFromFormat('d/m/Y', trim($request->end_date))->endOfDay()
+                : null;
+
             $orders = Order::query()
+                ->select(
+                    'orders.id',
+                    'orders.title',
+                    'orders.created_at',
+                    'orders.status_id',
+                    'orders.user_id',
+                    'orders.equipment_id'
+                )
+                ->with([
+                    'user:id,name',
+                    'equipment:id,name',
+                    'status:id,name'
+                ])
+                // Filtro por status
                 ->when(isset($status_id) && $status_id !== '', function ($query) use ($status_id) {
                     $query->where('orders.status_id', $status_id);
                 })
+
+                // Filtro por texto
                 ->when(!empty($search_term), function ($query) use ($search_term) {
                     $query->where(function ($q) use ($search_term) {
 
-                        // 🔍 Busca por ID (se for numérico)
+                        // Busca por ID
                         if (is_numeric($search_term)) {
                             $q->orWhere('orders.id', (int) $search_term);
                         }
 
-                        // 🔍 Busca por título
+                        // Busca por título
                         $q->orWhere('orders.title', 'LIKE', '%' . $search_term . '%')
 
-                        // 🔍 Busca por nome do usuário
-                        ->orWhereHas('user', function ($q2) use ($search_term) {
-                            $q2->where('name', 'LIKE', '%' . $search_term . '%');
-                        });
+                            // Busca por usuário
+                            ->orWhereHas('user', function ($q2) use ($search_term) {
+                                $q2->where('name', 'LIKE', '%' . $search_term . '%');
+                            });
                     });
                 })
-                ->get();
+
+                // Entre duas datas
+                ->when($start_date && $end_date, function ($query) use ($start_date, $end_date) {
+                    $query->whereBetween('orders.created_at', [$start_date, $end_date]);
+                })
+
+                // Maior ou igual à data inicial
+                ->when($start_date && !$end_date, function ($query) use ($start_date) {
+                    $query->where('orders.created_at', '>=', $start_date);
+                })
+
+                // Menor ou igual à data final
+                ->when(!$start_date && $end_date, function ($query) use ($end_date) {
+                    $query->where('orders.created_at', '<=', $end_date);
+                })
+                ->orderByDesc('orders.created_at')
+                ->limit(20)
+                ->paginate();
+
 
             return response($orders);
-
         } catch (Exception $e) {
+
             return response([
                 'message' => 'Não foi possível carregar as ordens de serviço',
                 'error' => $e->getMessage()

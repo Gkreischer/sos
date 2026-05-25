@@ -12,6 +12,7 @@ import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import localePtBr from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { LoadingBarInterceptor } from './_interceptors/loading-bar.interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 registerLocaleData(localePtBr);
 
@@ -35,7 +36,8 @@ registerLocaleData(localePtBr);
       useClass: LoadingBarInterceptor,
       multi: true,
     },
-    {provide: LOCALE_ID, useValue: 'pt' }
+    {provide: LOCALE_ID, useValue: 'pt' },
+    provideCharts(withDefaultRegisterables())
   ],
   bootstrap: [AppComponent],
 })

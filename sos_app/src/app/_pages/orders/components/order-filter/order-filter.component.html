@@ -1,13 +1,13 @@
 <ion-card>
   <ion-card-header>
-    <ion-card-title>Filtrar por status</ion-card-title>
+    <ion-card-title>Filtros</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    {{ form.value | json }}
     <form [formGroup]="form" (ngSubmit)="search()">
       <ion-grid>
         <ion-row>
           <ion-col size="12" sizeLg="3">
+            @let statuses = ordersStatuses$ | async;
             <ion-select
               labelPlacement="floating"
               label="status"
@@ -15,12 +15,15 @@
               formControlName="status_id"
             >
               <ion-select-option value=""> Nenhum status </ion-select-option>
-              <ion-select-option
-                *ngFor="let status of ordersStatuses$ | async"
-                [value]="status.id"
-              >
-                {{ status.name }}
-              </ion-select-option>
+              @for (status of statuses; track status.id) {
+                <ion-select-option [value]="status.id">{{
+                  status.name
+                }}</ion-select-option>
+              } @empty {
+                <ion-select-option disabled="true">
+                  Nenhum status cadastrado
+                </ion-select-option>
+              }
             </ion-select>
           </ion-col>
           <ion-col size="12" sizeLg="7">

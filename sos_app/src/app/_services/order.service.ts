@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Order } from '../_models/Order';
+import { Injectable, signal } from '@angular/core';
+import { OrderInterface } from '../_interfaces/OrderInterface';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
-import { OrderFilter } from '../_models/OrderFilter';
-
+import { OrderFilter } from '../_interfaces/OrderFilter';
+import { PaginateInterface } from '../_interfaces/PaginateInterface';
+import { inject } from '@angular/core';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -13,17 +14,17 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class OrderService {
-  private ordersSubject: BehaviorSubject<Order[]> = new BehaviorSubject<
-    Order[]
-  >([]);
-  private orderSubject: BehaviorSubject<Order> = new BehaviorSubject<Order>(
-    {} as Order,
-  );
+  http = inject(HttpClient);
+  errorService = inject(ErrorService);
 
-  constructor(
-    private http: HttpClient,
-    private errorService: ErrorService,
-  ) {}
+  private ordersSubject: BehaviorSubject<OrderInterface[]> =
+    new BehaviorSubject<OrderInterface[]>([]);
+  private orderSubject: BehaviorSubject<OrderInterface> =
+    new BehaviorSubject<OrderInterface>({} as OrderInterface);
+
+  public orderFilters = signal(null as OrderFilter | null);
+
+  constructor() {}
 
   get orders$() {
     return this.ordersSubject.asObservable();
@@ -33,21 +34,26 @@ export class OrderService {
     return this.orderSubject.asObservable();
   }
 
-  getAll() {
-    return this.http
-      .get<Order[]>(`${environment.baseUrl}/orders`, httpOptions)
-      .pipe(
-        tap((res) => this.ordersSubject.next(res)),
-        catchError(this.errorService.handleError),
-      );
+  public setOrderFilter(orderFilter: OrderFilter) {
+    this.orderFilters.set(orderFilter);
   }
 
-  getOrderByFilter(orderFilter: OrderFilter) {
+  public getAll(page?: number, orderFilter?: OrderFilter | null) {
     return this.http
-      .post<Order[]>(`${environment.baseUrl}/orders/search`, orderFilter)
+      .post<
+        PaginateInterface<OrderInterface[]>
+      >(`${environment.baseUrl}/orders/search${page ? `?page=${page}` : ''}`, orderFilter, httpOptions)
       .pipe(
         tap((res) => {
-          return this.ordersSubject.next(res);
+          console.log(res);
+          if (page && page >= 2) {
+            this.ordersSubject.next([
+              ...this.ordersSubject.getValue(),
+              ...res.data,
+            ]);
+          } else {
+            this.ordersSubject.next(res.data);
+          }
         }),
         catchError(this.errorService.handleError),
       );
@@ -55,7 +61,7 @@ export class OrderService {
 
   getById(id: number) {
     return this.http
-      .get<Order>(`${environment.baseUrl}/orders/${id}`, httpOptions)
+      .get<OrderInterface>(`${environment.baseUrl}/orders/${id}`, httpOptions)
       .pipe(
         tap((res) => {
           return this.orderSubject.next(res);
@@ -64,12 +70,15 @@ export class OrderService {
       );
   }
 
-  update(id: number, order: Order) {
+  update(id: number, order: OrderInterface) {
     return this.http
-      .put<Order>(`${environment.baseUrl}/orders/${id}`, order, httpOptions)
+      .put<OrderInterface>(
+        `${environment.baseUrl}/orders/${id}`,
+        order,
+        httpOptions,
+      )
       .pipe(
         tap((res) => {
-          console.log('recebendo res', res);
           const orders = this.ordersSubject.getValue();
 
           const updatedOrders = orders.map((order) => {
@@ -87,12 +96,11 @@ export class OrderService {
       );
   }
 
-  create(order: Order) {
+  create(order: OrderInterface) {
     return this.http
-      .post<Order>(`${environment.baseUrl}/orders`, order, httpOptions)
+      .post<OrderInterface>(`${environment.baseUrl}/orders`, order, httpOptions)
       .pipe(
         tap((res) => {
-          console.log('recebendo res', res);
           let orders = this.ordersSubject.getValue();
           orders = [res, ...orders];
           this.ordersSubject.next(orders);

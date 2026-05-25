@@ -20,26 +20,16 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       retry(2), // retry a failed request up to 2 times
       catchError((err: HttpErrorResponse) => {
-        this.toastService.presentToast(
-          err.error.message,
-          'bottom',
-          2000,
-          'danger',
-        );
+        const message = err?.error?.message || err?.message || 'Erro interno';
+
+        this.toastService.presentToast(message, 'bottom', 2000, 'danger');
+
         if (err.status === 0) {
-          //client-side or network error
-          console.log('An error occurred:', err.error.message);
-          // return of()
+          console.error('An error occurred:', message);
         } else {
-          //Backend returns error codes such as 404, 500 etc.
-          console.log('Error code: ', err.status);
+          console.error('Error code:', err.status, 'Error message:', message);
         }
-        this.toastService.presentToast(
-          `${err.status} - ${err.error.message}`,
-          'bottom',
-          2000,
-          'danger',
-        );
+
         return throwError(() => err);
       }),
     );

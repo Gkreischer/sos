@@ -1,33 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Category } from 'src/app/_models/Category';
-import { Equipment } from 'src/app/_models/Equipment';
-import { User } from 'src/app/_models/User';
+import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
+import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
 import { UsersListComponent } from 'src/app/_pages/users/components/users-list/users-list.component';
 import { CategoryService } from 'src/app/_services/category.service';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
-import { UserService } from 'src/app/_services/user.service';
 
 @Component({
   selector: 'app-equipment-modal',
   templateUrl: './equipment-modal.component.html',
   styleUrls: ['./equipment-modal.component.scss'],
+  standalone: false,
 })
 export class EquipmentModalComponent implements OnInit {
-  equipment?: Equipment;
+  modalService = inject(ModalService);
+  formBuilder = inject(FormBuilder);
+  categoryService = inject(CategoryService);
+  equipmentService = inject(EquipmentService);
+  toastService = inject(ToastService);
+
+  equipment?: EquipmentInterface;
   formEquipment!: FormGroup;
-  categories!: Observable<Category[]>;
-  constructor(
-    private modalService: ModalService,
-    private formBuilder: FormBuilder,
-    private categoryService: CategoryService,
-    private equipmentService: EquipmentService,
-    private toastService: ToastService,
-    private userService: UserService,
-  ) {}
+  categories!: Observable<CategoryInterface[]>;
+  constructor() {}
 
   ngOnInit() {
     this.mountForm();
@@ -61,7 +59,6 @@ export class EquipmentModalComponent implements OnInit {
   }
 
   update() {
-    console.log(this.formEquipment.value);
     this.equipmentService
       .updateEquipment(this.formEquipment.value, this.equipment!.id)
       .subscribe({

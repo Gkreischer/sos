@@ -4,3 +4,10 @@
     max-height: 300px;
   }
 }
+
+ion-buttons {
+  ion-button {
+    --padding-start: 20px;
+    --padding-end: 20px;
+  }
+}

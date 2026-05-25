@@ -8,6 +8,7 @@ import { ModalService } from 'src/app/_services/modal.service';
   selector: 'app-print',
   templateUrl: './print.page.html',
   styleUrls: ['./print.page.scss'],
+  standalone: false,
 })
 export class PrintPage implements OnInit {
   activatedRoute = inject(ActivatedRoute);
@@ -31,15 +32,5 @@ export class PrintPage implements OnInit {
       });
     }
     return null;
-  }
-
-  openModalWithOrderId() {
-    this.modalService.openModal(
-      OrderModalComponent,
-      {
-        orderId: this.getOrderId(),
-      },
-      'full-modal',
-    );
   }
 }

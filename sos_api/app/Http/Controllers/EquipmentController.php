@@ -6,6 +6,7 @@ use App\Models\Equipment;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class EquipmentController extends Controller
 {
@@ -14,10 +15,9 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        try
-        {
-            $equipments = Equipment::orderBy('created_at', 'desc')->get();
-    
+        try {
+            $equipments = Equipment::orderBy('created_at', 'desc')->paginate(20);
+
             return response($equipments, 200);
         } catch (Exception $e) {
             return response([
@@ -25,42 +25,41 @@ class EquipmentController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
-    }   
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        try
-        {
+        try {
             //
-        $data = $request->all();
+            $data = $request->all();
 
-        // Make validation with Validator
-        $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'description' => 'string|max:255',
-            'category_id' => 'required|exists:categories,id',
-        ]);
+            // Make validation with Validator
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'description' => 'string|max:255',
+                'category_id' => 'required|exists:categories,id',
+            ]);
 
-        if ($validator->fails()) {
-            return response($validator->errors(), 400);
-        }
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
 
-        $equipment = Equipment::create($data);
+            $equipment = Equipment::create($data);
 
-        $equipment->load(['category',  'user']);
+            $equipment->load(['category',  'user']);
 
-        return response($equipment, 201);
-        } 
-        catch (\Exception $e)
-        {
+            return response($equipment, 201);
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Equipment not created',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
@@ -70,30 +69,73 @@ class EquipmentController extends Controller
     public function show(Equipment $equipment, int $id)
     {
         //
-        try
-        {
+        try {
             $equipment = Equipment::findOrFail($id);
-        
+
             return response($equipment, 200);
-        } 
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Equipment not found',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
+    public function getEquipmentByFilter(Request $request)
+    {
+        try {
+
+            $description = trim($request->description ?? '');
+
+            $equipments = Equipment::query()
+                ->select(
+                    'equipments.id',
+                    'equipments.name',
+                    'equipments.description',
+                    'equipments.category_id',
+                    'equipments.user_id',
+                    'equipments.obs',
+                    'equipments.created_at'
+                )
+                ->with([
+                    'category:id,name',
+                    'user:id,name'
+                ])
+
+                ->when(!empty($description), function ($query) use ($description) {
+
+                    $query->where(function ($q) use ($description) {
+
+                        $q->where('equipments.name', 'LIKE', '%' . $description . '%')
+                            ->orWhere('equipments.description', 'LIKE', '%' . $description . '%')
+                            ->orWhereHas('category', function ($q2) use ($description) {
+                                $q2->where('name', 'LIKE', '%' . $description . '%');
+                            });
+                    });
+                })
+
+                ->orderBy('equipments.created_at', 'desc')
+                ->paginate(20);
+
+            return response($equipments, 200);
+        } catch (Exception $e) {
+
+            return response([
+                'message' => 'Não foi possível obter os equipamentos',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, int $id)
     {
         //
-        try
-        {
+        try {
 
             $data = $request->all();
 
@@ -105,7 +147,7 @@ class EquipmentController extends Controller
                 'user_id' => 'required|exists:users,id',
                 'obs' => 'string|max:255|nullable',
             ]);
-    
+
             if ($validator->fails()) {
                 return response($validator->errors(), 400);
             }
@@ -118,14 +160,14 @@ class EquipmentController extends Controller
             $equipment->load(['category', 'parts', 'user']);
 
             return response($equipment, 200);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Equipment not updated',
                     'error' => $e->getMessage()
-                ], 404);
+                ],
+                404
+            );
         }
     }
 
@@ -135,37 +177,37 @@ class EquipmentController extends Controller
     public function destroy(Equipment $equipment, int $id)
     {
         //
-        try
-        {
+        try {
             $equipment = Equipment::findOrFail($id);
 
             $equipment->delete();
 
             return response($equipment, 200);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response(
                 [
                     'message' => 'Equipment not deleted',
                     'error' => $e->getMessage()
-                ], 
-            404);
+                ],
+                404
+            );
         }
     }
 
-    public function getUserEquipments(int $id) {
-        try
-        {
+    public function getUserEquipments(int $id)
+    {
+        try {
             $equipments = Equipment::where('user_id', $id)->get();
-            
+
             return response($equipments, 200);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Erro ao obter os equipamentos do usuario',
                     'error' => $e->getMessage()
-                ], 500);
+                ],
+                500
+            );
         }
     }
 }

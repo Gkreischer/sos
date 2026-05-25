@@ -1,49 +1,45 @@
 <style>
-  #print-section {
-    background-color: white;
-    padding: 1.5rem;
-  }
-
-  .signs {
-    padding-top: 3rem;
-  }
-
-  .signs .sign {
-    font-size: 0.8;
-    font-weight: bold;
-  }
-
-  .header p,
-  .order-info p,
-  .diagnostic-info p {
-    margin-top: 0;
-    margin-bottom: 0.2rem;
-  }
-
-  .box-sign {
-    width: 350px;
-    border-top: 1px solid black;
-    text-align: center;
+  .print-page {
+    background-color: red;
   }
 </style>
-<button
-  printSectionId="print-section"
-  printTitle="Ordem de serviço - NOME DA LOJA"
-  ngxPrint
-  [openNewTab]="true"
-  [printStyle]="orderPrintStyle"
->
-  print
-</button>
-<div id="print-section">
+<div class="ion-flex ion-justify-content-center">
+  <button
+    id="confirm-button"
+    class="ion-padding"
+    printSectionId="print-section"
+    printTitle="Ordem de serviço - NOME DA LOJA"
+    bodyClass="print-page"
+    [printStyle]="orderPrintStyle"
+    ngxPrint
+  >
+    <strong>IMPRIMIR</strong>
+  </button>
+</div>
+<div id="print-section" class="ion-padding">
   @let info = businessInfo | async;
   @if (info) {
     <div style="display: flex; justify-content: space-between">
       <div class="header">
-        <p>{{ info.name }}</p>
-        <p>{{ info.address }}</p>
-        <p>{{ info.email }}</p>
-        <p>{{ info.phone | formatPhone }}</p>
+        <table>
+          <tbody>
+            <tr></tr>
+            <tr>
+              <td>
+                <h2>
+                  <strong>{{ info.name }}</strong> -
+                  <ion-note>{{ info.cnpj }}</ion-note>
+                </h2>
+                <p>
+                  <strong>{{ info.address }}</strong>
+                </p>
+                <p>
+                  {{ info.phone }}
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="logo-image">
         <img src="https://picsum.photos/125/125" />
@@ -70,10 +66,11 @@
         <p><strong>Diagnóstico: </strong>{{ order.obs }}</p>
         <p><strong>Serviço executado: </strong>{{ order.description }}</p>
       </div>
+      <hr />
     }
-    <hr />
+    <h2>Peças ou material</h2>
+
     @if (order.order_parts.length > 0) {
-      <h2>Peças ou material</h2>
       <table width="100%" border="1px">
         <thead>
           <tr>

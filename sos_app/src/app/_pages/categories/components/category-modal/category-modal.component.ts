@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Category } from 'src/app/_models/Category';
+import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -10,19 +10,20 @@ import { ToastService } from 'src/app/_services/toast.service';
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',
   styleUrls: ['./category-modal.component.scss'],
+  standalone: false,
 })
 export class CategoryModalComponent implements OnInit {
+  modalService = inject(ModalService);
+  formBuilder = inject(FormBuilder);
+  categoryService = inject(CategoryService);
+  toastService = inject(ToastService);
+  alertService = inject(AlertService);
+
   categoryForm!: FormGroup;
 
-  category!: Category;
+  category!: CategoryInterface;
 
-  constructor(
-    private modalService: ModalService,
-    private formBuilder: FormBuilder,
-    private categoryService: CategoryService,
-    private toastService: ToastService,
-    private alertService: AlertService
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.mountForm();
@@ -49,7 +50,7 @@ export class CategoryModalComponent implements OnInit {
           'Categoria criada com sucesso!',
           'bottom',
           2000,
-          'success'
+          'success',
         );
       },
       error: () => {
@@ -57,7 +58,7 @@ export class CategoryModalComponent implements OnInit {
           'Erro ao criar categoria!',
           'bottom',
           2000,
-          'danger'
+          'danger',
         );
       },
     });
@@ -73,7 +74,7 @@ export class CategoryModalComponent implements OnInit {
             'Categoria criada com sucesso!',
             'bottom',
             2000,
-            'success'
+            'success',
           );
         },
         error: () => {
@@ -81,14 +82,13 @@ export class CategoryModalComponent implements OnInit {
             'Erro ao criar categoria!',
             'bottom',
             2000,
-            'danger'
+            'danger',
           );
         },
       });
   }
 
   async confirmDeleteCategory() {
-    console.log('deletando');
     await this.alertService.presentAlert(
       'Atenção',
       '',
@@ -106,11 +106,11 @@ export class CategoryModalComponent implements OnInit {
             this.deleteCategory(this.category);
           },
         },
-      ]
+      ],
     );
   }
 
-  deleteCategory(category: Category) {
+  deleteCategory(category: CategoryInterface) {
     this.categoryService.deleteCategory(category).subscribe({
       next: () => {
         this.closeModal();
@@ -118,7 +118,7 @@ export class CategoryModalComponent implements OnInit {
           'Categoria deletada com sucesso!',
           'bottom',
           2000,
-          'success'
+          'success',
         );
       },
       error: (err) => {

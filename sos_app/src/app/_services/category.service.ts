@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Category } from '../_models/Category';
+import { inject, Injectable } from '@angular/core';
+import { CategoryInterface } from '../_interfaces/CategoryInterface';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
@@ -13,9 +13,12 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class CategoryService {
-  categoriesSubject = new BehaviorSubject<Category[]>([]);
+  http = inject(HttpClient);
+  errorService = inject(ErrorService);
 
-  constructor(private http: HttpClient, private errorService: ErrorService) {}
+  categoriesSubject = new BehaviorSubject<CategoryInterface[]>([]);
+
+  constructor() {}
 
   get categories() {
     return this.categoriesSubject.asObservable();
@@ -23,18 +26,24 @@ export class CategoryService {
 
   getCategories() {
     return this.http
-      .get<Category[]>(`${environment.baseUrl}/categories`, httpOptions)
+      .get<
+        CategoryInterface[]
+      >(`${environment.baseUrl}/categories`, httpOptions)
       .pipe(
         tap((categories) => {
           return this.categoriesSubject.next(categories);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 
-  addCategory(category: Category) {
+  addCategory(category: CategoryInterface) {
     return this.http
-      .post<Category>(`${environment.baseUrl}/categories`, category, httpOptions)
+      .post<CategoryInterface>(
+        `${environment.baseUrl}/categories`,
+        category,
+        httpOptions,
+      )
       .pipe(
         tap((category) => {
           return this.categoriesSubject.next([
@@ -42,13 +51,17 @@ export class CategoryService {
             category,
           ]);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 
-  updateCategory(category: Category, id: number) {
+  updateCategory(category: CategoryInterface, id: number) {
     return this.http
-      .put<Category>(`${environment.baseUrl}/categories/${id}`, category, httpOptions)
+      .put<CategoryInterface>(
+        `${environment.baseUrl}/categories/${id}`,
+        category,
+        httpOptions,
+      )
       .pipe(
         tap((categoryReceived) => {
           const newCategories = this.categoriesSubject.value.map((category) => {
@@ -59,21 +72,21 @@ export class CategoryService {
           });
           return this.categoriesSubject.next(newCategories);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 
-  deleteCategory(category: Category) {
+  deleteCategory(category: CategoryInterface) {
     return this.http
       .delete(`${environment.baseUrl}/categories/${category.id}`, httpOptions)
       .pipe(
         tap(() => {
           const newCategories = this.categoriesSubject.value.filter(
-            (categoryListItem) => categoryListItem.id !== category.id
+            (categoryListItem) => categoryListItem.id !== category.id,
           );
           this.categoriesSubject.next(newCategories);
         }),
-        catchError(this.errorService.handleError)
+        catchError(this.errorService.handleError),
       );
   }
 }

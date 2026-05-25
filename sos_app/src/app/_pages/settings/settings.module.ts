@@ -10,7 +10,7 @@ import { SettingsPage } from './settings.page';
 import { MenuOptionComponent } from './components/menu-option/menu-option.component';
 import { BusinessInfoModalComponent } from './components/business-info-modal/business-info-modal.component';
 import { MaskitoDirective } from '@maskito/angular';
-
+import { UserInfoModalComponent } from './components/user-info-modal/user-info-modal.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,6 +20,11 @@ import { MaskitoDirective } from '@maskito/angular';
     ReactiveFormsModule,
     MaskitoDirective,
   ],
-  declarations: [SettingsPage, MenuOptionComponent, BusinessInfoModalComponent],
+  declarations: [
+    SettingsPage,
+    MenuOptionComponent,
+    BusinessInfoModalComponent,
+    UserInfoModalComponent,
+  ],
 })
 export class SettingsPageModule {}

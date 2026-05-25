@@ -12,6 +12,7 @@ import { ToastService } from 'src/app/_services/toast.service';
   selector: 'app-business-info-modal',
   templateUrl: './business-info-modal.component.html',
   styleUrls: ['./business-info-modal.component.scss'],
+  standalone: false,
 })
 export class BusinessInfoModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -42,7 +43,6 @@ export class BusinessInfoModalComponent implements OnInit {
 
   getBusinessInfo() {
     this.settingService.getBusinessInfo().subscribe((data) => {
-      console.log(data);
       this.form.patchValue(data);
       this.businessAlreadyExists = true;
     });
@@ -90,7 +90,6 @@ export class BusinessInfoModalComponent implements OnInit {
       );
       return;
     }
-    console.log('resposta upload imagem ', response);
     this.form.get('image')?.setValue(response.imagePath);
     this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
   }
@@ -115,15 +114,12 @@ export class BusinessInfoModalComponent implements OnInit {
 
   async update() {
     const verifyImageWasChanged = this.verifyIfImageWasSelected();
-    console.log('nao mudou', verifyImageWasChanged);
     if (verifyImageWasChanged) {
-      console.log('uploading image');
       await this.uploadImage();
     }
     this.settingService
       .updateBusinessInfo(this.form.value)
       .subscribe((businessInfo) => {
-        console.log(businessInfo);
         this.toastService.presentToast(
           'Dados atualizados com sucesso',
           'bottom',

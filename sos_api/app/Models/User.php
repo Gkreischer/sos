@@ -33,11 +33,13 @@ class User extends Authenticatable
         'cep',
         'address',
         'phone',
+        'district',
         'city',
         'state',
         'country',
         'image',
-        'password'
+        'password',
+        'type_id'
     ];
 
     /**
@@ -69,5 +71,10 @@ class User extends Authenticatable
     public function orders() : HasMany 
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function userType()
+    {
+        return $this->belongsTo(UserType::class, 'type_id');
     }
 }

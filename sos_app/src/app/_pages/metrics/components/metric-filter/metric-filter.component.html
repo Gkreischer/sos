@@ -1,0 +1,44 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Filtros</ion-card-title>
+    <ion-card-subtitle
+      >Utilize os filtros abaixo para visualizar os dados de acordo com suas
+      necessidades.</ion-card-subtitle
+    >
+  </ion-card-header>
+  <ion-card-content>
+    <form [formGroup]="form" (ngSubmit)="getOrderStatusMetrics()">
+      <ion-grid class="ion-padding">
+        <ion-row>
+          <ion-col size="12" sizeLg="2">
+            <ion-input
+              fill="outline"
+              labelPlacement="floating"
+              [placeholder]="'Início'"
+              formControlName="startDate"
+              [maskito]="dateMask"
+              [maskitoElement]="maskPredicate"
+              inputmode="numeric"
+              [clearOnEdit]="true"
+            ></ion-input>
+          </ion-col>
+          <ion-col size="12" sizeLg="2">
+            <ion-input
+              fill="outline"
+              labelPlacement="floating"
+              [placeholder]="'Fim'"
+              formControlName="endDate"
+              [maskito]="dateMask"
+              [maskitoElement]="maskPredicate"
+              inputmode="numeric"
+              [clearOnEdit]="true"
+            ></ion-input>
+          </ion-col>
+          <ion-col size="12" sizeLg="2">
+            <ion-button class="full-button" type="submit">Atualizar</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-card-content>
+</ion-card>

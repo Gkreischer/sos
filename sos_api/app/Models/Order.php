@@ -47,7 +47,7 @@ class Order extends Model
 
     public function technician() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'technician_id', 'id');
     }
 
     protected $casts = [

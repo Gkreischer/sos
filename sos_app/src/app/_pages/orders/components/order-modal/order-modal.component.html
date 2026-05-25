@@ -12,7 +12,7 @@
         <ion-button
           fill="solid"
           type="button"
-          color="primary"
+          color="tertiary"
           (click)="print()"
         >
           <ion-icon name="print-sharp"></ion-icon>
@@ -47,7 +47,7 @@
             <ion-card-content>
               <ion-grid>
                 <ion-row>
-                  <ion-col>
+                  <ion-col size="12" [sizeLg]="orderReceived ? 10 : 12">
                     @if (orderReceived) {
                       <ion-input
                         type="text"
@@ -63,70 +63,70 @@
                         (click)="selectClientId()"
                       ></ion-input>
                     }
-                    <!-- <ion-list>
-                      <ion-item
-                        fill="outline"
-                        lines="none"
-                        detail="true"
-                        button="true"
-                        [disabled]="orderReceived"
-                        (click)="selectClientId()"
-                      >
-                        <ion-label
-                          class="ion-padding-start"
-                          *ngIf="!clientSelected"
-                          >Selecionar o cliente</ion-label
-                        >
-                        <ion-label
-                          *ngIf="clientSelected"
-                          class="ion-padding-start"
-                          ><span class="ion-text-bold">Cliente:</span>
-                          {{ clientSelected.name }}</ion-label
-                        >
-                      </ion-item>
-                    </ion-list> -->
                   </ion-col>
+                  @if (orderReceived) {
+                    <ion-col size="12" sizeLg="2">
+                      <ion-button
+                        *ngIf="orderReceived"
+                        expand="block"
+                        type="button"
+                        color="tertiary"
+                        class="full-button"
+                      >
+                        <ion-icon name="search-sharp"></ion-icon>
+                        Anteriores
+                      </ion-button>
+                    </ion-col>
+                  }
                 </ion-row>
                 <ion-row>
                   <ion-col size="12" sizeLg="8">
-                    <ion-select
-                      *ngIf="equipments$"
-                      fill="outline"
-                      formControlName="equipment_id"
-                      labelPlacement="floating"
-                      label="Equipamento"
-                      okText="confirmar"
-                      cancelText="cancelar"
-                    >
-                      <ion-select-option
-                        *ngFor="
-                          let equipment of equipments$ | async as equipments
-                        "
-                        [value]="equipment.id"
-                        >{{ equipment.name }}</ion-select-option
+                    @let equipments = equipments$ | async;
+                    @if (equipments) {
+                      <ion-select
+                        fill="outline"
+                        formControlName="equipment_id"
+                        labelPlacement="floating"
+                        label="Equipamento"
+                        okText="confirmar"
+                        cancelText="cancelar"
                       >
-                    </ion-select>
+                        @for (equipment of equipments; track equipment.id) {
+                          <ion-select-option [value]="equipment.id">{{
+                            equipment.name
+                          }}</ion-select-option>
+                        } @empty {
+                          <ion-select-option disabled="true">
+                            Nenhum equipamento cadastrado
+                          </ion-select-option>
+                        }
+                      </ion-select>
+                    }
                   </ion-col>
                   <ion-col size="12" [sizeLg]="equipments$ ? 4 : 12">
-                    <ion-select
-                      *ngIf="orderStatuses$"
-                      fill="outline"
-                      formControlName="status_id"
-                      labelPlacement="floating"
-                      label="Status"
-                      okText="confirmar"
-                      cancelText="cancelar"
-                      (ionChange)="onChangeStatus()"
-                      [disabled]="this.selectOrderStatusDisabled"
-                    >
-                      <ion-select-option
-                        *ngFor="
-                          let status of orderStatuses$ | async as statuses
-                        "
-                        [value]="status.id"
-                        >{{ status.name }}</ion-select-option
+                    @let orderStatuses = orderStatuses$ | async;
+                    @if (orderStatuses$) {
+                      <ion-select
+                        fill="outline"
+                        formControlName="status_id"
+                        labelPlacement="floating"
+                        label="Status"
+                        okText="confirmar"
+                        cancelText="cancelar"
+                        (ionChange)="onChangeStatus()"
+                        [disabled]="this.selectOrderStatusDisabled"
                       >
-                    </ion-select>
+                        @for (status of orderStatuses; track status.id) {
+                          <ion-select-option [value]="status.id">{{
+                            status.name
+                          }}</ion-select-option>
+                        } @empty {
+                          <ion-select-option disabled="true"
+                            >Cadastre pelo menos um status</ion-select-option
+                          >
+                        }
+                      </ion-select>
+                    }
                   </ion-col>
                 </ion-row>
                 <ion-row>
@@ -360,12 +360,13 @@
                                   </div>
                                 </form>
                               </ion-list>
-                              <p>
+                              <br />
+                              <h2>
                                 <span class="ion-text-bold"
                                   >Valor total das peças:</span
                                 >
                                 {{ totalPartsPrice | currency: "R$" }}
-                              </p>
+                              </h2>
                             } @else {
                               <p>Nenhuma peça cadastrada</p>
                             }

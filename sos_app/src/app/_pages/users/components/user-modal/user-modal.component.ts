@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   MaskitoElementPredicate,
@@ -7,9 +7,9 @@ import {
   maskitoTransform,
 } from '@maskito/core';
 import { Observable } from 'rxjs';
-import { Category } from 'src/app/_models/Category';
-import { User } from 'src/app/_models/User';
-import { UserType } from 'src/app/_models/UserType';
+import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
+import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { UserTypeInterface } from 'src/app/_interfaces/UserTypeInterface';
 import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -20,15 +20,26 @@ import { cnpjMask } from 'src/app/_masks/cnpjMask';
 import { phoneMask } from 'src/app/_masks/phoneMask';
 import { cepMask } from 'src/app/_masks/cepMask';
 import { cpfMask } from 'src/app/_masks/cpfMask';
+import { UserTypeService } from 'src/app/_services/user-type.service';
 
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.scss'],
+  standalone: false,
 })
 export class UserModalComponent implements OnInit {
-  user!: User;
-  categories!: Observable<Category[]>;
+  private modalService = inject(ModalService);
+  private userService = inject(UserService);
+  private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
+  private alertService = inject(AlertService);
+  private categoryService = inject(CategoryService);
+  private userTypeService = inject(UserTypeService);
+
+  user!: UserInterface;
+  categories!: Observable<CategoryInterface[]>;
+  userTypes!: Observable<UserTypeInterface[]>;
 
   userForm!: FormGroup;
 
@@ -40,14 +51,7 @@ export class UserModalComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor(
-    private modalService: ModalService,
-    private userService: UserService,
-    private fb: FormBuilder,
-    private toastService: ToastService,
-    private alertService: AlertService,
-    private categoryService: CategoryService,
-  ) {}
+  constructor() {}
 
   mountForm() {
     this.userForm = this.fb.group({
@@ -62,14 +66,17 @@ export class UserModalComponent implements OnInit {
       cep: [''],
       city: [''],
       state: [''],
-      type: ['', [Validators.required]],
+      type_id: ['', [Validators.required]],
+      district: [''],
       country: [''],
     });
   }
 
   ngOnInit() {
     this.mountForm();
+    this.getUserTypes();
     if (this.user) {
+      console.log(this.user);
       this.patchForm();
       this.getCategories();
     }
@@ -122,7 +129,6 @@ export class UserModalComponent implements OnInit {
   }
 
   async confirmDeleteUser() {
-    console.log('deletando');
     await this.alertService.presentAlert(
       'Atenção',
       '',
@@ -144,11 +150,10 @@ export class UserModalComponent implements OnInit {
     );
   }
 
-  deleteUser(user: User) {
+  deleteUser(user: UserInterface) {
     this.userService.deleteUser(user).subscribe({
       next: (user) => {
         this.closeModal();
-        console.log(user);
         this.toastService.presentToast(
           'Usuário deletado com sucesso!',
           'bottom',
@@ -165,6 +170,12 @@ export class UserModalComponent implements OnInit {
   getCategories() {
     this.categoryService.getCategories().subscribe(() => {
       this.categories = this.categoryService.categories;
+    });
+  }
+
+  getUserTypes() {
+    this.userTypeService.get().subscribe(() => {
+      this.userTypes = this.userTypeService.userTypes;
     });
   }
 }

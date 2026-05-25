@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { ModalAddPartComponent } from './modal-add-part.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('ModalAddPartComponent', () => {
   let component: ModalAddPartComponent;
@@ -9,8 +11,9 @@ describe('ModalAddPartComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalAddPartComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ModalAddPartComponent],
+      imports: [IonicModule.forRoot()],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalAddPartComponent);

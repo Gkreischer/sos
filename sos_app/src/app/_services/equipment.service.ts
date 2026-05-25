@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { Equipment } from '../_models/Equipment';
+import { EquipmentInterface } from '../_interfaces/EquipmentInterface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
-import { User } from '../_models/User';
-
+import { UserInterface } from '../_interfaces/UserInterface';
+import { PaginateInterface } from '../_interfaces/PaginateInterface';
+import { EquipmentFilterInterface } from '../_interfaces/EquipmentFilterInterface';
+import { effect } from '@angular/core';
+import { signal } from '@angular/core';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -13,32 +16,27 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class EquipmentService {
-  equipmentsSubject = new BehaviorSubject<Equipment[]>([]);
+  http = inject(HttpClient);
+  errorService = inject(ErrorService);
 
-  constructor(
-    private http: HttpClient,
-    private errorService: ErrorService,
-  ) {}
+  equipmentsSubject = new BehaviorSubject<EquipmentInterface[]>([]);
+
+  equipmentFilter = signal<EquipmentFilterInterface | null>(null);
+
+  constructor() {}
 
   get equipments() {
     return this.equipmentsSubject.asObservable();
   }
 
-  getEquipments() {
-    return this.http
-      .get<Equipment[]>(`${environment.baseUrl}/equipments`, httpOptions)
-      .pipe(
-        tap((equipments) => {
-          return this.equipmentsSubject.next(equipments);
-        }),
-        catchError(this.errorService.handleError),
-      );
+  setEquipmentFilter(equipmentFilter: EquipmentFilterInterface) {
+    this.equipmentFilter.set(equipmentFilter);
   }
 
-  getUserEquipments(user: User) {
+  getUserEquipments(user: UserInterface) {
     return this.http
       .get<
-        Equipment[]
+        EquipmentInterface[]
       >(`${environment.baseUrl}/users/${user.id}/equipments`, httpOptions)
       .pipe(
         tap((equipments) => {
@@ -48,9 +46,9 @@ export class EquipmentService {
       );
   }
 
-  addEquipment(equipment: Equipment) {
+  addEquipment(equipment: EquipmentInterface) {
     return this.http
-      .post<Equipment>(
+      .post<EquipmentInterface>(
         `${environment.baseUrl}/equipments`,
         equipment,
         httpOptions,
@@ -66,9 +64,9 @@ export class EquipmentService {
       );
   }
 
-  updateEquipment(equipment: Equipment, id: number) {
+  updateEquipment(equipment: EquipmentInterface, id: number) {
     return this.http
-      .put<Equipment>(
+      .put<EquipmentInterface>(
         `${environment.baseUrl}/equipments/${id}`,
         equipment,
         httpOptions,
@@ -83,8 +81,27 @@ export class EquipmentService {
               return equipment;
             },
           );
-          console.log(newEquipments);
           return this.equipmentsSubject.next(newEquipments);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getEquipments(page?: number, filters?: EquipmentFilterInterface | null) {
+    return this.http
+      .post<
+        PaginateInterface<EquipmentInterface[]>
+      >(`${environment.baseUrl}/equipments/filter${page ? `?page=${page}` : ''}`, filters, httpOptions)
+      .pipe(
+        tap((res) => {
+          if (page && page >= 2) {
+            this.equipmentsSubject.next([
+              ...this.equipmentsSubject.getValue(),
+              ...res.data,
+            ]);
+          } else {
+            this.equipmentsSubject.next(res.data);
+          }
         }),
         catchError(this.errorService.handleError),
       );

@@ -53,6 +53,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./_pages/print/print.module').then((m) => m.PrintPageModule),
   },
+  {
+    path: 'relatorios',
+    loadChildren: () =>
+      import('./_pages/metrics/metrics.module').then(
+        (m) => m.MetricsPageModule,
+      ),
+  },
 ];
 
 @NgModule({

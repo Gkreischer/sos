@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\UserType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -26,9 +25,11 @@ class UserSeeder extends Seeder
                 'fantasy_name' => 'GK Informática',
                 'corporate_name' => 'GkInfo Serviços',
                 'cnpj' => '12345678901234',
+                'type_id' => UserType::where('name', 'Administrador')->first()->id,
                 'address' => 'Travessa X',
                 'cep' => '12345678',
                 'phone' => '22123456789',
+                'district' => 'Centro',
                 'city' => 'São Paulo',
                 'state' => 'SP',
                 'country' => 'Brasil',

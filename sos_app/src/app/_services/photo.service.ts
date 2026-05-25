@@ -7,7 +7,7 @@ import {
   Photo,
 } from '@capacitor/camera';
 import { Filesystem, Directory, WriteFileResult } from '@capacitor/filesystem';
-import { LocalFile } from 'src/app/_models/LocalFile';
+import { LocalFileInterface } from 'src/app/_interfaces/LocalFileInterface';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ErrorService } from './error.service';
@@ -16,7 +16,7 @@ import { ErrorService } from './error.service';
   providedIn: 'root',
 })
 export class PhotoService {
-  localFile = new BehaviorSubject<LocalFile | null>(null);
+  localFile = new BehaviorSubject<LocalFileInterface | null>(null);
 
   http = inject(HttpClient);
   error = inject(ErrorService);
@@ -63,7 +63,7 @@ export class PhotoService {
       name: fileName,
       path: savedFile.uri,
       data: `data:image/jpeg;base64,${base64Data}`,
-    } as LocalFile);
+    } as LocalFileInterface);
     // Use webPath to display the new image instead of base64 since it's
     // already loaded into memory
     return {
@@ -122,8 +122,6 @@ export class PhotoService {
           const formData = new FormData();
           formData.append('image', blob, file.name);
 
-          console.log('Enviando FormData:', formData);
-
           this.http
             .post<{ imagePath: string; message: string }>(
               `${environment.baseUrl}/photos`,
@@ -131,7 +129,6 @@ export class PhotoService {
             )
             .pipe(
               tap((response) => {
-                console.log('Upload realizado:', response);
                 resolve(response); // Retorna o objeto para o método que chamou
               }),
               catchError((error) => {

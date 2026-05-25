@@ -35,7 +35,7 @@
               <ion-label class="ion-padding-horizontal">
                 <h3 class="ion-text-bold">{{ part.category.name }}</h3>
                 <h3>{{ part.name }}</h3>
-                <p slot="end">{{ part.price | currency: "R$" }}</p>
+                <ion-note>{{ part.price | currency: "R$" }}</ion-note>
               </ion-label>
             </ion-item>
           } @empty {

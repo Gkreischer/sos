@@ -6,8 +6,8 @@ import {
   maskitoTransform,
 } from '@maskito/core';
 import { Observable, Subscription } from 'rxjs';
-import { Category } from 'src/app/_models/Category';
-import { Part } from 'src/app/_models/Part';
+import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
+import { PartInterface } from 'src/app/_interfaces/PartInterface';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
@@ -19,11 +19,12 @@ import priceMask from 'src/app/_masks/priceMask';
   selector: 'app-part-modal',
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
+  standalone: false,
 })
 export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
   partId!: number;
-  part!: Observable<Part>;
-  categories!: Observable<Category[]>;
+  part!: Observable<PartInterface>;
+  categories!: Observable<CategoryInterface[]>;
   formPart!: FormGroup;
 
   partSubscription!: Subscription;
@@ -59,7 +60,6 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((part) => {
         this.part = this.partService.part;
         this.formPart.patchValue(part);
-        console.log(part);
       });
   }
 
@@ -67,14 +67,12 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async update() {
     const verifyImageWasChanged = this.verifyIfImageWasSelected();
-    console.log(verifyImageWasChanged);
     if (verifyImageWasChanged) {
       await this.uploadImage();
     }
     this.partSubscription = this.partService
       .update(this.formPart.value, this.partId)
       .subscribe((part) => {
-        console.log(part);
         this.toastService.presentToast(
           'Parte atualizada com sucesso',
           'bottom',

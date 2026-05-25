@@ -18,7 +18,7 @@ class UserController extends Controller
         //
 
         try {
-            $users = User::all();
+            $users = User::with('userType')->select('id', 'name', 'phone', 'type_id')->paginate(20);
 
             return response($users, 200);
         } catch (Exception $e) {
@@ -66,17 +66,18 @@ class UserController extends Controller
             // Make validation with Validator
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255',
-                'cpf' => 'required|string|max:11',
-                'fantasy_name' => 'required|string|max:255',
-                'corporate_name' => 'required|string|max:255',
-                'cnpj' => 'required|string|max:14',
-                'cep' => 'required|string|max:8',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+                'cpf' => 'required|string|max:14|unique:users,cpf,' . $id,
+                'fantasy_name' => 'nullable|string|max:255',
+                'corporate_name' => 'nullable|string|max:255',
+                'cnpj' => 'nullable|string|max:18|unique:users,cnpj,' . $id,
+                'cep' => 'required|string|max:9',
                 'address' => 'required|string|max:255',
                 'phone' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:2',
                 'country' => 'required|string|max:255',
+                'type_id' => 'required|int',
             ]);
 
             if ($validator->fails()) {
@@ -131,17 +132,17 @@ class UserController extends Controller
         }
     }
 
-    public function store(Request $request) {
-        
+    public function store(Request $request)
+    {
+
         try {
 
             $data = $request->all();
-            
+
             $user = User::create($data);
 
             return response($user);
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
 
             return response([
                 'message' => 'Não foi possível criar o usuário',
@@ -156,12 +157,11 @@ class UserController extends Controller
 
             $data = $request->all();
 
-            Log::info($data);
-
             $validator = Validator::make(
                 $data,
                 [
-                    'description' => 'required|max:255'
+                    'description' => 'nullable|max:255',
+                    'type_id' => 'nullable|int'
                 ]
             );
 
@@ -169,29 +169,28 @@ class UserController extends Controller
                 return response($validator->errors(), 400);
             }
 
-            $user = User::where('name', 'LIKE', '%' . $data['description'] . '%')->orWhere('phone', 'LIKE', '%' . $data['description'] . '%')->orWhere('email', 'LIKE', '%' . $data['description'] . '%')->get();
+            $query = User::query();
 
-            return response($user, 200);
+            if (!empty($data['description'])) {
+                $query->where(function ($q) use ($data) {
+                    $q->where('name', 'LIKE', '%' . $data['description'] . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $data['description'] . '%')
+                        ->orWhere('email', 'LIKE', '%' . $data['description'] . '%');
+                });
+            }
+
+            if (!empty($data['type_id'])) {
+                $query->whereHas('userType', function ($q) use ($data) {
+                    $q->where('id', $data['type_id']);
+                });
+            }
+
+            $users = $query->get();
+
+            return response($users, 200);
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível obter o usuário',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    public function getStaffUsers() {
-
-        try
-        {
-            $users = User::all();
-
-            return response($users, 200);
-        }
-        catch (Exception $e)
-        {
-            return response([
-                'message' => 'Não foi possível obter os usuários da equipe',
                 'error' => $e->getMessage()
             ], 500);
         }

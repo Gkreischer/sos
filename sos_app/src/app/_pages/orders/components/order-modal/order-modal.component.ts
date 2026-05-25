@@ -1,39 +1,50 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Category } from 'src/app/_models/Category';
+import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { UsersListComponent } from 'src/app/_pages/users/components/users-list/users-list.component';
 import { ModalService } from 'src/app/_services/modal.service';
-import { User } from 'src/app/_models/User';
+import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { EquipmentService } from 'src/app/_services/equipment.service';
-import { Equipment } from 'src/app/_models/Equipment';
+import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
 import { OrderService } from 'src/app/_services/order.service';
-import { Order } from 'src/app/_models/Order';
+import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { AlertService } from 'src/app/_services/alert.service';
 import { ModalAddPartComponent } from '../modal-add-part/modal-add-part.component';
-import { Part } from 'src/app/_models/Part';
+import { PartInterface } from 'src/app/_interfaces/PartInterface';
 import { ToastService } from 'src/app/_services/toast.service';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
-import { OrderStatus } from 'src/app/_models/OrderStatus';
+import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import priceMask from 'src/app/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/money.service';
 import { Router } from '@angular/router';
-import { dateMask } from 'src/app/_masks/dateMask';
+import dateMask from 'src/app/_masks/dateMask';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
   styleUrls: ['./order-modal.component.scss'],
+  standalone: false,
 })
 export class OrderModalComponent implements OnInit {
+  modalService = inject(ModalService);
+  formBuilder = inject(FormBuilder);
+  equipmentService = inject(EquipmentService);
+  orderService = inject(OrderService);
+  alertService = inject(AlertService);
+  toastService = inject(ToastService);
+  orderStatusService = inject(OrderStatusService);
+  router = inject(Router);
+  moneyService = inject(MoneyService);
+
   orderId?: number;
-  orderReceived!: Order;
+  orderReceived!: OrderInterface;
   orderForm!: FormGroup;
-  categories$?: Observable<Category[]>;
-  equipments$?: Observable<Equipment[]>;
-  clientSelected?: User;
-  technicianSelected?: User;
-  orderStatuses$?: Observable<OrderStatus[]>;
+  categories$?: Observable<CategoryInterface[]>;
+  equipments$?: Observable<EquipmentInterface[]>;
+  clientSelected?: UserInterface;
+  technicianSelected?: UserInterface;
+  orderStatuses$?: Observable<OrderStatusInterface[]>;
   selectOrderStatusDisabled = false;
 
   priceMask = priceMask;
@@ -42,20 +53,9 @@ export class OrderModalComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor(
-    private modalService: ModalService,
-    private formBuilder: FormBuilder,
-    private equipmentService: EquipmentService,
-    private orderService: OrderService,
-    private alertService: AlertService,
-    private toastService: ToastService,
-    private orderStatusService: OrderStatusService,
-    private moneyService: MoneyService,
-    private router: Router,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
-    console.log('id', this.orderId);
     this.getOrderDetailsById();
     this.mountForm();
     this.patchFormTotalPrice();
@@ -110,7 +110,6 @@ export class OrderModalComponent implements OnInit {
     const orderStatus = this.orderForm.get('status_id')?.value;
 
     if (orderStatus != 4) {
-      console.log(orderStatus);
       return;
     }
     this.selectOrderStatusDisabled = true;
@@ -124,7 +123,7 @@ export class OrderModalComponent implements OnInit {
       });
   }
 
-  addParts(parts: Part[]) {
+  addParts(parts: PartInterface[]) {
     if (parts.length === 0) {
       return;
     }
@@ -132,7 +131,7 @@ export class OrderModalComponent implements OnInit {
     parts.forEach((part) => {
       this.parts.push(
         this.formBuilder.group({
-          part_id: [part.id, [Validators.required]],
+          id: [part.id, [Validators.required]],
           name: [part.name, [Validators.required]],
           quantity: [part.quantity, [Validators.required]],
           price: [part.price, [Validators.required]],
@@ -141,7 +140,7 @@ export class OrderModalComponent implements OnInit {
     });
   }
 
-  addPart(part: Part) {
+  addPart(part: PartInterface) {
     this.parts.push(
       this.formBuilder.group({
         part_id: [part.id, [Validators.required]],
@@ -171,13 +170,12 @@ export class OrderModalComponent implements OnInit {
 
     this.orderService.getById(this.orderId).subscribe((order) => {
       this.orderReceived = order;
-      order.equipment_id = order.equipment_id;
+
       this.orderForm.patchValue(order);
       this.clientSelected = order.user;
       this.technicianSelected = order.technician;
       this.addParts(order.order_parts);
       this.getUserEquipments();
-      console.log('ordem recebida', order);
       this.disabledSelectForDeliveredStatus();
       this.patchFormTotalPrice();
     });
@@ -192,7 +190,6 @@ export class OrderModalComponent implements OnInit {
       return;
     }
 
-    console.log('clientRecebido', client);
     this.orderForm.get('user_id')?.setValue(client.id);
     this.clientSelected = client;
     this.getUserEquipments();
@@ -222,11 +219,9 @@ export class OrderModalComponent implements OnInit {
   }
 
   update() {
-    console.log('enviando', this.orderForm.value);
     this.orderService
       .update(+this.orderReceived.id, this.orderForm.value)
       .subscribe((order) => {
-        console.log('ordem recebida', order);
         this.showUpdateSuccessToast();
         this.patchFormTotalPrice();
       });
@@ -308,9 +303,7 @@ export class OrderModalComponent implements OnInit {
         {
           text: 'Confirmar',
           role: 'confirm',
-          handler: () => {
-            console.log('ordem finalizada');
-          },
+          handler: () => {},
         },
       ],
     );

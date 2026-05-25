@@ -1,11 +1,19 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { EquipmentsPage } from './equipments.page';
+import { IonicModule } from '@ionic/angular';
+import { EquipmentsPageModule } from './equipments.module';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('EquipmentsPage', () => {
   let component: EquipmentsPage;
   let fixture: ComponentFixture<EquipmentsPage>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [IonicModule.forRoot(), EquipmentsPageModule],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
     fixture = TestBed.createComponent(EquipmentsPage);
     component = fixture.componentInstance;
     fixture.detectChanges();

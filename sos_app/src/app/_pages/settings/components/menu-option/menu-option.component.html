@@ -1,4 +1,7 @@
 <ion-card>
+  <ion-card-header>
+    <ion-card-title>Menu</ion-card-title>
+  </ion-card-header>
   <ion-card-content>
     <ion-list>
       <ion-item
@@ -7,6 +10,13 @@
         button="true"
         (click)="openBussinessInfoModal()"
         >Dados do seu negócio</ion-item
+      >
+      <ion-item
+        lines=""
+        detail="true"
+        button="true"
+        (click)="openUserModalInfo()"
+        >Suas informações</ion-item
       >
     </ion-list>
   </ion-card-content>

@@ -12,7 +12,6 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      {{ form.value | json }}
       <form
         [formGroup]="form"
         (ngSubmit)="businessAlreadyExists ? update() : submit()"

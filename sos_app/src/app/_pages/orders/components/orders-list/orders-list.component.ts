@@ -1,43 +1,74 @@
 import {
   Component,
+  inject,
   Input,
   OnChanges,
   OnInit,
+  Signal,
+  signal,
   SimpleChanges,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Order } from 'src/app/_models/Order';
+import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { ModalService } from 'src/app/_services/modal.service';
 import { OrderService } from 'src/app/_services/order.service';
 import { OrderModalComponent } from '../order-modal/order-modal.component';
-import { OrderStatus } from 'src/app/_models/OrderStatus';
+import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
 import { map } from 'rxjs';
+import { InfiniteScrollCustomEvent } from '@ionic/core';
+import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
+import { OrderFilter } from 'src/app/_interfaces/OrderFilter';
+import { effect } from '@angular/core';
 
 @Component({
   selector: 'app-orders-list',
   templateUrl: './orders-list.component.html',
   styleUrls: ['./orders-list.component.scss'],
+  standalone: false,
 })
 export class OrdersListComponent implements OnInit {
-  orders$?: Observable<Order[]>;
+  orderService = inject(OrderService);
+  modalService = inject(ModalService);
 
-  constructor(
-    private orderService: OrderService,
-    private modalService: ModalService,
-  ) {}
+  orders$?: Observable<OrderInterface[]>;
+  ordersPage: number = 1;
+  infiniteScroll = signal(true);
+  orderFilters: Signal<OrderFilter | null> = this.orderService.orderFilters;
 
-  ngOnInit() {
-    this.getAllOrders();
-  }
+  constructor() {
+    effect(() => {
+      const filters = this.orderFilters();
 
-  getAllOrders() {
-    this.orderService.getAll().subscribe((orders) => {
-      console.log('orders', orders);
-      this.orders$ = this.orderService.orders$;
+      this.ordersPage = 1;
+      this.infiniteScroll.set(true);
+
+      this.orderService
+        .getAll(this.ordersPage, filters ?? undefined)
+        .subscribe((res) => {
+          console.log('ordens recebidas', res);
+          this.orders$ = this.orderService.orders$;
+
+          if (res.current_page >= res.last_page) {
+            this.infiniteScroll.set(false);
+          }
+        });
     });
   }
 
-  openModal(order: Order) {
+  ngOnInit() {}
+
+  getOrders() {
+    this.orderService
+      .getAll(this.ordersPage, this.orderService.orderFilters())
+      .subscribe((res) => {
+        this.orders$ = this.orderService.orders$;
+        if (res.current_page >= res.last_page) {
+          this.infiniteScroll.set(false);
+        }
+      });
+  }
+
+  openModal(order: OrderInterface) {
     this.modalService.openModal(
       OrderModalComponent,
       { orderId: order.id },
@@ -45,7 +76,11 @@ export class OrdersListComponent implements OnInit {
     );
   }
 
-  trackById(index: number, item: Order) {
-    return item.id;
+  onIonInfinite(event: InfiniteScrollCustomEvent) {
+    this.ordersPage++;
+
+    this.getOrders();
+
+    setTimeout(() => event.target.complete(), 500);
   }
 }

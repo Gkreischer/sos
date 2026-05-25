@@ -1,5 +1,5 @@
-<ion-content color="light">
-  <ion-card *ngIf="equipments | async as equipments">
+@if (equipments | async; as equipments) {
+  <ion-card>
     <ion-card-header>
       <ion-card-title>Equipamentos cadastrados</ion-card-title>
       <ion-card-subtitle
@@ -8,20 +8,34 @@
       >
     </ion-card-header>
     <ion-card-content>
-      <ion-list *ngIf="equipments.length > 0">
-        <ion-item
-          button="true"
-          detail="true"
-          *ngFor="let equipment of equipments"
-          (click)="openModal(equipment)"
-        >
-          <ion-label>
-            <h3>{{ equipment.name }}</h3>
-            <p>{{ equipment.user.name }}</p>
-          </ion-label>
-        </ion-item>
+      <ion-list>
+        @for (equipment of equipments; track equipment.id) {
+          <ion-item button="true" detail="true" (click)="openModal(equipment)">
+            <ion-label>
+              <h3 class="ion-text-bold">{{ equipment.category.name }}</h3>
+              <h3>{{ equipment.name }}</h3>
+              <p>{{ equipment.user.name }}</p>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Nenhum equipamento cadastrado</h2>
+            </ion-label>
+          </ion-item>
+        }
+        @if (infiniteScroll()) {
+          <ion-item>
+            <ion-infinite-scroll
+              (ionInfinite)="onIonInfinite($event)"
+              loadingText="Carregando..."
+              loadingSpinner="bubbles"
+            >
+              <ion-infinite-scroll-content></ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+          </ion-item>
+        }
       </ion-list>
-      <p *ngIf="equipments.length == 0">Nenhum equipamento encontrado</p>
     </ion-card-content>
   </ion-card>
-</ion-content>
+}

@@ -6,13 +6,35 @@
     <form [formGroup]="filterForm">
       <ion-grid>
         <ion-row>
-          <ion-col size="12" sizeLg="10">
+          <ion-col size="12" sizeLg="7">
             <ion-input
               label="Nome"
               labelPlacement="floating"
               formControlName="description"
               fill="outline"
+              (ionChange)="resetListIfEmpty($event)"
+              [debounce]="800"
             ></ion-input>
+          </ion-col>
+          <ion-col size="12" sizeLg="3">
+            @let userTypes = userTypes$ | async;
+            <ion-select
+              label="Tipo de usuário"
+              labelPlacement="floating"
+              formControlName="type_id"
+              fill="outline"
+            >
+              <ion-select-option value="">Todos</ion-select-option>
+              @for (type of userTypes; track type.id) {
+                <ion-select-option [value]="type.id">
+                  {{ type.name }}
+                </ion-select-option>
+              } @empty {
+                <ion-select-option value=""
+                  >Nenhum usuário encontrado</ion-select-option
+                >
+              }
+            </ion-select>
           </ion-col>
           <ion-col size="12" sizeLg="2">
             <ion-button

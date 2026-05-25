@@ -18,6 +18,6 @@ export class FormatPhonePipe implements PipeTransform {
       return value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3').toString();
     }
 
-    return 'Não ocorreu a conversão';
+    return 'phone: Não ocorreu a conversão';
   }
 }

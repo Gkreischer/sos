@@ -22,14 +22,17 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        
-        Category::factory()->count(10)->create();
-        User::factory()->count(20)->create();
 
-        Equipment::factory()->count(50)->create();
+        $this->call([
+            UserTypeSeeder::class,
+        ]);
 
-        // Chame o seeder de Part após CategorySeeder
-        Part::factory()->count(50)->create();
+        Category::factory()->count(20)->create();
+        User::factory()->count(1000)->create();
+
+        Equipment::factory()->count(1000)->create();
+
+        Part::factory()->count(5000)->create();
 
         $this->call([
             EquipmentSeeder::class,
@@ -37,13 +40,15 @@ class DatabaseSeeder extends Seeder
             OrderStatusSeeder::class,
             OrderSeeder::class,
             OrderPartSeeder::class,
+
         ]);
 
-        
-        Order::factory()->count(20)->create();
+
+        Order::factory()->count(10000)->create();
 
         $this->call([
             RolesAndPermissionsSeeder::class,
+            BusinessInfoSeeder::class,
         ]);
     }
 }

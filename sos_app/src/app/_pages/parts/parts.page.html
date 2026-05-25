@@ -7,11 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="light">
+<ion-content>
+  <app-part-filter></app-part-filter>
   <app-parts-list></app-parts-list>
 </ion-content>
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-  <ion-fab-button class="ion-margin-end" (click)="addPart()">
+  <ion-fab-button (click)="addPart()">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>

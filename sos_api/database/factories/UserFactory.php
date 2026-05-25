@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\UserType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -37,10 +38,12 @@ class UserFactory extends Factory
             'address' => fake()->address(),
             'phone' => fake()->numerify('###########'),
             'city' => fake()->city(),
+            'district' => fake()->city(),
             'state' => strtoupper(fake()->lexify('??')),
             'country' => fake()->country(),
             'image' => fake()->imageUrl(),
-            
+            'type_id' => fake()->numberBetween(1, 4),
+
         ];
     }
 
@@ -49,7 +52,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

@@ -5,12 +5,11 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        @if (orders.length > 0) {
+        @for (order of orders; track order.id) {
           <ion-item
             lines="inset"
             detail="true"
             button="true"
-            *ngFor="let order of orders; trackBy: trackById"
             (click)="openModal(order)"
           >
             <div class="ion-margin-horizontal">
@@ -38,8 +37,23 @@
               >
             </ion-label>
           </ion-item>
-        } @else {
-          <ion-item lines="none">Nenhuma ordem encontrada</ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Nenhuma ordem de serviço encontrada</h2>
+            </ion-label>
+          </ion-item>
+        }
+        @if (infiniteScroll()) {
+          <ion-item>
+            <ion-infinite-scroll
+              (ionInfinite)="onIonInfinite($event)"
+              loadingText="Carregando..."
+              loadingSpinner="bubbles"
+            >
+              <ion-infinite-scroll-content></ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+          </ion-item>
         }
       </ion-list>
     </ion-card-content>

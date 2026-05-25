@@ -2,8 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { phoneMask } from 'src/app/_masks/phoneMask';
-import { BusinessInfoInterface } from 'src/app/_models/BusinessInfo';
-import { Order } from 'src/app/_models/Order';
+import { BusinessInfoInterface } from 'src/app/_interfaces/BusinessInfoInterface';
+import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { OrderService } from 'src/app/_services/order.service';
 import { SettingService } from 'src/app/_services/setting.service';
 
@@ -11,19 +11,17 @@ import { SettingService } from 'src/app/_services/setting.service';
   selector: 'app-order-print',
   templateUrl: './order-print.component.html',
   styleUrls: ['./order-print.component.scss'],
+  standalone: false,
 })
 export class OrderPrintComponent implements OnInit {
   route = inject(ActivatedRoute);
   orderService = inject(OrderService);
   settingService = inject(SettingService);
 
-  orderInfo!: Observable<Order>;
+  orderInfo!: Observable<OrderInterface>;
   businessInfo!: Observable<BusinessInfoInterface>;
 
-  orderPrintStyle = {
-    p: { padding: '0 !important' },
-    '.signs': { display: 'flex', 'justify-content': 'space-around' },
-  };
+  orderPrintStyle = { p: { margin: '2px !important' } };
 
   constructor() {}
 
@@ -38,14 +36,12 @@ export class OrderPrintComponent implements OnInit {
 
   getOrderData() {
     this.orderService.getById(+this.getOrderId()!).subscribe((order) => {
-      console.log(order);
       this.orderInfo = this.orderService.order$;
     });
   }
 
   getBusinessInfo() {
     this.settingService.getBusinessInfo().subscribe((data) => {
-      console.log(data);
       this.businessInfo = this.settingService.businessInfo$;
     });
   }

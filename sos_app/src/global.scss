@@ -113,16 +113,6 @@
 
 // END FONTS
 
-ion-content::part(background) {
-  background-color: #d1d1d1 !important;
-  --background-color: #d1d1d1 !important;
-}
-
-*,
-ion-label {
-  font-family: "Nunito", sans-serif !important;
-}
-
 ion-item {
   --padding-start: 0px;
 }
@@ -184,5 +174,28 @@ ion-list {
 }
 
 hr {
-  background-color: black;
+  border-top: 1px solid black;
+}
+
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-light);
+}
+
+.ion-flex {
+  display: flex;
+}
+
+ion-content {
+  --background: var(--ion-color-medium);
+}
+
+ion-item {
+  --background-hover: var(--ion-color-tertiary);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ion-color-dark);
 }

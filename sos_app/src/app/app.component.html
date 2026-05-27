@@ -1,35 +1,55 @@
 <ion-app>
-  <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
-      <ion-content color="primary">
-        <ion-list id="inbox-list">
+  <ion-split-pane contentId="main-content" when="xl">
+    <ion-menu contentId="main-content" type="overlay" menuId="main">
+      <ion-content class="ion-padding" color="primary">
+        @let userLogged = user | async;
+        @if (userLogged) {
+          <ion-card style="border-radius: 5%">
+            <ion-img
+              src="{{ userLogged.image }}"
+              alt="User Image"
+              class="user-image"
+            ></ion-img>
+          </ion-card>
+        } @else {
           <ion-card>
             <img src="assets/person-shape.svg" />
           </ion-card>
-          <ion-list-header>SOS</ion-list-header>
-          <ion-note>Sistema de Ordem de Serviço</ion-note>
+        }
+        <ion-list id="inbox-list" color="primary">
+          @if (userLogged) {
+            <ion-list-header>{{ userLogged.name }}</ion-list-header>
+            <ion-note>{{ userLogged.type.name }}</ion-note>
+          } @else {
+            <ion-list-header>SOS</ion-list-header>
+            <ion-note>Sistema de Ordem de Serviço</ion-note>
+          }
 
           <ion-menu-toggle auto-hide="false">
-            <ion-item
-              *ngFor="let p of appPages; let i = index"
-              routerDirection="root"
-              [routerLink]="[p.url]"
-              lines="none"
-              detail="false"
-              routerLinkActive="selected"
-            >
-              <ion-icon
-                aria-hidden="true"
-                slot="start"
-                [ios]="p.icon + '-outline'"
-                [md]="p.icon + '-sharp'"
-              ></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
+            @for (p of appPages; track p.title; let i = $index) {
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[p.url]"
+                lines="none"
+                detail="false"
+                routerLinkActive="activated"
+                color="primary"
+                [id]="p.id"
+              >
+                <ion-icon
+                  aria-hidden="true"
+                  slot="start"
+                  [ios]="p.icon + '-outline'"
+                  [md]="p.icon + '-sharp'"
+                ></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            }
           </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>
+
     <ion-router-outlet id="main-content" main></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

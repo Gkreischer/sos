@@ -1,3 +1,216 @@
-<p>
-  user-info-modal works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Suas informações de usuário</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      @if (this.user | async) {
+        <form [formGroup]="userForm" (ngSubmit)="updateUser()">
+          @if (this.userForm.get("image")?.value) {
+            <ion-row>
+              <ion-col>
+                <ion-card>
+                  <ion-img
+                    width="25%"
+                    [src]="userForm.get('image')?.value"
+                  ></ion-img>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          }
+          {{ userForm.value | json }}
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <ion-button (click)="selectImage()">
+                <ion-icon name="camera"></ion-icon>
+                <ion-label>Selecionar foto</ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  label="Nome"
+                  formControlName="name"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="email"
+                  formControlName="email"
+                  label="Email"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="tel"
+                  formControlName="cpf"
+                  label="CPF"
+                  [maskitoElement]="maskPredicate"
+                  [maskito]="cpfMask"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="text"
+                  formControlName="fantasy_name"
+                  label="Nome fantasia"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="text"
+                  formControlName="corporate_name"
+                  label="Razão social"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="tel"
+                  formControlName="cnpj"
+                  label="CNPJ"
+                  [maskitoElement]="maskPredicate"
+                  [maskito]="cnpjMask"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="tel"
+                  formControlName="cep"
+                  label="CEP"
+                  [maskitoElement]="maskPredicate"
+                  [maskito]="cepMask"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="text"
+                  formControlName="address"
+                  label="Endereço"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="tel"
+                  formControlName="phone"
+                  label="Telefone"
+                  [maskitoElement]="maskPredicate"
+                  [maskito]="phoneMask"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="text"
+                  formControlName="city"
+                  label="Cidade"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="text"
+                  formControlName="state"
+                  label="Estado"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="text"
+                  formControlName="country"
+                  label="País"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="password"
+                  formControlName="password"
+                  label="Senha"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  type="password"
+                  formControlName="confirmPassword"
+                  label="Confirmar senha"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-button
+                  type="submit"
+                  [disabled]="!userForm.valid"
+                  expand="block"
+                >
+                  Atualizar
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>

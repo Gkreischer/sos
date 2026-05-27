@@ -28,7 +28,7 @@
     "@capacitor/filesystem": "^6.0.0",
     "@capacitor/haptics": "^6.0.0",
     "@capacitor/keyboard": "^6.0.0",
-    "@capacitor/preferences": "^6.0.0",
+    "@capacitor/preferences": "^6.0.4",
     "@capacitor/status-bar": "^6.0.0",
     "@ionic/angular": "^8.8.6",
     "@ionic/core": "^8.8.6",
@@ -44,6 +44,8 @@
     "ionicons": "^7.4.0",
     "ng2-charts": "^8.0.0",
     "ngx-print": "^3.2.0",
+    "ngx-ui-tour-core": "^14.0.0",
+    "ngx-ui-tour-ionic": "^6.0.1",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.3",
     "zone.js": "~0.15.1"

@@ -28,7 +28,7 @@
             (click)="returnClientIdMode ? returnClient(user) : openModal(user)"
           >
             <ion-label>
-              <h3 class="ion-text-bold">{{ user.user_type.name }}</h3>
+              <h3 class="ion-text-bold">{{ user.type.name }}</h3>
               <h3>{{ user.name }}</h3>
               <p>{{ user.phone | formatPhone }}</p>
             </ion-label>

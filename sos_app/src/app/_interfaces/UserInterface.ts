@@ -16,8 +16,12 @@ export interface UserInterface {
   fantasy_name: string;
   phone: string;
   equipments: Array<EquipmentInterface>;
-  user_type: UserTypeInterface;
+  type_id: number;
+  type: UserTypeInterface;
   corporate_name: string;
+  password: string;
+  token?: string;
+  password_confirmation?: string;
   created_at: Date;
   updated_at: Date;
 }

@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UserInterface } from '../_interfaces/UserInterface';
 import { catchError, tap, BehaviorSubject } from 'rxjs';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
 import { PaginateInterface } from '../_interfaces/PaginateInterface';
 import { UserTypeInterface } from '../_interfaces/UserTypeInterface';
+import { LoginService } from './login.service';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -14,13 +15,14 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class UserService {
+  http = inject(HttpClient);
+  errorService = inject(ErrorService);
+  loginService = inject(LoginService);
+
   usersSubject = new BehaviorSubject<UserInterface[]>([]);
   userTypesSubject = new BehaviorSubject<UserTypeInterface[]>([]);
 
-  constructor(
-    private httpClient: HttpClient,
-    private errorService: ErrorService,
-  ) {}
+  constructor() {}
 
   get users() {
     return this.usersSubject.asObservable();
@@ -31,7 +33,7 @@ export class UserService {
   }
 
   getUsers(page?: number) {
-    return this.httpClient
+    return this.http
       .get<
         PaginateInterface<UserInterface[]>
       >(`${environment.baseUrl}/users${page ? `?page=${page}` : ''}`, httpOptions)
@@ -47,7 +49,7 @@ export class UserService {
   }
 
   getUserByDesc(filter: UserTypeInterface) {
-    return this.httpClient
+    return this.http
       .post<
         UserInterface[]
       >(`${environment.baseUrl}/users/description/${filter.id}`, filter, httpOptions)
@@ -60,7 +62,7 @@ export class UserService {
   }
 
   addUser(user: UserInterface) {
-    return this.httpClient
+    return this.http
       .post<UserInterface>(
         `${environment.baseUrl}/users/add`,
         user,
@@ -76,7 +78,7 @@ export class UserService {
   }
 
   updateUser(user: UserInterface, id: number) {
-    return this.httpClient
+    return this.http
       .put<UserInterface>(
         `${environment.baseUrl}/users/${id}`,
         user,
@@ -88,6 +90,9 @@ export class UserService {
             if (user.id === userReceived.id) {
               return userReceived;
             }
+            if (user.id === this.loginService.userSubject.value!.id) {
+              this.loginService.userSubject.next(userReceived);
+            }
             return user;
           });
 
@@ -98,7 +103,7 @@ export class UserService {
   }
 
   deleteUser(user: UserInterface) {
-    return this.httpClient
+    return this.http
       .delete(`${environment.baseUrl}/users/${user.id}`, httpOptions)
       .pipe(
         tap(() => {
@@ -112,7 +117,7 @@ export class UserService {
   }
 
   getUserTypes() {
-    return this.httpClient
+    return this.http
       .get<
         UserTypeInterface[]
       >(`${environment.baseUrl}/user-types`, httpOptions)

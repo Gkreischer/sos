@@ -83,6 +83,27 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  getCategories() {
+    this.categoryService.getCategories().subscribe(() => {
+      this.categories = this.categoryService.categories;
+    });
+  }
+
+  mountForm() {
+    this.formPart = this.formBuilder.group({
+      id: [''],
+      name: ['', [Validators.required]],
+      price: ['', [Validators.required]],
+      description: [''],
+      image: [''],
+      category_id: ['', [Validators.required]],
+    });
+  }
+
+  closeModal() {
+    this.modalService.closeModal();
+  }
+
   async uploadImage() {
     const response = await this.photoService.startUpload();
 
@@ -105,27 +126,6 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
       return true;
     }
     return;
-  }
-
-  getCategories() {
-    this.categoryService.getCategories().subscribe(() => {
-      this.categories = this.categoryService.categories;
-    });
-  }
-
-  mountForm() {
-    this.formPart = this.formBuilder.group({
-      id: [''],
-      name: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      description: [''],
-      image: [''],
-      category_id: ['', [Validators.required]],
-    });
-  }
-
-  closeModal() {
-    this.modalService.closeModal();
   }
 
   async selectImage() {

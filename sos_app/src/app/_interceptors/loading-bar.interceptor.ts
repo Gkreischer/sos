@@ -1,55 +1,51 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-} from '@angular/common/http';
-import { Observable, finalize } from 'rxjs';
-import { LoadingController } from '@ionic/angular';
+import { HttpInterceptorFn } from '@angular/common/http';
 
-@Injectable()
-export class LoadingBarInterceptor implements HttpInterceptor {
-  private request = 0;
-  private loadingBar: HTMLIonProgressBarElement;
+import { finalize } from 'rxjs';
 
-  constructor() {
-    this.loadingBar = document.createElement('ion-progress-bar');
-    this.loadingBar.type = 'indeterminate';
-    this.loadingBar.color = 'tertiary';
-    this.loadingBar.style.height = '5px';
-    this.loadingBar.style.opacity = '1';
+let requests = 0;
+
+const loadingBar = document.createElement(
+  'ion-progress-bar',
+) as HTMLIonProgressBarElement;
+
+loadingBar.type = 'indeterminate';
+loadingBar.color = 'tertiary';
+loadingBar.style.height = '5px';
+loadingBar.style.opacity = '1';
+loadingBar.style.position = 'fixed';
+loadingBar.style.top = '0';
+loadingBar.style.left = '0';
+loadingBar.style.width = '100%';
+loadingBar.style.zIndex = '99999';
+
+const show = () => {
+  if (!loadingBar.parentElement) {
+    document.body.appendChild(loadingBar);
+  }
+};
+
+const hide = () => {
+  if (loadingBar.parentElement) {
+    loadingBar.parentElement.removeChild(loadingBar);
+  }
+};
+
+export const loadingBarInterceptor: HttpInterceptorFn = (req, next) => {
+  requests++;
+
+  if (requests === 1) {
+    show();
   }
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
-    this.request++;
+  return next(req).pipe(
+    finalize(() => {
+      requests--;
 
-    if (this.request === 1) {
-      this.show();
-    }
-
-    return next.handle(request).pipe(
-      finalize(() => {
-        this.request--;
-        if (this.request == 0) {
-          setTimeout(() => {
-            this.hide();
-          }, 250);
-        }
-      })
-    );
-  }
-
-  private show() {
-    document.body.appendChild(this.loadingBar);
-  }
-
-  private hide() {
-    if (this.loadingBar && this.loadingBar.parentElement) {
-      this.loadingBar.parentElement.removeChild(this.loadingBar);
-    }
-  }
-}
+      if (requests === 0) {
+        setTimeout(() => {
+          hide();
+        }, 250);
+      }
+    }),
+  );
+};

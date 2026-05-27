@@ -10,6 +10,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\MetricController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTypeController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,78 +24,94 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::middleware(['json.response'])->group(function () {
 
-    Route::controller(EquipmentController::class)->group(function () {
-        Route::get('/equipments', 'index');
-        Route::get('/equipments/{id}', 'show');
-        Route::post('/equipments', 'store');
-        Route::put('/equipments/{id}', 'update');
-        Route::delete('/equipments/{id}', 'destroy');
-        Route::get('/users/{id}/equipments', 'getUserEquipments');
-        Route::post('/equipments/filter', 'getEquipmentByFilter');
+
+    Route::controller(LoginController::class)->group(function () {
+        Route::post('/login', 'login');
+        Route::post('/register/technician', 'registerTechnician');
+        Route::post('/logout', 'logout');
     });
 
-    Route::controller(CategoryController::class)->group(function () {
-        Route::get('/categories', 'index');
-        Route::get('/categories/{id}', 'show');
-        Route::post('/categories', 'store');
-        Route::put('/categories/{id}', 'update');
-        Route::delete('/categories/{id}', 'destroy');
-    });
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::controller(LoginController::class)->group(function () {
+            Route::post('/verify', 'verifyToken');
+            Route::post('/register/technician', 'registerTechnician');
+            Route::post('/logout', 'logout');
+        });
 
-    Route::controller(UserController::class)->group(function () {
+        Route::controller(EquipmentController::class)->group(function () {
+            Route::get('/equipments', 'index');
+            Route::get('/equipments/{id}', 'show');
+            Route::post('/equipments', 'store');
+            Route::put('/equipments/{id}', 'update');
+            Route::delete('/equipments/{id}', 'destroy');
+            Route::get('/users/{id}/equipments', 'getUserEquipments');
+            Route::post('/equipments/filter', 'getEquipmentByFilter');
+        });
 
-        Route::get('/users', 'index');
-        Route::get('/users/staff', 'getStaffUsers');
-        Route::get('/users/{id}', 'show');
-        Route::post('/users/description/{description}', 'getUserByDescription');
-        Route::put('/users/{id}', 'update');
-        Route::delete('/users/{id}', 'destroy');
-        Route::post('/users/add', 'store');
-    });
+        Route::controller(CategoryController::class)->group(function () {
+            Route::get('/categories', 'index');
+            Route::get('/categories/{id}', 'show');
+            Route::post('/categories', 'store');
+            Route::put('/categories/{id}', 'update');
+            Route::delete('/categories/{id}', 'destroy');
+        });
 
-    Route::controller(OrderController::class)->group(function () {
-        Route::get('/orders', 'getAll');
-        Route::post('/orders', 'store');
-        Route::get('/orders/{id}', 'getById');
-        Route::put('/orders/{id}', 'update');
-        Route::get('/orders/status/{status_id}', 'getOrderByStatus');
-        Route::post('/orders/search', 'searchByFilter');
-    });
+        Route::controller(UserController::class)->group(function () {
 
-    Route::controller(PartController::class)->group(function () {
-        Route::get('/parts', 'getAll');
-        Route::post('/parts/search', 'search');
-        Route::get('/parts/{id}', 'getById');
-        Route::put('/parts/{id}', 'update');
-        Route::post('/parts/filter', 'getPartByDescFilter');
-    });
+            Route::get('/users', 'index');
+            Route::get('/users/staff', 'getStaffUsers');
+            Route::get('/users/{id}', 'show');
+            Route::post('/users/description/{description}', 'getUserByDescription');
+            Route::put('/users/{id}', 'update');
+            Route::delete('/users/{id}', 'destroy');
+            Route::post('/users/add', 'store');
+        });
 
-    Route::controller(PhotoController::class)->group(function () {
-        Route::post('/photos', 'store');
-    });
+        Route::controller(OrderController::class)->group(function () {
+            Route::get('/orders', 'getAll');
+            Route::post('/orders', 'store');
+            Route::get('/orders/{id}', 'getById');
+            Route::put('/orders/{id}', 'update');
+            Route::get('/orders/status/{status_id}', 'getOrderByStatus');
+            Route::post('/orders/search', 'searchByFilter');
+        });
 
-    Route::controller(OrderStatusController::class)->group(function () {
-        Route::get('/order-status', 'index');
-    });
+        Route::controller(PartController::class)->group(function () {
+            Route::get('/parts', 'getAll');
+            Route::post('/parts/search', 'search');
+            Route::get('/parts/{id}', 'getById');
+            Route::put('/parts/{id}', 'update');
+            Route::post('/parts/filter', 'getPartByDescFilter');
+        });
 
-    Route::controller(BusinessInfoController::class)->group(function () {
-        Route::get('/settings/business-info', 'getBusinessInfo');
-        Route::put('/settings/business-info', 'storeBusinessInfo');
-    });
+        Route::controller(PhotoController::class)->group(function () {
+            Route::post('/photos', 'store');
+        });
 
-    Route::controller(MetricController::class)->group(function () {
-        Route::post('/metrics/orders/year', 'getCountOrderByPeriod');
-        Route::post('/metrics/orders/status', 'getTypeOrderByPeriodMetric');
-        Route::post('/metrics/orders/total-price', 'getTotalPriceOrderByPeriod');
-        Route::post('/metrics/orders/revenue', 'getRevenueByStatus');
-        Route::post('/metrics/technicians', 'getTechnicianData');
-        Route::post('/metrics/equipment', 'getEquipmentWithMostOrders');
-    });
+        Route::controller(OrderStatusController::class)->group(function () {
+            Route::get('/order-status', 'index');
+        });
 
-    Route::controller(UserTypeController::class)->group(function () {
-        Route::get('/user-types', 'index');
+        Route::controller(BusinessInfoController::class)->group(function () {
+            Route::get('/settings/business-info', 'getBusinessInfo');
+            Route::put('/settings/business-info', 'storeBusinessInfo');
+        });
+
+        Route::controller(MetricController::class)->group(function () {
+            Route::post('/metrics/orders/year', 'getCountOrderByPeriod');
+            Route::post('/metrics/orders/status', 'getTypeOrderByPeriodMetric');
+            Route::post('/metrics/orders/total-price', 'getTotalPriceOrderByPeriod');
+            Route::post('/metrics/orders/revenue', 'getRevenueByStatus');
+            Route::post('/metrics/technicians', 'getTechnicianData');
+            Route::post('/metrics/equipment', 'getEquipmentWithMostOrders');
+        });
+
+        Route::controller(UserTypeController::class)->group(function () {
+            Route::get('/user-types', 'index');
+        });
     });
 
     Route::fallback(function () {

@@ -1,37 +1,37 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse,
-} from '@angular/common/http';
-import { Observable, catchError, retry, throwError } from 'rxjs';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+
+import { inject } from '@angular/core';
+
+import { catchError, retry, throwError } from 'rxjs';
+
 import { ToastService } from '../_services/toast.service';
+import { LoginService } from '../_services/login.service';
 
-@Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private toastService: ToastService) {}
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const toastService = inject(ToastService);
+  const loginService = inject(LoginService);
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<unknown>> {
-    return next.handle(request).pipe(
-      retry(2), // retry a failed request up to 2 times
-      catchError((err: HttpErrorResponse) => {
-        const message = err?.error?.message || err?.message || 'Erro interno';
+  return next(req).pipe(
+    catchError((err: HttpErrorResponse) => {
+      const message = err?.error?.message || err?.message || 'Erro interno';
 
-        this.toastService.presentToast(message, 'bottom', 2000, 'danger');
+      switch (err.status) {
+        case 401:
+          loginService.logout();
+          break;
+        case 0:
+          toastService.presentToast('Erro crítico', 'bottom', 2000, 'danger');
+          break;
+      }
 
-        if (err.status === 0) {
-          console.error('An error occurred:', message);
-        } else {
-          console.error('Error code:', err.status, 'Error message:', message);
-        }
+      toastService.presentToast(
+        `${err.status} - ${message}`,
+        'bottom',
+        2000,
+        'danger',
+      );
 
-        return throwError(() => err);
-      }),
-    );
-  }
-}
+      return throwError(() => err);
+    }),
+  );
+};

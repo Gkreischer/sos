@@ -128,8 +128,8 @@ ion-modal {
 }
 
 .split-pane-visible > .split-pane-side {
-  min-width: 230px !important;
-  max-width: 230px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
 
   * {
     font-family: "Nunito", sans-serif !important;
@@ -188,10 +188,6 @@ ion-toolbar {
 
 ion-content {
   --background: var(--ion-color-medium);
-}
-
-ion-item {
-  --background-hover: var(--ion-color-tertiary);
 }
 
 h1,

@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Models\UserType;
 
 class UserController extends Controller
 {
@@ -63,6 +64,22 @@ class UserController extends Controller
 
             $data = $request->all();
 
+            if (!empty($data['type_id']) && is_numeric($data['type_id'])) {
+                if (request()->user()->type_id != UserType::where('name', 'Administrador')->first()->id) {
+                    return response([
+                        'message' => 'Não é possível alterar o tipo de usuário',
+                        'error' => 'Não é possível alterar o tipo de usuário'
+                    ], 403);
+                }
+            }
+
+            if (!empty($data['password']) && !empty($data['password_confirmation']) && $data['password'] != $data['password_confirmation'] && strlen($data['password']) >= 8 && strlen($data['password_confirmation']) >= 8) {
+                return response([
+                    'message' => 'A confirmação da senha não confere',
+                    'error' => 'A confirmação da senha não confere'
+                ], 400);
+            }
+
             // Make validation with Validator
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
@@ -77,7 +94,7 @@ class UserController extends Controller
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:2',
                 'country' => 'required|string|max:255',
-                'type_id' => 'required|int',
+
             ]);
 
             if ($validator->fails()) {

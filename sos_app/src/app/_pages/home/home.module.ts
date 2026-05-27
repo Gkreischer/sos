@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { HomePageRoutingModule } from './home-routing.module';
-
+import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
 import { HomePage } from './home.page';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
@@ -16,6 +16,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     IonicModule,
     HomePageRoutingModule,
     NgxChartsModule,
+    TourIonPopoverModule,
   ],
   declarations: [HomePage],
 })

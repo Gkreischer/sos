@@ -18,10 +18,9 @@ describe('BarChartCounterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [BarChartCounterComponent],
-      imports: [IonicModule.forRoot(), BaseChartDirective],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), BaseChartDirective, BarChartCounterComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(BarChartCounterComponent);
     component = fixture.componentInstance;

@@ -19,12 +19,18 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
 import { OrderFilter } from 'src/app/_interfaces/OrderFilter';
 import { effect } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-orders-list',
-  templateUrl: './orders-list.component.html',
-  styleUrls: ['./orders-list.component.scss'],
-  standalone: false,
+    selector: 'app-orders-list',
+    templateUrl: './orders-list.component.html',
+    styleUrls: ['./orders-list.component.scss'],
+    imports: [
+        IonicModule,
+        AsyncPipe,
+        DatePipe,
+    ],
 })
 export class OrdersListComponent implements OnInit {
   orderService = inject(OrderService);

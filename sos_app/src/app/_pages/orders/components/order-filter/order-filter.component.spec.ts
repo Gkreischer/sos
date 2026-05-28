@@ -13,10 +13,9 @@ describe('OrderFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [OrderFilterComponent],
-      imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule, OrderFilterComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(OrderFilterComponent);
     component = fixture.componentInstance;

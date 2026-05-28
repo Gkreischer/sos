@@ -9,9 +9,8 @@ describe('TechnicianDataListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TechnicianDataListComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), TechnicianDataListComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(TechnicianDataListComponent);
     component = fixture.componentInstance;

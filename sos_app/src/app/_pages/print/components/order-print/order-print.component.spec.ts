@@ -13,14 +13,13 @@ describe('OrderPrintComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [OrderPrintComponent],
-      imports: [IonicModule.forRoot(), NgxPrintDirective],
-      providers: [
+    imports: [IonicModule.forRoot(), NgxPrintDirective, OrderPrintComponent],
+    providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
 
     fixture = TestBed.createComponent(OrderPrintComponent);
     component = fixture.componentInstance;

@@ -23,7 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'user_type',
+        'type',
         'cep',
         'address',
         'cpf',
@@ -63,17 +63,17 @@ class User extends Authenticatable
     ];
 
 
-    public function equipments() : HasMany
+    public function equipments(): HasMany
     {
         return $this->hasMany(Equipment::class);
     }
 
-    public function orders() : HasMany 
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function userType()
+    public function type()
     {
         return $this->belongsTo(UserType::class, 'type_id');
     }

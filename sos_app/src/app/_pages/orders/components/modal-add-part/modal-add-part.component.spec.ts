@@ -11,10 +11,9 @@ describe('ModalAddPartComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ModalAddPartComponent],
-      imports: [IonicModule.forRoot()],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), ModalAddPartComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(ModalAddPartComponent);
     component = fixture.componentInstance;

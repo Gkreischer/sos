@@ -13,10 +13,9 @@ describe('PartModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PartModalComponent],
-      imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule, PartModalComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(PartModalComponent);
     component = fixture.componentInstance;

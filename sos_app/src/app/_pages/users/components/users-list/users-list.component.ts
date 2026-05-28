@@ -4,14 +4,20 @@ import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { ModalService } from 'src/app/_services/modal.service';
 import { UserService } from 'src/app/_services/user.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
-import { InfiniteScrollCustomEvent, IonInfiniteScroll } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonInfiniteScroll, IonicModule } from '@ionic/angular';
 import { inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { FormatPhonePipe } from '../../../../_pipes/format-phone.pipe';
 
 @Component({
-  selector: 'app-users-list',
-  templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss'],
-  standalone: false,
+    selector: 'app-users-list',
+    templateUrl: './users-list.component.html',
+    styleUrls: ['./users-list.component.scss'],
+    imports: [
+        IonicModule,
+        AsyncPipe,
+        FormatPhonePipe,
+    ],
 })
 export class UsersListComponent implements OnInit {
   userService = inject(UserService);

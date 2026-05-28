@@ -1,5 +1,17 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import {
   MaskitoElementPredicate,
   MaskitoOptions,
@@ -14,14 +26,32 @@ import { PartService } from 'src/app/_services/part.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import priceMask from 'src/app/_masks/priceMask';
-
+import { IonicModule } from '@ionic/angular';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MaskitoDirective } from '@maskito/angular';
+import { JsonPipe } from '@angular/common';
 @Component({
   selector: 'app-part-modal',
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
-  standalone: false,
+  imports: [
+    IonicModule,
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    MaskitoDirective,
+    AsyncPipe,
+    JsonPipe,
+  ],
 })
 export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
+  modalService = inject(ModalService);
+  formBuilder = inject(FormBuilder);
+  categoryService = inject(CategoryService);
+  partService = inject(PartService);
+  toastService = inject(ToastService);
+  photoService = inject(PhotoService);
+
   partId!: number;
   part!: Observable<PartInterface>;
   categories!: Observable<CategoryInterface[]>;
@@ -34,14 +64,7 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor(
-    private modalService: ModalService,
-    private formBuilder: FormBuilder,
-    private categoryService: CategoryService,
-    private partService: PartService,
-    private toastService: ToastService,
-    private photoService: PhotoService,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.mountForm();
@@ -63,13 +86,28 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  submit() {}
+  async submit() {
+    const verifyImageWasChanged = this.verifyIfImageWasSelected();
+    if (verifyImageWasChanged) {
+      await this.uploadImage();
+    }
+    this.partService.create(this.formPart.value).subscribe((part) => {
+      this.closeModal();
+      this.toastService.presentToast(
+        'Parte criada com sucesso!',
+        'bottom',
+        2000,
+        'success',
+      );
+    });
+  }
 
   async update() {
     const verifyImageWasChanged = this.verifyIfImageWasSelected();
     if (verifyImageWasChanged) {
       await this.uploadImage();
     }
+    let part: PartInterface = this.formPart.value;
     this.partSubscription = this.partService
       .update(this.formPart.value, this.partId)
       .subscribe((part) => {

@@ -27,12 +27,12 @@ class DatabaseSeeder extends Seeder
             UserTypeSeeder::class,
         ]);
 
-        Category::factory()->count(20)->create();
-        User::factory()->count(1000)->create();
+        Category::factory()->count(40)->create();
+        User::factory()->count(200)->create();
 
-        Equipment::factory()->count(1000)->create();
+        Equipment::factory()->count(200)->create();
 
-        Part::factory()->count(5000)->create();
+        Part::factory()->count(100)->create();
 
         $this->call([
             EquipmentSeeder::class,
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        Order::factory()->count(10000)->create();
+        Order::factory()->count(1300)->create();
 
         $this->call([
             RolesAndPermissionsSeeder::class,

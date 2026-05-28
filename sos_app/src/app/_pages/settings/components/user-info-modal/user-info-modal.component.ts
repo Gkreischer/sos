@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { inject } from '@angular/core';
 import { LoginService } from 'src/app/_services/login.service';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -13,11 +13,21 @@ import { MaskitoElementPredicate } from '@maskito/core';
 import { phoneMask } from 'src/app/_masks/phoneMask';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
+import { IonicModule } from '@ionic/angular';
+import { MaskitoDirective } from '@maskito/angular';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 @Component({
-  selector: 'app-user-info-modal',
-  templateUrl: './user-info-modal.component.html',
-  styleUrls: ['./user-info-modal.component.scss'],
-  standalone: false,
+    selector: 'app-user-info-modal',
+    templateUrl: './user-info-modal.component.html',
+    styleUrls: ['./user-info-modal.component.scss'],
+    imports: [
+        IonicModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaskitoDirective,
+        AsyncPipe,
+        JsonPipe,
+    ],
 })
 export class UserInfoModalComponent implements OnInit {
   formBuilder = inject(FormBuilder);

@@ -1,16 +1,23 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
+import { IonicModule } from '@ionic/angular';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-category-modal',
-  templateUrl: './category-modal.component.html',
-  styleUrls: ['./category-modal.component.scss'],
-  standalone: false,
+    selector: 'app-category-modal',
+    templateUrl: './category-modal.component.html',
+    styleUrls: ['./category-modal.component.scss'],
+    imports: [
+        IonicModule,
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class CategoryModalComponent implements OnInit {
   modalService = inject(ModalService);

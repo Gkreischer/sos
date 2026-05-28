@@ -11,10 +11,9 @@ describe('PartsListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PartsListComponent],
-      imports: [IonicModule.forRoot()],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), PartsListComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(PartsListComponent);
     component = fixture.componentInstance;

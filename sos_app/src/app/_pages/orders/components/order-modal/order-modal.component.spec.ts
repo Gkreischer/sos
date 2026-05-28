@@ -12,10 +12,9 @@ describe('OrderModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [OrderModalComponent],
-      imports: [IonicModule.forRoot(), ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactiveFormsModule, OrderModalComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(OrderModalComponent);
     component = fixture.componentInstance;

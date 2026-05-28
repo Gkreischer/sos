@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
 import { cepMask } from 'src/app/_masks/cepMask';
 import { cnpjMask } from 'src/app/_masks/cnpjMask';
@@ -7,12 +7,19 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { SettingService } from 'src/app/_services/setting.service';
 import { ToastService } from 'src/app/_services/toast.service';
+import { IonicModule } from '@ionic/angular';
+import { MaskitoDirective } from '@maskito/angular';
 
 @Component({
-  selector: 'app-business-info-modal',
-  templateUrl: './business-info-modal.component.html',
-  styleUrls: ['./business-info-modal.component.scss'],
-  standalone: false,
+    selector: 'app-business-info-modal',
+    templateUrl: './business-info-modal.component.html',
+    styleUrls: ['./business-info-modal.component.scss'],
+    imports: [
+        IonicModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaskitoDirective,
+    ],
 })
 export class BusinessInfoModalComponent implements OnInit {
   modalService = inject(ModalService);

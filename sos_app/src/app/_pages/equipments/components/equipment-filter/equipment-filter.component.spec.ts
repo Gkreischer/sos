@@ -12,10 +12,9 @@ describe('EquipmentFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EquipmentFilterComponent],
-      imports: [IonicModule.forRoot(), ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactiveFormsModule, EquipmentFilterComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(EquipmentFilterComponent);
     component = fixture.componentInstance;

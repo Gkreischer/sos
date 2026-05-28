@@ -2,12 +2,19 @@ import { Component, effect, inject, OnInit } from '@angular/core';
 import { ChartData, ChartType } from 'chart.js';
 import { OrderTotalPriceByStatusInterface } from 'src/app/_interfaces/OrderTotalPriceByStatusInterface';
 import { MetricsService } from 'src/app/_services/metrics.service';
+import { IonicModule } from '@ionic/angular';
+import { BaseChartDirective } from 'ng2-charts';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-revenue-values-list',
-  templateUrl: './revenue-values-list.component.html',
-  styleUrls: ['./revenue-values-list.component.scss'],
-  standalone: false,
+    selector: 'app-revenue-values-list',
+    templateUrl: './revenue-values-list.component.html',
+    styleUrls: ['./revenue-values-list.component.scss'],
+    imports: [
+        IonicModule,
+        BaseChartDirective,
+        CurrencyPipe,
+    ],
 })
 export class RevenueValuesListComponent implements OnInit {
   metricsService = inject(MetricsService);

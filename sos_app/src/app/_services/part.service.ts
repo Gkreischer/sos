@@ -116,4 +116,16 @@ export class PartService {
         catchError(this.errorService.handleError),
       );
   }
+
+  public create(part: PartInterface) {
+    return this.http
+      .post<PartInterface>(`${environment.baseUrl}/parts`, part, httpOptions)
+      .pipe(
+        tap((partReceived) => {
+          const newParts = [partReceived, ...this.partsSubject.value];
+          return this.partsSubject.next(newParts);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
 }

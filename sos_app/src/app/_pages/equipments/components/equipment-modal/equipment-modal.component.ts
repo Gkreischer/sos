@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
@@ -8,12 +8,21 @@ import { CategoryService } from 'src/app/_services/category.service';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
+import { IonicModule } from '@ionic/angular';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-equipment-modal',
-  templateUrl: './equipment-modal.component.html',
-  styleUrls: ['./equipment-modal.component.scss'],
-  standalone: false,
+    selector: 'app-equipment-modal',
+    templateUrl: './equipment-modal.component.html',
+    styleUrls: ['./equipment-modal.component.scss'],
+    imports: [
+        IonicModule,
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+        NgFor,
+        AsyncPipe,
+    ],
 })
 export class EquipmentModalComponent implements OnInit {
   modalService = inject(ModalService);

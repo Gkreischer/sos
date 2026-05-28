@@ -19,7 +19,7 @@ class UserController extends Controller
         //
 
         try {
-            $users = User::with('userType')->select('id', 'name', 'phone', 'type_id')->paginate(20);
+            $users = User::with('type')->select('id', 'name', 'phone', 'type_id', 'cpf', 'cnpj', 'cep')->paginate(20);
 
             return response($users, 200);
         } catch (Exception $e) {

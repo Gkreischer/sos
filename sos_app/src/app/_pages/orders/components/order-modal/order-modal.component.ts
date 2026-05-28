@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { UsersListComponent } from 'src/app/_pages/users/components/users-list/users-list.component';
@@ -20,11 +20,23 @@ import priceMask from 'src/app/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/money.service';
 import { Router } from '@angular/router';
 import dateMask from 'src/app/_masks/dateMask';
+import { IonicModule } from '@ionic/angular';
+import { NgIf, AsyncPipe, JsonPipe, CurrencyPipe } from '@angular/common';
+import { MaskitoDirective } from '@maskito/angular';
 @Component({
-  selector: 'app-order-modal',
-  templateUrl: './order-modal.component.html',
-  styleUrls: ['./order-modal.component.scss'],
-  standalone: false,
+    selector: 'app-order-modal',
+    templateUrl: './order-modal.component.html',
+    styleUrls: ['./order-modal.component.scss'],
+    imports: [
+        IonicModule,
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+        MaskitoDirective,
+        AsyncPipe,
+        JsonPipe,
+        CurrencyPipe,
+    ],
 })
 export class OrderModalComponent implements OnInit {
   modalService = inject(ModalService);

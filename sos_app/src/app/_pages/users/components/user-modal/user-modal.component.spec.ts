@@ -13,10 +13,9 @@ describe('UserModalComponent', () => {
 
   beforeEach(waitForAsync(async () => {
     TestBed.configureTestingModule({
-      declarations: [UserModalComponent],
-      imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule, UserModalComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(UserModalComponent);
     component = fixture.componentInstance;

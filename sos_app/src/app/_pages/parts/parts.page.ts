@@ -1,12 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PartModalComponent } from './components/part-modal/part-modal.component';
+import { IonicModule } from '@ionic/angular';
+import { PartFilterComponent } from './components/part-filter/part-filter.component';
+import { PartsListComponent } from './components/parts-list/parts-list.component';
 
 @Component({
-  selector: 'app-parts',
-  templateUrl: './parts.page.html',
-  styleUrls: ['./parts.page.scss'],
-  standalone: false,
+    selector: 'app-parts',
+    templateUrl: './parts.page.html',
+    styleUrls: ['./parts.page.scss'],
+    imports: [
+        IonicModule,
+        PartFilterComponent,
+        PartsListComponent,
+    ],
 })
 export class PartsPage implements OnInit {
   modalService = inject(ModalService);

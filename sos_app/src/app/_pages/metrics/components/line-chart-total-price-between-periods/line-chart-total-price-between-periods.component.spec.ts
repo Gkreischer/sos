@@ -18,10 +18,9 @@ describe('LineChartTotalPriceBetweenPeriodsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [LineChartTotalPriceBetweenPeriodsComponent],
-      imports: [IonicModule.forRoot(), BaseChartDirective],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), BaseChartDirective, LineChartTotalPriceBetweenPeriodsComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(
       LineChartTotalPriceBetweenPeriodsComponent,

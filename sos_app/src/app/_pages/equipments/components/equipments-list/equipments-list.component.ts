@@ -7,12 +7,14 @@ import { EquipmentModalComponent } from '../equipment-modal/equipment-modal.comp
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { EquipmentFilterInterface } from 'src/app/_interfaces/EquipmentFilterInterface';
 import { effect } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-equipments-list',
-  templateUrl: './equipments-list.component.html',
-  styleUrls: ['./equipments-list.component.scss'],
-  standalone: false,
+    selector: 'app-equipments-list',
+    templateUrl: './equipments-list.component.html',
+    styleUrls: ['./equipments-list.component.scss'],
+    imports: [IonicModule, AsyncPipe],
 })
 export class EquipmentsListComponent implements OnInit {
   equipmentService = inject(EquipmentService);

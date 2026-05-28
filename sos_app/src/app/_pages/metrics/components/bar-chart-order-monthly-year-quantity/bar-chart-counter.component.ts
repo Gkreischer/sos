@@ -13,13 +13,15 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 import { Chart } from 'chart.js';
 import { barChartOptions } from 'src/app/_charts/barChartOptions';
 import { chartTypes } from 'src/app/_charts/chartTypes';
+import { IonicModule } from '@ionic/angular';
+import { BaseChartDirective } from 'ng2-charts';
 Chart.register(zoomPlugin);
 
 @Component({
-  selector: 'app-bar-chart-counter',
-  templateUrl: './bar-chart-counter.component.html',
-  styleUrls: ['./bar-chart-counter.component.scss'],
-  standalone: false,
+    selector: 'app-bar-chart-counter',
+    templateUrl: './bar-chart-counter.component.html',
+    styleUrls: ['./bar-chart-counter.component.scss'],
+    imports: [IonicModule, BaseChartDirective],
 })
 export class BarChartCounterComponent implements OnInit {
   metricsService = inject(MetricsService);

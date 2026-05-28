@@ -6,12 +6,20 @@ import { BusinessInfoInterface } from 'src/app/_interfaces/BusinessInfoInterface
 import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { OrderService } from 'src/app/_services/order.service';
 import { SettingService } from 'src/app/_services/setting.service';
+import { NgxPrintDirective } from 'ngx-print';
+import { IonicModule } from '@ionic/angular';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-order-print',
-  templateUrl: './order-print.component.html',
-  styleUrls: ['./order-print.component.scss'],
-  standalone: false,
+    selector: 'app-order-print',
+    templateUrl: './order-print.component.html',
+    styleUrls: ['./order-print.component.scss'],
+    imports: [
+        NgxPrintDirective,
+        IonicModule,
+        AsyncPipe,
+        CurrencyPipe,
+    ],
 })
 export class OrderPrintComponent implements OnInit {
   route = inject(ActivatedRoute);

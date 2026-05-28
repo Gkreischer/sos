@@ -13,10 +13,9 @@ describe('MetricFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MetricFilterComponent],
-      imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule, MetricFilterComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(MetricFilterComponent);
     component = fixture.componentInstance;

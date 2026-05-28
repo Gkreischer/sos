@@ -9,9 +9,8 @@ describe('MenuOptionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MenuOptionComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), MenuOptionComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(MenuOptionComponent);
     component = fixture.componentInstance;

@@ -17,10 +17,9 @@ describe('PieOrderByStatusBetweenPeriodsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PieOrderByStatusBetweenPeriodsComponent],
-      imports: [IonicModule.forRoot(), BaseChartDirective],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), BaseChartDirective, PieOrderByStatusBetweenPeriodsComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(PieOrderByStatusBetweenPeriodsComponent);
     component = fixture.componentInstance;

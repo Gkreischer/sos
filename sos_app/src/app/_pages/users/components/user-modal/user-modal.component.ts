@@ -1,11 +1,13 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-  MaskitoElementPredicate,
-  MaskitoOptions,
-  maskitoTransform,
-} from '@maskito/core';
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { UserInterface } from 'src/app/_interfaces/UserInterface';
@@ -21,12 +23,20 @@ import { phoneMask } from 'src/app/_masks/phoneMask';
 import { cepMask } from 'src/app/_masks/cepMask';
 import { cpfMask } from 'src/app/_masks/cpfMask';
 import { UserTypeService } from 'src/app/_services/user-type.service';
+import { IonicModule } from '@ionic/angular';
+import { MaskitoDirective } from '@maskito/angular';
 
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.scss'],
-  standalone: false,
+  imports: [
+    IonicModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaskitoDirective,
+    AsyncPipe,
+  ],
 })
 export class UserModalComponent implements OnInit {
   private modalService = inject(ModalService);
@@ -53,6 +63,16 @@ export class UserModalComponent implements OnInit {
 
   constructor() {}
 
+  ngOnInit() {
+    this.mountForm();
+    this.getUserTypes();
+    if (this.user) {
+      console.log(this.user);
+      this.patchForm();
+      this.getCategories();
+    }
+  }
+
   mountForm() {
     this.userForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -72,18 +92,7 @@ export class UserModalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.mountForm();
-    this.getUserTypes();
-    if (this.user) {
-      console.log(this.user);
-      this.patchForm();
-      this.getCategories();
-    }
-  }
-
   patchForm() {
-    const user = this.user;
     this.user.cpf = maskitoTransform(this.user.cpf, cpfMask);
     this.user.cnpj = maskitoTransform(this.user.cnpj, cnpjMask);
     this.user.cep = maskitoTransform(this.user.cep, cepMask);

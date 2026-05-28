@@ -9,9 +9,8 @@ describe('FormLoginComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormLoginComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), FormLoginComponent]
+}).compileComponents();
 
     fixture = TestBed.createComponent(FormLoginComponent);
     component = fixture.componentInstance;

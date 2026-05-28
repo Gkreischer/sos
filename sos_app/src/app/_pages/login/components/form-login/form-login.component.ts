@@ -1,15 +1,19 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from 'src/app/_services/login.service';
 import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, IonicModule } from '@ionic/angular';
 @Component({
-  selector: 'app-form-login',
-  templateUrl: './form-login.component.html',
-  styleUrls: ['./form-login.component.scss'],
-  standalone: false,
+    selector: 'app-form-login',
+    templateUrl: './form-login.component.html',
+    styleUrls: ['./form-login.component.scss'],
+    imports: [
+        IonicModule,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class FormLoginComponent implements OnInit {
   formBuilder = inject(FormBuilder);

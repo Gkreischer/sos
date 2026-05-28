@@ -13,14 +13,13 @@ describe('CategoryModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CategoryModalComponent],
-      imports: [IonicModule.forRoot(), ReactiveFormsModule],
-      providers: [
+    imports: [IonicModule.forRoot(), ReactiveFormsModule, CategoryModalComponent],
+    providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
 
     fixture = TestBed.createComponent(CategoryModalComponent);
     component = fixture.componentInstance;

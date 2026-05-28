@@ -81,6 +81,7 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::controller(PartController::class)->group(function () {
             Route::get('/parts', 'getAll');
+            Route::post('/parts', 'create');
             Route::post('/parts/search', 'search');
             Route::get('/parts/{id}', 'getById');
             Route::put('/parts/{id}', 'update');

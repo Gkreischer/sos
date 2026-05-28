@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class PartController extends Controller
 {
@@ -61,19 +62,46 @@ class PartController extends Controller
 
     public function update(Request $request, int $id)
     {
-
         try {
-            $part = Part::findOrFail($id);
+            $part = DB::transaction(function () use ($request, $id) {
 
-            $part->update($request->all());
+                // 1. Criamos o validador normalmente
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required|string|max:255',
+                    'description' => 'nullable|string|max:255',
+                    'price' => 'required|string',
+                    'category_id' => 'required|numeric',
+                    'created_at' => 'nullable|date',
+                    'updated_at' => 'nullable|date',
+                ]);
 
-            return response($part);
+                // 2. CORREÇÃO: Em vez de if/return, use o método validate().
+                // Se falhar, ele joga uma ValidationException automaticamente e para a execução.
+                $validatedData = $validator->validate();
+
+                // 3. O lockForUpdate e o achado do registro
+                $part = Part::lockForUpdate()->findOrFail($id);
+
+                // Dica de segurança: use os dados já validados em vez de $request->all()
+                $part->update($validatedData);
+
+                return $part;
+            });
+
+            // Retorna o JSON limpo e correto para o cliente
+            return response($part, 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 4. Captura o erro de validação que o $validator->validate() disparou
+            return response([
+                'message' => 'Os dados fornecidos são inválidos.',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (ModelNotFoundException $e) {
             return response([
                 'message' => 'Peça não encontrada',
                 'error' => $e->getMessage(),
             ], 404);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response([
                 'message' => 'Erro ao atualizar a peça',
                 'error' => $e->getMessage(),
@@ -99,6 +127,34 @@ class PartController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível obter a peça',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function create(Request $request)
+    {
+        try {
+            $data = $request->all();
+
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string|max:255',
+                'price' => 'required|string',
+                'category_id' => 'required|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
+
+            $part = Part::create($data);
+            $part->load('category');
+
+            return response($part);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível criar a peça',
                 'error' => $e->getMessage()
             ], 500);
         }

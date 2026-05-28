@@ -17,10 +17,9 @@ describe('RevenueValuesListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [RevenueValuesListComponent],
-      imports: [IonicModule.forRoot(), BaseChartDirective],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), BaseChartDirective, RevenueValuesListComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(RevenueValuesListComponent);
     component = fixture.componentInstance;

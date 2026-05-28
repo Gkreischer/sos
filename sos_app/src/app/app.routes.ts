@@ -1,0 +1,74 @@
+import { Routes, PreloadAllModules, withPreloading } from '@angular/router';
+import { loginGuard } from './_guards/login.guard';
+
+export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    // Mudamos de loadChildren para loadComponent e apontamos para a classe do Componente
+    loadComponent: () =>
+      import('./_pages/login/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'home',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/home/home.page').then((m) => m.HomePage),
+  },
+  {
+    path: 'categorias',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/categories/categories.page').then(
+        (m) => m.CategoriesPage,
+      ),
+  },
+  {
+    path: 'equipamentos',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/equipments/equipments.page').then(
+        (m) => m.EquipmentsPage,
+      ),
+  },
+  {
+    path: 'usuarios',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/users/users.page').then((m) => m.UsersPage),
+  },
+  {
+    path: 'ordem-servico',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/orders/order.page').then((m) => m.OrderPage),
+  },
+  {
+    path: 'materiais',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/parts/parts.page').then((m) => m.PartsPage),
+  },
+  {
+    path: 'configuracoes',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/settings/settings.page').then((m) => m.SettingsPage),
+  },
+  {
+    path: 'imprimir/:id',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/print/print.page').then((m) => m.PrintPage),
+  },
+  {
+    path: 'relatorios',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/metrics/metrics.page').then((m) => m.MetricsPage),
+  },
+];

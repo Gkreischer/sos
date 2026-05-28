@@ -12,10 +12,9 @@ describe('EquipmentModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EquipmentModalComponent],
-      imports: [IonicModule.forRoot(), ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactiveFormsModule, EquipmentModalComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(EquipmentModalComponent);
     component = fixture.componentInstance;

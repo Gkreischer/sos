@@ -1,11 +1,13 @@
 import { Component, effect, OnInit } from '@angular/core';
 import { inject } from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
+import { IonicModule } from '@ionic/angular';
+import { CurrencyPipe } from '@angular/common';
 @Component({
-  selector: 'app-technician-data-list',
-  templateUrl: './technician-data-list.component.html',
-  styleUrls: ['./technician-data-list.component.scss'],
-  standalone: false,
+    selector: 'app-technician-data-list',
+    templateUrl: './technician-data-list.component.html',
+    styleUrls: ['./technician-data-list.component.scss'],
+    imports: [IonicModule, CurrencyPipe],
 })
 export class TechnicianDataListComponent implements OnInit {
   metricsService = inject(MetricsService);

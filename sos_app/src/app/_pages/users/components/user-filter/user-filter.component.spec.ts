@@ -12,10 +12,9 @@ describe('UserFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [UserFilterComponent],
-      imports: [IonicModule.forRoot(), ReactiveFormsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactiveFormsModule, UserFilterComponent],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(UserFilterComponent);
     component = fixture.componentInstance;

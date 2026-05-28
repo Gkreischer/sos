@@ -10,12 +10,18 @@ import {
 } from '@ionic/core';
 import { PartFilterInterface } from 'src/app/_interfaces/PartFilterInterface';
 import { effect, inject } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-parts-list',
-  templateUrl: './parts-list.component.html',
-  styleUrls: ['./parts-list.component.scss'],
-  standalone: false,
+    selector: 'app-parts-list',
+    templateUrl: './parts-list.component.html',
+    styleUrls: ['./parts-list.component.scss'],
+    imports: [
+        IonicModule,
+        AsyncPipe,
+        CurrencyPipe,
+    ],
 })
 export class PartsListComponent implements OnInit {
   partService = inject(PartService);

@@ -3,7 +3,7 @@
     @if (!user) {
       <ion-title>Adicionar Usuário</ion-title>
     } @else {
-      <ion-title *ngIf="user">Editar Usuário</ion-title>
+      <ion-title>Editar Usuário</ion-title>
     }
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
@@ -173,7 +173,6 @@
                 >
               } @else {
                 <ion-button
-                  *ngIf="user"
                   type="submit"
                   color="primary"
                   expand="block"
@@ -187,9 +186,11 @@
       </form>
     </ion-card-content>
   </ion-card>
-  <ion-fab *ngIf="user" slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="danger" (click)="confirmDeleteUser()">
-      <ion-icon name="trash"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  @if (user) {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="danger" (click)="confirmDeleteUser()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  }
 </ion-content>

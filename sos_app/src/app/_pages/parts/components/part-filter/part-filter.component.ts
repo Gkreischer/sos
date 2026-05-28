@@ -1,12 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PartService } from 'src/app/_services/part.service';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
-  selector: 'app-part-filter',
-  templateUrl: './part-filter.component.html',
-  styleUrls: ['./part-filter.component.scss'],
-  standalone: false,
+    selector: 'app-part-filter',
+    templateUrl: './part-filter.component.html',
+    styleUrls: ['./part-filter.component.scss'],
+    imports: [
+        IonicModule,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class PartFilterComponent implements OnInit {
   formBuilder = inject(FormBuilder);

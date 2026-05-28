@@ -1,14 +1,21 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MenuController } from '@ionic/angular';
+import { MenuController, IonicModule } from '@ionic/angular';
 import { inject } from '@angular/core';
 import { LoginService } from './_services/login.service';
 import { UserInterface } from './_interfaces/UserInterface';
+import { RouterLinkActive, RouterLink } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
-  standalone: false,
+    selector: 'app-root',
+    templateUrl: 'app.component.html',
+    styleUrls: ['app.component.scss'],
+    imports: [
+        IonicModule,
+        RouterLinkActive,
+        RouterLink,
+        AsyncPipe,
+    ],
 })
 export class AppComponent implements OnInit {
   menuService = inject(MenuController);

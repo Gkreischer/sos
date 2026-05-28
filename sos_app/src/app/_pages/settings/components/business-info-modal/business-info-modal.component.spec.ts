@@ -19,15 +19,15 @@ describe('BusinessInfoModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [BusinessInfoModalComponent],
-      imports: [
+    imports: [
         IonicModule.forRoot(),
         MaskitoDirective,
         ReactiveFormsModule,
         BaseChartDirective,
-      ],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+        BusinessInfoModalComponent,
+    ],
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+}).compileComponents();
 
     fixture = TestBed.createComponent(BusinessInfoModalComponent);
     component = fixture.componentInstance;

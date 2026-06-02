@@ -13,6 +13,7 @@ import { IonButtons, IonMenuButton } from '@ionic/angular/standalone';
 import { ViewWillEnter } from '@ionic/angular';
 import { PostService } from 'src/app/_services/post.service';
 import { inject } from '@angular/core';
+
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.page.html',
@@ -38,6 +39,6 @@ export class PostsPage implements ViewWillEnter {
   ngOnInit() {}
 
   ionViewWillEnter() {
-    this.postService.getLastPosts().subscribe();
+    this.postService.getPosts(1).subscribe();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, AfterViewInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -29,7 +29,7 @@ export class UsersListComponent implements OnInit {
   returnClientIdMode: boolean = false;
 
   numPage = 1;
-  infiniteScroll = signal(true);
+  infiniteScroll: WritableSignal<boolean> = signal(false);
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {

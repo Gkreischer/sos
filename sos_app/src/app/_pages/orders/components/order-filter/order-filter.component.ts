@@ -15,7 +15,7 @@ import { dateMask } from 'src/app/_masks/dateMask';
 import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe } from '@angular/common';
-
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
   selector: 'app-order-filter',
   templateUrl: './order-filter.component.html',
@@ -34,6 +34,8 @@ export class OrderFilterComponent implements OnInit {
   orderStatusService = inject(OrderStatusService);
   formBuilder = inject(FormBuilder);
   ordersStatuses$?: Observable<OrderStatusInterface[]>;
+  loadingService = inject(LoadingService);
+  isLoading$ = this.loadingService.isLoading$;
 
   form!: FormGroup;
 

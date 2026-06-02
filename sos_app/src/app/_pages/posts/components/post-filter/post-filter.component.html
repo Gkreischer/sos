@@ -1,9 +1,7 @@
 <ion-card>
   <ion-card-header>
     <ion-card-title>Filtros</ion-card-title>
-    <ion-card-subtitle
-      >Filtre os materiais pelo nome ou categoria</ion-card-subtitle
-    >
+    <ion-card-subtitle>Filtre os posts por palavras-chave</ion-card-subtitle>
   </ion-card-header>
   <ion-card-content>
     <form [formGroup]="filterForm">
@@ -23,7 +21,7 @@
               class="full-button"
               expand="block"
               type="submit"
-              [disabled]="filterForm.invalid"
+              [disabled]="filterForm.invalid || (isLoading$ | async)"
               (click)="searchPost()"
               >Buscar</ion-button
             >

@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Histórico do cliente</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="close()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @let clientOrdersHistory = clientOrdersHistory$ | async;
+  @if (clientOrdersHistory) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Histórico do cliente</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          @for (order of clientOrdersHistory; track order.id) {
+            <ion-item lines="inset" detail="true" button="true">
+              <div
+                class="ion-margin-horizontal"
+                style="width: 50px; max-width: 80px; text-align: center"
+              >
+                <h1>{{ order.id }}</h1>
+              </div>
+
+              <ion-label class="ion-padding-start">
+                <h2 class="ion-text-bold">{{ order.title }}</h2>
+
+                <ion-chip color="primary">
+                  {{ order.user.name }}
+                  <ion-icon name="person-circle"></ion-icon>
+                </ion-chip>
+
+                <ion-chip color="dark">
+                  {{ order.equipment.name }}
+                  <ion-icon name="construct"></ion-icon>
+                </ion-chip>
+
+                <ion-chip>
+                  {{ order.created_at | date: "short" }}
+                </ion-chip>
+
+                <ion-chip
+                  [color]="
+                    order.status_id == 1
+                      ? 'danger'
+                      : order.status_id == 2
+                        ? 'warning'
+                        : order.status_id == 3
+                          ? 'success'
+                          : order.status_id == 4
+                            ? 'dark'
+                            : 'light'
+                  "
+                >
+                  {{ order.status.name }}
+                </ion-chip>
+              </ion-label>
+            </ion-item>
+          } @empty {
+            <ion-item lines="none">
+              <ion-label>
+                <h2>Nenhuma ordem de serviço encontrada</h2>
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  } @else {
+    <ion-item lines="none">
+      <ion-label>
+        <ion-spinner></ion-spinner>
+      </ion-label>
+    </ion-item>
+  }
+</ion-content>

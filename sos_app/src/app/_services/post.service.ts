@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
 import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
-import { PartFilterInterface } from 'src/app/_interfaces/PartFilterInterface';
+import { PostFilterInterface } from 'src/app/_interfaces/PostFilterInterface';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,7 +17,7 @@ export class PostService {
     PostInterface[]
   >([]);
 
-  partFilters = signal<PartFilterInterface | null>(null);
+  postFilters = signal<PostFilterInterface | null>(null);
 
   get posts$() {
     return this.posts.asObservable();
@@ -25,19 +25,8 @@ export class PostService {
 
   constructor() {}
 
-  setPostFilter(partFilter: PartFilterInterface | null) {
-    this.partFilters.set(partFilter);
-  }
-
-  getPosts(user: string) {
-    return this.http
-      .get<any>(`${environment.baseUrl}/users/${user}/posts`)
-      .pipe(
-        tap((res) => {
-          this.posts.next(res);
-        }),
-        catchError(this.errorService.handleError),
-      );
+  setPostFilter(postFilter: PostFilterInterface | null) {
+    this.postFilters.set(postFilter);
   }
 
   createPost(user: string, post: PostInterface) {
@@ -93,9 +82,11 @@ export class PostService {
       );
   }
 
-  getAllPosts() {
+  getPosts(pageNumber: number, filters?: PostFilterInterface | null) {
     return this.http
-      .get<PaginateInterface<PostInterface[]>>(`${environment.baseUrl}/posts`)
+      .post<
+        PaginateInterface<PostInterface[]>
+      >(`${environment.baseUrl}/posts/filter${filters ? `?page=${pageNumber}` : ''}`, this.postFilters())
       .pipe(
         tap((res) => {
           this.posts.next(res.data);

@@ -21,6 +21,8 @@ export class OrderService {
     new BehaviorSubject<OrderInterface[]>([]);
   private orderSubject: BehaviorSubject<OrderInterface> =
     new BehaviorSubject<OrderInterface>({} as OrderInterface);
+  private clientOrdersHistorySubject: BehaviorSubject<OrderInterface[]> =
+    new BehaviorSubject<OrderInterface[]>([]);
 
   public orderFilters = signal(null as OrderFilter | null);
 
@@ -32,6 +34,10 @@ export class OrderService {
 
   get order$() {
     return this.orderSubject.asObservable();
+  }
+
+  get clientOrdersHistory$() {
+    return this.clientOrdersHistorySubject.asObservable();
   }
 
   public setOrderFilter(orderFilter: OrderFilter) {
@@ -105,6 +111,19 @@ export class OrderService {
           orders = [res, ...orders];
           this.ordersSubject.next(orders);
           this.orderSubject.next(res);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getClientOrdersHistory(clientId: number) {
+    return this.http
+      .get<
+        OrderInterface[]
+      >(`${environment.baseUrl}/users/${clientId}/orders`, httpOptions)
+      .pipe(
+        tap((res) => {
+          this.clientOrdersHistorySubject.next(res);
         }),
         catchError(this.errorService.handleError),
       );

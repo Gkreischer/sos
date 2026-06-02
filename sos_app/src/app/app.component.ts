@@ -43,6 +43,9 @@ import {
   close,
   trash,
   exit,
+  library,
+  personCircle,
+  construct,
 } from 'ionicons/icons';
 @Component({
   selector: 'app-root',
@@ -141,6 +144,9 @@ export class AppComponent implements OnInit {
       searchSharp,
       trash,
       exit,
+      library,
+      personCircle,
+      construct,
     });
   }
 
@@ -155,9 +161,7 @@ export class AppComponent implements OnInit {
   async verifyIfIsLogged() {
     this.user$.subscribe(async (user) => {
       if (user) {
-        console.log(user);
-        let result = await this.menuController.open('main');
-        console.log(result);
+        await this.menuController.open('main');
       }
     });
   }

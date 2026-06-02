@@ -4,15 +4,24 @@
   </ion-card-header>
   <ion-card-content>
     @let posts = posts$ | async;
+    @let loading = loading$ | async;
     <ion-list>
-      @if (posts) {
+      @if (loading && (!posts || posts.length === 0)) {
+        <ion-item lines="none">
+          <ion-spinner></ion-spinner>
+        </ion-item>
+      } @else {
         @for (p of posts; track p.id; let i = $index) {
-          <ion-item button detail>
+          <ion-item button detail (click)="openModalPost(p)">
             <ion-label>
-              <ion-text
-                ><strong>{{ p.title }}</strong></ion-text
-              >
-              <p>{{ p.created_at | date: "dd/MM/yyyy" }}</p>
+              <h2>
+                <strong>{{ p.title }}</strong>
+              </h2>
+              <p>{{ p.content.substring(0, 100) + "..." }}</p>
+              <ion-chip color="primary">{{ p.user.name }}</ion-chip>
+              <ion-chip color="success">{{
+                p.created_at | date: "dd/MM/yyyy"
+              }}</ion-chip>
             </ion-label>
           </ion-item>
         } @empty {
@@ -23,12 +32,6 @@
             </ion-label>
           </ion-item>
         }
-      } @else {
-        <ion-item>
-          <ion-label>
-            <h2>Erro ao carregar os posts</h2>
-          </ion-label>
-        </ion-item>
       }
     </ion-list>
   </ion-card-content>

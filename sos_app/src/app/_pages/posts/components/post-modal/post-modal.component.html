@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Visualizar post</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ post.title }}</ion-card-title>
+      <ion-card-subtitle>
+        <ion-chip color="primary">{{ post.user.name }}</ion-chip>
+        <ion-chip color="secondary">{{
+          post.created_at | date: "dd/MM/yyyy"
+        }}</ion-chip>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="dark">{{ post.content }}</ion-text>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

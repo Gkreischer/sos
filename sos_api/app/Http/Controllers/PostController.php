@@ -11,10 +11,17 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $posts = Post::paginate(20);
+
+            $description = $request->input('description');
+
+            $posts = Post::query()->when($description, function ($query) use ($description) {
+                $query->where('title', 'like', '%' . $description . '%')
+                    ->orWhere('content', 'like', '%' . $description . '%');
+            })->with('user:id,name')->paginate(20);
+
             return response($posts);
         } catch (\Exception $e) {
             return response([

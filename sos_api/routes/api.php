@@ -76,6 +76,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::put('/orders/{id}', 'update');
             Route::get('/orders/status/{status_id}', 'getOrderByStatus');
             Route::post('/orders/search', 'searchByFilter');
+            Route::get('/users/{id}/orders', 'getOrderHistory');
         });
 
         Route::controller(PartController::class)->group(function () {
@@ -114,7 +115,7 @@ Route::middleware(['json.response'])->group(function () {
         });
 
         Route::controller(PostController::class)->group(function () {
-            Route::get('/posts', 'index');
+            Route::post('/posts/filter', 'index');
             Route::post('/posts', 'store');
             Route::put('/posts/{id}', 'update');
             Route::delete('/posts/{id}', 'destroy');

@@ -14,7 +14,8 @@ import {
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PostService } from 'src/app/_services/post.service';
-
+import { LoadingService } from 'src/app/_services/loading.service';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-post-filter',
   templateUrl: './post-filter.component.html',
@@ -31,12 +32,14 @@ import { PostService } from 'src/app/_services/post.service';
     IonButton,
     IonCard,
     ReactiveFormsModule,
+    AsyncPipe,
   ],
 })
 export class PostFilterComponent implements OnInit {
   postService = inject(PostService);
   formBuilder = inject(FormBuilder);
-
+  loadingService = inject(LoadingService);
+  isLoading$ = this.loadingService.isLoading$;
   filterForm!: FormGroup;
 
   constructor() {}

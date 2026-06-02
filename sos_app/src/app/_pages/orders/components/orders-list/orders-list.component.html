@@ -22,7 +22,10 @@
             button="true"
             (click)="openModal(order)"
           >
-            <div class="ion-margin-horizontal">
+            <div
+              class="ion-margin-horizontal"
+              style="width: 50px; max-width: 80px; text-align: center"
+            >
               <h1>{{ order.id }}</h1>
             </div>
 
@@ -65,18 +68,17 @@
             </ion-label>
           </ion-item>
         }
-      }
-
-      @if (infiniteScroll()) {
-        <ion-item>
-          <ion-infinite-scroll
-            (ionInfinite)="onIonInfinite($event)"
-            loadingText="Carregando..."
-            loadingSpinner="bubbles"
-          >
-            <ion-infinite-scroll-content />
-          </ion-infinite-scroll>
-        </ion-item>
+        @if (infiniteScroll()) {
+          <ion-item lines="none">
+            <ion-infinite-scroll
+              (ionInfinite)="onIonInfinite($event)"
+              loadingText="Carregando..."
+              loadingSpinner="bubbles"
+            >
+              <ion-infinite-scroll-content />
+            </ion-infinite-scroll>
+          </ion-item>
+        }
       }
     </ion-list>
   </ion-card-content>

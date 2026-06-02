@@ -22,6 +22,8 @@ import { PhotoService } from 'src/app/_services/photo.service';
 import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { LoadingService } from 'src/app/_services/loading.service';
+
 @Component({
   selector: 'app-user-info-modal',
   templateUrl: './user-info-modal.component.html',
@@ -42,7 +44,7 @@ export class UserInfoModalComponent implements OnInit {
   userService = inject(UserService);
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
-
+  loadingService = inject(LoadingService);
   userForm!: FormGroup;
 
   cnpjMask = cnpjMask;
@@ -52,6 +54,8 @@ export class UserInfoModalComponent implements OnInit {
 
   user?: Observable<UserLoginInterface | null>;
   userId!: number;
+
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();

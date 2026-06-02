@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 
 class OrderController extends Controller
@@ -206,6 +207,22 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível criar a ordem de serviço',
+                'error' => $e->getMessage()
+            ], 404);
+        }
+    }
+
+    public function getOrderHistory(int $id)
+    {
+        try {
+            $order = User::findOrFail($id)->orders()->with('status')->get();
+
+            $order->load(['status', 'technician', 'user', 'equipment']);
+
+            return response($order);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar a ordem de serviço',
                 'error' => $e->getMessage()
             ], 404);
         }

@@ -155,7 +155,7 @@
               <ion-button
                 expand="block"
                 type="submit"
-                [disabled]="form.invalid"
+                [disabled]="form.invalid || (isLoading$ | async)"
               >
                 Salvar
               </ion-button>

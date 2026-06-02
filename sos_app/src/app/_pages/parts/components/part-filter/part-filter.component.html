@@ -23,7 +23,7 @@
               class="full-button"
               expand="block"
               type="submit"
-              [disabled]="filterForm.invalid"
+              [disabled]="filterForm.invalid || (isLoading$ | async)"
               (click)="searchPart()"
               >Buscar</ion-button
             >

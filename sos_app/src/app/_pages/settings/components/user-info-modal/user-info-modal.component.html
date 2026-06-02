@@ -201,7 +201,7 @@
               <ion-col>
                 <ion-button
                   type="submit"
-                  [disabled]="!userForm.invalid"
+                  [disabled]="userForm.invalid || (isLoading$ | async)"
                   expand="block"
                 >
                   Atualizar

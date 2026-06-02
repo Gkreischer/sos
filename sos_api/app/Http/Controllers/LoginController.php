@@ -32,7 +32,7 @@ class LoginController extends Controller
             return response([
                 'token' => $userToken,
                 'user' => $user,
-                'role' => UserType::with('type')->select('name')->where('id', $user->type_id)->first()
+                'type' => UserType::with('users')->select('name')->where('id', $user->type_id)->first()
             ]);
         } catch (\Exception $e) {
             return response([

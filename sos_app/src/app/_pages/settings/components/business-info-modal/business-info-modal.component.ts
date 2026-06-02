@@ -1,5 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
 import { cepMask } from 'src/app/_masks/cepMask';
 import { cnpjMask } from 'src/app/_masks/cnpjMask';
@@ -9,17 +15,53 @@ import { SettingService } from 'src/app/_services/setting.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
-
+import { Observable } from 'rxjs';
+import { LoadingService } from 'src/app/_services/loading.service';
+import { AsyncPipe } from '@angular/common';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg,
+  IonLabel,
+  IonInput,
+} from '@ionic/angular/standalone';
 @Component({
-    selector: 'app-business-info-modal',
-    templateUrl: './business-info-modal.component.html',
-    styleUrls: ['./business-info-modal.component.scss'],
-    imports: [
-        IonicModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MaskitoDirective,
-    ],
+  selector: 'app-business-info-modal',
+  templateUrl: './business-info-modal.component.html',
+  styleUrls: ['./business-info-modal.component.scss'],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MaskitoDirective,
+    AsyncPipe,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonCard,
+    IonCardContent,
+    IonContent,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonImg,
+    IonLabel,
+    IonInput,
+  ],
 })
 export class BusinessInfoModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -27,9 +69,12 @@ export class BusinessInfoModalComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
+  loadingService = inject(LoadingService);
 
   form!: FormGroup;
   businessAlreadyExists = false;
+
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   cnpjMask = cnpjMask;
   cepMask = cepMask;

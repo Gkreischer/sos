@@ -11,7 +11,7 @@ import { UserTypeInterface } from 'src/app/_interfaces/UserTypeInterface';
 import { Observable } from 'rxjs';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
-
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
   selector: 'app-user-filter',
   templateUrl: './user-filter.component.html',
@@ -21,7 +21,8 @@ import { AsyncPipe } from '@angular/common';
 export class UserFilterComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   userService = inject(UserService);
-
+  loadingService = inject(LoadingService);
+  isLoading$ = this.loadingService.isLoading$;
   filterForm!: FormGroup;
 
   userTypes$: Observable<UserTypeInterface[]> = this.userService.userTypes;

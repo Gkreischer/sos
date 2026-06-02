@@ -31,6 +31,7 @@ import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, JsonPipe, CurrencyPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { LoadingService } from 'src/app/_services/loading.service';
+import { OrderClientHistoryComponent } from '../order-client-history/order-client-history.component';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -181,6 +182,7 @@ export class OrderModalComponent implements OnInit {
     this.equipmentService
       .getUserEquipments(this.clientSelected!)
       .subscribe((equipaments) => {
+        console.log(equipaments);
         this.equipments$ = this.equipmentService.equipments;
       });
   }
@@ -336,6 +338,12 @@ export class OrderModalComponent implements OnInit {
         },
       ],
     );
+  }
+
+  showClientHistory() {
+    this.modalService.openModal(OrderClientHistoryComponent, {
+      clientId: this.clientSelected?.id,
+    });
   }
 
   print() {

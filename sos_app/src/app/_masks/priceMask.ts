@@ -1,6 +1,7 @@
 import { maskitoNumberOptionsGenerator } from '@maskito/kit';
+import { MaskitoOptions } from '@maskito/core';
 
-export default maskitoNumberOptionsGenerator({
+export const priceMask: MaskitoOptions = maskitoNumberOptionsGenerator({
   decimalSeparator: ',',
   min: 0,
   thousandSeparator: '.',

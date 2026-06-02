@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserTypeInterface } from '../_interfaces/UserTypeInterface';
+import { UserFilterInterface } from '../_interfaces/UserFilterInterface';
 import { ErrorService } from './error.service';
+import { UserTypeInterface } from '../_interfaces/UserTypeInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +21,11 @@ export class UserTypeService {
   }
 
   public get() {
-    return this.http.get<UserTypeInterface[]>(`${this.baseUrl}/user-types`).pipe(
-      tap((userTypes) => this.userTypes$.next(userTypes)),
-      catchError(this.errorService.handleError),
-    );
+    return this.http
+      .get<UserTypeInterface[]>(`${this.baseUrl}/user-types`)
+      .pipe(
+        tap((userTypes) => this.userTypes$.next(userTypes)),
+        catchError(this.errorService.handleError),
+      );
   }
 }

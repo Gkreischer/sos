@@ -25,37 +25,39 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
-import priceMask from 'src/app/_masks/priceMask';
+import { priceMask } from 'src/app/_masks/priceMask';
 import { IonicModule } from '@ionic/angular';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { JsonPipe } from '@angular/common';
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
   selector: 'app-part-modal',
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
   imports: [
     IonicModule,
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
-    JsonPipe,
   ],
 })
-export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PartModalComponent implements OnInit {
   modalService = inject(ModalService);
   formBuilder = inject(FormBuilder);
   categoryService = inject(CategoryService);
   partService = inject(PartService);
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
+  loadingService = inject(LoadingService);
 
   partId!: number;
-  part!: Observable<PartInterface>;
+  part$!: Observable<PartInterface>;
   categories!: Observable<CategoryInterface[]>;
   formPart!: FormGroup;
+
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   partSubscription!: Subscription;
 
@@ -69,21 +71,18 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.mountForm();
     this.getCategories();
-  }
-
-  ngAfterViewInit(): void {
     if (this.partId) {
       this.getPartData();
     }
   }
 
   getPartData() {
-    this.partSubscription = this.partService
-      .getPartById(this.partId)
-      .subscribe((part) => {
-        this.part = this.partService.part;
-        this.formPart.patchValue(part);
+    this.partService.getPartById(this.partId).subscribe((part) => {
+      this.formPart.patchValue({
+        ...part,
+        price: maskitoTransform(part.price.toString(), priceMask),
       });
+    });
   }
 
   async submit() {
@@ -108,17 +107,15 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
       await this.uploadImage();
     }
     let part: PartInterface = this.formPart.value;
-    this.partSubscription = this.partService
-      .update(this.formPart.value, this.partId)
-      .subscribe((part) => {
-        this.toastService.presentToast(
-          'Parte atualizada com sucesso',
-          'bottom',
-          3000,
-          'success',
-        );
-        this.modalService.closeModal();
-      });
+    this.partService.update(part, this.partId).subscribe((part) => {
+      this.toastService.presentToast(
+        'Parte atualizada com sucesso',
+        'bottom',
+        3000,
+        'success',
+      );
+      this.modalService.closeModal();
+    });
   }
 
   getCategories() {
@@ -174,9 +171,5 @@ export class PartModalComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.formPart.get('image')?.setValue(image.webviewPath);
-  }
-
-  ngOnDestroy(): void {
-    if (this.partSubscription) this.partSubscription.unsubscribe();
   }
 }

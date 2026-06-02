@@ -168,7 +168,7 @@ class UserController extends Controller
         }
     }
 
-    public function getUserByDescription(Request $request)
+    public function getUsersWithFilter(Request $request)
     {
         try {
 
@@ -188,7 +188,7 @@ class UserController extends Controller
 
             $query = User::query();
 
-            if (!empty($data['description'])) {
+            if (isset($data['description'])) {
                 $query->where(function ($q) use ($data) {
                     $q->where('name', 'LIKE', '%' . $data['description'] . '%')
                         ->orWhere('phone', 'LIKE', '%' . $data['description'] . '%')
@@ -196,13 +196,13 @@ class UserController extends Controller
                 });
             }
 
-            if (!empty($data['type_id'])) {
-                $query->whereHas('userType', function ($q) use ($data) {
+            if (isset($data['type_id'])) {
+                $query->whereHas('type', function ($q) use ($data) {
                     $q->where('id', $data['type_id']);
                 });
             }
 
-            $users = $query->get();
+            $users = $query->with('type')->paginate(20);
 
             return response($users, 200);
         } catch (Exception $e) {

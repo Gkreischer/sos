@@ -1,28 +1,38 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { LoginService } from 'src/app/_services/login.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { UserLoginInterface } from 'src/app/_interfaces/UserLoginInterface';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MenuController, IonicModule } from '@ionic/angular';
+import { LoadingService } from 'src/app/_services/loading.service';
+import { ActivatedRoute } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+
 @Component({
-    selector: 'app-form-login',
-    templateUrl: './form-login.component.html',
-    styleUrls: ['./form-login.component.scss'],
-    imports: [
-        IonicModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
+  selector: 'app-form-login',
+  templateUrl: './form-login.component.html',
+  styleUrls: ['./form-login.component.scss'],
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, AsyncPipe],
+  standalone: true,
 })
 export class FormLoginComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   loginService = inject(LoginService);
   router = inject(Router);
+  route = inject(ActivatedRoute);
   menuController = inject(MenuController);
-  loginForm!: FormGroup;
+  loadingService = inject(LoadingService);
 
-  loginData: Observable<UserInterface | null> = this.loginService.user;
+  loginForm!: FormGroup;
+  loginData: Observable<UserLoginInterface | null> = this.loginService.user;
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor() {}
 
@@ -38,7 +48,7 @@ export class FormLoginComponent implements OnInit {
   }
 
   enableMenu() {
-    this.menuController.enable(true, 'main');
+    this.menuController.toggle('main');
   }
 
   login() {
@@ -46,7 +56,11 @@ export class FormLoginComponent implements OnInit {
       console.log(res);
       this.loginData = this.loginService.user;
       this.enableMenu();
-      this.router.navigate(['/home']);
+      // 1. Recupera a URL que o Guard guardou, ou define '/home' como padrão
+      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+
+      // 2. Redireciona o usuário para onde ele tentou ir antes do Guard barrar
+      this.router.navigateByUrl(returnUrl);
     });
   }
 }

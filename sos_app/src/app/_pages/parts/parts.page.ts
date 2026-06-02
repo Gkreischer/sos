@@ -6,14 +6,10 @@ import { PartFilterComponent } from './components/part-filter/part-filter.compon
 import { PartsListComponent } from './components/parts-list/parts-list.component';
 
 @Component({
-    selector: 'app-parts',
-    templateUrl: './parts.page.html',
-    styleUrls: ['./parts.page.scss'],
-    imports: [
-        IonicModule,
-        PartFilterComponent,
-        PartsListComponent,
-    ],
+  selector: 'app-parts',
+  templateUrl: './parts.page.html',
+  styleUrls: ['./parts.page.scss'],
+  imports: [IonicModule, PartFilterComponent, PartsListComponent],
 })
 export class PartsPage implements OnInit {
   modalService = inject(ModalService);

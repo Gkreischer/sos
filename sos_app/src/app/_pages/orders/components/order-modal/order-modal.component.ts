@@ -1,5 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { UsersListComponent } from 'src/app/_pages/users/components/users-list/users-list.component';
@@ -16,27 +23,27 @@ import { ToastService } from 'src/app/_services/toast.service';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
-import priceMask from 'src/app/_masks/priceMask';
+import { priceMask } from 'src/app/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/money.service';
 import { Router } from '@angular/router';
-import dateMask from 'src/app/_masks/dateMask';
+import { dateMask } from 'src/app/_masks/dateMask';
 import { IonicModule } from '@ionic/angular';
-import { NgIf, AsyncPipe, JsonPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe, CurrencyPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
-    selector: 'app-order-modal',
-    templateUrl: './order-modal.component.html',
-    styleUrls: ['./order-modal.component.scss'],
-    imports: [
-        IonicModule,
-        NgIf,
-        FormsModule,
-        ReactiveFormsModule,
-        MaskitoDirective,
-        AsyncPipe,
-        JsonPipe,
-        CurrencyPipe,
-    ],
+  selector: 'app-order-modal',
+  templateUrl: './order-modal.component.html',
+  styleUrls: ['./order-modal.component.scss'],
+  imports: [
+    IonicModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaskitoDirective,
+    AsyncPipe,
+    JsonPipe,
+    CurrencyPipe,
+  ],
 })
 export class OrderModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -48,6 +55,7 @@ export class OrderModalComponent implements OnInit {
   orderStatusService = inject(OrderStatusService);
   router = inject(Router);
   moneyService = inject(MoneyService);
+  loadingService = inject(LoadingService);
 
   orderId?: number;
   orderReceived!: OrderInterface;
@@ -58,6 +66,7 @@ export class OrderModalComponent implements OnInit {
   technicianSelected?: UserInterface;
   orderStatuses$?: Observable<OrderStatusInterface[]>;
   selectOrderStatusDisabled = false;
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   priceMask = priceMask;
   dateMask = dateMask;
@@ -124,6 +133,7 @@ export class OrderModalComponent implements OnInit {
     if (orderStatus != 4) {
       return;
     }
+    this.orderForm.get('status_id')?.disable();
     this.selectOrderStatusDisabled = true;
   }
 
@@ -183,7 +193,14 @@ export class OrderModalComponent implements OnInit {
     this.orderService.getById(this.orderId).subscribe((order) => {
       this.orderReceived = order;
 
-      this.orderForm.patchValue(order);
+      this.orderForm.patchValue({
+        ...order,
+        service_price: maskitoTransform(
+          order.service_price.toString(),
+          priceMask,
+        ),
+        discount: maskitoTransform(order.discount.toString(), priceMask),
+      });
       this.clientSelected = order.user;
       this.technicianSelected = order.technician;
       this.addParts(order.order_parts);

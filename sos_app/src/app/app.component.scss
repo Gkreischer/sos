@@ -39,7 +39,7 @@ ion-menu.md ion-item {
 }
 
 ion-menu.md ion-item.selected ion-icon {
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-primary);
 }
 
 ion-menu.md ion-item ion-icon {
@@ -103,4 +103,9 @@ ion-note {
 ion-note,
 ion-list-header {
   color: var(--ion-color-light);
+}
+
+ion-item.selected::part(native) {
+  background: var(--ion-color-light);
+  color: var(--ion-color-dark);
 }

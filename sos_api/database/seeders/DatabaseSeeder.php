@@ -8,6 +8,7 @@ use App\Models\Order;
 use Illuminate\Database\Seeder;
 use App\Models\Part;
 use App\Models\User;
+use App\Models\Post;
 
 class DatabaseSeeder extends Seeder
 {
@@ -44,11 +45,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        Order::factory()->count(1300)->create();
+        Order::factory()->count(200)->create();
 
         $this->call([
             RolesAndPermissionsSeeder::class,
             BusinessInfoSeeder::class,
+            UserSeeder::class,
         ]);
+
+        Post::factory()->count(100)->create();
     }
 }

@@ -1,7 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!part">Cadastrar material</ion-title>
-    <ion-title *ngIf="part">Editar material</ion-title>
+    @let part = this.part$ | async;
+    @if (!part) {
+      <ion-title>Cadastrar material</ion-title>
+    }
+    @if (part) {
+      <ion-title>Editar material</ion-title>
+    }
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -13,7 +18,6 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      {{ formPart.value | json }}
       <form [formGroup]="formPart" (ngSubmit)="!part ? submit() : update()">
         <ion-grid>
           @if (this.formPart.get("image")?.value) {
@@ -93,14 +97,14 @@
                 <ion-button
                   expand="block"
                   type="submit"
-                  [disabled]="!formPart.valid"
+                  [disabled]="formPart.invalid || (isLoading$ | async)"
                   >Salvar</ion-button
                 >
               } @else {
                 <ion-button
                   expand="block"
                   type="submit"
-                  [disabled]="!formPart.valid"
+                  [disabled]="formPart.invalid || (isLoading$ | async)"
                   >Atualizar</ion-button
                 >
               }

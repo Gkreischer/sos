@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Part;
+use App\Models\Category;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Part>
@@ -24,7 +25,7 @@ class PartFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->sentence(),
             'image' => 'https://picsum.photos/200/300',
-            'category_id' => $this->faker->numberBetween(1, 20),
+            'category_id' => Category::all()->random()->id,
             'price' => $this->faker->numberBetween(1, 1000),
         ];
     }

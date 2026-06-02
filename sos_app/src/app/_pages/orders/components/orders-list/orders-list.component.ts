@@ -21,25 +21,23 @@ import { OrderFilter } from 'src/app/_interfaces/OrderFilter';
 import { effect } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, DatePipe } from '@angular/common';
-
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
-    selector: 'app-orders-list',
-    templateUrl: './orders-list.component.html',
-    styleUrls: ['./orders-list.component.scss'],
-    imports: [
-        IonicModule,
-        AsyncPipe,
-        DatePipe,
-    ],
+  selector: 'app-orders-list',
+  templateUrl: './orders-list.component.html',
+  styleUrls: ['./orders-list.component.scss'],
+  imports: [IonicModule, AsyncPipe, DatePipe],
 })
-export class OrdersListComponent implements OnInit {
+export class OrdersListComponent {
   orderService = inject(OrderService);
   modalService = inject(ModalService);
-
-  orders$?: Observable<OrderInterface[]>;
+  loadingService = inject(LoadingService);
+  orders$?: Observable<OrderInterface[]> = this.orderService.orders$;
   ordersPage: number = 1;
   infiniteScroll = signal(true);
   orderFilters: Signal<OrderFilter | null> = this.orderService.orderFilters;
+
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor() {
     effect(() => {
@@ -51,9 +49,6 @@ export class OrdersListComponent implements OnInit {
       this.orderService
         .getAll(this.ordersPage, filters ?? undefined)
         .subscribe((res) => {
-          console.log('ordens recebidas', res);
-          this.orders$ = this.orderService.orders$;
-
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
@@ -61,13 +56,10 @@ export class OrdersListComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
   getOrders() {
     this.orderService
       .getAll(this.ordersPage, this.orderService.orderFilters())
       .subscribe((res) => {
-        this.orders$ = this.orderService.orders$;
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }
@@ -85,8 +77,13 @@ export class OrdersListComponent implements OnInit {
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.ordersPage++;
 
-    this.getOrders();
-
-    setTimeout(() => event.target.complete(), 500);
+    this.orderService
+      .getAll(this.ordersPage, this.orderService.orderFilters())
+      .subscribe((res) => {
+        event.target.complete();
+        if (res.current_page >= res.last_page) {
+          this.infiniteScroll.set(false);
+        }
+      });
   }
 }

@@ -199,3 +199,10 @@ h2,
 h3 {
   color: var(--ion-color-dark);
 }
+
+ion-button {
+  ion-icon {
+    padding-bottom: 2px;
+    padding-inline: 0.3rem;
+  }
+}

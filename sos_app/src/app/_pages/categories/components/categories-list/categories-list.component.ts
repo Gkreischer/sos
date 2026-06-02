@@ -5,39 +5,28 @@ import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
 import { IonicModule } from '@ionic/angular';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
-
+import { AsyncPipe } from '@angular/common';
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
-    selector: 'app-categories-list',
-    templateUrl: './categories-list.component.html',
-    styleUrls: ['./categories-list.component.scss'],
-    imports: [
-        IonicModule,
-        NgIf,
-        NgFor,
-        AsyncPipe,
-    ],
+  selector: 'app-categories-list',
+  templateUrl: './categories-list.component.html',
+  styleUrls: ['./categories-list.component.scss'],
+  imports: [IonicModule, AsyncPipe],
 })
 export class CategoriesListComponent implements OnInit {
   categoryService = inject(CategoryService);
   modalService = inject(ModalService);
+  loadingService = inject(LoadingService);
+  categories?: Observable<CategoryInterface[]> =
+    this.categoryService.categories;
 
-  categories?: Observable<CategoryInterface[]>;
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor() {}
 
-  ngOnInit() {
-    this.getCategories();
-  }
+  ngOnInit() {}
 
   openModal(category: CategoryInterface) {
     this.modalService.openModal(CategoryModalComponent, { category: category });
-  }
-
-  getCategories() {
-    this.categoryService.getCategories().subscribe((res) => {
-      console.log(res);
-      this.categories = this.categoryService.categories;
-    });
   }
 }

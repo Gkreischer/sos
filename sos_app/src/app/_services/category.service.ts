@@ -47,8 +47,8 @@ export class CategoryService {
       .pipe(
         tap((category) => {
           return this.categoriesSubject.next([
-            ...this.categoriesSubject.value,
             category,
+            ...this.categoriesSubject.value,
           ]);
         }),
         catchError(this.errorService.handleError),

@@ -65,33 +65,26 @@ class PartController extends Controller
         try {
             $part = DB::transaction(function () use ($request, $id) {
 
-                // 1. Criamos o validador normalmente
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string|max:255',
                     'description' => 'nullable|string|max:255',
-                    'price' => 'required|string',
+                    'price' => 'required|integer',
                     'category_id' => 'required|numeric',
                     'created_at' => 'nullable|date',
                     'updated_at' => 'nullable|date',
                 ]);
 
-                // 2. CORREÇÃO: Em vez de if/return, use o método validate().
-                // Se falhar, ele joga uma ValidationException automaticamente e para a execução.
                 $validatedData = $validator->validate();
 
-                // 3. O lockForUpdate e o achado do registro
                 $part = Part::lockForUpdate()->findOrFail($id);
 
-                // Dica de segurança: use os dados já validados em vez de $request->all()
                 $part->update($validatedData);
 
                 return $part;
             });
 
-            // Retorna o JSON limpo e correto para o cliente
             return response($part, 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // 4. Captura o erro de validação que o $validator->validate() disparou
             return response([
                 'message' => 'Os dados fornecidos são inválidos.',
                 'errors' => $e->errors(),

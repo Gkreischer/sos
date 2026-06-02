@@ -2,9 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ErrorService } from './error.service';
 import { environment } from 'src/environments/environment';
-import { UserInterface } from '../_interfaces/UserInterface';
 import { BehaviorSubject, tap, catchError } from 'rxjs';
 import { PreferencesPluginService } from './preferences-plugin.service';
+import { UserLoginInterface } from '../_interfaces/UserLoginInterface';
+import { UserInterface } from '../_interfaces/UserInterface';
 import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
@@ -24,12 +25,12 @@ export class LoginService {
 
   public login(user: UserInterface) {
     return this.http
-      .post<UserInterface>(`${environment.baseUrl}/login`, user)
+      .post<UserLoginInterface>(`${environment.baseUrl}/login`, user)
       .pipe(
-        tap((user) => {
-          console.log(user);
-          this.userSubject.next(user);
-          this.setToken(user.token!);
+        tap((res) => {
+          console.log(res);
+          res.user ? this.userSubject.next(res.user) : null;
+          this.setToken(res.token!);
         }),
         catchError(this.errorService.handleError),
       );

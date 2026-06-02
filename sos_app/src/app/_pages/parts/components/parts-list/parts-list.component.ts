@@ -12,25 +12,24 @@ import { PartFilterInterface } from 'src/app/_interfaces/PartFilterInterface';
 import { effect, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
-
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
-    selector: 'app-parts-list',
-    templateUrl: './parts-list.component.html',
-    styleUrls: ['./parts-list.component.scss'],
-    imports: [
-        IonicModule,
-        AsyncPipe,
-        CurrencyPipe,
-    ],
+  selector: 'app-parts-list',
+  templateUrl: './parts-list.component.html',
+  styleUrls: ['./parts-list.component.scss'],
+  imports: [IonicModule, AsyncPipe, CurrencyPipe],
 })
 export class PartsListComponent implements OnInit {
   partService = inject(PartService);
   modalService = inject(ModalService);
+  loadingService = inject(LoadingService);
 
   parts!: Observable<PartInterface[]>;
   partsPage: number = 1;
   infiniteScroll = signal(true);
   partFilters = this.partService.partFilters;
+
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor() {
     effect(() => {

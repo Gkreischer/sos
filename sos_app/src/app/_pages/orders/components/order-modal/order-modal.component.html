@@ -1,7 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!orderId">Adicionar Ordem de Serviço</ion-title>
-    <ion-title *ngIf="orderId">Atualizar Ordem de Serviço</ion-title>
+    @if (!orderId) {
+      <ion-title>Adicionar Ordem de Serviço</ion-title>
+    }
+    @if (orderId) {
+      <ion-title>Atualizar Ordem de Serviço</ion-title>
+    }
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -21,7 +25,11 @@
       }
       <ion-button
         fill="solid"
-        [disabled]="this.selectOrderStatusDisabled || !orderForm.valid"
+        [disabled]="
+          this.selectOrderStatusDisabled ||
+          orderForm.invalid ||
+          (isLoading$ | async)
+        "
         type="button"
         (click)="!orderId ? submit() : update()"
         expand="block"
@@ -61,21 +69,23 @@
                         fill="outline"
                         [value]="clientSelected?.name"
                         (click)="selectClientId()"
+                        placeholder="Clique aqui para selecionar um cliente"
                       ></ion-input>
                     }
                   </ion-col>
                   @if (orderReceived) {
                     <ion-col size="12" sizeLg="2">
-                      <ion-button
-                        *ngIf="orderReceived"
-                        expand="block"
-                        type="button"
-                        color="tertiary"
-                        class="full-button"
-                      >
-                        <ion-icon name="search-sharp"></ion-icon>
-                        Anteriores
-                      </ion-button>
+                      @if (orderReceived) {
+                        <ion-button
+                          expand="block"
+                          type="button"
+                          color="tertiary"
+                          class="full-button"
+                        >
+                          <ion-icon name="search-sharp"></ion-icon>
+                          Anteriores
+                        </ion-button>
+                      }
                     </ion-col>
                   }
                 </ion-row>
@@ -114,7 +124,6 @@
                         okText="confirmar"
                         cancelText="cancelar"
                         (ionChange)="onChangeStatus()"
-                        [disabled]="this.selectOrderStatusDisabled"
                       >
                         @for (status of orderStatuses; track status.id) {
                           <ion-select-option [value]="status.id">{{

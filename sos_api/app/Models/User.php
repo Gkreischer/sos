@@ -75,6 +75,11 @@ class User extends Authenticatable
 
     public function type()
     {
-        return $this->belongsTo(UserType::class, 'type_id');
+        return $this->belongsTo(UserType::class, 'type_id', 'id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id', 'id');
     }
 }

@@ -1,5 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
@@ -9,20 +15,15 @@ import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { IonicModule } from '@ionic/angular';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+
+import { LoadingService } from 'src/app/_services/loading.service';
 
 @Component({
-    selector: 'app-equipment-modal',
-    templateUrl: './equipment-modal.component.html',
-    styleUrls: ['./equipment-modal.component.scss'],
-    imports: [
-        IonicModule,
-        NgIf,
-        FormsModule,
-        ReactiveFormsModule,
-        NgFor,
-        AsyncPipe,
-    ],
+  selector: 'app-equipment-modal',
+  templateUrl: './equipment-modal.component.html',
+  styleUrls: ['./equipment-modal.component.scss'],
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, AsyncPipe],
 })
 export class EquipmentModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -30,10 +31,13 @@ export class EquipmentModalComponent implements OnInit {
   categoryService = inject(CategoryService);
   equipmentService = inject(EquipmentService);
   toastService = inject(ToastService);
+  loadingService = inject(LoadingService);
 
   equipment?: EquipmentInterface;
   formEquipment!: FormGroup;
   categories!: Observable<CategoryInterface[]>;
+
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
   constructor() {}
 
   ngOnInit() {

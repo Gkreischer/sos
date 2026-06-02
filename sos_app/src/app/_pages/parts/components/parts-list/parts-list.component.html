@@ -1,23 +1,37 @@
-@if (parts | async; as parts) {
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Materiais cadastrados</ion-card-title>
-      <ion-card-subtitle
-        >Aqui você cadastra materiais que são usados nas ordens de
-        serviço</ion-card-subtitle
-      >
-    </ion-card-header>
-    <ion-card-content>
-      <ion-list>
-        @for (part of parts; track $index) {
+@let loading = isLoading$ | async;
+@let partsList = parts | async;
+
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Materiais cadastrados</ion-card-title>
+    <ion-card-subtitle>
+      Aqui você cadastra materiais que são usados nas ordens de serviço
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-list>
+      @if (loading && (!partsList || partsList.length === 0)) {
+        <ion-item lines="none">
+          <ion-label>
+            <ion-spinner></ion-spinner>
+          </ion-label>
+        </ion-item>
+      } @else {
+        @for (part of partsList; track part.id) {
           <ion-item button="true" detail="true" (click)="openModalEdit(part)">
             <ion-avatar>
               <ion-img [src]="part.image"></ion-img>
             </ion-avatar>
+
             <ion-label class="ion-padding-start">
-              <h3 class="ion-text-bold">{{ part.category.name }}</h3>
+              <h3 class="ion-text-bold">
+                {{ part.category.name }}
+              </h3>
+
               <h3>{{ part.name }}</h3>
-              <p>{{ part.price | currency: "R$" }}</p>
+
+              <p>{{ part.price | currency: "BRL" }}</p>
             </ion-label>
           </ion-item>
         } @empty {
@@ -27,18 +41,19 @@
             </ion-label>
           </ion-item>
         }
-        @if (infiniteScroll()) {
-          <ion-item>
-            <ion-infinite-scroll
-              (ionInfinite)="onIonInfinite($event)"
-              loadingText="Carregando..."
-              loadingSpinner="bubbles"
-            >
-              <ion-infinite-scroll-content></ion-infinite-scroll-content>
-            </ion-infinite-scroll>
-          </ion-item>
-        }
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-}
+      }
+
+      @if (infiniteScroll()) {
+        <ion-item>
+          <ion-infinite-scroll
+            (ionInfinite)="onIonInfinite($event)"
+            loadingText="Carregando..."
+            loadingSpinner="bubbles"
+          >
+            <ion-infinite-scroll-content />
+          </ion-infinite-scroll>
+        </ion-item>
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>

@@ -1,7 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!category">Adicionar Categoria</ion-title>
-    <ion-title *ngIf="category">Editar Categoria</ion-title>
+    @if (!category) {
+      <ion-title>Adicionar Categoria</ion-title>
+    }
+    @if (category) {
+      <ion-title>Editar Categoria</ion-title>
+    }
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -30,29 +34,33 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button
-                *ngIf="!category"
-                type="submit"
-                expand="block"
-                [disabled]="!this.categoryForm.valid"
-                >Cadastrar</ion-button
-              >
-              <ion-button
-                *ngIf="category"
-                type="submit"
-                expand="block"
-                [disabled]="!this.categoryForm.valid"
-                >Atualizar</ion-button
-              >
+              @if (!category) {
+                <ion-button
+                  type="submit"
+                  expand="block"
+                  [disabled]="this.categoryForm.invalid || (isLoading$ | async)"
+                  >Cadastrar</ion-button
+                >
+              }
+              @if (category) {
+                <ion-button
+                  type="submit"
+                  expand="block"
+                  [disabled]="this.categoryForm.invalid || (isLoading$ | async)"
+                  >Atualizar</ion-button
+                >
+              }
             </ion-col>
           </ion-row>
         </ion-grid>
       </form>
     </ion-card-content>
   </ion-card>
-  <ion-fab *ngIf="category" slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="danger" (click)="confirmDeleteCategory()">
-      <ion-icon name="trash"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  @if (category) {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="danger" (click)="confirmDeleteCategory()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  }
 </ion-content>

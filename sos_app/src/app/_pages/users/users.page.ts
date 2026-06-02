@@ -1,20 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ViewWillEnter } from '@ionic/angular';
 import { ModalService } from 'src/app/_services/modal.service';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { IonicModule } from '@ionic/angular';
 import { UserFilterComponent } from './components/user-filter/user-filter.component';
 import { UsersListComponent } from './components/users-list/users-list.component';
-
+import { UserService } from 'src/app/_services/user.service';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButtons,
+  IonMenuButton,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+} from '@ionic/angular/standalone';
 @Component({
-    selector: 'app-users',
-    templateUrl: './users.page.html',
-    styleUrls: ['./users.page.scss'],
-    imports: [IonicModule, UserFilterComponent, UsersListComponent]
+  selector: 'app-users',
+  templateUrl: './users.page.html',
+  styleUrls: ['./users.page.scss'],
+  imports: [
+    UserFilterComponent,
+    UsersListComponent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButtons,
+    IonMenuButton,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+  ],
 })
-export class UsersPage implements OnInit {
-  constructor(private modalService: ModalService) {}
+export class UsersPage implements ViewWillEnter {
+  modalService = inject(ModalService);
+  userService = inject(UserService);
+  constructor() {}
 
-  ngOnInit() {}
+  ionViewWillEnter() {
+    this.userService.getUsers().subscribe();
+  }
 
   addUser() {
     this.modalService.openModal(UserModalComponent);

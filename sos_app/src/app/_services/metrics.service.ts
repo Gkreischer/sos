@@ -20,7 +20,7 @@ export class MetricsService {
   usersOrdersMetrics$ = signal([] as TechnicianMetricsInterface[]);
 
   startDate$ = signal<string>(
-    `01/${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
+    `01/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`,
   );
   endDate$ = signal<string>(new Date().toLocaleDateString('pt-BR'));
 

@@ -6,12 +6,14 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+use Spatie\Permission\PermissionRegistrar;
+
 class RolesAndPermissionsSeeder extends Seeder
 {
     public function run(): void
     {
         // Reset cache
-        app()[\Spatie\Permission\PermissionRegistrar::class]
+        app()[PermissionRegistrar::class]
             ->forgetCachedPermissions();
 
         // Permissions
@@ -34,6 +36,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'view settings']);
         Permission::create(['name' => 'edit settings']);
         Permission::create(['name' => 'delete settings']);
+        Permission::create(['name' => 'view reports']);
+        Permission::create(['name' => 'edit reports']);
+        Permission::create(['name' => 'delete reports']);
+        Permission::create(['name' => 'view posts']);
+        Permission::create(['name' => 'edit posts']);
+        Permission::create(['name' => 'delete posts']);
 
         // Roles
         $admin = Role::create(['name' => 'admin']);
@@ -79,6 +87,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'delete equipments',
             'delete parts',
             'delete categories',
+            'view posts',
+            'edit posts',
+            'delete posts',
         ]);
     }
 }

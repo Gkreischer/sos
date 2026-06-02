@@ -1,7 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!equipment">Adicionar Equipamento</ion-title>
-    <ion-title *ngIf="equipment">Editar Equipamento</ion-title>
+    @if (!equipment) {
+      <ion-title>Adicionar Equipamento</ion-title>
+    }
+    @if (equipment) {
+      <ion-title>Editar Equipamento</ion-title>
+    }
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -11,6 +15,7 @@
 </ion-header>
 
 <ion-content>
+  @let isLoading = isLoading$ | async;
   <ion-card>
     <ion-card-content>
       <form
@@ -43,21 +48,22 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-select
-                *ngIf="categories | async as categories"
-                label="Categoria"
-                formControlName="category_id"
-                labelPlacement="floating"
-                okText="Confirmar"
-                cancelText="Cancelar"
-                fill="outline"
-              >
-                <ion-select-option
-                  *ngFor="let category of categories"
-                  [value]="category.id"
-                  >{{ category.name }}</ion-select-option
+              @if (categories | async; as categories) {
+                <ion-select
+                  label="Categoria"
+                  formControlName="category_id"
+                  labelPlacement="floating"
+                  okText="Confirmar"
+                  cancelText="Cancelar"
+                  fill="outline"
                 >
-              </ion-select>
+                  @for (category of categories; track category) {
+                    <ion-select-option [value]="category.id">{{
+                      category.name
+                    }}</ion-select-option>
+                  }
+                </ion-select>
+              }
             </ion-col>
           </ion-row>
           <ion-row>
@@ -84,20 +90,22 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button
-                *ngIf="!equipment"
-                type="submit"
-                expand="block"
-                [disabled]="!this.formEquipment.valid"
-                >Cadastrar</ion-button
-              >
-              <ion-button
-                *ngIf="equipment"
-                type="submit"
-                expand="block"
-                [disabled]="!this.formEquipment.valid"
-                >Editar</ion-button
-              >
+              @if (!equipment) {
+                <ion-button
+                  type="submit"
+                  expand="block"
+                  [disabled]="formEquipment.invalid || isLoading"
+                  >Cadastrar</ion-button
+                >
+              }
+              @if (equipment) {
+                <ion-button
+                  type="submit"
+                  expand="block"
+                  [disabled]="formEquipment.invalid || isLoading"
+                  >Editar</ion-button
+                >
+              }
             </ion-col>
           </ion-row>
         </ion-grid>

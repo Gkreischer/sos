@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { inject } from '@angular/core';
 import { LoginService } from 'src/app/_services/login.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { UserLoginInterface } from 'src/app/_interfaces/UserLoginInterface';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/app/_services/user.service';
 import { cnpjMask } from 'src/app/_masks/cnpjMask';
@@ -17,17 +23,17 @@ import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 @Component({
-    selector: 'app-user-info-modal',
-    templateUrl: './user-info-modal.component.html',
-    styleUrls: ['./user-info-modal.component.scss'],
-    imports: [
-        IonicModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MaskitoDirective,
-        AsyncPipe,
-        JsonPipe,
-    ],
+  selector: 'app-user-info-modal',
+  templateUrl: './user-info-modal.component.html',
+  styleUrls: ['./user-info-modal.component.scss'],
+  imports: [
+    IonicModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaskitoDirective,
+    AsyncPipe,
+    JsonPipe,
+  ],
 })
 export class UserInfoModalComponent implements OnInit {
   formBuilder = inject(FormBuilder);
@@ -44,7 +50,7 @@ export class UserInfoModalComponent implements OnInit {
   cepMask = cepMask;
   phoneMask = phoneMask;
 
-  user?: Observable<UserInterface | null>;
+  user?: Observable<UserLoginInterface | null>;
   userId!: number;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>

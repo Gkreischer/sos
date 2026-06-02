@@ -30,7 +30,9 @@ class LoginController extends Controller
             $userToken = $user->createToken($request->email)->plainTextToken;
 
             return response([
-                'token' => $userToken
+                'token' => $userToken,
+                'user' => $user,
+                'role' => UserType::with('type')->select('name')->where('id', $user->type_id)->first()
             ]);
         } catch (\Exception $e) {
             return response([

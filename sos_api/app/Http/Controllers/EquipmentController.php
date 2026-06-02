@@ -110,7 +110,6 @@ class EquipmentController extends Controller
                     $query->where(function ($q) use ($description) {
 
                         $q->where('equipments.name', 'LIKE', '%' . $description . '%')
-                            ->orWhere('equipments.description', 'LIKE', '%' . $description . '%')
                             ->orWhereHas('category', function ($q2) use ($description) {
                                 $q2->where('name', 'LIKE', '%' . $description . '%');
                             });

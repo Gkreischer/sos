@@ -1,8 +1,13 @@
 <ion-app>
   <ion-split-pane contentId="main-content" when="xl">
-    <ion-menu contentId="main-content" type="overlay" menuId="main">
+    @let userLogged = user$ | async;
+    <ion-menu
+      contentId="main-content"
+      type="overlay"
+      menuId="main"
+      [disabled]="true && !userLogged"
+    >
       <ion-content class="ion-padding" color="primary">
-        @let userLogged = user | async;
         @if (userLogged) {
           <ion-card style="border-radius: 5%">
             <ion-img
@@ -32,7 +37,7 @@
                 [routerLink]="[p.url]"
                 lines="none"
                 detail="false"
-                routerLinkActive="activated"
+                routerLinkActive="selected"
                 color="primary"
                 [id]="p.id"
               >
@@ -45,11 +50,19 @@
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             }
+            <ion-button expand="block" color="danger" (click)="logout()">
+              Sair
+              <ion-icon name="exit"></ion-icon>
+            </ion-button>
           </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>
 
-    <ion-router-outlet id="main-content" main></ion-router-outlet>
+    <ion-router-outlet
+      id="main-content"
+      main
+      [animated]="true"
+    ></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

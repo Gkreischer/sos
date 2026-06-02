@@ -33,7 +33,7 @@
             <ion-button
               expand="block"
               type="submit"
-              [disabled]="loginForm.invalid"
+              [disabled]="loginForm.invalid || (isLoading$ | async)"
             >
               Entrar
             </ion-button>

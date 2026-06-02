@@ -168,7 +168,7 @@
                   type="submit"
                   color="primary"
                   expand="block"
-                  [disabled]="!this.userForm.valid"
+                  [disabled]="!this.userForm.invalid"
                   >Cadastrar</ion-button
                 >
               } @else {
@@ -176,7 +176,7 @@
                   type="submit"
                   color="primary"
                   expand="block"
-                  [disabled]="!this.userForm.valid"
+                  [disabled]="!this.userForm.invalid"
                   >Atualizar</ion-button
                 >
               }

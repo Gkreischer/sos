@@ -1,18 +1,29 @@
-@if (equipments | async; as equipments) {
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Equipamentos cadastrados</ion-card-title>
-      <ion-card-subtitle
-        >Aqui você verifica e cadastra os equipamentos dos seus
-        clientes</ion-card-subtitle
-      >
-    </ion-card-header>
-    <ion-card-content>
-      <ion-list>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Equipamentos cadastrados</ion-card-title>
+    <ion-card-subtitle>
+      Aqui você verifica e cadastra os equipamentos dos seus clientes
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    @let equipments = equipmentService.equipments | async;
+    @let loading = isLoading$ | async;
+
+    <ion-list>
+      @if (loading && (!equipments || equipments.length === 0)) {
+        <ion-item lines="none">
+          <ion-label>
+            <ion-spinner></ion-spinner>
+          </ion-label>
+        </ion-item>
+      } @else {
         @for (equipment of equipments; track equipment.id) {
           <ion-item button="true" detail="true" (click)="openModal(equipment)">
             <ion-label>
-              <h3 class="ion-text-bold">{{ equipment.category.name }}</h3>
+              <h3 class="ion-text-bold">
+                {{ equipment.category.name }}
+              </h3>
               <h3>{{ equipment.name }}</h3>
               <p>{{ equipment.user.name }}</p>
             </ion-label>
@@ -24,18 +35,19 @@
             </ion-label>
           </ion-item>
         }
-        @if (infiniteScroll()) {
-          <ion-item>
-            <ion-infinite-scroll
-              (ionInfinite)="onIonInfinite($event)"
-              loadingText="Carregando..."
-              loadingSpinner="bubbles"
-            >
-              <ion-infinite-scroll-content></ion-infinite-scroll-content>
-            </ion-infinite-scroll>
-          </ion-item>
-        }
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-}
+      }
+
+      @if (infiniteScroll()) {
+        <ion-item>
+          <ion-infinite-scroll
+            (ionInfinite)="onIonInfinite($event)"
+            loadingText="Carregando..."
+            loadingSpinner="bubbles"
+          >
+            <ion-infinite-scroll-content />
+          </ion-infinite-scroll>
+        </ion-item>
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>

@@ -11,6 +11,7 @@ use App\Http\Controllers\MetricController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTypeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,10 +62,8 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::controller(UserController::class)->group(function () {
 
-            Route::get('/users', 'index');
-            Route::get('/users/staff', 'getStaffUsers');
+            Route::post('/users', 'getUsersWithFilter');
             Route::get('/users/{id}', 'show');
-            Route::post('/users/description/{description}', 'getUserByDescription');
             Route::put('/users/{id}', 'update');
             Route::delete('/users/{id}', 'destroy');
             Route::post('/users/add', 'store');
@@ -113,16 +112,17 @@ Route::middleware(['json.response'])->group(function () {
         Route::controller(UserTypeController::class)->group(function () {
             Route::get('/user-types', 'index');
         });
+
+        Route::controller(PostController::class)->group(function () {
+            Route::get('/posts', 'index');
+            Route::post('/posts', 'store');
+            Route::put('/posts/{id}', 'update');
+            Route::delete('/posts/{id}', 'destroy');
+            Route::get('/posts/last', 'getLastPosts');
+        });
     });
 
     Route::fallback(function () {
-        abort(404, 'API resource not found');
+        abort(404, 'Erro.');
     });
 });
-
-
-
-
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    //return $request->user();
-//});

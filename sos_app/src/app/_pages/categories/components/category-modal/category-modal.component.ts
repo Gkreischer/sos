@@ -1,23 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { IonicModule } from '@ionic/angular';
-import { NgIf } from '@angular/common';
-
+import { AsyncPipe } from '@angular/common';
+import { LoadingService } from 'src/app/_services/loading.service';
+import { Observable } from 'rxjs';
 @Component({
-    selector: 'app-category-modal',
-    templateUrl: './category-modal.component.html',
-    styleUrls: ['./category-modal.component.scss'],
-    imports: [
-        IonicModule,
-        NgIf,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
+  selector: 'app-category-modal',
+  templateUrl: './category-modal.component.html',
+  styleUrls: ['./category-modal.component.scss'],
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, AsyncPipe],
 })
 export class CategoryModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -25,10 +27,13 @@ export class CategoryModalComponent implements OnInit {
   categoryService = inject(CategoryService);
   toastService = inject(ToastService);
   alertService = inject(AlertService);
+  loadingService = inject(LoadingService);
 
   categoryForm!: FormGroup;
 
   category!: CategoryInterface;
+
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   constructor() {}
 

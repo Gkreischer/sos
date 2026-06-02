@@ -1,22 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
-import dateMask from 'src/app/_masks/dateMask';
+import { dateMask } from 'src/app/_masks/dateMask';
 import { MetricsService } from 'src/app/_services/metrics.service';
-import { IonHeader } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
+import { maskitoTransform } from '@maskito/core';
 
 @Component({
-    selector: 'app-metric-filter',
-    templateUrl: './metric-filter.component.html',
-    styleUrls: ['./metric-filter.component.scss'],
-    imports: [
-        IonicModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MaskitoDirective,
-    ],
+  selector: 'app-metric-filter',
+  templateUrl: './metric-filter.component.html',
+  styleUrls: ['./metric-filter.component.scss'],
+  imports: [IonicModule, FormsModule, ReactiveFormsModule, MaskitoDirective],
 })
 export class MetricFilterComponent implements OnInit {
   metricsService = inject(MetricsService);
@@ -38,15 +38,15 @@ export class MetricFilterComponent implements OnInit {
     this.mountForm();
   }
 
-  getOrderStatusMetrics() {
+  setDateFilter() {
     this.metricsService.startDate$.set(this.form.value.startDate);
     this.metricsService.endDate$.set(this.form.value.endDate);
   }
 
   mountForm() {
     this.form = this.formBuilder.group({
-      startDate: [this.metricsService.startDate$()],
-      endDate: [this.metricsService.endDate$()],
+      startDate: [maskitoTransform(this.metricsService.startDate$(), dateMask)],
+      endDate: [maskitoTransform(this.metricsService.endDate$(), dateMask)],
     });
   }
 }

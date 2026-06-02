@@ -1,0 +1,43 @@
+@let lastPosts = (lastPosts$ | async)!.slice(0, 5);
+@let loading = isLoading$ | async;
+
+<ion-card color="secondary">
+  <ion-card-header>
+    <ion-card-title>Quadro de comunicação</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-list>
+      @if (loading && (!lastPosts || lastPosts.length === 0)) {
+        <ion-item color="secondary">
+          <ion-label>
+            <ion-spinner color="light"></ion-spinner>
+          </ion-label>
+        </ion-item>
+      } @else {
+        @for (p of lastPosts; track p.id) {
+          <ion-item button detail color="secondary">
+            <ion-label>
+              <ion-text color="light">
+                <strong>{{ p.title }}</strong>
+              </ion-text>
+
+              <p>{{ p.created_at | date: "dd/MM/yyyy" }}</p>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item color="secondary">
+            <ion-label>
+              <h2>Nenhum post</h2>
+              <p>Crie um post para ver aqui</p>
+            </ion-label>
+          </ion-item>
+        }
+      }
+    </ion-list>
+
+    <ion-button (click)="goToPostsPage()" expand="block" type="submit">
+      Ver todos os posts
+    </ion-button>
+  </ion-card-content>
+</ion-card>

@@ -42,7 +42,7 @@ class UserFactory extends Factory
             'state' => strtoupper(fake()->lexify('??')),
             'country' => fake()->country(),
             'image' => fake()->imageUrl(),
-            'type_id' => fake()->numberBetween(1, 4),
+            'type_id' => UserType::all()->random()->id,
 
         ];
     }

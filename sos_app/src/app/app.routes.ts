@@ -4,12 +4,11 @@ import { loginGuard } from './_guards/login.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
     path: 'login',
-    // Mudamos de loadChildren para loadComponent e apontamos para a classe do Componente
     loadComponent: () =>
       import('./_pages/login/login.page').then((m) => m.LoginPage),
   },
@@ -70,5 +69,11 @@ export const routes: Routes = [
     canActivate: [loginGuard],
     loadComponent: () =>
       import('./_pages/metrics/metrics.page').then((m) => m.MetricsPage),
+  },
+  {
+    path: 'posts',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/posts/posts.page').then((m) => m.PostsPage),
   },
 ];

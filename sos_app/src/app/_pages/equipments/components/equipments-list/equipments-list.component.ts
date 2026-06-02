@@ -9,21 +9,25 @@ import { EquipmentFilterInterface } from 'src/app/_interfaces/EquipmentFilterInt
 import { effect } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
+import { LoadingService } from 'src/app/_services/loading.service';
 
 @Component({
-    selector: 'app-equipments-list',
-    templateUrl: './equipments-list.component.html',
-    styleUrls: ['./equipments-list.component.scss'],
-    imports: [IonicModule, AsyncPipe],
+  selector: 'app-equipments-list',
+  templateUrl: './equipments-list.component.html',
+  styleUrls: ['./equipments-list.component.scss'],
+  imports: [IonicModule, AsyncPipe],
 })
 export class EquipmentsListComponent implements OnInit {
   equipmentService = inject(EquipmentService);
   modalService = inject(ModalService);
+  loadingService = inject(LoadingService);
 
-  equipments!: Observable<EquipmentInterface[]>;
+  equipments: Observable<EquipmentInterface[]> =
+    this.equipmentService.equipments;
   equipmentsPage = 1;
   infiniteScroll = signal(true);
   filters = this.equipmentService.equipmentFilter;
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor() {
     effect(() => {
@@ -35,8 +39,6 @@ export class EquipmentsListComponent implements OnInit {
       this.equipmentService
         .getEquipments(this.equipmentsPage, filters)
         .subscribe((res) => {
-          this.equipments = this.equipmentService.equipments;
-
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
@@ -58,7 +60,6 @@ export class EquipmentsListComponent implements OnInit {
       .getEquipments(this.equipmentsPage, this.filters())
       .subscribe((res) => {
         console.log(res);
-        this.equipments = this.equipmentService.equipments;
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }

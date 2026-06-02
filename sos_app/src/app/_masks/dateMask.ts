@@ -1,7 +1,7 @@
 import { MaskitoOptions } from '@maskito/core';
 import { maskitoDateOptionsGenerator } from '@maskito/kit';
 
-export default maskitoDateOptionsGenerator({
+export const dateMask: MaskitoOptions = maskitoDateOptionsGenerator({
   mode: 'dd/mm/yyyy',
   separator: '/',
 });

@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Order;
+use App\Models\User;
+use App\Models\Equipment;
+use App\Models\OrderStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,12 +22,12 @@ class OrderFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            'user_id' => $this->faker->numberBetween(1, 10),
-            'status_id' => $this->faker->numberBetween(1, 4),
+            'user_id' => User::all()->where('type_id', 2)->random()->id,
+            'status_id' => OrderStatus::all()->random()->id,
             'description' => $this->faker->sentence(),
             'obs' => $this->faker->sentence(),
-            'technician_id' => $this->faker->numberBetween(1, 30),
-            'equipment_id' => $this->faker->numberBetween(1, 50),
+            'technician_id' => User::all()->where('type_id', 3)->random()->id,
+            'equipment_id' => Equipment::all()->random()->id,
             'diagnostic' => $this->faker->sentence(),
             'service_description' => $this->faker->sentence(),
             'service_price' => $this->faker->numberBetween(1, 1000),

@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Injectable, inject } from '@angular/core';
+import { ModalController } from '@ionic/angular/standalone';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private modalController: ModalController) {}
+  modalController = inject(ModalController);
+  constructor() {}
 
   async openModal(component: any, props?: Object, cssClass?: string) {
     const modal = await this.modalController.create({

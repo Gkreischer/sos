@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { UserInterface } from '../_interfaces/UserInterface';
 import { catchError, tap, BehaviorSubject } from 'rxjs';
 import { ErrorService } from './error.service';
@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { PaginateInterface } from '../_interfaces/PaginateInterface';
 import { UserTypeInterface } from '../_interfaces/UserTypeInterface';
 import { LoginService } from './login.service';
+import { UserFilterInterface } from '../_interfaces/UserFilterInterface';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -22,6 +23,8 @@ export class UserService {
   usersSubject = new BehaviorSubject<UserInterface[]>([]);
   userTypesSubject = new BehaviorSubject<UserTypeInterface[]>([]);
 
+  userFilter = signal<UserFilterInterface | null>(null);
+
   constructor() {}
 
   get users() {
@@ -32,27 +35,35 @@ export class UserService {
     return this.userTypesSubject.asObservable();
   }
 
-  getUsers(page?: number) {
+  setUserFilter(userFilter: UserFilterInterface) {
+    this.userFilter.set(userFilter);
+  }
+
+  getUsers(page?: number, filters?: UserFilterInterface | null) {
     return this.http
-      .get<
+      .post<
         PaginateInterface<UserInterface[]>
-      >(`${environment.baseUrl}/users${page ? `?page=${page}` : ''}`, httpOptions)
+      >(`${environment.baseUrl}/users${page ? `?page=${page}` : ''}`, this.userFilter(), httpOptions)
       .pipe(
         tap((res) => {
-          return this.usersSubject.next([
-            ...this.usersSubject.value,
-            ...res.data,
-          ]);
+          if (page && page >= 2) {
+            this.usersSubject.next([
+              ...this.usersSubject.getValue(),
+              ...res.data,
+            ]);
+          } else {
+            this.usersSubject.next(res.data);
+          }
         }),
         catchError(this.errorService.handleError),
       );
   }
 
-  getUserByDesc(filter: UserTypeInterface) {
+  getUserByDesc(filter: UserFilterInterface) {
     return this.http
       .post<
         UserInterface[]
-      >(`${environment.baseUrl}/users/description/${filter.id}`, filter, httpOptions)
+      >(`${environment.baseUrl}/users/description`, filter, httpOptions)
       .pipe(
         tap((user) => {
           return this.usersSubject.next(user);

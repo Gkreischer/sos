@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -25,6 +25,8 @@ import { cpfMask } from 'src/app/_masks/cpfMask';
 import { UserTypeService } from 'src/app/_services/user-type.service';
 import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
+import { addIcons } from 'ionicons';
+import { trash } from 'ionicons/icons';
 
 @Component({
   selector: 'app-user-modal',
@@ -61,7 +63,9 @@ export class UserModalComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({ trash });
+  }
 
   ngOnInit() {
     this.mountForm();

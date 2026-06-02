@@ -1,16 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LoadingBarInterceptor } from './loading-bar.interceptor';
+import { loadingBarInterceptor } from './loading-bar.interceptor';
 
-describe('LoadingBarInterceptor', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    providers: [
-      LoadingBarInterceptor
-      ]
-  }));
+describe('loadingBarInterceptor', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [loadingBarInterceptor],
+    }),
+  );
 
   it('should be created', () => {
-    const interceptor: LoadingBarInterceptor = TestBed.inject(LoadingBarInterceptor);
+    const interceptor: typeof loadingBarInterceptor = TestBed.inject(
+      loadingBarInterceptor,
+    );
     expect(interceptor).toBeTruthy();
   });
 });

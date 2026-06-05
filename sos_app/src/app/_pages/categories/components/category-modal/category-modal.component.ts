@@ -55,48 +55,28 @@ export class CategoryModalComponent implements OnInit {
   }
 
   submit() {
-    this.categoryService.addCategory(this.categoryForm.value).subscribe({
-      next: () => {
-        this.closeModal();
-        this.toastService.presentToast(
-          'Categoria criada com sucesso!',
-          'bottom',
-          2000,
-          'success',
-        );
-      },
-      error: () => {
-        this.toastService.presentToast(
-          'Erro ao criar categoria!',
-          'bottom',
-          2000,
-          'danger',
-        );
-      },
+    this.categoryService.addCategory(this.categoryForm.value).subscribe(() => {
+      this.closeModal();
+      this.toastService.presentToast(
+        'Categoria criada com sucesso!',
+        'bottom',
+        2000,
+        'success',
+      );
     });
   }
 
   update() {
     this.categoryService
       .updateCategory(this.categoryForm.value, this.category.id)
-      .subscribe({
-        next: () => {
-          this.closeModal();
-          this.toastService.presentToast(
-            'Categoria criada com sucesso!',
-            'bottom',
-            2000,
-            'success',
-          );
-        },
-        error: () => {
-          this.toastService.presentToast(
-            'Erro ao criar categoria!',
-            'bottom',
-            2000,
-            'danger',
-          );
-        },
+      .subscribe(() => {
+        this.closeModal();
+        this.toastService.presentToast(
+          'Categoria atualizada com sucesso!',
+          'bottom',
+          2000,
+          'success',
+        );
       });
   }
 
@@ -123,19 +103,14 @@ export class CategoryModalComponent implements OnInit {
   }
 
   deleteCategory(category: CategoryInterface) {
-    this.categoryService.deleteCategory(category).subscribe({
-      next: () => {
-        this.closeModal();
-        this.toastService.presentToast(
-          'Categoria deletada com sucesso!',
-          'bottom',
-          2000,
-          'success',
-        );
-      },
-      error: (err) => {
-        this.toastService.presentToast(err, 'bottom', 2000, 'danger');
-      },
+    this.categoryService.deleteCategory(category).subscribe(() => {
+      this.closeModal();
+      this.toastService.presentToast(
+        'Categoria deletada com sucesso!',
+        'bottom',
+        2000,
+        'success',
+      );
     });
   }
 

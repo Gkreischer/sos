@@ -56,4 +56,17 @@ export class LoginService {
         catchError(this.errorService.handleError),
       );
   }
+
+  updateAvatarImage(imagePath: string) {
+    return this.http
+      .post<UserInterface>(`${environment.baseUrl}/user/image/change`, {
+        imagePath: imagePath,
+      })
+      .pipe(
+        tap((user) => {
+          this.userSubject.next(user);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
 }

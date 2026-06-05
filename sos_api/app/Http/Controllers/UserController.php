@@ -212,4 +212,30 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    public function updateUserAvatarImage(Request $request)
+    {
+        try {
+
+
+            if (!isset($request->imagePath)) {
+                return response([
+                    'message' => 'Não foi recebida informação da imagem',
+                    'error' => throw new Exception('Não foi possível receber informações da imagem')
+                ]);
+            }
+
+            $user = $request->user();
+            $user->update([
+                'image' => $request->imagePath
+            ]);
+
+            return $user->load('type');
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível atualizar a imagem',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }

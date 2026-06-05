@@ -34,8 +34,6 @@ import {
 } from '@ionic/angular/standalone';
 import { errAndLoadingInterceptor } from './app/_interceptors/loading.interceptor';
 
-import { MenuController } from '@ionic/angular';
-
 registerLocaleData(localePtBr);
 defineCustomElements(window);
 
@@ -62,7 +60,6 @@ bootstrapApplication(AppComponent, {
     provideAppInitializer(async () => {
       const prefs = inject(PreferencesPluginService);
       const loginService = inject(LoginService);
-      const menuController = inject(MenuController);
 
       const token = await prefs.get('_t');
       if (token?.value) {

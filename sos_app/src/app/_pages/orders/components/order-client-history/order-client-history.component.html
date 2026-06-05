@@ -11,15 +11,27 @@
 
 <ion-content>
   @let clientOrdersHistory = clientOrdersHistory$ | async;
-  @if (clientOrdersHistory) {
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Histórico do cliente</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
+  @let loading = isLoading$ | async;
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Histórico do cliente</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @if (!clientOrdersHistory || loading) {
+          <ion-item lines="none">
+            <ion-label>
+              <ion-spinner></ion-spinner>
+            </ion-label>
+          </ion-item>
+        } @else {
           @for (order of clientOrdersHistory; track order.id) {
-            <ion-item lines="inset" detail="true" button="true">
+            <ion-item
+              lines="inset"
+              detail="true"
+              button="true"
+              (click)="openModalOrder(order.id)"
+            >
               <div
                 class="ion-margin-horizontal"
                 style="width: 50px; max-width: 80px; text-align: center"
@@ -68,14 +80,8 @@
               </ion-label>
             </ion-item>
           }
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-  } @else {
-    <ion-item lines="none">
-      <ion-label>
-        <ion-spinner></ion-spinner>
-      </ion-label>
-    </ion-item>
-  }
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

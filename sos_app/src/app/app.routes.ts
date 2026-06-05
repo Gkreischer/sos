@@ -1,5 +1,6 @@
 import { Routes, PreloadAllModules, withPreloading } from '@angular/router';
 import { loginGuard } from './_guards/login.guard';
+import { introGuard } from './_guards/intro.guard';
 
 export const routes: Routes = [
   {
@@ -75,5 +76,11 @@ export const routes: Routes = [
     canActivate: [loginGuard],
     loadComponent: () =>
       import('./_pages/posts/posts.page').then((m) => m.PostsPage),
+  },
+  {
+    path: 'intro',
+    canActivate: [introGuard],
+    loadComponent: () =>
+      import('./_pages/intro/intro.page').then((m) => m.IntroPage),
   },
 ];

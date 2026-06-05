@@ -6,23 +6,20 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
-
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
-    selector: 'app-modal-add-part',
-    templateUrl: './modal-add-part.component.html',
-    styleUrls: ['./modal-add-part.component.scss'],
-    imports: [
-        IonicModule,
-        FormsModule,
-        AsyncPipe,
-        CurrencyPipe,
-    ],
+  selector: 'app-modal-add-part',
+  templateUrl: './modal-add-part.component.html',
+  styleUrls: ['./modal-add-part.component.scss'],
+  imports: [IonicModule, FormsModule, AsyncPipe, CurrencyPipe],
 })
 export class ModalAddPartComponent implements OnInit {
   modalService = inject(ModalService);
   partService = inject(PartService);
+  loadingService = inject(LoadingService);
 
-  parts!: Observable<PartInterface[]>;
+  parts$: Observable<PartInterface[]> = this.partService.partsSearch;
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor() {}
 
@@ -39,9 +36,7 @@ export class ModalAddPartComponent implements OnInit {
       return;
     }
 
-    this.partService.search(value).subscribe((res) => {
-      this.parts = this.partService.partsSearchedSubject;
-    });
+    this.partService.search(value).subscribe();
   }
 
   addPart(part: PartInterface) {

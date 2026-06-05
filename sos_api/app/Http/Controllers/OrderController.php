@@ -215,7 +215,7 @@ class OrderController extends Controller
     public function getOrderHistory(int $id)
     {
         try {
-            $order = User::findOrFail($id)->orders()->with('status')->get();
+            $order = User::findOrFail($id)->orders()->with('status')->orderByDesc('created_at')->get();
 
             $order->load(['status', 'technician', 'user', 'equipment']);
 

@@ -67,6 +67,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::put('/users/{id}', 'update');
             Route::delete('/users/{id}', 'destroy');
             Route::post('/users/add', 'store');
+            Route::post('/user/image/change', 'updateUserAvatarImage');
         });
 
         Route::controller(OrderController::class)->group(function () {

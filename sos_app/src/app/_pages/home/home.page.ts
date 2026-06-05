@@ -15,7 +15,10 @@ import { UserPostsBoardComponent } from './user-posts-board/user-posts-board.com
 import { MenuController } from '@ionic/angular';
 import { inject } from '@angular/core';
 import { PostService } from 'src/app/_services/post.service';
-import { ViewWillEnter } from '@ionic/angular';
+import { ViewWillEnter, ViewDidEnter } from '@ionic/angular';
+import { TourService } from 'ngx-ui-tour-ionic';
+import tourSteps from 'src/app/_shared/utils/tour/tour';
+import { PreferencesPluginService } from 'src/app/_services/preferences-plugin.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -33,13 +36,33 @@ import { ViewWillEnter } from '@ionic/angular';
     IonCol,
   ],
 })
-export class HomePage implements ViewWillEnter {
+export class HomePage implements ViewWillEnter, ViewDidEnter {
   menuController = inject(MenuController);
   postService = inject(PostService);
+  tourService = inject(TourService);
+  preferenceService = inject(PreferencesPluginService);
   constructor() {}
 
   ionViewWillEnter() {
     this.postService.getLastPosts().subscribe();
     this.menuController.enable(true, 'main');
+  }
+
+  ionViewDidEnter() {
+    this.startTour();
+  }
+
+  async startTour() {
+    if (await this.preferenceService.get('intro')) {
+      return false;
+    }
+    this.tourService.initialize(tourSteps);
+    this.tourService.start();
+    this.tutorialIsViewed();
+    return true;
+  }
+
+  async tutorialIsViewed() {
+    await this.preferenceService.set('intro', 'true');
   }
 }

@@ -22,6 +22,9 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PostModalComponent } from '../../posts/components/post-modal/post-modal.component';
+import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
+import { TourAnchorDirective } from 'ngx-ui-tour-core';
+import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
 @Component({
   selector: 'app-user-posts-board',
   templateUrl: './user-posts-board.component.html',
@@ -41,6 +44,7 @@ import { PostModalComponent } from '../../posts/components/post-modal/post-modal
     IonItem,
     IonLabel,
     DatePipe,
+    TourAnchorIonPopoverDirective,
   ],
 })
 export class UserPostsBoardComponent {

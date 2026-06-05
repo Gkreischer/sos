@@ -19,7 +19,7 @@ class LoginController extends Controller
                 'password' => 'required|string|min:8'
             ]);
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->with('type')->first();
 
             if (! $user || ! Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
@@ -32,7 +32,7 @@ class LoginController extends Controller
             return response([
                 'token' => $userToken,
                 'user' => $user,
-                'type' => UserType::with('users')->select('name')->where('id', $user->type_id)->first()
+                'type' => UserType::select('name')->where('id', $user->type_id)->first()
             ]);
         } catch (\Exception $e) {
             return response([

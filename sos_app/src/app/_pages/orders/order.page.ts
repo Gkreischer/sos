@@ -7,11 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
 import { OrderService } from 'src/app/_services/order.service';
+import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
 @Component({
   selector: 'app-order',
   templateUrl: './order.page.html',
   styleUrls: ['./order.page.scss'],
-  imports: [IonicModule, OrderFilterComponent, OrdersListComponent],
+  imports: [
+    IonicModule,
+    OrderFilterComponent,
+    OrdersListComponent,
+    TourAnchorIonPopoverDirective,
+  ],
 })
 export class OrderPage implements ViewWillEnter {
   modalService = inject(ModalService);

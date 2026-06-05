@@ -9,7 +9,12 @@
     >
       <ion-content class="ion-padding" color="primary">
         @if (userLogged) {
-          <ion-card style="border-radius: 5%">
+          <ion-card
+            style="border-radius: 5%"
+            tourAnchor="menu.start"
+            button
+            (click)="changeAvatarImage()"
+          >
             <ion-img
               src="{{ userLogged.image }}"
               alt="User Image"
@@ -17,8 +22,8 @@
             ></ion-img>
           </ion-card>
         } @else {
-          <ion-card>
-            <img src="assets/person-shape.svg" />
+          <ion-card button (click)="changeAvatarImage()">
+            <ion-img src="assets/person-shape.svg"></ion-img>
           </ion-card>
         }
         <ion-list id="inbox-list" color="primary">
@@ -30,7 +35,7 @@
             <ion-note>Sistema de Ordem de Serviço</ion-note>
           }
 
-          <ion-menu-toggle auto-hide="false">
+          <ion-menu-toggle auto-hide="false" tourAnchor="menu.list">
             @for (p of appPages; track p.title; let i = $index) {
               <ion-item
                 routerDirection="root"
@@ -40,6 +45,7 @@
                 routerLinkActive="selected"
                 color="primary"
                 [id]="p.id"
+                [tourAnchor]="p.tourAnchor!"
               >
                 <ion-icon
                   aria-hidden="true"
@@ -69,5 +75,6 @@
       main
       [animated]="true"
     ></ion-router-outlet>
+    <tour-step-template></tour-step-template>
   </ion-split-pane>
 </ion-app>

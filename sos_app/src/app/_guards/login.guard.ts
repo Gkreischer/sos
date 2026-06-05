@@ -11,7 +11,7 @@ export const loginGuard: CanActivateFn = async (route, state) => {
 
   if (!token.value) {
     // state.url contém o caminho completo que o usuário tentou acessar (ex: /produtos/detalhes)
-    router.navigate(['/login'], {
+    await router.navigate(['/login'], {
       queryParams: { returnUrl: state.url },
     });
     return false;

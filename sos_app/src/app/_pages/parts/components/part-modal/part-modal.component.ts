@@ -29,7 +29,7 @@ import { priceMask } from 'src/app/_masks/priceMask';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
-import { JsonPipe } from '@angular/common';
+import { AlertService } from 'src/app/_services/alert.service';
 import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
   selector: 'app-part-modal',
@@ -51,6 +51,7 @@ export class PartModalComponent implements OnInit {
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
   loadingService = inject(LoadingService);
+  alertService = inject(AlertService);
 
   partId!: number;
   part$!: Observable<PartInterface>;
@@ -171,5 +172,37 @@ export class PartModalComponent implements OnInit {
     }
 
     this.formPart.get('image')?.setValue(image.webviewPath);
+  }
+
+  async confirmDelete() {
+    this.alertService.presentAlert(
+      'Atenção',
+      '',
+      'Tem certeza que deseja excluir esta parte?',
+      [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {},
+        },
+        {
+          text: 'Confirmar',
+          role: 'confirm',
+          handler: () => {
+            this.partService.delete(this.partId).subscribe({
+              next: () => {
+                this.closeModal();
+                this.toastService.presentToast(
+                  'Parte excluído com sucesso!',
+                  'bottom',
+                  2000,
+                  'success',
+                );
+              },
+            });
+          },
+        },
+      ],
+    );
   }
 }

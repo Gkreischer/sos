@@ -1,7 +1,7 @@
 @let loading = isLoading$ | async;
 @let categoriesList = categories | async;
 
-<ion-content color="light">
+<ion-content>
   <ion-card>
     <ion-card-header>
       <ion-card-title>Categorias cadastradas</ion-card-title>
@@ -12,14 +12,14 @@
     </ion-card-header>
 
     <ion-card-content>
-      @if (loading) {
+      @if (loading && (!categoriesList || categoriesList.length === 0)) {
         <ion-item lines="none">
           <ion-label>
             <ion-spinner></ion-spinner>
           </ion-label>
         </ion-item>
       } @else {
-        <ion-list>
+        <ion-list data-cy="categories-list">
           @for (category of categoriesList; track category.id) {
             <ion-item button="true" detail="true" (click)="openModal(category)">
               <ion-label>
@@ -27,7 +27,7 @@
               </ion-label>
             </ion-item>
           } @empty {
-            <ion-item lines="none">
+            <ion-item lines="none" data-cy="empty-categories-message">
               <ion-label>
                 <h3>Nenhuma categoria cadastrada</h3>
               </ion-label>

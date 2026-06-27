@@ -33,7 +33,7 @@ class MetricController extends Controller
 
             $cacheKey = 'metrics:order:count_by_month:' . $request->startDate . ':' . $request->endDate;
 
-            $metrics = Cache::remember(
+            $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
@@ -87,7 +87,7 @@ class MetricController extends Controller
 
             $cacheKey = 'metrics:order:status_type:' . $request->startDate . ':' . $request->endDate;
 
-            $metrics = Cache::remember(
+            $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate, $statuses) {
@@ -187,7 +187,7 @@ class MetricController extends Controller
 
             $cacheKey = 'metrics:order:revenue:' . $request->startDate . ':' . $request->endDate;
 
-            $metrics = Cache::remember(
+            $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
@@ -248,7 +248,7 @@ class MetricController extends Controller
             // Substituí as barras por hífen na chave do cache para evitar problemas de string
             $cacheKey = 'metrics:order:technician:' . str_replace('/', '-', $request->startDate) . ':' . str_replace('/', '-', $request->endDate);
 
-            $metrics = Cache::remember(
+            $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
@@ -310,7 +310,7 @@ class MetricController extends Controller
 
             $cacheKey = 'metrics:order:equipment:' . $request->startDate . ':' . $request->endDate;
 
-            $metrics = Cache::remember(
+            $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(5),
                 function () use ($startDate, $endDate) {

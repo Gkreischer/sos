@@ -19,9 +19,8 @@ export class PartService {
   http = inject(HttpClient);
   errorService = inject(ErrorService);
 
-  partsSearchedSubject: BehaviorSubject<PartInterface[]> = new BehaviorSubject<
-    PartInterface[]
-  >([]);
+  partsSearchedSubject: BehaviorSubject<PartInterface[] | null> =
+    new BehaviorSubject<PartInterface[] | null>(null);
   partsSubject: BehaviorSubject<PartInterface[]> = new BehaviorSubject<
     PartInterface[]
   >([]);
@@ -48,13 +47,14 @@ export class PartService {
 
   constructor() {}
 
-  getParts(page?: number, filters?: PartFilterInterface | null) {
+  getParts(page?: number) {
     return this.http
       .post<
         PaginateInterface<PartInterface[]>
       >(`${environment.baseUrl}/parts/filter${page ? `?page=${page}` : ''}`, this.partFilters(), httpOptions)
       .pipe(
         tap((parts) => {
+          console.log(parts);
           if (page && page > 1) {
             return this.partsSubject.next([
               ...this.partsSubject.value,
@@ -123,6 +123,23 @@ export class PartService {
       .pipe(
         tap((partReceived) => {
           const newParts = [partReceived, ...this.partsSubject.value];
+          return this.partsSubject.next(newParts);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  delete(id: number) {
+    return this.http
+      .delete<PartInterface>(
+        `${environment.baseUrl}/parts/${id.toString()}`,
+        httpOptions,
+      )
+      .pipe(
+        tap((part) => {
+          const newParts = this.partsSubject.value.filter(
+            (part) => part.id !== id,
+          );
           return this.partsSubject.next(newParts);
         }),
         catchError(this.errorService.handleError),

@@ -16,7 +16,7 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
-
+import { AlertService } from 'src/app/_services/alert.service';
 import { LoadingService } from 'src/app/_services/loading.service';
 
 @Component({
@@ -32,10 +32,10 @@ export class EquipmentModalComponent implements OnInit {
   equipmentService = inject(EquipmentService);
   toastService = inject(ToastService);
   loadingService = inject(LoadingService);
-
+  alertService = inject(AlertService);
   equipment?: EquipmentInterface;
   formEquipment!: FormGroup;
-  categories!: Observable<CategoryInterface[]>;
+  categories: Observable<CategoryInterface[]> = this.categoryService.categories;
 
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
   constructor() {}
@@ -62,9 +62,7 @@ export class EquipmentModalComponent implements OnInit {
   }
 
   getCategories() {
-    this.categoryService.getCategories().subscribe((categories) => {
-      this.categories = this.categoryService.categories;
-    });
+    this.categoryService.getCategories().subscribe();
   }
 
   closeModal() {
@@ -137,5 +135,38 @@ export class EquipmentModalComponent implements OnInit {
       .get('user_id')
       ?.patchValue(modalSelectUser.id.toString());
     this.formEquipment.get('user_name')?.patchValue(modalSelectUser.name);
+  }
+
+  confirmDelete() {
+    this.alertService.presentAlert(
+      'Atenção',
+      '',
+      'Tem certeza que deseja excluir este equipamento?',
+      [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {},
+        },
+        {
+          text: 'Confirmar',
+          role: 'confirm',
+          id: 'confirm-button',
+          handler: () => {
+            this.equipmentService.delete(this.equipment!.id).subscribe({
+              next: () => {
+                this.closeModal();
+                this.toastService.presentToast(
+                  'Equipamento excluído com sucesso!',
+                  'bottom',
+                  2000,
+                  'success',
+                );
+              },
+            });
+          },
+        },
+      ],
+    );
   }
 }

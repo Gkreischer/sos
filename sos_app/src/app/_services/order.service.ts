@@ -4,7 +4,7 @@ import { OrderInterface } from '../_interfaces/OrderInterface';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
-import { OrderFilter } from '../_interfaces/OrderFilter';
+import { OrderFilterInterface } from '../_interfaces/OrderFilterInterface';
 import { PaginateInterface } from '../_interfaces/PaginateInterface';
 import { inject } from '@angular/core';
 const httpOptions = {
@@ -24,7 +24,7 @@ export class OrderService {
   private clientOrdersHistorySubject: BehaviorSubject<OrderInterface[]> =
     new BehaviorSubject<OrderInterface[]>([]);
 
-  public orderFilters = signal(null as OrderFilter | null);
+  public orderFilters = signal(null as OrderFilterInterface | null);
 
   constructor() {}
 
@@ -40,11 +40,11 @@ export class OrderService {
     return this.clientOrdersHistorySubject.asObservable();
   }
 
-  public setOrderFilter(orderFilter: OrderFilter) {
+  public setOrderFilter(orderFilter: OrderFilterInterface | null) {
     this.orderFilters.set(orderFilter);
   }
 
-  public getAll(page?: number, orderFilter?: OrderFilter | null) {
+  public getAll(page?: number, orderFilter?: OrderFilterInterface | null) {
     return this.http
       .post<
         PaginateInterface<OrderInterface[]>

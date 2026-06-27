@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -16,38 +17,54 @@ class PostController extends Controller
         try {
 
             $description = $request->input('description');
+            $page = request()->get('page', 1);
 
-            $posts = Post::query()->when($description, function ($query) use ($description) {
-                $query->where('title', 'like', '%' . $description . '%')
-                    ->orWhere('content', 'like', '%' . $description . '%');
-            })->with('user:id,name')->paginate(20);
+            $cacheKey = 'posts_description_' . $description . '_page_' . $page;
+
+            $posts = Cache::tags('posts-list')->remember(
+                $cacheKey,
+                now()->addMinutes(5),
+                function () use ($description, $page) {
+                    $posts = Post::query()->when($description, function ($query) use ($description) {
+                        $query->where('title', 'like', '%' . $description . '%')
+                            ->orWhere('content', 'like', '%' . $description . '%');
+                    })->with('user:id,name,image')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(20)->toArray();
+                    return $posts;
+                }
+            );
 
             return response($posts);
         } catch (\Exception $e) {
             return response([
-                'message' => 'Erro ao obter os comentários',
+                'message' => 'Erro ao obter os avisos',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         try {
 
-            $validator = Validator::make($request->all(), [
+            $data = $request->all();
+
+            $validator = Validator::make($data, [
                 'title' => 'required|string|max:255',
                 'content' => 'required|string',
             ]);
 
             if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
+                return response($validator->errors(), 422);
             }
 
-            $post = Post::create($request->all());
+            $data['user_id'] = auth('sanctum')->user()->id;
+            $post = Post::create($data);
+            $post->load('user');
+            Cache::tags('last-posts')->flush();
+            Cache::tags('posts-list')->flush();
+
             return response($post);
         } catch (\Exception $e) {
             return response([
@@ -57,21 +74,30 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(int $id)
     {
-        //
+        try {
+            $post = Post::findOrFail($id);
+            return response($post);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Erro ao obter o comentário',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, int $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
+
+            $data = $request->all();
+
+            $validator = Validator::make($data, [
                 'title' => 'required|string|max:255',
                 'content' => 'required|string',
             ]);
@@ -80,11 +106,24 @@ class PostController extends Controller
                 return response($validator->errors(), 422);
             }
 
+            $post = Post::findOrFail($id);
+
+            $user = auth('sanctum')->user();
+
+            if ($user->id != $post->user_id) {
+                return response([
+                    'message' => 'Você não tem permissão para atualizar esse aviso',
+                ], 403);
+            }
+
             $post->update($request->all());
+            $post->load('user');
+            Cache::tags('posts-list')->flush();
+            Cache::tags('last-posts')->flush();
             return response($post);
         } catch (\Exception $e) {
             return response([
-                'message' => 'Erro ao atualizar o comentário',
+                'message' => 'Erro ao atualizar o aviso',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -99,8 +138,17 @@ class PostController extends Controller
             $post = $request->all();
 
             $post = Post::findOrFail($post['id']);
+            $user = auth('sanctum')->user();
+
+            if ($user->id != $post->user_id) {
+                return response([
+                    'message' => 'Você não tem permissão para excluir esse aviso',
+                ], 403);
+            }
             $postCopy = $post->toArray();
             $post->delete();
+            Cache::tags('posts-list')->flush();
+            Cache::tags('last-posts')->flush();
             return response($postCopy);
         } catch (\Exception $e) {
             return response([
@@ -113,28 +161,22 @@ class PostController extends Controller
     public function getLastPosts()
     {
         try {
-            $posts = Post::with('user')
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get();
-            return response($posts);
+            $cacheKey = 'posts:last';
+            $postsCache = Cache::tags('last-posts')->remember(
+                $cacheKey,
+                now()->addMinutes(5),
+                function () {
+                    return Post::with('user')
+                        ->orderBy('created_at', 'desc')
+                        ->limit(5)
+                        ->get()
+                        ->toArray();
+                }
+            );
+            return response($postsCache);
         } catch (\Exception $e) {
             return response([
-                'message' => 'Erro ao obter os comentários',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function getUserPosts(Request $request)
-    {
-        try {
-            $user = $request->user();
-            $userPosts = $user->posts()->get();
-            return response($userPosts);
-        } catch (\Exception $e) {
-            return response([
-                'message' => 'Erro ao obter os comentários',
+                'message' => 'Erro ao obter os avisos',
                 'error' => $e->getMessage(),
             ], 500);
         }

@@ -17,7 +17,7 @@ import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
 import { map } from 'rxjs';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
-import { OrderFilter } from 'src/app/_interfaces/OrderFilter';
+import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
 import { effect } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -35,12 +35,15 @@ export class OrdersListComponent {
   orders$?: Observable<OrderInterface[]> = this.orderService.orders$;
   ordersPage: number = 1;
   infiniteScroll = signal(true);
-  orderFilters: Signal<OrderFilter | null> = this.orderService.orderFilters;
+  orderFilters: Signal<OrderFilterInterface | null> =
+    this.orderService.orderFilters;
 
   isLoading$ = this.loadingService.isLoading$;
-
   constructor() {
     effect(() => {
+      if (this.orderFilters() === null) {
+        return;
+      }
       const filters = this.orderFilters();
 
       this.ordersPage = 1;

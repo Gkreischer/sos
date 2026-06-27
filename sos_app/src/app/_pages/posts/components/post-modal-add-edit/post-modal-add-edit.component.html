@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    @let post = this.post$ | async;
+    @if (!post) {
+      <ion-title>Cadastrar aviso</ion-title>
+    } @else {
+      <ion-title>Editar aviso</ion-title>
+    }
+
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+@let isLoading = isLoading$ | async;
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="formPost" (ngSubmit)="postId ? update() : submit()">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
+                label="Título"
+                formControlName="title"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-textarea
+                rows="5"
+                fill="outline"
+                labelPlacement="floating"
+                label="Descrição"
+                formControlName="content"
+              ></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button
+                expand="block"
+                type="submit"
+                [disabled]="formPost.invalid || isLoading"
+                >{{ postId ? "Atualizar" : "Publicar" }}</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

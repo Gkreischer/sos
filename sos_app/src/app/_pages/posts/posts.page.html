@@ -10,4 +10,9 @@
 <ion-content>
   <app-post-filter></app-post-filter>
   <app-posts-list></app-posts-list>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="openModalAddPost()" color="tertiary">
+      <ion-icon name="add-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

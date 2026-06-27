@@ -152,4 +152,22 @@ class PartController extends Controller
             ], 500);
         }
     }
+
+    public function destroy(Part $part, int $id)
+    {
+        try {
+            $part = Part::findOrFail($id);
+
+            $copyPart = $part;
+
+            $part->delete();
+
+            return response($copyPart, 204);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível deletar a peça',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

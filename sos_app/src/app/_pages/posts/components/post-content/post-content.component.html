@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Visualizar post</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ post.title }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-text>
+              <ion-text color="dark">
+                <ion-textarea
+                  label="Aviso"
+                  labelPlacement="floating"
+                  [value]="post.content"
+                  fill="outline"
+                  rows="10"
+                >
+                </ion-textarea>
+              </ion-text>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip color="primary">
+              <ion-avatar>
+                <img src="{{ post.user.image }}" />
+              </ion-avatar>
+              <ion-label>
+                <strong>Responsável:</strong> {{ post.user.name }}
+              </ion-label>
+            </ion-chip>
+            <ion-chip color="secondary"
+              ><strong>Atualizado em: </strong>
+              {{ post.created_at | date: "dd/MM/yyyy HH:mm" }}</ion-chip
+            >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+@let user = user$ | async;
+@if (user!.id === post!.user.id) {
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="tertiary">
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="warning" (click)="openModalEdit(post)">
+        <ion-icon name="pencil-sharp"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="danger" (click)="confirmDelete()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+}

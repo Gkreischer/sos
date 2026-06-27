@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ViewWillEnter } from '@ionic/angular';
+import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import { ModalService } from 'src/app/_services/modal.service';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
-import { IonicModule } from '@ionic/angular';
 import { UserFilterComponent } from './components/user-filter/user-filter.component';
 import { UsersListComponent } from './components/users-list/users-list.component';
 import { UserService } from 'src/app/_services/user.service';
@@ -35,7 +34,7 @@ import {
     IonIcon,
   ],
 })
-export class UsersPage implements ViewWillEnter {
+export class UsersPage implements ViewWillEnter, ViewWillLeave {
   modalService = inject(ModalService);
   userService = inject(UserService);
   constructor() {}
@@ -46,5 +45,9 @@ export class UsersPage implements ViewWillEnter {
 
   addUser() {
     this.modalService.openModal(UserModalComponent);
+  }
+
+  ionViewWillLeave() {
+    this.userService.usersSubject.next(null);
   }
 }

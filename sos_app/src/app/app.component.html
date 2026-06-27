@@ -14,11 +14,13 @@
             tourAnchor="menu.start"
             button
             (click)="changeAvatarImage()"
+            data-cy="menu-item-profile"
           >
             <ion-img
               src="{{ userLogged.image }}"
               alt="User Image"
               class="user-image"
+              data-cy="menu-item-profile"
             ></ion-img>
           </ion-card>
         } @else {
@@ -31,7 +33,7 @@
             <ion-list-header>{{ userLogged.name }}</ion-list-header>
             <ion-note>{{ userLogged.type.name }}</ion-note>
           } @else {
-            <ion-list-header>SOS</ion-list-header>
+            <ion-list-header>OrceX</ion-list-header>
             <ion-note>Sistema de Ordem de Serviço</ion-note>
           }
 
@@ -45,6 +47,7 @@
                 routerLinkActive="selected"
                 color="primary"
                 [id]="p.id"
+                data-cy="menu-item-home"
                 [tourAnchor]="p.tourAnchor!"
               >
                 <ion-icon

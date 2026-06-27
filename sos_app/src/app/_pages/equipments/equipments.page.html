@@ -7,11 +7,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content data-cy="equipments-page">
   <app-equipment-filter></app-equipment-filter>
   <app-equipments-list></app-equipments-list>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="openModal()">
+    <ion-fab-button (click)="openModal()" color="tertiary">
       <ion-icon name="add-sharp"></ion-icon>
     </ion-fab-button>
   </ion-fab>

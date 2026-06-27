@@ -1,25 +1,65 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, OnInit, effect } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { EquipmentService } from 'src/app/_services/equipment.service';
-import { IonicModule } from '@ionic/angular';
-
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonCol,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonInput,
+} from '@ionic/angular/standalone';
+import { LoadingService } from 'src/app/_services/loading.service';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 @Component({
-    selector: 'app-equipment-filter',
-    templateUrl: './equipment-filter.component.html',
-    styleUrls: ['./equipment-filter.component.scss'],
-    imports: [
-        IonicModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
+  selector: 'app-equipment-filter',
+  templateUrl: './equipment-filter.component.html',
+  styleUrls: ['./equipment-filter.component.scss'],
+  imports: [
+    IonRow,
+    IonGrid,
+    IonButton,
+    FormsModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonCardContent,
+    IonCol,
+    IonInput,
+  ],
 })
 export class EquipmentFilterComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   equipmentService = inject(EquipmentService);
-
+  loadingService = inject(LoadingService);
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
   filterForm!: FormGroup;
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      const filters = this.equipmentService.equipmentFilter();
+
+      if (!filters && this.filterForm) {
+        this.filterForm.reset({
+          description: '',
+        });
+      }
+    });
+  }
 
   ngOnInit() {
     this.mountForm();
@@ -29,9 +69,25 @@ export class EquipmentFilterComponent implements OnInit {
     this.filterForm = this.formBuilder.group({
       description: ['', [Validators.required]],
     });
+
+    this.filterForm.get('description')?.valueChanges.subscribe((value) => {
+      if (!value?.trim()) {
+        this.equipmentService.setEquipmentFilter({
+          description: '',
+        });
+      }
+    });
   }
 
   searchEquipment() {
     this.equipmentService.setEquipmentFilter(this.filterForm.value);
+  }
+
+  resetDataOnBlank(event: CustomEvent) {
+    let target = event.target as HTMLInputElement;
+    console.log(target.value);
+    if (target.value === '') {
+      this.equipmentService.setEquipmentFilter(null);
+    }
   }
 }

@@ -6,6 +6,9 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { PostsListComponent } from './components/posts-list/posts-list.component';
 import { PostFilterComponent } from './components/post-filter/post-filter.component';
@@ -13,13 +16,17 @@ import { IonButtons, IonMenuButton } from '@ionic/angular/standalone';
 import { ViewWillEnter } from '@ionic/angular';
 import { PostService } from 'src/app/_services/post.service';
 import { inject } from '@angular/core';
-
+import { ModalService } from 'src/app/_services/modal.service';
+import { PostModalAddEditComponent } from './components/post-modal-add-edit/post-modal-add-edit.component';
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.page.html',
   styleUrls: ['./posts.page.scss'],
   standalone: true,
   imports: [
+    IonIcon,
+    IonFabButton,
+    IonFab,
     IonContent,
     IonHeader,
     IonTitle,
@@ -34,11 +41,16 @@ import { inject } from '@angular/core';
 })
 export class PostsPage implements ViewWillEnter {
   postService = inject(PostService);
+  modalService = inject(ModalService);
   constructor() {}
 
   ngOnInit() {}
 
   ionViewWillEnter() {
     this.postService.getPosts(1).subscribe();
+  }
+
+  openModalAddPost() {
+    this.modalService.openModal(PostModalAddEditComponent);
   }
 }

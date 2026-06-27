@@ -10,14 +10,17 @@ export class FormatPhonePipe implements PipeTransform {
       return 'Insira um valor de telefone';
     }
 
-    if (value.length === 11) {
-      return value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3').toString();
+    const length = value.length;
+
+    if (length === 12) {
+      const countryCode = value.slice(0, 2);
+      const areaCode = value.slice(2, 4);
+      const firstPart = value.slice(4, 8);
+      const secondPart = value.slice(8);
+
+      return `+${countryCode} (${areaCode}) ${firstPart}-${secondPart}`;
     }
 
-    if (value.length === 10) {
-      return value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3').toString();
-    }
-
-    return 'phone: Não ocorreu a conversão';
+    return 'Formato de número de telefone incorreto. Atualize em configurações, no formato 11 ou 10 números, sem caracteres especiais.';
   }
 }

@@ -14,7 +14,7 @@
               fill="outline"
               formControlName="status_id"
             >
-              <ion-select-option value=""> Nenhum status </ion-select-option>
+              <ion-select-option value="0"> Nenhum status </ion-select-option>
               @for (status of statuses; track status.id) {
                 <ion-select-option [value]="status.id">{{
                   status.name

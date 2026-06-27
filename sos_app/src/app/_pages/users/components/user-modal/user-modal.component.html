@@ -13,7 +13,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content data-cy="edit-user-page">
   <ion-card>
     <ion-card-content>
       <form [formGroup]="userForm" (ngSubmit)="this.user ? update() : submit()">
@@ -168,7 +168,7 @@
                   type="submit"
                   color="primary"
                   expand="block"
-                  [disabled]="!this.userForm.invalid"
+                  [disabled]="this.userForm.invalid"
                   >Cadastrar</ion-button
                 >
               } @else {
@@ -176,7 +176,7 @@
                   type="submit"
                   color="primary"
                   expand="block"
-                  [disabled]="!this.userForm.invalid"
+                  [disabled]="this.userForm.invalid"
                   >Atualizar</ion-button
                 >
               }

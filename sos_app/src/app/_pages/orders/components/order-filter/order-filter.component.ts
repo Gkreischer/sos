@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -33,7 +33,8 @@ export class OrderFilterComponent implements OnInit {
 
   orderStatusService = inject(OrderStatusService);
   formBuilder = inject(FormBuilder);
-  ordersStatuses$?: Observable<OrderStatusInterface[]>;
+  ordersStatuses$?: Observable<OrderStatusInterface[]> =
+    this.orderStatusService.order_statuses;
   loadingService = inject(LoadingService);
   isLoading$ = this.loadingService.isLoading$;
 
@@ -67,8 +68,6 @@ export class OrderFilterComponent implements OnInit {
   }
 
   getOrderStatuses() {
-    this.orderStatusService.getOrderStatuses().subscribe((data) => {
-      this.ordersStatuses$ = this.orderStatusService.order_statuses;
-    });
+    this.orderStatusService.getOrderStatuses().subscribe();
   }
 }

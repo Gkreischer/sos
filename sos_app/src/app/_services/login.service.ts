@@ -7,6 +7,8 @@ import { PreferencesPluginService } from './preferences-plugin.service';
 import { UserLoginInterface } from '../_interfaces/UserLoginInterface';
 import { UserInterface } from '../_interfaces/UserInterface';
 import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationInterface } from 'src/app/_interfaces/NotificationInterface';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,6 +17,7 @@ export class LoginService {
   errorService = inject(ErrorService);
   preferencesPluginService = inject(PreferencesPluginService);
   router = inject(Router);
+  notificationService = inject(NotificationService);
 
   userSubject: BehaviorSubject<UserInterface | null> =
     new BehaviorSubject<UserInterface | null>(null);
@@ -52,6 +55,13 @@ export class LoginService {
       .pipe(
         tap((user) => {
           this.userSubject.next(user);
+          this.notificationService.listen<NotificationInterface>(
+            'notifications',
+            '.new.notification',
+            (data) => {
+              console.log(data.message);
+            },
+          );
         }),
         catchError(this.errorService.handleError),
       );

@@ -29,7 +29,7 @@ export class EquipmentService {
     return this.equipmentsSubject.asObservable();
   }
 
-  setEquipmentFilter(equipmentFilter: EquipmentFilterInterface) {
+  setEquipmentFilter(equipmentFilter: EquipmentFilterInterface | null) {
     this.equipmentFilter.set(equipmentFilter);
   }
 
@@ -102,6 +102,23 @@ export class EquipmentService {
           } else {
             this.equipmentsSubject.next(res.data);
           }
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  delete(id: number) {
+    return this.http
+      .delete<EquipmentInterface>(
+        `${environment.baseUrl}/equipments/${id}`,
+        httpOptions,
+      )
+      .pipe(
+        tap((equipment) => {
+          const newEquipments = this.equipmentsSubject.value.filter(
+            (equipment) => equipment.id !== id,
+          );
+          return this.equipmentsSubject.next(newEquipments);
         }),
         catchError(this.errorService.handleError),
       );

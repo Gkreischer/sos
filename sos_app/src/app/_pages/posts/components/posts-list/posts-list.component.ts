@@ -16,7 +16,7 @@ import {
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { ModalService } from 'src/app/_services/modal.service';
-import { PostModalComponent } from '../post-modal/post-modal.component';
+import { PostContentModalComponent } from '../post-content/post-content.component';
 import { PostInterface } from 'src/app/_interfaces/PostInterface';
 @Component({
   selector: 'app-posts-list',
@@ -60,6 +60,6 @@ export class PostsListComponent {
   }
 
   openModalPost(post: PostInterface) {
-    this.modalService.openModal(PostModalComponent, { post: post });
+    this.modalService.openModal(PostContentModalComponent, { post: post });
   }
 }

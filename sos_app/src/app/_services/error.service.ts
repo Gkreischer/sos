@@ -27,12 +27,7 @@ export class ErrorService {
         errorMessage =
           'Não foi possível conectar ao servidor. Verifique sua internet.';
         break;
-      case 400:
-        // Erro de validação
-        console.error('An error occurred:', error.error);
-        errorMessage = 'Ocorreu um erro de validação.';
-        validationErrors = error.error.errors;
-        break;
+
       case 401:
         // Usuário não autenticado
         break;

@@ -1,0 +1,171 @@
+@let room = this.room$ | async;
+@let isLoading = this.isLoading$ | async;
+<ion-header>
+  <ion-toolbar>
+    @if (!room) {
+      <ion-title>Adicionar Sala de Chat</ion-title>
+    } @else {
+      <ion-title>Editar Sala de Chat</ion-title>
+    }
+
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      {{ roomForm.value | json }}
+      <form
+        [formGroup]="roomForm"
+        (ngSubmit)="this.roomId ? update() : submit()"
+      >
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                formControlName="name"
+                label="Nome"
+                labelPlacement="floating"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-list>
+                <ion-item lines="none">
+                  <ion-toggle
+                    [enableOnOffLabels]="true"
+                    (ionChange)="onTogglePrivate($event)"
+                    formControlName="private"
+                    helperText="Você precisará adicionar os convidados a sala manualmente"
+                    id="open-modal"
+                  >
+                    Sala privada?
+                  </ion-toggle>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+          @if (roomForm.get("private")?.value && users.length > 0) {
+            <ion-row>
+              <ion-col>
+                <ion-text>Convidados</ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="ion-padding-horizontal">
+                @for (
+                  user of this.roomForm.get("users")?.value;
+                  track user.id
+                ) {
+                  <ion-chip color="secondary">
+                    <ion-avatar>
+                      <ion-img src="{{ user.avatar }}"></ion-img>
+                    </ion-avatar>
+                    <ion-label>{{ user.name }}</ion-label>
+                    <ion-icon
+                      name="close"
+                      (click)="removeUserInRoom(user)"
+                    ></ion-icon>
+                  </ion-chip>
+                } @empty {
+                  <ion-text>
+                    <ion-note>Nenhum usuário adicionado</ion-note>
+                  </ion-text>
+                }
+              </ion-col>
+            </ion-row>
+          }
+          <ion-row>
+            <ion-col>
+              <ion-button
+                expand="block"
+                type="submit"
+                [disabled]="roomForm.invalid || isLoading"
+              >
+                <ion-icon slot="start" name="save-outline"></ion-icon>
+                @if (room) {
+                  Editar
+                } @else {
+                  Criar
+                }
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+  @if (room) {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="danger" (click)="confirmDeleteRoom()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  }
+
+  <ion-modal
+    #modal
+    [isOpen]="isModalOpen"
+    (ionModalDidDismiss)="isModalOpen = false"
+    [initialBreakpoint]="0.25"
+    [breakpoints]="[0, 0.25, 0.5, 0.75]"
+  >
+    <ng-template>
+      <ion-content>
+        <ion-searchbar
+          search-icon="search-circle"
+          placeholder="Digite o nome do usuário"
+          show-clear-button="always"
+          [debounce]="1000"
+          (ionInput)="searchUser($event)"
+        ></ion-searchbar>
+        @let users = this.usersSearched$ | async;
+        @let userLogged = this.userLogged$ | async;
+        <ion-list>
+          @if (isLoading) {
+            <ion-item lines="none">
+              <ion-spinner></ion-spinner>
+            </ion-item>
+          } @else {
+            @if (users) {
+              @for (user of users; track user.id) {
+                <ion-item
+                  class="ion-padding-horizontal"
+                  lines="none"
+                  detail="true"
+                  [detailIcon]="
+                    disableUserAlreadyAdded(user) ? 'close' : 'add-circle'
+                  "
+                  button="true"
+                  (click)="
+                    disableUserAlreadyAdded(user)
+                      ? removeUserInRoom(user)
+                      : addUserInRoom(user)
+                  "
+                  [disabled]="user.id === userLogged?.id"
+                >
+                  <ion-label>
+                    <h2>{{ user.name }}</h2>
+                  </ion-label>
+                </ion-item>
+              } @empty {
+                <ion-item lines="none">
+                  <ion-label>
+                    <ion-note>Nenhum usuário encontrado</ion-note>
+                  </ion-label>
+                </ion-item>
+              }
+            }
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

@@ -1,125 +1,145 @@
-<style>
-  .print-page {
-    background-color: red;
-  }
-</style>
+@let info = businessInfo | async;
+
 <div class="ion-flex ion-justify-content-center">
   <button
     id="confirm-button"
     class="ion-padding"
-    printSectionId="print-section"
-    printTitle="Ordem de serviço - NOME DA LOJA"
+    printSectionId="print-order"
+    printTitle="Ordem de serviço - {{ info?.name }}"
     bodyClass="print-page"
     [printStyle]="orderPrintStyle"
     ngxPrint
   >
-    <strong>IMPRIMIR</strong>
+    IMPRIMIR
   </button>
 </div>
-<div id="print-section" class="ion-padding">
-  @let info = businessInfo | async;
-  @if (info) {
-    <div style="display: flex; justify-content: space-between">
-      <div class="header">
-        <table>
-          <tbody>
-            <tr></tr>
-            <tr>
-              <td>
-                <h2>
-                  <strong>{{ info.name }}</strong> -
-                  <ion-note>{{ info.cnpj }}</ion-note>
-                </h2>
-                <p>
-                  <strong>{{ info.address }}</strong>
-                </p>
-                <p>
-                  {{ info.phone }}
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="logo-image">
-        <img src="https://picsum.photos/125/125" />
-      </div>
-    </div>
-  } @else {
-    <p>Erro ao carregar os dados da empresa</p>
-  }
-  <hr />
-  @let order = orderInfo | async;
-  @if (order) {
-    <div class="order-info">
-      <h2>Informações da Ordem de Serviço</h2>
-      <p><strong>Cliente: </strong>{{ order.user.name }}</p>
-      <p><strong>Equipamento: </strong>{{ order.equipment.name }}</p>
-      <p><strong>Descrição: </strong>{{ order.description }}</p>
-      <p><strong>Observação: </strong>{{ order.obs }}</p>
-    </div>
-    <hr />
-    @if (order.technician_id) {
-      <div class="diagnostic-info">
-        <h2>Informações do Diagnóstico</h2>
-        <p><strong>Técnico: </strong>{{ order.technician.name }}</p>
-        <p><strong>Diagnóstico: </strong>{{ order.obs }}</p>
-        <p><strong>Serviço executado: </strong>{{ order.description }}</p>
-      </div>
-      <hr />
-    }
-    <h2>Peças ou material</h2>
+<ion-card>
+  <ion-card-content>
+    <div id="print-order" class="ion-padding">
+      @if (info) {
+        <div style="display: flex; justify-content: space-between">
+          <div class="header">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <h2>
+                      <strong>{{ info.name | uppercase }}</strong>
+                      <span style="font-size: 14px">
+                        - CNPJ: {{ info.cnpj }}</span
+                      >
+                    </h2>
 
-    @if (order.order_parts.length > 0) {
-      <table width="100%" border="1px">
-        <thead>
-          <tr>
-            <th scope="col">Nome da peça</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Preço unitário</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (part of order.order_parts; track part.id) {
-            <tr>
-              <td>{{ part.name }}</td>
-              <td>x {{ part.quantity }}</td>
-              <td>{{ part.price | currency: "R$" }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-      <div class="total-price-row">
-        <h4 style="text-align: end">
-          Total: {{ order.total_price | currency: "R$" }}
-        </h4>
+                    <p>
+                      <strong>{{ info.address }}</strong>
+                    </p>
+                    <p><strong>Telefone: </strong>{{ info.phone }}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="logo-image" style="width: 125px; height: 125px">
+            <img src="{{ info.image }}" />
+          </div>
+        </div>
+      } @else {
+        <p>Erro ao carregar os dados da empresa</p>
+      }
+      <hr />
+      @let order = orderInfo | async;
+      @if (order) {
+        <div class="order-info">
+          <h2><strong>Informações da Ordem de Serviço</strong></h2>
+          <br />
+          <p><strong>Cliente: </strong>{{ order.user.name }}</p>
+          <p><strong>Equipamento: </strong>{{ order.equipment.name }}</p>
+          <p><strong>Descrição: </strong>{{ order.description }}</p>
+          <p><strong>Observação: </strong>{{ order.obs }}</p>
+        </div>
+        <hr />
+        @if (order.technician_id) {
+          <div class="diagnostic-info">
+            <h2><strong>Informações do Diagnóstico</strong></h2>
+            <br />
+            <p><strong>Técnico: </strong>{{ order.technician.name }}</p>
+            <p><strong>Diagnóstico: </strong>{{ order.obs }}</p>
+            <p><strong>Serviço executado: </strong>{{ order.description }}</p>
+          </div>
+          <hr />
+        }
+        <h2><strong>Peças ou material</strong></h2>
+        <br />
+        @if (order.order_parts.length > 0) {
+          <table width="100%" border="1px">
+            <thead>
+              <tr>
+                <th scope="col">Nome da peça</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Preço unitário</th>
+                <th scope="col">Preço total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (part of order.order_parts; track part.id) {
+                <tr>
+                  <td>{{ part.name }}</td>
+                  <td>x {{ part.quantity }}</td>
+                  <td>{{ part.price | currency: "R$" }}</td>
+                  <td>{{ part.quantity * part.price | currency: "R$" }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <div class="total-price-row">
+            <br />
+            <h4 style="text-align: end">
+              <strong>Total:</strong> {{ order.total_price | currency: "R$" }}
+            </h4>
+          </div>
+        } @else {
+          <p>Nenhuma peça orçada</p>
+        }
+
+        <hr />
+        <div class="total-price-section">
+          <h2><strong>Valores totais</strong></h2>
+          <br />
+          <p>
+            <strong>Serviço:</strong> {{ order.service_price | currency: "R$" }}
+          </p>
+          <p>
+            <strong>Desconto:</strong> {{ order.discount | currency: "R$" }}
+          </p>
+          <p>
+            <strong>Valor total:</strong>
+            {{ order.total_price | currency: "R$" }}
+          </p>
+        </div>
+      }
+      <hr />
+
+      <br />
+      <br />
+      <div
+        class="signs"
+        style="display: flex; justify-content: space-around; margin-top: 2rem"
+      >
+        <div style="width: 200px; text-align: center">
+          <hr />
+          <p class="sign">Assinatura do cliente</p>
+        </div>
+        <div style="width: 200px; text-align: center">
+          <hr />
+          <p class="sign">Assinatura do responsável</p>
+        </div>
       </div>
-    } @else {
-      <p>Nenhuma peça cadastrada</p>
-    }
-
-    <hr />
-    <div class="total-price-section">
-      <h2>Valores totais</h2>
-      <p>Serviço: {{ order.service_price | currency: "R$" }}</p>
-      <p>Desconto: {{ order.discount | currency: "R$" }}</p>
-      <p>Valor total: {{ order.total_price | currency: "R$" }}</p>
+      <div>
+        <br />
+        <p style="text-align: center">
+          Li e concordo com o orçamento e serviço
+        </p>
+      </div>
     </div>
-  }
-  <hr />
-  <div><ion-note>Li e concordo com o orçamento</ion-note></div>
-
-  <div
-    class="signs"
-    style="display: flex; justify-content: space-around; margin-top: 2rem"
-  >
-    <div>
-      <hr />
-      <p class="sign">Assinatura do cliente</p>
-    </div>
-    <div>
-      <hr />
-      <p class="sign">Assinatura do técnico</p>
-    </div>
-  </div>
-</div>
+  </ion-card-content>
+</ion-card>

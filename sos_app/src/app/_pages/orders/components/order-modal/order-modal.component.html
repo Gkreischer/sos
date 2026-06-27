@@ -2,8 +2,7 @@
   <ion-toolbar>
     @if (!orderId) {
       <ion-title>Adicionar Ordem de Serviço</ion-title>
-    }
-    @if (orderId) {
+    } @else {
       <ion-title>Atualizar Ordem de Serviço</ion-title>
     }
     <ion-buttons slot="start">
@@ -75,20 +74,15 @@
                   </ion-col>
                   @if (orderReceived) {
                     <ion-col size="12" sizeLg="2">
-                      @if (orderReceived) {
-                        <ion-button
-                          expand="block"
-                          type="button"
-                          color="tertiary"
-                          class="full-button"
-                          (click)="showClientHistory()"
-                        >
-                          <ion-icon
-                            name="search-sharp"
-                            type="button"
-                          ></ion-icon>
-                        </ion-button>
-                      }
+                      <ion-button
+                        expand="block"
+                        type="button"
+                        color="tertiary"
+                        class="full-button"
+                        (click)="showClientHistory()"
+                      >
+                        <ion-icon name="search-sharp" type="button"></ion-icon>
+                      </ion-button>
                     </ion-col>
                   }
                 </ion-row>
@@ -114,6 +108,8 @@
                           </ion-select-option>
                         }
                       </ion-select>
+                    } @else {
+                      <p>Selecione um cliente primeiro</p>
                     }
                   </ion-col>
                   <ion-col size="12" [sizeLg]="equipments$ ? 4 : 12">

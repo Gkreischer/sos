@@ -25,7 +25,7 @@ export class UsersListComponent implements OnInit {
   userService = inject(UserService);
   modalService = inject(ModalService);
   loadingService = inject(LoadingService);
-  users?: Observable<UserInterface[]> = this.userService.users;
+  users?: Observable<UserInterface[] | null> = this.userService.users;
   returnClientIdMode: boolean = false;
 
   numPage = 1;

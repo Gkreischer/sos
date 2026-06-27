@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sala de Chat</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+@let messages = this.messages$ | async;
+@let isLoading = this.isLoading$ | async;
+@let user = user$ | async;
+<ion-content>
+  <ion-grid>
+    @if (isLoading && (!messages || messages.length === 0)) {
+      <ion-row>
+        <ion-col>
+          <ion-spinner></ion-spinner>
+        </ion-col>
+      </ion-row>
+    } @else {
+      @for (message of messages; track $index) {
+        <ion-card [color]="message.user_id == user?.id ? 'tertiary' : 'light'">
+          <ion-card-content>
+            <ion-list>
+              <ion-item
+                lines="none"
+                [color]="message.user_id == user?.id ? 'tertiary' : 'light'"
+              >
+                <ion-avatar slot="start">
+                  <ion-img [src]="message.user.image"></ion-img>
+                </ion-avatar>
+                <ion-label>
+                  <strong>{{ message.user.name }}</strong>
+                  <ion-note
+                    [color]="message.user_id == user?.id ? 'light' : 'dark'"
+                    class="ion-text-wrap"
+                  >
+                    {{ message.content }}
+                  </ion-note>
+                </ion-label>
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note
+                    [color]="message.user_id == user?.id ? 'light' : 'dark'"
+                    >06:11</ion-note
+                  >
+                </div>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      } @empty {
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-content>
+                <ion-text>Nenhuma mensagem</ion-text>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      }
+    }
+  </ion-grid>
+  @if (room!.creator.id === user?.id) {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="secondary">
+        <ion-icon name="chevron-up-circle"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button color="danger" (click)="deleteAlert()">
+          <ion-icon name="trash-sharp"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button color="warning" (click)="editRoom()">
+          <ion-icon name="pencil-sharp"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+  }
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="form" (ngSubmit)="sendMessage()">
+    <ion-textarea
+      fill="outline"
+      label="Mensagem"
+      labelPlacement="floating"
+      formControlName="content"
+      class="ion-padding"
+      rows="4"
+    ></ion-textarea>
+    <ion-button
+      expand="block"
+      class="ion-padding"
+      color="secondary"
+      type="submit"
+      [disabled]="form.invalid || (isLoading$ | async)"
+      >Enviar</ion-button
+    >
+  </form>
+</ion-footer>

@@ -37,6 +37,12 @@ const tourSteps = [
     route: '/ordem-servico',
   },
   {
+    anchorId: 'menu.chat',
+    content: 'Aqui você se comunica com sua empresa',
+    title: 'Chat',
+    route: '/chat',
+  },
+  {
     anchorId: 'menu.users',
     content: 'Aqui você cadastra utilizadores do sistema e também clientes',
     title: 'Usuários e clientes',

@@ -1,12 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ViewWillEnter } from '@ionic/angular';
+import { Component, inject } from '@angular/core';
+import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import { ModalService } from 'src/app/_services/modal.service';
 import { EquipmentModalComponent } from './components/equipment-modal/equipment-modal.component';
 
 import { EquipmentFilterComponent } from './components/equipment-filter/equipment-filter.component';
 import { EquipmentsListComponent } from './components/equipments-list/equipments-list.component';
 import { EquipmentService } from 'src/app/_services/equipment.service';
-import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
 import {
   IonHeader,
   IonToolbar,
@@ -19,7 +18,6 @@ import {
   IonFab,
   IonFabButton,
 } from '@ionic/angular/standalone';
-
 @Component({
   selector: 'app-equipments',
   templateUrl: './equipments.page.html',
@@ -38,13 +36,18 @@ import {
     IonFabButton,
   ],
 })
-export class EquipmentsPage implements ViewWillEnter {
+export class EquipmentsPage implements ViewWillEnter, ViewWillLeave {
   modalService = inject(ModalService);
   equipmentService = inject(EquipmentService);
   constructor() {}
 
   ionViewWillEnter() {
     this.equipmentService.getEquipments().subscribe();
+  }
+
+  ionViewWillLeave() {
+    this.equipmentService.equipmentFilter.set(null);
+    this.equipmentService.equipmentsSubject.next([]);
   }
 
   openModal() {

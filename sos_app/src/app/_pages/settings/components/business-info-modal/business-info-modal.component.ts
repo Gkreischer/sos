@@ -37,6 +37,8 @@ import {
   IonLabel,
   IonInput,
 } from '@ionic/angular/standalone';
+import { phoneMask } from 'src/app/_masks/phoneMask';
+import { maskitoTransform } from '@maskito/core';
 @Component({
   selector: 'app-business-info-modal',
   templateUrl: './business-info-modal.component.html',
@@ -78,6 +80,7 @@ export class BusinessInfoModalComponent implements OnInit {
 
   cnpjMask = cnpjMask;
   cepMask = cepMask;
+  phoneMask = phoneMask;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
@@ -95,6 +98,8 @@ export class BusinessInfoModalComponent implements OnInit {
 
   getBusinessInfo() {
     this.settingService.getBusinessInfo().subscribe((data) => {
+      data.cnpj = maskitoTransform(data.cnpj, cnpjMask);
+      data.phone = maskitoTransform(data.phone, phoneMask);
       this.form.patchValue(data);
       this.businessAlreadyExists = true;
     });
@@ -118,6 +123,8 @@ export class BusinessInfoModalComponent implements OnInit {
   }
 
   submit() {
+    const formatedPhone = this.form.get('phone')?.value;
+    this.form.get('phone')?.setValue(formatedPhone.replace(/\D/g, ''));
     this.settingService
       .updateBusinessInfo(this.form.value)
       .subscribe((data) => {
@@ -165,6 +172,8 @@ export class BusinessInfoModalComponent implements OnInit {
   }
 
   async update() {
+    const formatedPhone = this.form.get('phone')?.value;
+    this.form.get('phone')?.setValue(formatedPhone.replace(/\D/g, ''));
     const verifyImageWasChanged = this.verifyIfImageWasSelected();
     if (verifyImageWasChanged) {
       await this.uploadImage();

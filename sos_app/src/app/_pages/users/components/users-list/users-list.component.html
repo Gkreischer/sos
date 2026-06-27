@@ -32,9 +32,9 @@
       />
     }
 
-    <ion-list>
+    <ion-list data-cy="users-list">
       @if (loading && (!usersReceived || usersReceived.length === 0)) {
-        <ion-item>
+        <ion-item lines="none">
           <ion-label>
             <ion-spinner></ion-spinner>
           </ion-label>

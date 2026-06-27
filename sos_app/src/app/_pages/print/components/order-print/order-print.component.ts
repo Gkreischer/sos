@@ -9,17 +9,20 @@ import { SettingService } from 'src/app/_services/setting.service';
 import { NgxPrintDirective } from 'ngx-print';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { FormatPhonePipe } from 'src/app/_pipes/format-phone.pipe';
+import { UpperCasePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-order-print',
-    templateUrl: './order-print.component.html',
-    styleUrls: ['./order-print.component.scss'],
-    imports: [
-        NgxPrintDirective,
-        IonicModule,
-        AsyncPipe,
-        CurrencyPipe,
-    ],
+  selector: 'app-order-print',
+  templateUrl: './order-print.component.html',
+  styleUrls: ['./order-print.component.scss'],
+  imports: [
+    NgxPrintDirective,
+    IonicModule,
+    AsyncPipe,
+    CurrencyPipe,
+    UpperCasePipe,
+  ],
 })
 export class OrderPrintComponent implements OnInit {
   route = inject(ActivatedRoute);
@@ -29,7 +32,10 @@ export class OrderPrintComponent implements OnInit {
   orderInfo!: Observable<OrderInterface>;
   businessInfo!: Observable<BusinessInfoInterface>;
 
-  orderPrintStyle = { p: { margin: '2px !important' } };
+  orderPrintStyle = {
+    p: { margin: '2px !important', color: 'black' },
+    img: { width: '125px', height: '125px' },
+  };
 
   constructor() {}
 
@@ -43,13 +49,13 @@ export class OrderPrintComponent implements OnInit {
   }
 
   getOrderData() {
-    this.orderService.getById(+this.getOrderId()!).subscribe((order) => {
+    this.orderService.getById(+this.getOrderId()!).subscribe((res) => {
       this.orderInfo = this.orderService.order$;
     });
   }
 
   getBusinessInfo() {
-    this.settingService.getBusinessInfo().subscribe((data) => {
+    this.settingService.getBusinessInfo().subscribe((res) => {
       this.businessInfo = this.settingService.businessInfo$;
     });
   }

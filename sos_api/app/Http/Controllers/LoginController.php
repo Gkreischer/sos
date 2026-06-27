@@ -10,21 +10,23 @@ use App\Models\UserType;
 
 class LoginController extends Controller
 {
+
     public function login(Request $request)
     {
-
         try {
             $request->validate([
                 'email' => 'required|string|email',
                 'password' => 'required|string|min:8'
             ]);
 
-            $user = User::where('email', $request->email)->with('type')->first();
+            $user = User::where('email', $request->email)
+                ->with('type')
+                ->first();
 
-            if (! $user || ! Hash::check($request->password, $user->password)) {
-                throw ValidationException::withMessages([
-                    'error' => ['Informações de login incorretas'],
-                ]);
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response([
+                    'message' => 'Informações de login incorretas'
+                ], 401);
             }
 
             $userToken = $user->createToken($request->email)->plainTextToken;
@@ -32,9 +34,16 @@ class LoginController extends Controller
             return response([
                 'token' => $userToken,
                 'user' => $user,
-                'type' => UserType::select('name')->where('id', $user->type_id)->first()
+                'type' => UserType::select('name')
+                    ->where('id', $user->type_id)
+                    ->first()
             ]);
-        } catch (\Exception $e) {
+        } catch (ValidationException $e) {
+            return response([
+                'message' => 'Dados inválidos',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Throwable $e) {
             return response([
                 'message' => 'Não foi possível realizar login',
                 'error' => $e->getMessage(),

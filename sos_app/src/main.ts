@@ -33,6 +33,7 @@ import {
   IonicRouteStrategy,
 } from '@ionic/angular/standalone';
 import { errAndLoadingInterceptor } from './app/_interceptors/loading.interceptor';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 registerLocaleData(localePtBr);
 defineCustomElements(window);
@@ -48,7 +49,6 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideCharts(withDefaultRegisterables()),
-
     provideHttpClient(
       withInterceptors([
         authenticationInterceptor,

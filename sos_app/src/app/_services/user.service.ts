@@ -20,7 +20,7 @@ export class UserService {
   errorService = inject(ErrorService);
   loginService = inject(LoginService);
 
-  usersSubject = new BehaviorSubject<UserInterface[]>([]);
+  usersSubject = new BehaviorSubject<UserInterface[] | null>(null);
   userTypesSubject = new BehaviorSubject<UserTypeInterface[]>([]);
 
   userFilter = signal<UserFilterInterface | null>(null);
@@ -48,7 +48,7 @@ export class UserService {
         tap((res) => {
           if (page && page >= 2) {
             this.usersSubject.next([
-              ...this.usersSubject.getValue(),
+              ...(this.usersSubject.getValue() ?? []),
               ...res.data,
             ]);
           } else {
@@ -62,11 +62,11 @@ export class UserService {
   getUserByDesc(filter: UserFilterInterface) {
     return this.http
       .post<
-        UserInterface[]
-      >(`${environment.baseUrl}/users/description`, filter, httpOptions)
+        PaginateInterface<UserInterface[]>
+      >(`${environment.baseUrl}/users`, filter, httpOptions)
       .pipe(
-        tap((user) => {
-          return this.usersSubject.next(user);
+        tap((res) => {
+          return this.usersSubject.next(res.data);
         }),
         catchError(this.errorService.handleError),
       );
@@ -81,7 +81,7 @@ export class UserService {
       )
       .pipe(
         tap((userReceived) => {
-          const newUsers = [userReceived, ...this.usersSubject.value];
+          const newUsers = [userReceived, ...(this.usersSubject.value ?? [])];
           return this.usersSubject.next(newUsers);
         }),
         catchError(this.errorService.handleError),
@@ -97,7 +97,7 @@ export class UserService {
       )
       .pipe(
         tap((userReceived) => {
-          const newUsers = this.usersSubject.value.map((user) => {
+          const newUsers = this.usersSubject.value?.map((user) => {
             if (user.id === userReceived.id) {
               return userReceived;
             }
@@ -107,7 +107,7 @@ export class UserService {
             return user;
           });
 
-          return this.usersSubject.next(newUsers);
+          return this.usersSubject.next(newUsers ?? []);
         }),
         catchError(this.errorService.handleError),
       );
@@ -118,10 +118,10 @@ export class UserService {
       .delete(`${environment.baseUrl}/users/${user.id}`, httpOptions)
       .pipe(
         tap(() => {
-          const newUsers = this.usersSubject.value.filter(
+          const newUsers = this.usersSubject.value?.filter(
             (userListItem) => userListItem.id !== user.id,
           );
-          this.usersSubject.next(newUsers);
+          this.usersSubject.next(newUsers ?? []);
         }),
         catchError(this.errorService.handleError),
       );

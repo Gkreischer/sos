@@ -1,0 +1,45 @@
+@let rooms = this.rooms$ | async;
+@let isLoading = this.isLoading$ | async;
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Salas</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      @if (isLoading && (!rooms || rooms.length === 0)) {
+        <ion-item lines="none">
+          <ion-spinner></ion-spinner>
+        </ion-item>
+      } @else {
+        @for (room of rooms; track $index) {
+          <ion-item button detail (click)="openRoom(room)">
+            <ion-avatar slot="start">
+              <ion-img [src]="room.creator.image"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ room.name }}</h2>
+              <ion-note>{{ room.creator.name }}</ion-note>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item>
+            <ion-label>
+              <h2>Nenhuma sala encontrada</h2>
+            </ion-label>
+          </ion-item>
+        }
+        @if (infiniteScroll()) {
+          <ion-item lines="none">
+            <ion-infinite-scroll
+              (ionInfinite)="onIonInfinite($event)"
+              loadingText="Carregando..."
+              loadingSpinner="bubbles"
+            >
+              <ion-infinite-scroll-content />
+            </ion-infinite-scroll>
+          </ion-item>
+        }
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>

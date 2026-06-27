@@ -33,6 +33,10 @@ export class EquipmentsListComponent implements OnInit {
     effect(() => {
       const filters = this.filters();
 
+      if (filters === null) {
+        return;
+      }
+
       this.equipmentsPage = 1;
       this.infiniteScroll.set(true);
 

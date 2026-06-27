@@ -9,6 +9,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Part;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Room;
 
 class DatabaseSeeder extends Seeder
 {
@@ -54,5 +55,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Post::factory()->count(100)->create();
+        Room::factory()->count(20)->create();
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserType;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -105,6 +106,8 @@ class UserController extends Controller
 
             $user->update($data);
 
+            Cache::tags('users-list')->flush();
+
             return response($user, 200);
         } catch (Exception $e) {
             return response([
@@ -124,6 +127,8 @@ class UserController extends Controller
             $user = User::findOrFail($id);
 
             $user->delete();
+
+            Cache::tags('users-list')->flush();
 
             return response($user, 200);
         }
@@ -157,6 +162,9 @@ class UserController extends Controller
             $data = $request->all();
 
             $user = User::create($data);
+            $user->load('type');
+
+            Cache::tags('users-list')->flush();
 
             return response($user);
         } catch (Exception $e) {
@@ -171,14 +179,16 @@ class UserController extends Controller
     public function getUsersWithFilter(Request $request)
     {
         try {
+            // Correção: Chamada correta do objeto $request
+            $page = $request->get('page', 1);
 
             $data = $request->all();
 
             $validator = Validator::make(
                 $data,
                 [
-                    'description' => 'nullable|max:255',
-                    'type_id' => 'nullable|int'
+                    'description' => 'max:255|string|nullable',
+                    'type_id' => 'nullable|integer' // Correção: 'integer' em vez de 'int' no Laravel
                 ]
             );
 
@@ -188,21 +198,32 @@ class UserController extends Controller
 
             $query = User::query();
 
-            if (isset($data['description'])) {
+            if (!empty($data['description'])) {
                 $query->where(function ($q) use ($data) {
                     $q->where('name', 'LIKE', '%' . $data['description'] . '%')
                         ->orWhere('phone', 'LIKE', '%' . $data['description'] . '%')
-                        ->orWhere('email', 'LIKE', '%' . $data['description'] . '%');
+                        ->orWhere('email', 'LIKE', '%' . $data['description'] . '%')
+                        ->orWhereHas('type', function ($q) use ($data) {
+                            $q->where('name', 'LIKE', '%' . $data['description'] . '%');
+                        });
                 });
             }
 
-            if (isset($data['type_id'])) {
+            if (!empty($data['type_id'])) {
                 $query->whereHas('type', function ($q) use ($data) {
                     $q->where('id', $data['type_id']);
                 });
             }
 
-            $users = $query->with('type')->paginate(20);
+
+            $descriptionFilter = $data['description'] ?? 'none';
+            $typeFilter = $data['type_id'] ?? 'none';
+            $cacheKey = "users:filter:{$descriptionFilter}:type:{$typeFilter}:page:{$page}";
+
+            $users = Cache::tags('users-list')->remember($cacheKey, now()->addMinutes(5), function () use ($query, $descriptionFilter, $typeFilter) {
+
+                return $query->with('type')->paginate(20)->toArray();
+            });
 
             return response($users, 200);
         } catch (Exception $e) {

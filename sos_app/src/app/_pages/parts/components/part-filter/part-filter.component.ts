@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -58,6 +58,14 @@ export class PartFilterComponent implements OnInit {
   mountForm() {
     this.filterForm = this.formBuilder.group({
       description: ['', [Validators.required]],
+    });
+
+    this.filterForm.get('description')?.valueChanges.subscribe((value) => {
+      if (!value.trim()) {
+        this.partService.setPartFilters({
+          description: '',
+        });
+      }
     });
   }
 

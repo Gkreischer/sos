@@ -97,10 +97,17 @@ export class UserModalComponent implements OnInit {
   }
 
   patchForm() {
-    this.user.cpf = maskitoTransform(this.user.cpf, cpfMask);
-    this.user.cnpj = maskitoTransform(this.user.cnpj, cnpjMask);
-    this.user.cep = maskitoTransform(this.user.cep, cepMask);
-    this.userForm.patchValue(this.user);
+    const formattedUser = {
+      ...this.user,
+      cpf: this.user.cpf ? maskitoTransform(this.user.cpf, cpfMask) : null,
+      cnpj: this.user.cnpj ? maskitoTransform(this.user.cnpj, cnpjMask) : null,
+      cep: this.user.cep ? maskitoTransform(this.user.cep, cepMask) : null,
+      phone: this.user.phone
+        ? maskitoTransform(this.user.phone, phoneMask)
+        : null,
+    };
+
+    this.userForm.patchValue(formattedUser);
   }
 
   closeModal() {
@@ -128,14 +135,6 @@ export class UserModalComponent implements OnInit {
           'bottom',
           2000,
           'success',
-        );
-      },
-      error: () => {
-        this.toastService.presentToast(
-          'Erro ao criar o usuário!',
-          'bottom',
-          2000,
-          'danger',
         );
       },
     });
@@ -173,9 +172,6 @@ export class UserModalComponent implements OnInit {
           2000,
           'success',
         );
-      },
-      error: (err) => {
-        this.toastService.presentToast(err, 'bottom', 2000, 'danger');
       },
     });
   }

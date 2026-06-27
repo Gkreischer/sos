@@ -94,6 +94,7 @@ export class CategoryModalComponent implements OnInit {
         {
           text: 'Confirmar',
           role: 'confirm',
+          id: 'confirm-button',
           handler: () => {
             this.deleteCategory(this.category);
           },

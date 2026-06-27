@@ -11,7 +11,7 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/angular/standalone';
-import { UserPostsBoardComponent } from './user-posts-board/user-posts-board.component';
+import { LastPostsBoardComponent } from './last-posts-board/last-posts-board.component';
 import { MenuController } from '@ionic/angular';
 import { inject } from '@angular/core';
 import { PostService } from 'src/app/_services/post.service';
@@ -19,6 +19,8 @@ import { ViewWillEnter, ViewDidEnter } from '@ionic/angular';
 import { TourService } from 'ngx-ui-tour-ionic';
 import tourSteps from 'src/app/_shared/utils/tour/tour';
 import { PreferencesPluginService } from 'src/app/_services/preferences-plugin.service';
+import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationInterface } from 'src/app/_interfaces/NotificationInterface';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -30,7 +32,7 @@ import { PreferencesPluginService } from 'src/app/_services/preferences-plugin.s
     IonTitle,
     IonContent,
     IonToolbar,
-    UserPostsBoardComponent,
+    LastPostsBoardComponent,
     IonGrid,
     IonRow,
     IonCol,
@@ -41,6 +43,7 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
   postService = inject(PostService);
   tourService = inject(TourService);
   preferenceService = inject(PreferencesPluginService);
+  notificationService = inject(NotificationService);
   constructor() {}
 
   ionViewWillEnter() {
@@ -53,12 +56,22 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
   }
 
   async startTour() {
-    if (await this.preferenceService.get('intro')) {
+    if ((window as any).Cypress) {
+      return;
+    }
+
+    const intro = await this.preferenceService.get('intro');
+
+    if (intro.value) {
       return false;
     }
+
     this.tourService.initialize(tourSteps);
     this.tourService.start();
-    this.tutorialIsViewed();
+    this.menuController.open('main');
+
+    await this.tutorialIsViewed();
+
     return true;
   }
 

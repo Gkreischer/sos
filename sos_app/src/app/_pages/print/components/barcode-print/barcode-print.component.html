@@ -1,0 +1,16 @@
+<div style="display: flex; justify-content: center">
+  <button
+    id="barcode-print-button"
+    class="ion-padding"
+    printSectionId="barcode-section"
+    printTitle="C. de barras - Ordem de serviço {{ getOrderId() }}"
+    ngxPrint
+    bodyClass="print-page"
+    [printStyle]="barcodePrintStyle"
+  >
+    IMPRIMIR C. DE BARRAS
+  </button>
+</div>
+<div style="text-align: center" id="barcode-section">
+  <canvas id="barcode"></canvas>
+</div>

@@ -6,6 +6,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -17,7 +18,10 @@ class CategoryController extends Controller
         //
         try {
             // Get all categories sorted by name
-            $categories = Category::orderBy('name')->select('id', 'name')->get();
+            $categories = Cache::tags('categories-list')->remember('categories', now()->addMinutes(5), function () {
+                return Category::orderBy('name', 'asc')->get()->toArray();
+            });
+
 
             return response($categories);
         } catch (\Exception $e) {
@@ -50,6 +54,7 @@ class CategoryController extends Controller
             }
 
             $category = Category::create($data);
+            Cache::tags('categories-list')->flush();
 
             return response($category, 201);
         } catch (\Exception $e) {
@@ -106,6 +111,9 @@ class CategoryController extends Controller
 
             $category->update($data);
 
+            Cache::tags('categories-list')->flush();
+
+
             return response($category, 200);
         } catch (\Exception $e) {
             return response(
@@ -129,7 +137,10 @@ class CategoryController extends Controller
 
             $category->delete();
 
-            return response($category, 200);
+            Cache::tags('categories-list')->flush();
+
+
+            return response($category, 204);
         }
         // Make an exception for QueryException
         catch (\Illuminate\Database\QueryException $e) {

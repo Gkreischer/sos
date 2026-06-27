@@ -10,14 +10,15 @@ export class ToastService {
   async presentToast(
     message = 'Insira uma mensagem',
     position: 'top' | 'middle' | 'bottom',
-    duration: number = 3000,
-    color: 'success' | 'danger' | 'warning'
+    duration: number,
+    color: 'success' | 'danger' | 'warning',
   ) {
     const toast = await this.toastController.create({
       message: `${message}`,
-      duration: duration,
+      duration: duration || 5000,
       position: position,
       color: color,
+      cssClass: 'data-cy-toast-error',
     });
 
     await toast.present();

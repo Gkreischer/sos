@@ -17,7 +17,14 @@
   horizontal="end"
   tourAnchor="os.add-button"
 >
-  <ion-fab-button (click)="addOrder()">
+  <ion-fab-button
+    class="ion-margin-bottom"
+    (click)="getCode()"
+    color="tertiary"
+  >
+    <ion-icon name="qr-code"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-button (click)="addOrder()" color="tertiary">
     <ion-icon name="add-sharp"></ion-icon>
   </ion-fab-button>
 </ion-fab>

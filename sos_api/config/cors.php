@@ -6,20 +6,17 @@ return [
     |--------------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
-    |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    // 1. ADICIONADO: 'broadcasting/auth' para que o Laravel aplique o CORS nessa rota também
+    // Se o seu endpoint for 'api/broadcasting/auth', o 'api/*' já cobriria, mas deixar explícito garante o funcionamento.
+    'paths' => ['api/*', 'broadcasting/auth', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    // 2. RECOMENDAÇÃO: Quando 'supports_credentials' é true, usar '*' no allowed_origins pode falhar em alguns navegadores.
+    // É mais seguro colocar a URL exata do seu Angular.
+    'allowed_origins' => ['http://localhost:8100', 'http://localhost:4200'],
 
     'allowed_origins_patterns' => [],
 
@@ -29,6 +26,7 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    // 3. ALTERADO PARA TRUE: Permite o envio de cookies/tokens de autenticação na requisição do Echo
+    'supports_credentials' => true,
 
 ];

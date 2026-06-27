@@ -6,7 +6,8 @@ use App\Models\Equipment;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Cache;
 
 class EquipmentController extends Controller
 {
@@ -16,12 +17,20 @@ class EquipmentController extends Controller
     public function index()
     {
         try {
-            $equipments = Equipment::orderBy('created_at', 'desc')->paginate(20);
+            // Captura a página atual da requisição (padrão é 1)
+            $page = request()->get('page', 1);
 
-            return response($equipments, 200);
+            // Cria uma chave única por página (ex: equipments_page_1, equipments_page_2)
+            $cacheKey = 'equipments_page_' . $page;
+
+            $equipmentsCache = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+                return Equipment::orderBy('created_at', 'desc')->paginate(20)->toArray();
+            });
+
+            return response($equipmentsCache);
         } catch (Exception $e) {
             return response([
-                'message' => 'Não foi possível carregar as equipamentos',
+                'message' => 'Não foi possível carregar os equipamentos',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -48,6 +57,8 @@ class EquipmentController extends Controller
             }
 
             $equipment = Equipment::create($data);
+
+            Cache::tags('equipments-list')->flush();
 
             $equipment->load(['category',  'user']);
 
@@ -87,41 +98,48 @@ class EquipmentController extends Controller
     public function getEquipmentByFilter(Request $request)
     {
         try {
-
             $description = trim($request->description ?? '');
+            $page = $request->get('page', 1);
 
-            $equipments = Equipment::query()
-                ->select(
-                    'equipments.id',
-                    'equipments.name',
-                    'equipments.description',
-                    'equipments.category_id',
-                    'equipments.user_id',
-                    'equipments.obs',
-                    'equipments.created_at'
-                )
-                ->with([
-                    'category:id,name',
-                    'user:id,name'
-                ])
+            // Criamos uma chave dinâmica única baseada no termo de busca e na página
+            // Exemplo de chave no Redis: equipments:filter:notebook:page:1
+            // Se a descrição estiver vazia, fica: equipments:filter:all:page:1
+            $searchKey = !empty($description) ? md5($description) : 'all';
+            $cacheKey = "equipments:filter:{$searchKey}:page:{$page}";
 
-                ->when(!empty($description), function ($query) use ($description) {
-
-                    $query->where(function ($q) use ($description) {
-
-                        $q->where('equipments.name', 'LIKE', '%' . $description . '%')
-                            ->orWhereHas('category', function ($q2) use ($description) {
-                                $q2->where('name', 'LIKE', '%' . $description . '%');
-                            });
-                    });
-                })
-
-                ->orderBy('equipments.created_at', 'desc')
-                ->paginate(20);
+            $equipments = Cache::tags('equipments-list')->remember($cacheKey, now()->addMinutes(5), function () use ($description) {
+                return Equipment::query()
+                    ->select(
+                        'equipments.id',
+                        'equipments.name',
+                        'equipments.description',
+                        'equipments.category_id',
+                        'equipments.user_id',
+                        'equipments.obs',
+                        'equipments.created_at'
+                    )
+                    ->with([
+                        'category:id,name',
+                        'user:id,name'
+                    ])
+                    ->when(!empty($description), function ($query) use ($description) {
+                        $query->where(function ($q) use ($description) {
+                            $q->where('equipments.name', 'LIKE', '%' . $description . '%')
+                                ->orWhereHas('category', function ($q2) use ($description) {
+                                    $q2->where('name', 'LIKE', '%' . $description . '%');
+                                })
+                                ->orWhereHas('user', function ($q2) use ($description) {
+                                    $q2->where('name', 'LIKE', '%' . $description . '%');
+                                });
+                        });
+                    })
+                    ->orderBy('equipments.created_at', 'desc')
+                    ->paginate(20)
+                    ->toArray(); // Converte para array garantindo que salve com sucesso no seu Redis
+            });
 
             return response($equipments, 200);
-        } catch (Exception $e) {
-
+        } catch (\Exception $e) { // Corrigido para \Exception global por segurança
             return response([
                 'message' => 'Não foi possível obter os equipamentos',
                 'error' => $e->getMessage()
@@ -155,14 +173,16 @@ class EquipmentController extends Controller
 
             $equipment->update($data);
 
+            Cache::tags('equipments-list')->flush();
+
             // Recarrega as relações após a atualização
-            $equipment->load(['category', 'parts', 'user']);
+            $equipment->load(['category', 'user']);
 
             return response($equipment, 200);
         } catch (\Exception $e) {
             return response(
                 [
-                    'message' => 'Equipment not updated',
+                    'message' => 'Equipamento não foi atualizado',
                     'error' => $e->getMessage()
                 ],
                 404
@@ -181,11 +201,18 @@ class EquipmentController extends Controller
 
             $equipment->delete();
 
-            return response($equipment, 200);
+            Cache::tags('equipments-list')->flush();
+
+            return response($equipment, 204);
+        } catch (QueryException $e) {
+            return response([
+                'message' => 'Equipamento já possui ordem de serviço associada',
+                'error' => $e->getMessage()
+            ], 400);
         } catch (\Exception $e) {
             return response(
                 [
-                    'message' => 'Equipment not deleted',
+                    'message' => 'Erro ao deletar o equipamento',
                     'error' => $e->getMessage()
                 ],
                 404

@@ -18,7 +18,7 @@ export class ModalAddPartComponent implements OnInit {
   partService = inject(PartService);
   loadingService = inject(LoadingService);
 
-  parts$: Observable<PartInterface[]> = this.partService.partsSearch;
+  parts$: Observable<PartInterface[] | null> = this.partService.partsSearch;
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {}

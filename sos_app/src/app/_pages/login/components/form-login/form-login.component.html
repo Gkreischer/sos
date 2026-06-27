@@ -8,6 +8,7 @@
         <ion-row>
           <ion-col>
             <ion-input
+              id="input-email"
               fill="outline"
               label="Email"
               formControlName="email"
@@ -19,6 +20,7 @@
         <ion-row>
           <ion-col>
             <ion-input
+              id="input-password"
               fill="outline"
               label="Senha"
               formControlName="password"
@@ -31,6 +33,7 @@
         <ion-row>
           <ion-col>
             <ion-button
+              id="login-button"
               expand="block"
               type="submit"
               [disabled]="loginForm.invalid || (isLoading$ | async)"

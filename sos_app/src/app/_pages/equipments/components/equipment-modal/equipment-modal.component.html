@@ -7,14 +7,14 @@
       <ion-title>Editar Equipamento</ion-title>
     }
     <ion-buttons slot="start">
-      <ion-button shape="round" (click)="closeModal()">
+      <ion-button shape="round" (click)="closeModal()" data-cy="close-modal">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content data-cy="equipment-modal">
   @let isLoading = isLoading$ | async;
   <ion-card>
     <ion-card-content>
@@ -57,7 +57,7 @@
                   cancelText="Cancelar"
                   fill="outline"
                 >
-                  @for (category of categories; track category) {
+                  @for (category of categories; track category.id) {
                     <ion-select-option [value]="category.id">{{
                       category.name
                     }}</ion-select-option>
@@ -90,20 +90,19 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              @if (!equipment) {
-                <ion-button
-                  type="submit"
-                  expand="block"
-                  [disabled]="formEquipment.invalid || isLoading"
-                  >Cadastrar</ion-button
-                >
-              }
               @if (equipment) {
                 <ion-button
                   type="submit"
                   expand="block"
                   [disabled]="formEquipment.invalid || isLoading"
                   >Editar</ion-button
+                >
+              } @else {
+                <ion-button
+                  type="submit"
+                  expand="block"
+                  [disabled]="formEquipment.invalid || isLoading"
+                  >Cadastrar</ion-button
                 >
               }
             </ion-col>
@@ -113,3 +112,8 @@
     </ion-card-content>
   </ion-card>
 </ion-content>
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button color="danger" (click)="confirmDelete()">
+    <ion-icon name="trash"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

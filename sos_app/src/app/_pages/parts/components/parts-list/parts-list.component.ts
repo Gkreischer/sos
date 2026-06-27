@@ -24,7 +24,7 @@ export class PartsListComponent implements OnInit {
   modalService = inject(ModalService);
   loadingService = inject(LoadingService);
 
-  parts!: Observable<PartInterface[]>;
+  parts: Observable<PartInterface[]> = this.partService.parts;
   partsPage: number = 1;
   infiniteScroll = signal(true);
   partFilters = this.partService.partFilters;
@@ -33,12 +33,13 @@ export class PartsListComponent implements OnInit {
 
   constructor() {
     effect(() => {
+      if (this.partFilters() === null) {
+        return;
+      }
       this.partsPage = 1;
       this.infiniteScroll.set(true);
       this.partService.partFilters();
       this.getParts().subscribe((res) => {
-        this.parts = this.partService.parts;
-
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }
@@ -47,7 +48,7 @@ export class PartsListComponent implements OnInit {
   }
 
   getParts() {
-    return this.partService.getParts(this.partsPage, this.partFilters());
+    return this.partService.getParts(this.partsPage);
   }
 
   ngOnInit() {}

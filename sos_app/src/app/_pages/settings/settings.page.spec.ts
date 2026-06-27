@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SettingsPage } from './settings.page';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { SettingsPageModule } from './settings.module';
 import { IonicModule } from '@ionic/angular';
 
 describe('SettingsPage', () => {
@@ -11,8 +9,8 @@ describe('SettingsPage', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), SettingsPageModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      imports: [IonicModule.forRoot(), SettingsPage],
+      providers: [provideHttpClient()],
     });
 
     fixture = TestBed.createComponent(SettingsPage);

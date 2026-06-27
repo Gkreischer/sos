@@ -1,7 +1,7 @@
 import { CategoryInterface } from './CategoryInterface';
 
 export interface PartInterface {
-  id: string;
+  id: number;
   name: string;
   price: number;
   quantity: number;

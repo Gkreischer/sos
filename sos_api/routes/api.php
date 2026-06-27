@@ -12,6 +12,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTypeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,6 +90,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::get('/parts/{id}', 'getById');
             Route::put('/parts/{id}', 'update');
             Route::post('/parts/filter', 'getPartByDescFilter');
+            Route::delete('/parts/{id}', 'destroy');
         });
 
         Route::controller(PhotoController::class)->group(function () {
@@ -117,10 +121,33 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::controller(PostController::class)->group(function () {
             Route::post('/posts/filter', 'index');
+            Route::get('/posts/last', 'getLastPosts');
+            Route::get('/posts/{id}', 'show');
             Route::post('/posts', 'store');
             Route::put('/posts/{id}', 'update');
             Route::delete('/posts/{id}', 'destroy');
-            Route::get('/posts/last', 'getLastPosts');
+        });
+
+        Route::controller(NotificationController::class)->group(function () {
+            Route::post('/notifications', 'sendMessage');
+        });
+
+        Route::controller(RoomController::class)->group(function () {
+            Route::get('/rooms', 'index');
+            Route::post('/rooms/room/messages', 'getRoomMessages');
+            Route::get('/room/{id}/users', 'getRoomUsers');
+            Route::post('/rooms', 'store');
+            Route::put('/rooms/{id}', 'update');
+            Route::get('/rooms/{id}', 'show');
+            Route::delete('/rooms/{id}', 'destroy');
+            Route::post('/rooms/block/users', 'blockRoomUsers');
+            Route::post('/rooms/unblock/users', 'unblockRoomUsers');
+        });
+
+        Route::controller(ChatController::class)->group(function () {
+            Route::post('/messages', 'store');
+            Route::put('/messages/{id}', 'update');
+            Route::delete('/messages/{id}', 'destroy');
         });
     });
 

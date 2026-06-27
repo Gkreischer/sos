@@ -10,7 +10,7 @@
     @let equipments = equipmentService.equipments | async;
     @let loading = isLoading$ | async;
 
-    <ion-list>
+    <ion-list data-cy="equipments-list">
       @if (loading && (!equipments || equipments.length === 0)) {
         <ion-item lines="none">
           <ion-label>
@@ -29,7 +29,7 @@
             </ion-label>
           </ion-item>
         } @empty {
-          <ion-item lines="none">
+          <ion-item lines="none" data-cy="empty-equipments-message">
             <ion-label>
               <h2>Nenhum equipamento cadastrado</h2>
             </ion-label>

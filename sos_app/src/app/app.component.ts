@@ -47,11 +47,19 @@ import {
   personCircle,
   construct,
   addCircle,
+  chatbubblesSharp,
+  saveOutline,
+  closeSharp,
+  searchCircle,
+  pencilSharp,
+  trashSharp,
+  chevronUpCircle,
+  qrCode,
 } from 'ionicons/icons';
-import { TourIonPopoverModule, TourService } from 'ngx-ui-tour-ionic';
-import { ViewDidEnter } from '@ionic/angular';
+import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
 import { ToastService } from './_services/toast.service';
 import { PhotoService } from './_services/photo.service';
+import { NotificationService } from 'src/app/_services/notification.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -84,6 +92,7 @@ export class AppComponent implements OnInit {
   router = inject(Router);
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
+  notificationService = inject(NotificationService);
 
   user$ = this.loginService.user;
 
@@ -118,6 +127,13 @@ export class AppComponent implements OnInit {
       icon: 'layers',
       id: 'button-sidebar-ordem-servico',
       tourAnchor: 'menu.os',
+    },
+    {
+      title: 'Chat',
+      url: '/chat',
+      icon: 'chatbubbles',
+      id: 'button-sidebar-chat',
+      tourAnchor: 'menu.chat',
     },
     {
       title: 'Usuários',
@@ -164,6 +180,14 @@ export class AppComponent implements OnInit {
       personCircle,
       construct,
       addCircle,
+      chatbubblesSharp,
+      saveOutline,
+      closeSharp,
+      searchCircle,
+      pencilSharp,
+      trashSharp,
+      chevronUpCircle,
+      qrCode,
     });
   }
 
@@ -185,6 +209,7 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.loginService.logout();
+    this.notificationService.leave('notifications');
   }
 
   async changeAvatarImage() {

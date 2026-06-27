@@ -24,7 +24,7 @@ import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import { priceMask } from 'src/app/_masks/priceMask';
-import { MoneyService } from 'src/app/_shared/utils/money.service';
+import { MoneyService } from 'src/app/_shared/utils/services/money.service';
 import { Router } from '@angular/router';
 import { dateMask } from 'src/app/_masks/dateMask';
 import { IonicModule } from '@ionic/angular';
@@ -65,7 +65,8 @@ export class OrderModalComponent implements OnInit {
   equipments$?: Observable<EquipmentInterface[]>;
   clientSelected?: UserInterface;
   technicianSelected?: UserInterface;
-  orderStatuses$?: Observable<OrderStatusInterface[]>;
+  orderStatuses$: Observable<OrderStatusInterface[]> =
+    this.orderStatusService.order_statuses;
   selectOrderStatusDisabled = false;
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
@@ -130,12 +131,11 @@ export class OrderModalComponent implements OnInit {
 
   disabledSelectForDeliveredStatus() {
     const orderStatus = this.orderForm.get('status_id')?.value;
-
-    if (orderStatus != 4) {
-      return;
+    const blockIds = [4, 5];
+    if (blockIds.includes(orderStatus)) {
+      this.selectOrderStatusDisabled = true;
+      this.orderForm.get('status_id')?.disable();
     }
-    this.orderForm.get('status_id')?.disable();
-    this.selectOrderStatusDisabled = true;
   }
 
   patchFormTotalPrice() {
@@ -296,18 +296,14 @@ export class OrderModalComponent implements OnInit {
     const modalData = await this.modalService.openModal(ModalAddPartComponent, {
       orderId: this.orderId,
     });
-
     if (!modalData) {
       return;
     }
-
     this.addPart(modalData);
   }
 
   getOrderStatuses() {
-    this.orderStatusService.getOrderStatuses().subscribe((data) => {
-      this.orderStatuses$ = this.orderStatusService.order_statuses;
-    });
+    this.orderStatusService.getOrderStatuses().subscribe();
   }
 
   onChangeStatus() {

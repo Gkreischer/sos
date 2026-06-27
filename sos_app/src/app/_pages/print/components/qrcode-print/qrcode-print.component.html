@@ -1,0 +1,28 @@
+<div style="display: flex; justify-content: center">
+  <button
+    id="qrcode-print-button"
+    class="ion-padding"
+    printSectionId="qrcode"
+    printTitle="QR Code - Ordem de serviço {{ getOrderId() }}"
+    ngxPrint
+    bodyClass="print-page"
+  >
+    IMPRIMIR QR CODE
+  </button>
+</div>
+<div class="qrcodeImage" style="display: flex; justify-content: center">
+  <qrcode
+    [qrdata]="generateQrCodeData()"
+    [allowEmptyString]="true"
+    [ariaLabel]="'QR Code of order service'"
+    [cssClass]="'center'"
+    [colorDark]="'#000000ff'"
+    [colorLight]="'#ffffffff'"
+    [elementType]="'canvas'"
+    [errorCorrectionLevel]="'H'"
+    [scale]="1"
+    [title]="`Ordem de serviço ${getOrderId()}`"
+    [width]="200"
+    id="qrcode"
+  ></qrcode>
+</div>

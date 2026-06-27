@@ -17,10 +17,17 @@ export class PostService {
     PostInterface[]
   >([]);
 
+  post: BehaviorSubject<PostInterface | null> =
+    new BehaviorSubject<PostInterface | null>(null);
+
   postFilters = signal<PostFilterInterface | null>(null);
 
   get posts$() {
     return this.posts.asObservable();
+  }
+
+  get post$() {
+    return this.post.asObservable();
   }
 
   constructor() {}
@@ -29,20 +36,20 @@ export class PostService {
     this.postFilters.set(postFilter);
   }
 
-  createPost(user: string, post: PostInterface) {
+  createPost(post: PostInterface) {
     return this.http
-      .post<any>(`${environment.baseUrl}/users/${user}/posts`, post)
+      .post<PostInterface>(`${environment.baseUrl}/posts`, post)
       .pipe(
         tap((res) => {
-          this.posts.next(res);
+          this.posts.next([res, ...this.posts.value]);
         }),
         catchError(this.errorService.handleError),
       );
   }
 
-  updatePost(user: string, post: PostInterface) {
+  updatePost(id: number, post: PostInterface) {
     return this.http
-      .put<any>(`${environment.baseUrl}/users/${user}/posts/${post.id}`, post)
+      .put<PostInterface>(`${environment.baseUrl}/posts/${id}`, post)
       .pipe(
         map((updatedPost) => {
           const currentPosts = this.posts.value;
@@ -52,19 +59,21 @@ export class PostService {
           );
 
           this.posts.next(posts);
-
-          return updatedPost;
+          this.post.next(updatedPost);
         }),
         catchError(this.errorService.handleError),
       );
   }
 
-  deletePost(user: string, post: PostInterface) {
+  deletePost(post: PostInterface) {
     return this.http
-      .delete<any>(`${environment.baseUrl}/users/${user}/posts/${post.id}`)
+      .delete<any>(`${environment.baseUrl}/posts/${post.id}`)
       .pipe(
         tap((res) => {
-          this.posts.next(res);
+          this.post.next(null);
+          this.posts.next(
+            this.posts.value.filter((post) => res.id !== post.id),
+          );
         }),
         catchError(this.errorService.handleError),
       );
@@ -76,7 +85,6 @@ export class PostService {
       .pipe(
         tap((res) => {
           this.posts.next(res);
-          console.log(res);
         }),
         catchError(this.errorService.handleError),
       );
@@ -90,6 +98,17 @@ export class PostService {
       .pipe(
         tap((res) => {
           this.posts.next(res.data);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getPost(id: number) {
+    return this.http
+      .get<PostInterface>(`${environment.baseUrl}/posts/${id}`)
+      .pipe(
+        tap((res) => {
+          this.post.next(res);
         }),
         catchError(this.errorService.handleError),
       );

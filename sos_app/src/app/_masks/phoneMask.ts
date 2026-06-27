@@ -1,45 +1,7 @@
 import { MaskitoOptions } from '@maskito/core';
-
-export const phoneMask: MaskitoOptions = {
-  mask: (state) => {
-    const { value } = state;
-    const inputValue = value?.replace(/\D/g, '');
-
-    if (inputValue.length <= 10) {
-      return [
-        '(',
-        /\d/,
-        /\d/,
-        ')',
-        ' ',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        '-',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-      ];
-    } else {
-      return [
-        '(',
-        /\d/,
-        /\d/,
-        ')',
-        ' ',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        '-',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-      ];
-    }
-  },
-} as MaskitoOptions;
+import { maskitoPhone } from '@maskito/phone';
+import metadata from 'libphonenumber-js/min/metadata';
+export const phoneMask: MaskitoOptions = maskitoPhone({
+  countryIsoCode: 'BR',
+  metadata,
+});

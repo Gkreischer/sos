@@ -12,7 +12,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+@let isLoading = isLoading$ | async;
 <ion-content data-cy="edit-user-page">
   <ion-card>
     <ion-card-content>
@@ -120,6 +120,7 @@
                 placeholder="CEP"
                 [maskito]="cepMask"
                 [maskitoElement]="maskPredicate"
+                (ionChange)="cepChanged($event)"
               ></ion-input>
             </ion-col>
             <ion-col>
@@ -149,6 +150,7 @@
                 label="Estado"
                 formControlName="state"
                 placeholder="Estado"
+                maxlength="2"
               ></ion-input>
             </ion-col>
             <ion-col>
@@ -168,7 +170,7 @@
                   type="submit"
                   color="primary"
                   expand="block"
-                  [disabled]="this.userForm.invalid"
+                  [disabled]="this.userForm.invalid || isLoading"
                   >Cadastrar</ion-button
                 >
               } @else {
@@ -176,7 +178,7 @@
                   type="submit"
                   color="primary"
                   expand="block"
-                  [disabled]="this.userForm.invalid"
+                  [disabled]="this.userForm.invalid || isLoading"
                   >Atualizar</ion-button
                 >
               }

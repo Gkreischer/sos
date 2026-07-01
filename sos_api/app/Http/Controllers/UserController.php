@@ -105,7 +105,7 @@ class UserController extends Controller
             $user = User::findOrFail($id);
 
             $user->update($data);
-
+            $user->load('type');
             Cache::tags('users-list')->flush();
 
             return response($user, 200);

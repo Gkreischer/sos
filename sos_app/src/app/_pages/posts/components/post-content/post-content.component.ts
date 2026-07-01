@@ -35,6 +35,7 @@ import { AsyncPipe } from '@angular/common';
 import { PostService } from 'src/app/_services/post.service';
 import { AlertService } from 'src/app/_services/alert.service';
 import { PostModalAddEditComponent } from '../post-modal-add-edit/post-modal-add-edit.component';
+import { ToastService } from 'src/app/_services/toast.service';
 @Component({
   selector: 'app-post-content',
   templateUrl: './post-content.component.html',
@@ -71,6 +72,7 @@ export class PostContentModalComponent implements OnInit {
   loginService = inject(LoginService);
   postService = inject(PostService);
   alertService = inject(AlertService);
+  toastService = inject(ToastService);
 
   post!: PostInterface;
   user$: Observable<UserInterface | null> = this.loginService.user;
@@ -103,7 +105,17 @@ export class PostContentModalComponent implements OnInit {
   }
 
   delete(post: PostInterface) {
-    this.postService.deletePost(post).subscribe();
+    this.postService.deletePost(post).subscribe({
+      next: (res) => {
+        this.toastService.presentToast(
+          'Aviso deletado com sucesso',
+          'top',
+          5000,
+          'success',
+        );
+        this.closeModal();
+      },
+    });
   }
 
   openModalEdit(post: PostInterface) {

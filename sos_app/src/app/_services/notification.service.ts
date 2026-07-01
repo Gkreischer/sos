@@ -11,28 +11,37 @@ import { PreferencesPluginService } from './preferences-plugin.service';
 export class NotificationService {
   preferenceService = inject(PreferencesPluginService);
 
-  private echo: Echo<'reverb'>;
+  private echo: Echo<'reverb' | 'pusher'>;
 
   constructor() {
-    this.echo = new Echo({
-      broadcaster: 'reverb',
+    console.log({
+      host: environment.reverbHost,
+      port: environment.reverbPort,
       key: environment.reverbKey,
-      wsHost: environment.reverbHost,
-      wsPort: environment.reverbPort,
-      forceTLS: false,
-      enabledTransports: ['ws'],
-      // bearerToken: 'jwt', // Pode remover esta linha se for usar a estrutura abaixo
+    });
+    this.echo = new Echo({
+      broadcaster: 'pusher',
 
-      // ALTERAÇÃO AQUI: Passamos uma função customizada de autorização
-      authorizer: (channel, options) => {
+      key: environment.reverbKey,
+
+      wsHost: 'localhost',
+      wsPort: 8080,
+      wssPort: 8080,
+
+      forceTLS: false,
+      encrypted: false,
+
+      disableStats: true,
+      enabledTransports: ['ws'],
+
+      cluster: '',
+
+      authorizer: (channel) => {
         return {
           authorize: async (socketId, callback) => {
             try {
-              // Aguarda o token real ser recuperado do storage
               const token = await this.getToken();
 
-              // Faz a requisição manualmente via fetch ou deixa o Echo tratar
-              // Mas o jeito mais limpo usando a API nativa do Echo/Pusher é:
               const response = await fetch(
                 `${environment.baseUrl.replace(/\/api$/, '')}/broadcasting/auth`,
                 {
@@ -49,14 +58,10 @@ export class NotificationService {
                 },
               );
 
-              if (!response.ok) {
-                throw new Error('Falha na autenticação do canal');
-              }
-
               const data = await response.json();
-              callback(null, data); // Sucesso!
-            } catch (error) {
-              callback(error as any, null); // Erro!
+              callback(null, data);
+            } catch (err) {
+              callback(err as any, null);
             }
           },
         };

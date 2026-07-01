@@ -16,7 +16,7 @@ return [
 
     // 2. RECOMENDAÇÃO: Quando 'supports_credentials' é true, usar '*' no allowed_origins pode falhar em alguns navegadores.
     // É mais seguro colocar a URL exata do seu Angular.
-    'allowed_origins' => ['http://localhost:8100', 'http://localhost:4200'],
+    'allowed_origins' => ['http://localhost:8100', 'http://localhost:4200', 'http://localhost', 'http://localhost:9003', 'https://localhost',],
 
     'allowed_origins_patterns' => [],
 
@@ -26,7 +26,6 @@ return [
 
     'max_age' => 0,
 
-    // 3. ALTERADO PARA TRUE: Permite o envio de cookies/tokens de autenticação na requisição do Echo
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
 ];

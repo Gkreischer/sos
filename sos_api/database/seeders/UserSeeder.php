@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -28,7 +29,7 @@ class UserSeeder extends Seeder
                 'type_id' => UserType::where('name', 'Administrador')->first()->id,
                 'address' => 'Travessa X',
                 'cep' => '12345678',
-                'phone' => '22123456789',
+                'phone' => '2212345678957',
                 'district' => 'Centro',
                 'city' => 'São Paulo',
                 'state' => 'SP',
@@ -39,7 +40,5 @@ class UserSeeder extends Seeder
             ],
 
         ]);
-
-        
     }
 }

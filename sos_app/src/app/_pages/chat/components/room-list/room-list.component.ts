@@ -22,7 +22,7 @@ import {
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { ModalService } from 'src/app/_services/modal.service';
-import { RoomContentComponent } from '../room-message/room-content.component';
+import { RoomContentComponent } from './../room-content/room-content.component';
 import { effect } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({

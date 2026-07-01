@@ -12,7 +12,7 @@ export class FormatPhonePipe implements PipeTransform {
 
     const length = value.length;
 
-    if (length === 12) {
+    if (length === 13) {
       const countryCode = value.slice(0, 2);
       const areaCode = value.slice(2, 4);
       const firstPart = value.slice(4, 8);

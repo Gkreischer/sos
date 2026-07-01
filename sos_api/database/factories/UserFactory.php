@@ -36,7 +36,7 @@ class UserFactory extends Factory
             'corporate_name' => fake()->name(),
             'cep' => fake()->numerify('########'),
             'address' => fake()->address(),
-            'phone' => fake()->numerify('###########'),
+            'phone' => fake()->numerify('#############'),
             'city' => fake()->city(),
             'district' => fake()->city(),
             'state' => strtoupper(fake()->lexify('??')),

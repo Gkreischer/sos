@@ -25,7 +25,7 @@
       @let parts = parts$ | async;
       @let loading = isLoading$ | async;
       <ion-list>
-        @if (!parts || loading) {
+        @if (loading && (!parts || parts.length === 0)) {
           <ion-item lines="none">
             <ion-label>
               <ion-spinner></ion-spinner>

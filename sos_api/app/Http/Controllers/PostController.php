@@ -132,12 +132,11 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post, Request $request)
+    public function destroy(int $id)
     {
         try {
-            $post = $request->all();
 
-            $post = Post::findOrFail($post['id']);
+            $post = Post::findOrFail($id);
             $user = auth('sanctum')->user();
 
             if ($user->id != $post->user_id) {

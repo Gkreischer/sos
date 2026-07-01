@@ -8,7 +8,7 @@ import { OrderFilterComponent } from './components/order-filter/order-filter.com
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
 import { OrderService } from 'src/app/_services/order.service';
 import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
-import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
+import { CodeReaderService } from 'src/app/_services/code-reader.service';
 @Component({
   selector: 'app-order',
   templateUrl: './order.page.html',
@@ -23,6 +23,7 @@ import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
 export class OrderPage implements ViewWillEnter {
   modalService = inject(ModalService);
   orderService = inject(OrderService);
+  barCodeScannerService = inject(CodeReaderService);
 
   constructor() {}
 
@@ -34,5 +35,15 @@ export class OrderPage implements ViewWillEnter {
     this.modalService.openModal(OrderModalComponent);
   }
 
-  getCode() {}
+  async getCode() {
+    let orderId = await this.barCodeScannerService.scanCode();
+
+    if (!orderId) {
+      return;
+    }
+
+    await this.modalService.openModal(OrderModalComponent, {
+      orderId: orderId,
+    });
+  }
 }

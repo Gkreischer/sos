@@ -17,7 +17,7 @@ import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { UserService } from 'src/app/_services/user.service';
-import { IonHeader } from '@ionic/angular/standalone';
+import { CepService } from 'src/app/_services/cep.service';
 import { cnpjMask } from 'src/app/_masks/cnpjMask';
 import { phoneMask } from 'src/app/_masks/phoneMask';
 import { cepMask } from 'src/app/_masks/cepMask';
@@ -48,6 +48,7 @@ export class UserModalComponent implements OnInit {
   private alertService = inject(AlertService);
   private categoryService = inject(CategoryService);
   private userTypeService = inject(UserTypeService);
+  private cepService = inject(CepService);
 
   user!: UserInterface;
   categories!: Observable<CategoryInterface[]>;
@@ -80,16 +81,16 @@ export class UserModalComponent implements OnInit {
   mountForm() {
     this.userForm = this.fb.group({
       name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required]],
       address: [''],
-      cpf: [''],
+      cpf: ['', [Validators.minLength(14), Validators.maxLength(14)]],
       corporate_name: [''],
       fantasy_name: [''],
-      cnpj: [''],
-      cep: [''],
+      cnpj: ['', [Validators.minLength(18), Validators.maxLength(18)]],
+      cep: ['', [Validators.minLength(9), Validators.maxLength(9)]],
       city: [''],
-      state: [''],
+      state: ['', [Validators.minLength(2), Validators.maxLength(2)]],
       type_id: ['', [Validators.required]],
       district: [''],
       country: [''],
@@ -185,6 +186,20 @@ export class UserModalComponent implements OnInit {
   getUserTypes() {
     this.userTypeService.get().subscribe(() => {
       this.userTypes = this.userTypeService.userTypes;
+    });
+  }
+
+  cepChanged(event: CustomEvent) {
+    const cep = event.detail.value;
+    this.cepService.getCep(cep).subscribe((res) => {
+      console.log(res);
+      this.userForm.patchValue({
+        ...this.userForm.value,
+        district: res.bairro,
+        city: res.localidade,
+        state: res.uf,
+        address: res.logradouro,
+      });
     });
   }
 }

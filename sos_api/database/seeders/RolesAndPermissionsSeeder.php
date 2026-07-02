@@ -36,12 +36,16 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'view settings']);
         Permission::create(['name' => 'edit settings']);
         Permission::create(['name' => 'delete settings']);
-        Permission::create(['name' => 'view reports']);
-        Permission::create(['name' => 'edit reports']);
-        Permission::create(['name' => 'delete reports']);
+        Permission::create(['name' => 'view metrics']);
+        Permission::create(['name' => 'edit metrics']);
+        Permission::create(['name' => 'delete metrics']);
         Permission::create(['name' => 'view posts']);
         Permission::create(['name' => 'edit posts']);
         Permission::create(['name' => 'delete posts']);
+        Permission::create(['name' => 'view rooms']);
+        Permission::create(['name' => 'edit rooms']);
+        Permission::create(['name' => 'delete rooms']);
+
 
         // Roles
         $admin = Role::create(['name' => 'admin']);
@@ -65,11 +69,20 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit parts',
             'view categories',
             'edit categories',
+            'view settings',
+            'edit settings',
+            'view metrics',
+            'edit metrics',
+            'view posts',
+            'edit posts',
+            'view rooms',
+            'edit rooms',
 
         ]);
 
         $customer->givePermissionTo([
             'view orders',
+            'view parts',
         ]);
 
         $attendant->givePermissionTo([
@@ -89,7 +102,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'delete categories',
             'view posts',
             'edit posts',
-            'delete posts',
         ]);
     }
 }

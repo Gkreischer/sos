@@ -35,7 +35,14 @@
             ></ion-input>
           </ion-col>
           <ion-col size="12" sizeLg="2">
-            <ion-button class="full-button" type="submit">Atualizar</ion-button>
+            @let isLoading = isLoading$ | async;
+            <ion-button
+              expand="block"
+              class="full-button"
+              type="submit"
+              [disabled]="form.invalid || isLoading"
+              >Atualizar</ion-button
+            >
           </ion-col>
         </ion-row>
       </ion-grid>

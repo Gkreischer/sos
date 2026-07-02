@@ -27,7 +27,7 @@ import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { addIcons } from 'ionicons';
 import { trash } from 'ionicons/icons';
-
+import { LoadingService } from 'src/app/_services/loading.service';
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
@@ -49,10 +49,12 @@ export class UserModalComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private userTypeService = inject(UserTypeService);
   private cepService = inject(CepService);
+  private loadingService = inject(LoadingService);
 
   user!: UserInterface;
   categories!: Observable<CategoryInterface[]>;
   userTypes!: Observable<UserTypeInterface[]>;
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   userForm!: FormGroup;
 

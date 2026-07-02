@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\UserType;
 use Illuminate\Support\Facades\Cache;
 
@@ -65,13 +65,24 @@ class UserController extends Controller
 
             $data = $request->all();
 
-            if (!empty($data['type_id']) && is_numeric($data['type_id'])) {
-                if (request()->user()->type_id != UserType::where('name', 'Administrador')->first()->id) {
-                    return response([
-                        'message' => 'Não é possível alterar o tipo de usuário',
-                        'error' => 'Não é possível alterar o tipo de usuário'
-                    ], 403);
-                }
+            $types = UserType::pluck('id', 'name');
+
+            $roles = [
+                $types['Administrador'] => 'admin',
+                $types['Cliente'] => 'client',
+                $types['Técnico'] => 'technician',
+                $types['Atendente'] => 'attendant',
+            ];
+
+            if (
+                !empty($data['type_id']) &&
+                is_numeric($data['type_id']) &&
+                request()->user()->type_id !== $types['Administrador']
+            ) {
+                return response([
+                    'message' => 'Não é possível alterar o tipo de usuário',
+                    'error' => 'Não é possível alterar o tipo de usuário'
+                ], 403);
             }
 
             if (!empty($data['password']) && !empty($data['password_confirmation']) && $data['password'] != $data['password_confirmation'] && strlen($data['password']) >= 8 && strlen($data['password_confirmation']) >= 8) {
@@ -85,7 +96,7 @@ class UserController extends Controller
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-                'cpf' => 'required|string|max:14|unique:users,cpf,' . $id,
+                'cpf' => 'nullable|string|max:14|unique:users,cpf,' . $id,
                 'fantasy_name' => 'nullable|string|max:255',
                 'corporate_name' => 'nullable|string|max:255',
                 'cnpj' => 'nullable|string|max:18|unique:users,cnpj,' . $id,
@@ -95,7 +106,6 @@ class UserController extends Controller
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:2',
                 'country' => 'required|string|max:255',
-
             ]);
 
             if ($validator->fails()) {
@@ -104,8 +114,19 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
 
-            $user->update($data);
+
+
+            DB::transaction(function () use ($user, $data, $roles) {
+
+                $user->update($data);
+
+
+                if (isset($roles[$user->type_id])) {
+                    $user->syncRoles([$roles[$user->type_id]]);
+                }
+            });
             $user->load('type');
+
             Cache::tags('users-list')->flush();
 
             return response($user, 200);
@@ -161,8 +182,42 @@ class UserController extends Controller
 
             $data = $request->all();
 
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255',
+                'cpf' => 'nullable|string|max:14',
+                'fantasy_name' => 'nullable|string|max:255',
+                'corporate_name' => 'nullable|string|max:255',
+                'cnpj' => 'nullable|string|max:18',
+                'cep' => 'required|string|max:9',
+                'address' => 'required|string|max:255',
+                'phone' => 'required|string|max:255',
+                'city' => 'required|string|max:255',
+                'state' => 'required|string|max:2',
+                'country' => 'required|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
+
             $user = User::create($data);
             $user->load('type');
+
+            switch ($user->type_id) {
+                case UserType::where('name', 'Administrador')->first()->id:
+                    $user->assignRole('admin');
+                    break;
+                case UserType::where('name', 'Cliente')->first()->id:
+                    $user->assignRole('client');
+                    break;
+                case UserType::where('name', 'Técnico')->first()->id:
+                    $user->assignRole('technician');
+                    break;
+                case UserType::where('name', 'Atendente')->first()->id:
+                    $user->assignRole('attendant');
+                    break;
+            }
 
             Cache::tags('users-list')->flush();
 

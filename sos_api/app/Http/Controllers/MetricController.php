@@ -262,11 +262,12 @@ class MetricController extends Controller
                     $technicians = $technicianType->users()
                         ->select('users.id', 'users.name')
                         ->withCount(['orders' => function ($query) use ($startDate, $endDate) {
-                            $query->whereBetween('created_at', [$startDate, $endDate]);
+                            $query->where('status_id', 3)->whereBetween('created_at', [$startDate, $endDate]);
                         }])
                         ->withSum(['orders as total_revenue' => function ($query) use ($startDate, $endDate) {
                             $query->whereBetween('created_at', [$startDate, $endDate]);
                         }], 'total_price')
+                        ->orderByDesc('orders_count')
                         ->limit(5)
                         ->get();
 
@@ -316,8 +317,11 @@ class MetricController extends Controller
                 function () use ($startDate, $endDate) {
 
                     $equipments = Equipment::without(['category', 'user'])->with(['orders' => function ($query) use ($startDate, $endDate) {
-                        $query->select('orders.id', 'orders.user_id', 'orders.equipment_id', 'orders.title', 'orders.status_id', 'orders.created_at', 'orders.updated_at');
-                    }])->get();
+                        $query->select('orders.id', 'orders.user_id', 'orders.equipment_id', 'orders.title', 'orders.status_id', 'orders.created_at', 'orders.updated_at')
+                            ->whereBetween('created_at', [$startDate, $endDate]);
+                    }])
+                        ->limit(5)
+                        ->get();
 
                     return $equipments ? $equipments->toArray() : null;
                 }

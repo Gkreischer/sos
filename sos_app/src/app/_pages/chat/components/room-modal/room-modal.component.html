@@ -19,7 +19,6 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      {{ roomForm.value | json }}
       <form
         [formGroup]="roomForm"
         (ngSubmit)="this.roomId ? update() : submit()"

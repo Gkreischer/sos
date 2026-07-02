@@ -6,6 +6,7 @@ use App\Models\UserType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Carbon\Carbon;
 
 class UserSeeder extends Seeder
@@ -40,5 +41,7 @@ class UserSeeder extends Seeder
             ],
 
         ]);
+
+        User::findOrFail(1)->assignRole('admin');
     }
 }

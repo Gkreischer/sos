@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:9003/api',
+  baseUrl: 'http://localhost:9003/api/v1',
   reverbKey: 'dv8upx8egffloafurncb',
   reverbHost: 'localhost',
   reverbPort: 8080,

@@ -33,7 +33,6 @@ import {
   IonicRouteStrategy,
 } from '@ionic/angular/standalone';
 import { errAndLoadingInterceptor } from './app/_interceptors/loading.interceptor';
-import { provideZonelessChangeDetection } from '@angular/core';
 
 registerLocaleData(localePtBr);
 defineCustomElements(window);

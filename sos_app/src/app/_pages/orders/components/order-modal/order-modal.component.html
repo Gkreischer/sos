@@ -187,6 +187,7 @@
                       type="button"
                       (click)="clearSignature()"
                       type="button"
+                      [disabled]="orderReceived"
                     >
                       <ion-icon name="trash"></ion-icon>
                       <ion-label>Limpar assinatura</ion-label>

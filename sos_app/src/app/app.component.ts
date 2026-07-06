@@ -60,6 +60,7 @@ import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
 import { ToastService } from './_services/toast.service';
 import { PhotoService } from './_services/photo.service';
 import { NotificationService } from 'src/app/_services/notification.service';
+import { UserLoginInterface } from './_interfaces/UserLoginInterface';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -203,7 +204,16 @@ export class AppComponent implements OnInit {
     this.user$.subscribe(async (user) => {
       if (user) {
         await this.menuController.open('main');
+        if (user.type.name !== 'Administrador') {
+          this.hideElementsMenuByTypeUser(user);
+        }
       }
+    });
+  }
+
+  hideElementsMenuByTypeUser(user: UserLoginInterface) {
+    this.appPages.filter((page) => {
+      return page.title != 'Relatórios' && page.title != 'Configurações';
     });
   }
 

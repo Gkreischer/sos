@@ -34,9 +34,7 @@ class LoginController extends Controller
             return response([
                 'token' => $userToken,
                 'user' => $user,
-                'type' => UserType::select('name')
-                    ->where('id', $user->type_id)
-                    ->first()
+
             ]);
         } catch (ValidationException $e) {
             return response([

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserType;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -170,7 +171,7 @@ class UserController extends Controller
 
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
                 'cpf' => 'nullable|string|max:14',
                 'fantasy_name' => 'nullable|string|max:255',
                 'corporate_name' => 'nullable|string|max:255',

@@ -175,6 +175,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.signaturePad()!.set('minWidth', 5);
+    this.signaturePad()!.changeBackgroundColor('#61C2FF');
     this.signaturePad()!.clear();
   }
 
@@ -298,6 +299,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       this.getUserEquipments();
       this.disabledSelectForDeliveredStatus();
       this.patchFormTotalPrice();
+      this.signaturePad()?.off();
     });
   }
 

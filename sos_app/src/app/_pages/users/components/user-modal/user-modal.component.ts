@@ -28,6 +28,7 @@ import { MaskitoDirective } from '@maskito/angular';
 import { addIcons } from 'ionicons';
 import { trash } from 'ionicons/icons';
 import { LoadingService } from 'src/app/_services/loading.service';
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
@@ -90,13 +91,18 @@ export class UserModalComponent implements OnInit {
       corporate_name: [''],
       fantasy_name: [''],
       cnpj: ['', [Validators.minLength(18), Validators.maxLength(18)]],
-      cep: ['', [Validators.minLength(9), Validators.maxLength(9)]],
+      cep: [
+        '',
+        [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
+      ],
       city: [''],
       state: ['', [Validators.minLength(2), Validators.maxLength(2)]],
       type_id: ['', [Validators.required]],
       district: [''],
       country: [''],
     });
+
+    this.observeCep();
   }
 
   patchForm() {
@@ -191,12 +197,22 @@ export class UserModalComponent implements OnInit {
     });
   }
 
-  cepChanged(event: CustomEvent) {
-    const cep = event.detail.value;
+  observeCep() {
+    this.userForm
+      .get('cep')
+      ?.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        filter((cep) => cep?.length === 9),
+      )
+      .subscribe((cep) => {
+        this.searchCep(cep);
+      });
+  }
+
+  searchCep(cep: string) {
     this.cepService.getCep(cep).subscribe((res) => {
-      console.log(res);
       this.userForm.patchValue({
-        ...this.userForm.value,
         district: res.bairro,
         city: res.localidade,
         state: res.uf,

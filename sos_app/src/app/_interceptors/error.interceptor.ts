@@ -13,21 +13,33 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
-      const message = err?.error?.message || err?.message || 'Erro interno';
+      const message = getErrorMessage(err.error);
 
       switch (err.status) {
         case 401:
           loginService.logout();
-          break;
+          toastService.presentToast(
+            `${err.status} - ${message}`,
+            'bottom',
+            3000,
+            'danger',
+          );
+          return throwError(() => err);
+
         case 0:
-          toastService.presentToast('Erro crítico', 'bottom', 2000, 'danger');
-          break;
+          toastService.presentToast(
+            'Não foi possível conectar ao servidor.',
+            'bottom',
+            3000,
+            'danger',
+          );
+          return throwError(() => err);
       }
 
       toastService.presentToast(
         `${err.status} - ${message}`,
         'bottom',
-        2000,
+        3000,
         'danger',
       );
 
@@ -35,3 +47,33 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     }),
   );
 };
+
+function getErrorMessage(error: any): string {
+  if (!error) {
+    return 'Erro interno.';
+  }
+
+  if (typeof error.message === 'string') {
+    return error.message;
+  }
+
+  if (typeof error === 'object') {
+    const messages = Object.values(error).reduce<string[]>((acc, value) => {
+      if (Array.isArray(value)) {
+        return [...acc, ...value];
+      }
+
+      if (typeof value === 'string') {
+        return [...acc, value];
+      }
+
+      return acc;
+    }, []);
+
+    if (messages.length) {
+      return messages.join('\n');
+    }
+  }
+
+  return 'Erro interno.';
+}

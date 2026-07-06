@@ -1,11 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import {
-  Camera,
-  CameraResultType,
-  CameraSource,
-  Photo,
-} from '@capacitor/camera';
+import { Camera, CameraDirection, MediaResult, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, WriteFileResult } from '@capacitor/filesystem';
 import { LocalFileInterface } from 'src/app/_interfaces/LocalFileInterface';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
@@ -29,14 +24,12 @@ export class PhotoService {
 
   public async selectImage() {
     // Take a photo
-    const selectedImage = await Camera.getPhoto({
-      resultType: CameraResultType.Uri, // file-based data; provides best performance
-      source: CameraSource.Prompt, // automatically take a new photo with the camera
-      quality: 100, // highest quality (0 to 100)
-      promptLabelCancel: 'Cancelar',
-      promptLabelPhoto: 'Selecionar foto',
-      promptLabelPicture: 'Tirar foto',
-      promptLabelHeader: 'Selecione uma opção',
+    const selectedImage = await Camera.takePhoto({
+      quality: 90,
+      editable: 'in-app', // replaces allowEditing: true
+      cameraDirection: CameraDirection.Rear, // replaces direction
+      targetWidth: 1280, // replaces width (1)
+      targetHeight: 720, // replaces height (1)
     });
 
     if (!selectedImage) {
@@ -47,7 +40,7 @@ export class PhotoService {
     return this.savePicture(selectedImage);
   }
 
-  private async savePicture(photo: Photo) {
+  private async savePicture(photo: MediaResult) {
     // Convert photo to base64 format, required by Filesystem API to save
     const base64Data = await this.readAsBase64(photo);
 
@@ -73,7 +66,7 @@ export class PhotoService {
     };
   }
 
-  private async readAsBase64(photo: Photo) {
+  private async readAsBase64(photo: MediaResult) {
     // Fetch the photo, read as a blob, then convert to base64 format
     const response = await fetch(photo.webPath!);
     const blob = await response.blob();

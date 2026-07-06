@@ -14,11 +14,6 @@ export class NotificationService {
   private echo: Echo<'reverb' | 'pusher'>;
 
   constructor() {
-    console.log({
-      host: environment.reverbHost,
-      port: environment.reverbPort,
-      key: environment.reverbKey,
-    });
     this.echo = new Echo({
       broadcaster: 'pusher',
 

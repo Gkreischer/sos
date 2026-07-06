@@ -7,8 +7,10 @@
     @let loading = loading$ | async;
     <ion-list>
       @if (loading && (!posts || posts.length === 0)) {
-        <ion-item lines="none">
-          <ion-spinner></ion-spinner>
+        <ion-item lines="none" class="ion-text-center">
+          <ion-label>
+            <ion-spinner></ion-spinner>
+          </ion-label>
         </ion-item>
       } @else {
         @for (p of posts; track p.id; let i = $index) {

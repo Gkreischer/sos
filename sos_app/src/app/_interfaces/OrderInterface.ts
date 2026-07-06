@@ -23,6 +23,7 @@ export interface OrderInterface {
   status_id: number;
   status: OrderStatusInterface;
   user: UserInterface;
+  signature: string;
   created_at: Date;
   updated_at: Date;
 }

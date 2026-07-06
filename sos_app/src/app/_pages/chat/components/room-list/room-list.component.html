@@ -8,7 +8,9 @@
     <ion-list>
       @if (isLoading && (!rooms || rooms.length === 0)) {
         <ion-item lines="none">
-          <ion-spinner></ion-spinner>
+          <ion-label class="ion-text-center">
+            <ion-spinner></ion-spinner>
+          </ion-label>
         </ion-item>
       } @else {
         @for (room of rooms; track $index) {

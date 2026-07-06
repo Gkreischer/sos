@@ -40,12 +40,10 @@ import {
   styleUrls: ['./form-login.component.scss'],
   imports: [
     IonButton,
-    IonCardTitle,
     IonCol,
     IonRow,
     IonGrid,
     IonCardContent,
-    IonCardHeader,
     IonImg,
     ReactiveFormsModule,
     AsyncPipe,

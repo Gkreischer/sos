@@ -1,4 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -27,26 +33,76 @@ import { priceMask } from 'src/app/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/services/money.service';
 import { Router } from '@angular/router';
 import { dateMask } from 'src/app/_masks/dateMask';
-import { IonicModule } from '@ionic/angular';
-import { AsyncPipe, JsonPipe, CurrencyPipe } from '@angular/common';
+
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { OrderClientHistoryComponent } from '../order-client-history/order-client-history.component';
+import {
+  SignaturePadComponent,
+  NgSignaturePadOptions,
+} from '@almothafar/angular-signature-pad';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonInput,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonCardHeader,
+  IonCardTitle,
+  IonSelect,
+  IonSelectOption,
+  IonTextarea,
+} from '@ionic/angular/standalone';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
   styleUrls: ['./order-modal.component.scss'],
   imports: [
-    IonicModule,
+    IonCardTitle,
+    IonCardHeader,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
-    JsonPipe,
     CurrencyPipe,
+    SignaturePadComponent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonInput,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonCardHeader,
+    IonCardTitle,
+    IonSelectOption,
+    IonInput,
+    IonSelect,
+    IonTextarea,
   ],
 })
-export class OrderModalComponent implements OnInit {
+export class OrderModalComponent implements OnInit, AfterViewInit {
   modalService = inject(ModalService);
   formBuilder = inject(FormBuilder);
   equipmentService = inject(EquipmentService);
@@ -57,6 +113,7 @@ export class OrderModalComponent implements OnInit {
   router = inject(Router);
   moneyService = inject(MoneyService);
   loadingService = inject(LoadingService);
+  signaturePad = viewChild(SignaturePadComponent);
 
   orderId?: number;
   orderReceived!: OrderInterface;
@@ -72,6 +129,12 @@ export class OrderModalComponent implements OnInit {
 
   priceMask = priceMask;
   dateMask = dateMask;
+
+  public signaturePadOptions: NgSignaturePadOptions = {
+    minWidth: 5,
+    canvasWidth: 500,
+    canvasHeight: 300,
+  };
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
@@ -110,6 +173,30 @@ export class OrderModalComponent implements OnInit {
     return this.totalPartsPrice + this.servicePrice - this.discount;
   }
 
+  ngAfterViewInit() {
+    this.signaturePad()!.set('minWidth', 5);
+    this.signaturePad()!.clear();
+  }
+
+  drawComplete(event: MouseEvent | Touch) {
+    this.orderForm.get('signature')?.setValue(this.signaturePad()?.toDataURL());
+  }
+
+  drawStart(event: MouseEvent | Touch) {
+    // will be notified of szimek/signature_pad's onBegin event
+  }
+
+  drawCleared() {
+    // will be notified when clear() is called on the pad
+  }
+
+  clearSignature() {
+    if (this.signaturePad()?.isEmpty) {
+      this.orderForm.get('signature')?.setValue('');
+      this.signaturePad()?.clear();
+    }
+  }
+
   mountForm() {
     this.orderForm = this.formBuilder.group({
       title: ['', [Validators.required]],
@@ -120,6 +207,7 @@ export class OrderModalComponent implements OnInit {
       status_id: [this.orderId ? this.orderId : 1, [Validators.required]],
       service_description: [''],
       diagnostic: [''],
+      signature: ['', [Validators.required]],
       parts: this.formBuilder.array([]),
       obs: [''],
       service_price: [0],
@@ -202,6 +290,7 @@ export class OrderModalComponent implements OnInit {
           priceMask,
         ),
         discount: maskitoTransform(order.discount.toString(), priceMask),
+        signature: this.signaturePad()?.fromDataURL(order.signature),
       });
       this.clientSelected = order.user;
       this.technicianSelected = order.technician;

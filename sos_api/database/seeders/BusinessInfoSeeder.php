@@ -25,7 +25,7 @@ class BusinessInfoSeeder extends Seeder
             'cep' => '01234567',
             'country' => 'Brasil',
             'website' => 'https://sos.com.br',
-            'image' => 'https://sos.com.br/logo.png'
+            'image' => 'https://picsum.photos/200/300'
         ]);
     }
 }

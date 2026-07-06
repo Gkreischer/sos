@@ -17,8 +17,10 @@
   <ion-grid>
     @if (isLoading && (!messages || messages.length === 0)) {
       <ion-row>
-        <ion-col>
-          <ion-spinner></ion-spinner>
+        <ion-col class="ion-text-center">
+          <ion-label>
+            <ion-spinner></ion-spinner>
+          </ion-label>
         </ion-col>
       </ion-row>
     } @else {

@@ -18,34 +18,34 @@ class Order extends Model
 
     protected $with = ['user', 'equipment', 'orderParts', 'images', 'status', 'technician'];
 
-    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic'];
+    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature'];
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function equipment() : BelongsTo
+    public function equipment(): BelongsTo
     {
         return $this->belongsTo(Equipment::class);
     }
 
-    public function orderParts() : HasMany
+    public function orderParts(): HasMany
     {
         return $this->HasMany(OrderParts::class, 'order_id', 'id');
     }
 
-    public function images() : HasMany
+    public function images(): HasMany
     {
         return $this->hasMany(Image::class);
     }
 
-    public function status() : BelongsTo
+    public function status(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class);
     }
 
-    public function technician() : BelongsTo
+    public function technician(): BelongsTo
     {
         return $this->belongsTo(User::class, 'technician_id', 'id');
     }
@@ -56,5 +56,4 @@ class Order extends Model
         'parts_price' => 'decimal:2',
         'total_price' => 'decimal:2',
     ];
-
 }

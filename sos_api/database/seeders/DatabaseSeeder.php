@@ -18,14 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         $this->call([
+            RolesAndPermissionsSeeder::class,
             UserTypeSeeder::class,
         ]);
 
@@ -49,7 +43,6 @@ class DatabaseSeeder extends Seeder
         Order::factory()->count(200)->create();
 
         $this->call([
-            RolesAndPermissionsSeeder::class,
             BusinessInfoSeeder::class,
             UserSeeder::class,
         ]);

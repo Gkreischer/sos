@@ -82,11 +82,6 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function type()
-    {
-        return $this->belongsTo(UserType::class, 'type_id', 'id');
-    }
-
     public function posts()
     {
         return $this->hasMany(Post::class, 'user_id', 'id');
@@ -95,5 +90,10 @@ class User extends Authenticatable
     public function rooms()
     {
         return $this->hasMany(Room::class, 'created_by');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(UserType::class);
     }
 }

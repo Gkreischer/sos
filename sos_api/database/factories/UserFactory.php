@@ -41,7 +41,7 @@ class UserFactory extends Factory
             'district' => fake()->city(),
             'state' => strtoupper(fake()->lexify('??')),
             'country' => fake()->country(),
-            'image' => fake()->imageUrl(),
+            'image' => 'https://picsum.photos/200/300',
             'type_id' => UserType::all()->random()->id,
 
         ];

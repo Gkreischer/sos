@@ -26,6 +26,7 @@ return new class extends Migration
             $table->decimal('service_price', 10, 2)->default(0.00);
             $table->decimal('total_price', 10, 2)->default(0.00);
             $table->decimal('discount', 10, 2)->default(0.00);
+            $table->mediumText('signature')->nullable();
             $table->timestamps();
         });
     }

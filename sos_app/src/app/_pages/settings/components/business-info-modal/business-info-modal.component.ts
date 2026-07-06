@@ -26,8 +26,6 @@ import {
   IonButton,
   IonIcon,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonContent,
   IonGrid,

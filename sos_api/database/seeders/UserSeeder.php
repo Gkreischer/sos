@@ -42,6 +42,6 @@ class UserSeeder extends Seeder
 
         ]);
 
-        User::findOrFail(1)->assignRole('admin');
+        User::where('name', 'admin')->first()->assignRole('admin');
     }
 }

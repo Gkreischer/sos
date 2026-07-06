@@ -170,6 +170,29 @@
                     ></ion-textarea>
                   </ion-col>
                 </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <signature-pad
+                      [options]="signaturePadOptions"
+                      (drawStart)="drawStart($event)"
+                      (drawEnd)="drawComplete($event)"
+                      (drawClear)="drawCleared()"
+                    />
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-button
+                      expand="block"
+                      type="button"
+                      (click)="clearSignature()"
+                      type="button"
+                    >
+                      <ion-icon name="trash"></ion-icon>
+                      <ion-label>Limpar assinatura</ion-label>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
               </ion-grid>
             </ion-card-content>
           </ion-card>

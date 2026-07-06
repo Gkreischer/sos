@@ -129,8 +129,10 @@
         @let userLogged = this.userLogged$ | async;
         <ion-list>
           @if (isLoading) {
-            <ion-item lines="none">
-              <ion-spinner></ion-spinner>
+            <ion-item lines="none" class="ion-text-center">
+              <ion-label>
+                <ion-spinner></ion-spinner>
+              </ion-label>
             </ion-item>
           } @else {
             @if (users) {

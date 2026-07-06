@@ -16,6 +16,7 @@
     "cypress:run": "cypress run"
   },
   "dependencies": {
+    "@almothafar/angular-signature-pad": "^9.0.0",
     "@angular/animations": "^20.3.22",
     "@angular/cdk": "^20.2.14",
     "@angular/common": "^20.3.22",
@@ -50,15 +51,15 @@
     "chartjs-plugin-zoom": "^2.2.0",
     "ionicons": "^7.4.0",
     "jsbarcode": "^3.12.3",
+    "laravel-echo": "^2.3.7",
     "ng2-charts": "^8.0.0",
     "ngx-print": "^3.2.0",
     "ngx-ui-tour-core": "^15.0.0",
     "ngx-ui-tour-ionic": "^7.0.1",
+    "pusher-js": "^8.5.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.3",
-    "zone.js": "~0.15.1",
-    "laravel-echo": "^2.3.7",
-    "pusher-js": "^8.5.0"
+    "zone.js": "~0.15.1"
   },
   "devDependencies": {
     "@angular-eslint/builder": "^18.2.0",

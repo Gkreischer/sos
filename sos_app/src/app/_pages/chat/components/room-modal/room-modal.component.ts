@@ -78,7 +78,6 @@ import { LoginService } from 'src/app/_services/login.service';
     IonHeader,
     ReactiveFormsModule,
     AsyncPipe,
-    JsonPipe,
     IonSearchbar,
     IonLabel,
     IonSpinner,

@@ -14,11 +14,19 @@ return new class extends Migration
         Schema::create('user_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('role_id')
+                ->constrained('roles')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
             $table->timestamps();
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('type_id')->constrained('user_types');
+            $table->foreignId('type_id')
+                ->constrained('user_types')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
         });
     }
 

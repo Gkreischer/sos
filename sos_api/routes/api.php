@@ -43,7 +43,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::controller(LoginController::class)->group(function () {
                 Route::post('/verify', 'verifyToken');
                 Route::post('/register/technician', 'registerTechnician');
-                Route::post('/logout', 'logout');
+                Route::get('/logout', 'logout');
             });
 
             Route::controller(EquipmentController::class)->group(function () {

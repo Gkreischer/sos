@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -48,7 +48,7 @@ class OrderController extends Controller
 
             $order = DB::transaction(function () use ($id, $request) {
 
-                $order = Order::findOrFail($id);
+                $order = Order::lockForUpdate()->findOrFail($id);
 
                 if ($request->has('parts')) {
 
@@ -198,6 +198,26 @@ class OrderController extends Controller
     {
         try {
             $data = $request->all();
+
+            $validators = Validator::make($data, [
+                'title' => 'required|string|max:255',
+                'user_id' => 'required|integer',
+                'equipment_id' => 'required|integer',
+                'status_id' => 'required|integer',
+                'description' => 'string',
+                'obs' => 'nullable|string',
+                'service_description' => 'nullable|string',
+                'diagnostic' => 'nullable|string',
+                'parts_price' => 'required|numeric|min:0',
+                'service_price' => 'required|numeric|min:0',
+                'total_price' => 'required|numeric|min:0',
+                'discount' => 'required|numeric|min:0',
+                'signature' => 'nullable|string',
+            ]);
+
+            if ($validators->fails()) {
+                return response($validators->errors(), 400);
+            }
 
             $order = Order::create($data);
 

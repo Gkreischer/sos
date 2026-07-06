@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('cnpj')->nullable();
             $table->string('cep');
             $table->string('address');
-            $table->integer('address_number');
+            $table->string('address_number');
             $table->text('image');
             $table->string('phone');
             $table->string('city');

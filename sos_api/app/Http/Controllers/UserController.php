@@ -67,13 +67,6 @@ class UserController extends Controller
 
             $types = UserType::pluck('id', 'name');
 
-            $roles = [
-                $types['Administrador'] => 'admin',
-                $types['Cliente'] => 'client',
-                $types['Técnico'] => 'technician',
-                $types['Atendente'] => 'attendant',
-            ];
-
             if (
                 !empty($data['type_id']) &&
                 is_numeric($data['type_id']) &&
@@ -114,16 +107,9 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
 
-
-
-            DB::transaction(function () use ($user, $data, $roles) {
+            DB::transaction(function () use ($user, $data) {
 
                 $user->update($data);
-
-
-                if (isset($roles[$user->type_id])) {
-                    $user->syncRoles([$roles[$user->type_id]]);
-                }
             });
             $user->load('type');
 
@@ -204,21 +190,6 @@ class UserController extends Controller
             $user = User::create($data);
             $user->load('type');
 
-            switch ($user->type_id) {
-                case UserType::where('name', 'Administrador')->first()->id:
-                    $user->assignRole('admin');
-                    break;
-                case UserType::where('name', 'Cliente')->first()->id:
-                    $user->assignRole('client');
-                    break;
-                case UserType::where('name', 'Técnico')->first()->id:
-                    $user->assignRole('technician');
-                    break;
-                case UserType::where('name', 'Atendente')->first()->id:
-                    $user->assignRole('attendant');
-                    break;
-            }
-
             Cache::tags('users-list')->flush();
 
             return response($user);
@@ -250,7 +221,7 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return response($validator->errors(), 400);
             }
-
+            /** @var \Illuminate\Database\Eloquent\Builder $query */
             $query = User::query();
 
             if (!empty($data['description'])) {

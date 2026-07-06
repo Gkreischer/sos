@@ -34,7 +34,6 @@ import { LoadingService } from 'src/app/_services/loading.service';
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
-    JsonPipe,
   ],
 })
 export class UserInfoModalComponent implements OnInit {

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\UserType;
+use Spatie\Permission\Models\Role;
 
 class UserTypeSeeder extends Seeder
 {
@@ -15,15 +16,21 @@ class UserTypeSeeder extends Seeder
     {
         $types = [
             'admin' => 'Administrador',
-            'client' => 'Cliente',
+            'customer' => 'Cliente',
             'technician' => 'Técnico',
             'attendant' => 'Atendente'
         ];
 
-        foreach ($types as $key => $value) {
-            UserType::create([
-                'name' => $value
-            ]);
+        foreach ($types as $roleName => $typeName) {
+
+            $role = Role::findByName($roleName);
+
+            UserType::updateOrCreate(
+                ['name' => $typeName],
+                [
+                    'role_id' => $role->id,
+                ]
+            );
         }
     }
 }

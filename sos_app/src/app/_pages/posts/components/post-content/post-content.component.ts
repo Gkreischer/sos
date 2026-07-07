@@ -79,9 +79,7 @@ export class PostContentModalComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-    console.log(this.post);
-  }
+  ngOnInit() {}
 
   confirmDelete() {
     this.alertService.presentAlert(

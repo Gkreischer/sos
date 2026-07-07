@@ -31,7 +31,6 @@ export class LoginService {
       .post<UserLoginInterface>(`${environment.baseUrl}/login`, user)
       .pipe(
         tap((res) => {
-          console.log(res);
           res.user ? this.userSubject.next(res.user) : null;
           this.setToken(res.token!);
         }),
@@ -58,9 +57,7 @@ export class LoginService {
           this.notificationService.listen<NotificationInterface>(
             'notifications',
             '.new.notification',
-            (data) => {
-              console.log(data.message);
-            },
+            (data) => {},
           );
         }),
         catchError(this.errorService.handleError),

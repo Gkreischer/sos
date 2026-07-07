@@ -70,7 +70,6 @@ export class PostModalAddEditComponent implements OnInit {
   ngOnInit() {
     this.mountForm();
     if (this.postId) {
-      console.log(this.postId);
       this.getPostById(this.postId);
     }
   }

@@ -18,7 +18,7 @@ class EquipmentController extends Controller
     {
         try {
             // Captura a página atual da requisição (padrão é 1)
-            $page = request()->get('page', 1);
+            $page = request()->input('page', 1);
 
             // Cria uma chave única por página (ex: equipments_page_1, equipments_page_2)
             $cacheKey = 'equipments_page_' . $page;
@@ -99,11 +99,8 @@ class EquipmentController extends Controller
     {
         try {
             $description = trim($request->description ?? '');
-            $page = $request->get('page', 1);
+            $page = $request->input('page', 1);
 
-            // Criamos uma chave dinâmica única baseada no termo de busca e na página
-            // Exemplo de chave no Redis: equipments:filter:notebook:page:1
-            // Se a descrição estiver vazia, fica: equipments:filter:all:page:1
             $searchKey = !empty($description) ? md5($description) : 'all';
             $cacheKey = "equipments:filter:{$searchKey}:page:{$page}";
 

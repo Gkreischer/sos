@@ -235,7 +235,6 @@ export class RoomModalComponent implements OnInit {
   update() {
     const room = this.roomForm.value;
     this.roomService.update(this.roomId, room).subscribe((res) => {
-      console.log(res);
       this.toastService.presentToast(
         'Sala atualizada com sucesso',
         'bottom',
@@ -249,7 +248,6 @@ export class RoomModalComponent implements OnInit {
   submit() {
     const room = this.roomForm.value;
     this.roomService.create(room).subscribe((res) => {
-      console.log(res);
       this.toastService.presentToast(
         'Sala criada com sucesso',
         'bottom',

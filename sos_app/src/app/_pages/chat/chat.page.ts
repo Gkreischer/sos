@@ -81,7 +81,6 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
       'rooms',
       '.new.room',
       (data: RoomInterface) => {
-        console.log('room recebida', data);
         this.roomService.addRoomInList(data);
       },
     );

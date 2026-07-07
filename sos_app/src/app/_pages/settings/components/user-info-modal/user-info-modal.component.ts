@@ -70,7 +70,6 @@ export class UserInfoModalComponent implements OnInit {
     this.loginService.user.subscribe((user) => {
       this.user = this.loginService.user;
       if (user) {
-        console.log(user);
         this.userId = user.id;
         this.userForm.patchValue(user);
       }
@@ -105,8 +104,6 @@ export class UserInfoModalComponent implements OnInit {
     this.userService
       .updateUser(this.userForm.value, this.userId)
       .subscribe((user) => {
-        console.log(user);
-
         this.toastService.presentToast(
           'Usuário atualizado com sucesso',
           'bottom',

@@ -15,7 +15,7 @@ class UserTypeController extends Controller
     {
         try {
 
-            $userTypes = UserType::all();
+            $userTypes = UserType::all('id', 'name');
             return response($userTypes);
         } catch (Exception $e) {
             return response([

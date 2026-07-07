@@ -54,7 +54,6 @@ export class PartService {
       >(`${environment.baseUrl}/parts/filter${page ? `?page=${page}` : ''}`, this.partFilters(), httpOptions)
       .pipe(
         tap((parts) => {
-          console.log(parts);
           if (page && page > 1) {
             return this.partsSubject.next([
               ...this.partsSubject.value,

@@ -63,7 +63,6 @@ export class EquipmentsListComponent implements OnInit {
     this.equipmentService
       .getEquipments(this.equipmentsPage, this.filters())
       .subscribe((res) => {
-        console.log(res);
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }

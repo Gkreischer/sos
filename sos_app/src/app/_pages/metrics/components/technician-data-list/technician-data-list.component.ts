@@ -4,10 +4,10 @@ import { MetricsService } from 'src/app/_services/metrics.service';
 import { IonicModule } from '@ionic/angular';
 import { CurrencyPipe } from '@angular/common';
 @Component({
-    selector: 'app-technician-data-list',
-    templateUrl: './technician-data-list.component.html',
-    styleUrls: ['./technician-data-list.component.scss'],
-    imports: [IonicModule, CurrencyPipe],
+  selector: 'app-technician-data-list',
+  templateUrl: './technician-data-list.component.html',
+  styleUrls: ['./technician-data-list.component.scss'],
+  imports: [IonicModule, CurrencyPipe],
 })
 export class TechnicianDataListComponent implements OnInit {
   metricsService = inject(MetricsService);
@@ -33,8 +33,6 @@ export class TechnicianDataListComponent implements OnInit {
         startDate: this.metricsService.startDate$(),
         endDate: this.metricsService.endDate$(),
       })
-      .subscribe((res) => {
-        console.log(res);
-      });
+      .subscribe();
   }
 }

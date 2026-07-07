@@ -28,7 +28,14 @@ import { MaskitoDirective } from '@maskito/angular';
 import { addIcons } from 'ionicons';
 import { trash } from 'ionicons/icons';
 import { LoadingService } from 'src/app/_services/loading.service';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  switchMap,
+  map,
+  tap,
+} from 'rxjs';
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
@@ -57,6 +64,8 @@ export class UserModalComponent implements OnInit {
   userTypes!: Observable<UserTypeInterface[]>;
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
+  enablePasswordsInput: boolean = false;
+
   userForm!: FormGroup;
 
   cnpjMask = cnpjMask;
@@ -75,7 +84,6 @@ export class UserModalComponent implements OnInit {
     this.mountForm();
     this.getUserTypes();
     if (this.user) {
-      console.log(this.user);
       this.patchForm();
       this.getCategories();
     }
@@ -100,9 +108,12 @@ export class UserModalComponent implements OnInit {
       type_id: ['', [Validators.required]],
       district: [''],
       country: [''],
+      password: [''],
+      password_confirmation: [''],
     });
 
     this.observeCep();
+    this.enableInputPasswordsByUserType();
   }
 
   patchForm() {
@@ -208,6 +219,12 @@ export class UserModalComponent implements OnInit {
       .subscribe((cep) => {
         this.searchCep(cep);
       });
+  }
+
+  enableInputPasswordsByUserType() {
+    this.userForm.get('type_id')?.valueChanges.subscribe((typeId) => {
+      this.enablePasswordsInput = [1, 3, 4].includes(typeId);
+    });
   }
 
   searchCep(cep: string) {

@@ -8,10 +8,10 @@ import { IonicModule } from '@ionic/angular';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
-    selector: 'app-pie-order-by-status-between-periods',
-    templateUrl: './pie-order-by-status-between-periods.component.html',
-    styleUrls: ['./pie-order-by-status-between-periods.component.scss'],
-    imports: [IonicModule, BaseChartDirective],
+  selector: 'app-pie-order-by-status-between-periods',
+  templateUrl: './pie-order-by-status-between-periods.component.html',
+  styleUrls: ['./pie-order-by-status-between-periods.component.scss'],
+  imports: [IonicModule, BaseChartDirective],
 })
 export class PieOrderByStatusBetweenPeriodsComponent implements OnInit {
   metricsService = inject(MetricsService);
@@ -57,7 +57,6 @@ export class PieOrderByStatusBetweenPeriodsComponent implements OnInit {
       endDate: this.metricsService.endDate,
     };
     this.metricsService.getOrderStatusMetrics(period).subscribe((data) => {
-      console.log(data);
       this.applyDataPieChart(Object.keys(data), Object.values(data as any));
     });
   }

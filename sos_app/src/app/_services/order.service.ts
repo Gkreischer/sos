@@ -51,7 +51,6 @@ export class OrderService {
       >(`${environment.baseUrl}/orders/search${page ? `?page=${page}` : ''}`, orderFilter, httpOptions)
       .pipe(
         tap((res) => {
-          console.log(res);
           if (page && page >= 2) {
             this.ordersSubject.next([
               ...this.ordersSubject.getValue(),

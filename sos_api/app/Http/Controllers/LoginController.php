@@ -49,37 +49,6 @@ class LoginController extends Controller
         }
     }
 
-    public function registerTechnician(Request $request)
-    {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
-                'password' => 'required|string|min:8|confirmed',
-                'password_confirmation' => 'required|string|min:8',
-                'phone' => 'string|max:20',
-            ]);
-
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'type_id' => UserType::where('name', 'Técnico')->first()->id,
-                'phone' => $request->phone,
-            ]);
-
-            return response([
-                'message' => 'Técnico criado com sucesso',
-                'token' => $user->createToken($request->name . $request->email)->plainTextToken
-            ]);
-        } catch (\Exception $e) {
-            return response([
-                'message' => 'Não foi possível criar o usuário',
-                'error' => 'Não foi possível criar o usuário',
-            ], 500);
-        }
-    }
-
     public function logout(Request $request)
     {
         $user = $request->user();

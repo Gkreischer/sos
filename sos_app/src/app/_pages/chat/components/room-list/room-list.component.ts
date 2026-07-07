@@ -70,7 +70,6 @@ export class RoomListComponent implements OnInit {
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.roomsPage++;
     this.roomService.getAll(this.roomsPage).subscribe((res) => {
-      console.log(res);
       if (res.current_page >= res.last_page) {
         this.infiniteScroll.set(false);
       }

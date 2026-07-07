@@ -37,21 +37,18 @@ export class NotificationService {
             try {
               const token = await this.getToken();
 
-              const response = await fetch(
-                `${environment.baseUrl.replace(/\/api$/, '')}/broadcasting/auth`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + token.value,
-                    Accept: 'application/json',
-                  },
-                  body: JSON.stringify({
-                    socket_id: socketId,
-                    channel_name: channel.name,
-                  }),
+              const response = await fetch(`${environment.authEndpoint}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: 'Bearer ' + token.value,
+                  Accept: 'application/json',
                 },
-              );
+                body: JSON.stringify({
+                  socket_id: socketId,
+                  channel_name: channel.name,
+                }),
+              });
 
               const data = await response.json();
               callback(null, data);

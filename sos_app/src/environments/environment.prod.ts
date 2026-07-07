@@ -4,6 +4,6 @@ export const environment = {
   reverbKey: 'dv8upx8egffloafurncb',
   reverbHost: 'localhost',
   reverbPort: 8080,
-  authEndpoint: 'http://localhost:8000/broadcasting/auth',
+  authEndpoint: 'http://localhost:9003/broadcasting/auth',
   cepUrl: 'https://viacep.com.br/ws/',
 };

@@ -35,14 +35,11 @@ Route::middleware(['json.response'])->group(function () {
     Route::prefix('v1')->group(function () {
         Route::controller(LoginController::class)->group(function () {
             Route::post('/login', 'login');
-            Route::post('/register/technician', 'registerTechnician');
-            Route::post('/logout', 'logout');
         });
 
-        Route::middleware('auth:sanctum')->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
             Route::controller(LoginController::class)->group(function () {
                 Route::post('/verify', 'verifyToken');
-                Route::post('/register/technician', 'registerTechnician');
                 Route::get('/logout', 'logout');
             });
 
@@ -51,7 +48,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::get('/equipments/{id}', 'show');
                 Route::post('/equipments', 'store');
                 Route::put('/equipments/{id}', 'update');
-                Route::delete('/equipments/{id}', 'destroy');
+                Route::middleware(['role:admin|attendant'])->delete('/equipments/{id}', 'destroy');
                 Route::get('/users/{id}/equipments', 'getUserEquipments');
                 Route::post('/equipments/filter', 'getEquipmentByFilter');
             });
@@ -61,7 +58,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::get('/categories/{id}', 'show');
                 Route::post('/categories', 'store');
                 Route::put('/categories/{id}', 'update');
-                Route::delete('/categories/{id}', 'destroy');
+                Route::middleware(['role:admin|attendant'])->delete('/categories/{id}', 'destroy');
             });
 
             Route::controller(UserController::class)->group(function () {
@@ -69,7 +66,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/users', 'getUsersWithFilter');
                 Route::get('/users/{id}', 'show');
                 Route::put('/users/{id}', 'update');
-                Route::delete('/users/{id}', 'destroy');
+                Route::middleware(['role:admin|attendant'])->delete('/users/{id}', 'destroy');
                 Route::post('/users/add', 'store');
                 Route::post('/user/image/change', 'updateUserAvatarImage');
             });
@@ -104,10 +101,10 @@ Route::middleware(['json.response'])->group(function () {
 
             Route::controller(BusinessInfoController::class)->group(function () {
                 Route::get('/settings/business-info', 'getBusinessInfo');
-                Route::put('/settings/business-info', 'storeBusinessInfo');
+                Route::middleware(['role:admin'])->put('/settings/business-info', 'storeBusinessInfo');
             });
 
-            Route::controller(MetricController::class)->group(function () {
+            Route::middleware('role:admin')->controller(MetricController::class)->group(function () {
                 Route::post('/metrics/orders/year', 'getCountOrderByPeriod');
                 Route::post('/metrics/orders/status', 'getTypeOrderByPeriodMetric');
                 Route::post('/metrics/orders/total-price', 'getTotalPriceOrderByPeriod');

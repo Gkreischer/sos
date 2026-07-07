@@ -58,7 +58,6 @@ export class UsersListComponent implements OnInit {
     this.userService.setUserFilter({
       description: value,
     });
-    console.log(this.userService.userFilter());
   }
 
   getUsers() {

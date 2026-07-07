@@ -103,7 +103,6 @@ export class FormLoginComponent implements OnInit, AfterViewInit {
 
   login() {
     this.loginService.login(this.loginForm.value).subscribe((res) => {
-      console.log(res);
       this.loginData = this.loginService.user;
       this.enableMenu();
       // 1. Recupera a URL que o Guard guardou, ou define '/home' como padrão

@@ -162,6 +162,32 @@
               ></ion-input>
             </ion-col>
           </ion-row>
+          @if (enablePasswordsInput) {
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  label="Senha"
+                  formControlName="password"
+                  placeholder="Senha"
+                  type="password"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  fill="outline"
+                  labelPlacement="floating"
+                  label="Confirmar Senha"
+                  formControlName="password_confirmation"
+                  placeholder="Confirmar Senha"
+                  type="password"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+          }
           <ion-row>
             <ion-col>
               @if (!user) {

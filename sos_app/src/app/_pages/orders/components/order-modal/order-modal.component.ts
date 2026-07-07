@@ -271,7 +271,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     this.equipmentService
       .getUserEquipments(this.clientSelected!)
       .subscribe((equipaments) => {
-        console.log(equipaments);
         this.equipments$ = this.equipmentService.equipments;
       });
   }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserType;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -166,7 +166,6 @@ class UserController extends Controller
     {
 
         try {
-
             $data = $request->all();
 
             $validator = Validator::make($data, [
@@ -175,6 +174,7 @@ class UserController extends Controller
                 'cpf' => 'nullable|string|max:14',
                 'fantasy_name' => 'nullable|string|max:255',
                 'corporate_name' => 'nullable|string|max:255',
+                'type_id' => 'integer|required|exists:user_types,id',
                 'cnpj' => 'nullable|string|max:18',
                 'cep' => 'required|string|max:9',
                 'address' => 'required|string|max:255',
@@ -182,10 +182,16 @@ class UserController extends Controller
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:2',
                 'country' => 'required|string|max:255',
+                'password' => 'nullable|string|min:8|max:255|confirmed',
+                'password_confirmation' => 'nullable|string|min:8|max:255'
             ]);
 
             if ($validator->fails()) {
                 return response($validator->errors(), 400);
+            }
+
+            if (!empty($data['password']) && !empty($data['password_confirmation'])) {
+                $data['password'] = Hash::make($data['password']);
             }
 
             $user = User::create($data);
@@ -206,8 +212,7 @@ class UserController extends Controller
     public function getUsersWithFilter(Request $request)
     {
         try {
-            // Correção: Chamada correta do objeto $request
-            $page = $request->get('page', 1);
+            $page = $request->input('page', 1);
 
             $data = $request->all();
 
@@ -215,14 +220,14 @@ class UserController extends Controller
                 $data,
                 [
                     'description' => 'max:255|string|nullable',
-                    'type_id' => 'nullable|integer' // Correção: 'integer' em vez de 'int' no Laravel
+                    'type_id' => 'nullable|integer'
                 ]
             );
 
             if ($validator->fails()) {
                 return response($validator->errors(), 400);
             }
-            /** @var \Illuminate\Database\Eloquent\Builder $query */
+
             $query = User::query();
 
             if (!empty($data['description'])) {
@@ -248,7 +253,7 @@ class UserController extends Controller
             $cacheKey = "users:filter:{$descriptionFilter}:type:{$typeFilter}:page:{$page}";
 
             $users = Cache::tags('users-list')->remember($cacheKey, now()->addMinutes(5), function () use ($query, $descriptionFilter, $typeFilter) {
-
+                /** @var \Illuminate\Database\Eloquent\Builder $query */
                 return $query->with('type')->paginate(20)->toArray();
             });
 
@@ -264,8 +269,6 @@ class UserController extends Controller
     public function updateUserAvatarImage(Request $request)
     {
         try {
-
-
             if (!isset($request->imagePath)) {
                 return response([
                     'message' => 'Não foi recebida informação da imagem',

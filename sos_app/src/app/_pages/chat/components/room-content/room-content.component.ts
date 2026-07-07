@@ -99,7 +99,6 @@ export class RoomContentComponent implements OnInit {
   ngOnInit() {
     this.mountForm();
     if (this.room) {
-      console.log(this.room);
       this.roomService.getRoomMessages(this.room.id).subscribe();
       this.enterChannelRoom();
     }
@@ -134,7 +133,6 @@ export class RoomContentComponent implements OnInit {
       `room.${this.room!.id}`,
       '.message.sent',
       (data: RoomMessageInterface) => {
-        console.log('mensagem recebida', data);
         this.roomService.addMessageInRoom(data);
       },
     );
@@ -171,7 +169,6 @@ export class RoomContentComponent implements OnInit {
 
   deleteRoom() {
     this.roomService.delete(this.room!.id).subscribe((res) => {
-      console.log(res);
       this.leaveChannelRoom();
       this.roomService.messagesSubject.next([]);
       this.modalService.closeModal();

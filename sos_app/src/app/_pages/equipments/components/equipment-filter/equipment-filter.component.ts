@@ -85,7 +85,6 @@ export class EquipmentFilterComponent implements OnInit {
 
   resetDataOnBlank(event: CustomEvent) {
     let target = event.target as HTMLInputElement;
-    console.log(target.value);
     if (target.value === '') {
       this.equipmentService.setEquipmentFilter(null);
     }

@@ -41,18 +41,16 @@
             </ion-label>
           </ion-item>
         }
-        @if (infiniteScroll()) {
-          <ion-item lines="none">
-            <ion-infinite-scroll
-              (ionInfinite)="onIonInfinite($event)"
-              loadingText="Carregando..."
-              loadingSpinner="bubbles"
-            >
-              <ion-infinite-scroll-content />
-            </ion-infinite-scroll>
-          </ion-item>
-        }
       }
     </ion-list>
   </ion-card-content>
 </ion-card>
+@if (infiniteScroll() && partsList && partsList.length > 0) {
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfinite($event)"
+    loadingText="Carregando..."
+    loadingSpinner="bubbles"
+  >
+    <ion-infinite-scroll-content />
+  </ion-infinite-scroll>
+}

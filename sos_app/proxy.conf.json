@@ -1,0 +1,29 @@
+{
+  "/api": {
+    "target": "http://localhost:9003",
+    "secure": false,
+    "changeOrigin": true
+  },
+
+  "/storage": {
+    "target": "http://localhost:9003",
+    "secure": false,
+    "changeOrigin": true
+  },
+
+  "/broadcasting": {
+    "target": "http://localhost:9003",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/images": {
+    "target": "http://localhost:9003",
+    "secure": false
+  },
+  "/app": {
+    "target": "ws://localhost:8080",
+    "ws": true,
+    "secure": false,
+    "changeOrigin": true
+  }
+}

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\UserType;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,32 +15,29 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-
-        DB::table('users')->insert([
-            [
+        if (!User::where('email', 'admin@localhost')->exists()) {
+            $user = User::create([
                 'name' => 'admin',
                 'email' => 'admin@localhost',
                 'password' => Hash::make('teste123'),
-                'cpf' => '14065716799',
-                'fantasy_name' => 'GK Informática',
-                'corporate_name' => 'GkInfo Serviços',
+                'cpf' => '12312312355',
+                'fantasy_name' => 'SOS Informática',
+                'corporate_name' => 'SOS Informática',
                 'cnpj' => '12345678901234',
                 'type_id' => UserType::where('name', 'Administrador')->first()->id,
-                'address' => 'Travessa X',
+                'address' => 'Endereço',
                 'cep' => '12345678',
                 'phone' => '2212345678957',
-                'district' => 'Centro',
-                'city' => 'São Paulo',
-                'state' => 'SP',
+                'district' => 'Bairro',
+                'city' => 'Cidade',
+                'state' => 'RJ',
                 'country' => 'Brasil',
-                'image' => 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745',
+                'image' => 'images/sos_logo.png',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
+                'updated_at' => Carbon::now(),
+            ]);
 
-        ]);
-
-        User::where('name', 'admin')->first()->assignRole('admin');
+            $user->assignRole('admin');
+        }
     }
 }

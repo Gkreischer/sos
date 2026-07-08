@@ -18,6 +18,7 @@ import {
   IonNote,
   IonAvatar,
   IonImg,
+  IonCardSubtitle,
 } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
@@ -30,6 +31,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
   templateUrl: './room-list.component.html',
   styleUrls: ['./room-list.component.scss'],
   imports: [
+    IonCardSubtitle,
     IonImg,
     IonAvatar,
     IonNote,
@@ -59,7 +61,9 @@ export class RoomListComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadRooms();
+  }
 
   async openRoom(room: RoomInterface) {
     let modal = await this.modalService.openModal(RoomContentComponent, {
@@ -69,11 +73,33 @@ export class RoomListComponent implements OnInit {
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.roomsPage++;
+
+    this.roomService.getAll(this.roomsPage).subscribe({
+      next: (res) => {
+        console.log(res.current_page, res.last_page);
+
+        if (res.current_page >= res.last_page) {
+          this.infiniteScroll.set(false);
+        }
+
+        event.target.complete();
+      },
+      error: () => {
+        event.target.complete();
+      },
+    });
+  }
+
+  private loadRooms() {
+    this.roomsPage = 1;
+    this.infiniteScroll.set(true);
+
     this.roomService.getAll(this.roomsPage).subscribe((res) => {
+      console.log(res.current_page, res.last_page);
+
       if (res.current_page >= res.last_page) {
         this.infiniteScroll.set(false);
       }
-      event.target.complete();
     });
   }
 }

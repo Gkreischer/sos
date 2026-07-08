@@ -1,9 +1,13 @@
 export const environment = {
-  production: false,
-  baseUrl: 'http://localhost:9003/api/v1',
+  production: true,
+  baseUrl: '/api/v1',
+  storageUrl: '/storage',
   reverbKey: 'dv8upx8egffloafurncb',
   reverbHost: 'localhost',
   reverbPort: 8080,
-  authEndpoint: 'http://localhost:c/broadcasting/auth',
+  authEndpoint: '/broadcasting/auth',
   cepUrl: 'https://viacep.com.br/ws/',
+  wsHost: 'localhost',
+  wsPort: 8080,
+  wsScheme: 'ws',
 };

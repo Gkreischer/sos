@@ -1,22 +1,13 @@
-import {
-  Component,
-  inject,
-  Input,
-  OnChanges,
-  OnInit,
-  Signal,
-  signal,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, inject, Signal, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { ModalService } from 'src/app/_services/modal.service';
 import { OrderService } from 'src/app/_services/order.service';
 import { OrderModalComponent } from '../order-modal/order-modal.component';
-import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
+
 import { map } from 'rxjs';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
-import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
+
 import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
 import { effect } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
@@ -40,22 +31,22 @@ export class OrdersListComponent {
 
   isLoading$ = this.loadingService.isLoading$;
   constructor() {
-    effect(() => {
-      if (this.orderFilters() === null) {
-        return;
-      }
+    effect((onCleanup) => {
       const filters = this.orderFilters();
 
       this.ordersPage = 1;
       this.infiniteScroll.set(true);
 
-      this.orderService
+      const subscription = this.orderService
         .getAll(this.ordersPage, filters ?? undefined)
         .subscribe((res) => {
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
         });
+      onCleanup(() => {
+        subscription.unsubscribe();
+      });
     });
   }
 

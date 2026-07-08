@@ -2,31 +2,32 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\UserType;
 use Spatie\Permission\Models\Role;
 
 class UserTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $types = [
             'admin' => 'Administrador',
             'customer' => 'Cliente',
             'technician' => 'Técnico',
-            'attendant' => 'Atendente'
+            'attendant' => 'Atendente',
         ];
 
         foreach ($types as $roleName => $typeName) {
 
-            $role = Role::findByName($roleName);
+            $role = Role::firstOrCreate([
+                'name' => $roleName,
+                'guard_name' => 'web',
+            ]);
 
             UserType::updateOrCreate(
-                ['name' => $typeName],
+                [
+                    'name' => $typeName,
+                ],
                 [
                     'role_id' => $role->id,
                 ]

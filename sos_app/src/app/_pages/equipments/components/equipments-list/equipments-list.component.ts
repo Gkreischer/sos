@@ -30,23 +30,22 @@ export class EquipmentsListComponent implements OnInit {
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const filters = this.filters();
-
-      if (filters === null) {
-        return;
-      }
 
       this.equipmentsPage = 1;
       this.infiniteScroll.set(true);
 
-      this.equipmentService
+      const subscription = this.equipmentService
         .getEquipments(this.equipmentsPage, filters)
         .subscribe((res) => {
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
         });
+      onCleanup(() => {
+        subscription.unsubscribe();
+      });
     });
   }
 

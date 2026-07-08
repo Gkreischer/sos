@@ -32,17 +32,17 @@ export class PartsListComponent implements OnInit {
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {
-    effect(() => {
-      if (this.partFilters() === null) {
-        return;
-      }
+    effect((onCleanup) => {
       this.partsPage = 1;
       this.infiniteScroll.set(true);
-      this.partService.partFilters();
-      this.getParts().subscribe((res) => {
+      const partFilters = this.partService.partFilters();
+      const subscription = this.getParts().subscribe((res) => {
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }
+      });
+      onCleanup(() => {
+        subscription.unsubscribe();
       });
     });
   }

@@ -19,15 +19,16 @@ export class NotificationService {
 
       key: environment.reverbKey,
 
-      wsHost: 'localhost',
-      wsPort: 8080,
-      wssPort: 8080,
+      wsHost: environment.wsHost,
+      wsPort: environment.wsPort,
+      wssPort: environment.wsPort,
+      forceTLS: window.location.protocol === 'https:',
 
-      forceTLS: false,
-      encrypted: false,
+      enabledTransports: ['ws', 'wss'],
+
+      authEndpoint: environment.authEndpoint,
 
       disableStats: true,
-      enabledTransports: ['ws'],
 
       cluster: '',
 
@@ -37,7 +38,7 @@ export class NotificationService {
             try {
               const token = await this.getToken();
 
-              const response = await fetch(`${environment.authEndpoint}`, {
+              const response = await fetch(environment.authEndpoint, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -51,6 +52,7 @@ export class NotificationService {
               });
 
               const data = await response.json();
+
               callback(null, data);
             } catch (err) {
               callback(err as any, null);

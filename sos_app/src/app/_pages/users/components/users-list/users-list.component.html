@@ -53,24 +53,18 @@
             </ion-label>
           </ion-item>
         } @empty {
-          <ion-item>
+          <ion-item lines="none">
             <ion-label>
               <h3>Nenhum usuário encontrado</h3>
             </ion-label>
-          </ion-item>
-        }
-        @if (infiniteScroll()) {
-          <ion-item lines="none">
-            <ion-infinite-scroll
-              (ionInfinite)="onIonInfinite($event)"
-              loadingText="Carregando..."
-              loadingSpinner="bubbles"
-            >
-              <ion-infinite-scroll-content />
-            </ion-infinite-scroll>
           </ion-item>
         }
       }
     </ion-list>
   </ion-card-content>
 </ion-card>
+@if (infiniteScroll() && usersReceived && usersReceived.length > 0) {
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+}

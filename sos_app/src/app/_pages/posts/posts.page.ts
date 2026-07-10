@@ -44,8 +44,6 @@ export class PostsPage implements ViewWillEnter {
   modalService = inject(ModalService);
   constructor() {}
 
-  ngOnInit() {}
-
   ionViewWillEnter() {
     this.postService.getPosts(1).subscribe();
   }

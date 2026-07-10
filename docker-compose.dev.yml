@@ -1,0 +1,105 @@
+name: sos-dev
+
+services:
+  app:
+    image: sos-api-dev:latest
+
+    build:
+      context: .
+      dockerfile: docker/laravel/Dockerfile
+
+    container_name: backend_dev
+
+    env_file:
+      - dev.env
+
+    volumes:
+      - ./sos_api:/var/www/html
+      - ./docker/cont-init.d:/etc/cont-init.d
+
+    expose:
+      - "80"
+
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+    networks:
+      - sos-dev
+
+  nginx:
+    image: sos-frontend-dev:latest
+
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.dev
+
+    container_name: nginx_dev
+
+    ports:
+      - "9003:80"
+
+    depends_on:
+      app:
+        condition: service_healthy
+
+    networks:
+      - sos-dev
+
+  mariadb:
+    image: mariadb:latest
+
+    container_name: mariadb_dev
+
+    env_file:
+      - dev.env
+
+    volumes:
+      - mariadb_dev_data:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb-admin ping -h localhost -uroot -p$$MARIADB_ROOT_PASSWORD --silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+    networks:
+      - sos-dev
+
+  redis:
+    image: redis:latest
+    container_name: redis_dev
+
+    volumes:
+      - redis_dev_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - sos-dev
+
+volumes:
+  mariadb_dev_data:
+  redis_dev_data:
+
+networks:
+  sos-dev:
+    driver: bridge

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
 import { IonicModule, ViewWillEnter } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { CategoryService } from 'src/app/_services/category.service';
   styleUrls: ['./categories.page.scss'],
   imports: [IonicModule, CategoriesListComponent],
 })
-export class CategoriesPage implements OnInit, ViewWillEnter {
+export class CategoriesPage implements ViewWillEnter {
   modalService = inject(ModalService);
   categoriesService = inject(CategoryService);
   constructor() {}
@@ -18,8 +18,6 @@ export class CategoriesPage implements OnInit, ViewWillEnter {
   ionViewWillEnter() {
     this.categoriesService.getCategories().subscribe();
   }
-
-  ngOnInit() {}
 
   openModal() {
     this.modalService.openModal(CategoryModalComponent);

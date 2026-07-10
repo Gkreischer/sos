@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SearchbarCustomEvent, IonicModule } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { PartInterface } from 'src/app/_interfaces/PartInterface';
@@ -13,7 +13,7 @@ import { LoadingService } from 'src/app/_services/loading.service';
   styleUrls: ['./modal-add-part.component.scss'],
   imports: [IonicModule, FormsModule, AsyncPipe, CurrencyPipe],
 })
-export class ModalAddPartComponent implements OnInit {
+export class ModalAddPartComponent {
   modalService = inject(ModalService);
   partService = inject(PartService);
   loadingService = inject(LoadingService);
@@ -22,8 +22,6 @@ export class ModalAddPartComponent implements OnInit {
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {}
-
-  ngOnInit() {}
 
   close() {
     this.modalService.closeModal(null, 'cancel');

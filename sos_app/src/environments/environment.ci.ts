@@ -1,4 +1,12 @@
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:8000/api/v1',
+
+  baseUrl: '/api/v1',
+  storageUrl: '/storage',
+
+  reverbKey: 'dv8upx8egffloafurncb',
+
+  authEndpoint: '/broadcasting/auth',
+
+  cepUrl: 'https://viacep.com.br/ws/',
 };

@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { ChartData } from 'chart.js';
 import { chartTypes } from 'src/app/_charts/chartTypes';
 import { lineChartOptions } from 'src/app/_charts/lineChartOptions';
@@ -7,12 +7,12 @@ import { IonicModule } from '@ionic/angular';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
-    selector: 'app-line-chart-total-price-between-periods',
-    templateUrl: './line-chart-total-price-between-periods.component.html',
-    styleUrls: ['./line-chart-total-price-between-periods.component.scss'],
-    imports: [IonicModule, BaseChartDirective],
+  selector: 'app-line-chart-total-price-between-periods',
+  templateUrl: './line-chart-total-price-between-periods.component.html',
+  styleUrls: ['./line-chart-total-price-between-periods.component.scss'],
+  imports: [IonicModule, BaseChartDirective],
 })
-export class LineChartTotalPriceBetweenPeriodsComponent implements OnInit {
+export class LineChartTotalPriceBetweenPeriodsComponent {
   private metricsService = inject(MetricsService);
 
   lineChartType = chartTypes.line;
@@ -37,8 +37,6 @@ export class LineChartTotalPriceBetweenPeriodsComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() {}
 
   getTotalPriceOrderByPeriod() {
     const period = {

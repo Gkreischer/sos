@@ -13,7 +13,7 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./pie-order-by-status-between-periods.component.scss'],
   imports: [IonicModule, BaseChartDirective],
 })
-export class PieOrderByStatusBetweenPeriodsComponent implements OnInit {
+export class PieOrderByStatusBetweenPeriodsComponent {
   metricsService = inject(MetricsService);
 
   public pieChartPlugins = [ChartDataLabels];
@@ -41,8 +41,6 @@ export class PieOrderByStatusBetweenPeriodsComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() {}
 
   applyDataPieChart(labels: string[], data: number[]) {
     this.pieChartData.labels = labels;

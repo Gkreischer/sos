@@ -23,31 +23,25 @@ class DatabaseSeeder extends Seeder
             UserTypeSeeder::class,
         ]);
 
-        Category::factory()->count(40)->create();
-        User::factory()->count(200)->create();
+        User::factory()->count(100)->create();
+        Category::factory()->count(20)->create();
+        Equipment::factory()->count(100)->create();
 
-        Equipment::factory()->count(200)->create();
-
-        Part::factory()->count(100)->create();
+        Part::factory()->count(50)->create();
 
         $this->call([
-            EquipmentSeeder::class,
-            ImageSeeder::class,
             OrderStatusSeeder::class,
-            OrderSeeder::class,
-            OrderPartSeeder::class,
-
         ]);
 
 
-        Order::factory()->count(200)->create();
+        Order::factory()->count(100)->create();
 
         $this->call([
             BusinessInfoSeeder::class,
             UserSeeder::class,
         ]);
 
-        Post::factory()->count(100)->create();
+        Post::factory()->count(50)->create();
         Room::factory()->count(20)->create();
     }
 }

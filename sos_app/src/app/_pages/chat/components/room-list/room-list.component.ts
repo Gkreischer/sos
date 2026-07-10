@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import {
   IonList,
   IonItem,
-  IonSkeletonText,
   IonLabel,
   IonCard,
   IonCardContent,
@@ -24,7 +23,6 @@ import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { RoomContentComponent } from './../room-content/room-content.component';
-import { effect } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
   selector: 'app-room-list',
@@ -95,8 +93,6 @@ export class RoomListComponent implements OnInit {
     this.infiniteScroll.set(true);
 
     this.roomService.getAll(this.roomsPage).subscribe((res) => {
-      console.log(res.current_page, res.last_page);
-
       if (res.current_page >= res.last_page) {
         this.infiniteScroll.set(false);
       }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
 import { CategoryService } from 'src/app/_services/category.service';
@@ -13,7 +13,7 @@ import { LoadingService } from 'src/app/_services/loading.service';
   styleUrls: ['./categories-list.component.scss'],
   imports: [IonicModule, AsyncPipe],
 })
-export class CategoriesListComponent implements OnInit {
+export class CategoriesListComponent {
   categoryService = inject(CategoryService);
   modalService = inject(ModalService);
   loadingService = inject(LoadingService);
@@ -23,8 +23,6 @@ export class CategoriesListComponent implements OnInit {
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {}
-
-  ngOnInit() {}
 
   openModal(category: CategoryInterface) {
     this.modalService.openModal(CategoryModalComponent, { category: category });

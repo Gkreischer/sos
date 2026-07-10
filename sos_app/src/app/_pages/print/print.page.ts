@@ -1,8 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { OrderPrintComponent } from './components/order-print/order-print.component';
-import { QrcodePrintComponent } from './components/qrcode-print/qrcode-print.component';
 import { BarcodePrintComponent } from './components/barcode-print/barcode-print.component';
 @Component({
   selector: 'app-print',
@@ -15,8 +14,6 @@ import { BarcodePrintComponent } from './components/barcode-print/barcode-print.
     BarcodePrintComponent,
   ],
 })
-export class PrintPage implements OnInit {
+export class PrintPage {
   constructor() {}
-
-  ngOnInit() {}
 }

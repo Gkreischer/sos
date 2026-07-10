@@ -1,14 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PartInterface } from 'src/app/_interfaces/PartInterface';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { PartModalComponent } from '../part-modal/part-modal.component';
-import {
-  InfiniteScrollCustomEvent,
-  IonInfiniteScrollCustomEvent,
-} from '@ionic/core';
-import { PartFilterInterface } from 'src/app/_interfaces/PartFilterInterface';
+import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { effect, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
@@ -19,7 +15,7 @@ import { LoadingService } from 'src/app/_services/loading.service';
   styleUrls: ['./parts-list.component.scss'],
   imports: [IonicModule, AsyncPipe, CurrencyPipe],
 })
-export class PartsListComponent implements OnInit {
+export class PartsListComponent {
   partService = inject(PartService);
   modalService = inject(ModalService);
   loadingService = inject(LoadingService);
@@ -50,8 +46,6 @@ export class PartsListComponent implements OnInit {
   getParts() {
     return this.partService.getParts(this.partsPage);
   }
-
-  ngOnInit() {}
 
   getAll() {
     this.partService.getParts().subscribe(() => {

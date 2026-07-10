@@ -10,6 +10,6 @@ export const environment = {
   authEndpoint: '/broadcasting/auth',
 
   wsHost: window.location.hostname,
-  wsPort: 443,
-  wsScheme: 'wss',
+  wsPort: 8080,
+  wsScheme: 'ws',
 };

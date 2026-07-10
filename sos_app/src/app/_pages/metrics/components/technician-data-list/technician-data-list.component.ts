@@ -9,7 +9,7 @@ import { CurrencyPipe } from '@angular/common';
   styleUrls: ['./technician-data-list.component.scss'],
   imports: [IonicModule, CurrencyPipe],
 })
-export class TechnicianDataListComponent implements OnInit {
+export class TechnicianDataListComponent {
   metricsService = inject(MetricsService);
 
   technicianOrderMetrics$ = this.metricsService.usersOrdersMetrics$;
@@ -24,8 +24,6 @@ export class TechnicianDataListComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() {}
 
   getTechnicianOrderMetrics() {
     this.metricsService

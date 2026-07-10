@@ -1,0 +1,125 @@
+name: sos
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/laravel/Dockerfile
+
+    image: sos-api:latest
+
+    container_name: sos-backend
+
+    restart: unless-stopped
+
+    env_file:
+      - production.env
+
+    ports:
+      - "8080:8080"
+
+    expose:
+      - "80"
+      - "8080"
+
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+    networks:
+      - sos
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+
+    image: sos-frontend:latest
+    container_name: sos-nginx
+    restart: unless-stopped
+
+    ports:
+      - "9003:80"
+
+    depends_on:
+      app:
+        condition: service_healthy
+
+    networks:
+      - sos
+
+  mariadb:
+    image: docker.io/library/mariadb:latest
+    container_name: sos-mariadb
+    restart: unless-stopped
+
+    env_file:
+      - mariadb.env
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - sos
+
+  redis:
+    image: docker.io/library/redis:latest
+    container_name: sos-redis
+    restart: unless-stopped
+
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - sos
+
+  phpmyadmin:
+    image: docker.io/phpmyadmin/phpmyadmin:latest
+    container_name: sos-phpmyadmin
+    restart: unless-stopped
+
+    ports:
+      - "8081:80"
+
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+    networks:
+      - sos
+
+volumes:
+  mariadb_data:
+  redis_data:
+
+networks:
+  sos:
+    driver: bridge

@@ -58,13 +58,13 @@
 
                 <ion-chip
                   [color]="
-                    order.status_id == 1
+                    order.status_id === 1
                       ? 'danger'
-                      : order.status_id == 2
+                      : order.status_id === 2
                         ? 'warning'
-                        : order.status_id == 3
+                        : order.status_id === 3
                           ? 'success'
-                          : order.status_id == 4
+                          : order.status_id === 4
                             ? 'dark'
                             : 'light'
                   "

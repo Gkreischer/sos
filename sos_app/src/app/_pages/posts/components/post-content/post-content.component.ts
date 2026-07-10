@@ -12,7 +12,6 @@ import {
   IonCardHeader,
   IonCard,
   IonCardContent,
-  IonCardSubtitle,
   IonChip,
   IonText,
   IonFab,
@@ -67,7 +66,7 @@ import { ToastService } from 'src/app/_services/toast.service';
     AsyncPipe,
   ],
 })
-export class PostContentModalComponent implements OnInit {
+export class PostContentModalComponent {
   modalService = inject(ModalService);
   loginService = inject(LoginService);
   postService = inject(PostService);
@@ -78,8 +77,6 @@ export class PostContentModalComponent implements OnInit {
   user$: Observable<UserInterface | null> = this.loginService.user;
 
   constructor() {}
-
-  ngOnInit() {}
 
   confirmDelete() {
     this.alertService.presentAlert(

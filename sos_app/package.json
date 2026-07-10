@@ -1,18 +1,20 @@
 {
-  "name": "orcex",
+  "name": "SOS",
   "version": "0.9",
   "author": "Gustavo Kreischer de Almeida",
   "homepage": "https://ionicframework.com/",
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ionic serve --configuration=development",
     "build": "ng build --configuration=production",
+    "build:dev": "ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "dev": "ionic serve --configuration=development",
+    "start:ci": "ng serve --host 0.0.0.0 --port 8100",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
@@ -31,7 +33,7 @@
     "@capacitor/app": "^8.0.0",
     "@capacitor/barcode-scanner": "^3.0.2",
     "@capacitor/camera": "^8.0.0",
-    "@capacitor/core": "^8.0.0",
+    "@capacitor/core": "8.4.1",
     "@capacitor/filesystem": "^8.0.0",
     "@capacitor/haptics": "^8.0.0",
     "@capacitor/keyboard": "^8.0.0",
@@ -63,24 +65,24 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-eslint/builder": "^18.2.0",
-    "@angular-eslint/eslint-plugin": "^18.2.0",
-    "@angular-eslint/eslint-plugin-template": "^18.2.0",
-    "@angular-eslint/schematics": "^18.2.0",
-    "@angular-eslint/template-parser": "^18.2.0",
+    "@angular-eslint/builder": "^20.0.0",
+    "@angular-eslint/eslint-plugin": "^20.0.0",
+    "@angular-eslint/eslint-plugin-template": "^20.0.0",
+    "@angular-eslint/schematics": "^20.0.0",
+    "@angular-eslint/template-parser": "^20.0.0",
     "@angular/build": "^20.3.26",
     "@angular/cli": "^20.3.26",
     "@angular/compiler-cli": "^20.3.22",
     "@angular/language-service": "^20.3.22",
-    "@capacitor/cli": "^8.0.0",
-    "@ionic/angular-toolkit": "^11.0.0",
+    "@capacitor/cli": "8.4.1",
+    "@ionic/angular-toolkit": "^12.3.0",
     "@types/jasmine": "~5.1.4",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "@typescript-eslint/types": "^8.0.0",
     "@typescript-eslint/utils": "^8.0.0",
     "cypress": "15.17.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.11.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
@@ -94,5 +96,12 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "cypress",
+    "esbuild",
+    "lmdb",
+    "msgpackr-extract"
+  ]
 }

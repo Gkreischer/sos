@@ -23,6 +23,4 @@ import { TechnicianDataListComponent } from './components/technician-data-list/t
     TechnicianDataListComponent,
   ],
 })
-export class MetricsPage implements OnInit {
-  ngOnInit(): void {}
-}
+export class MetricsPage {}

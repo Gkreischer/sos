@@ -1,6 +1,39 @@
+# Composer
 composer.phar
-/vendor/
 
-# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
-# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
-# composer.lock
+# Laravel
+sos_api/vendor/
+sos_api/storage/logs/*
+sos_api/storage/framework/cache/*
+sos_api/storage/framework/sessions/*
+sos_api/storage/framework/views/*
+sos_api/storage/framework/testing/*
+sos_api/bootstrap/cache/*.php
+
+# Ambiente
+sos_api/.env
+sos_api/.env.*
+
+# Node
+sos_app/node_modules/
+
+# Build Angular/Ionic
+sos_app/www/
+sos_app/.angular/
+
+# Cypress
+sos_app/cypress/screenshots/
+sos_app/cypress/videos/
+sos_app/cypress/downloads/
+
+# IDEs
+.vscode/
+.idea/
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+mariadb.env
+dev.env
+production.env

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
 import { EquipmentService } from 'src/app/_services/equipment.service';
@@ -17,7 +17,7 @@ import { LoadingService } from 'src/app/_services/loading.service';
   styleUrls: ['./equipments-list.component.scss'],
   imports: [IonicModule, AsyncPipe],
 })
-export class EquipmentsListComponent implements OnInit {
+export class EquipmentsListComponent {
   equipmentService = inject(EquipmentService);
   modalService = inject(ModalService);
   loadingService = inject(LoadingService);
@@ -48,8 +48,6 @@ export class EquipmentsListComponent implements OnInit {
       });
     });
   }
-
-  ngOnInit() {}
 
   openModal(equipment: EquipmentInterface) {
     this.modalService.openModal(EquipmentModalComponent, {

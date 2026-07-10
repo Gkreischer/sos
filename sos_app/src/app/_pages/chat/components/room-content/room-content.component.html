@@ -25,12 +25,12 @@
       </ion-row>
     } @else {
       @for (message of messages; track $index) {
-        <ion-card [color]="message.user_id == user?.id ? 'tertiary' : 'light'">
+        <ion-card [color]="message.user_id === user?.id ? 'tertiary' : 'light'">
           <ion-card-content>
             <ion-list>
               <ion-item
                 lines="none"
-                [color]="message.user_id == user?.id ? 'tertiary' : 'light'"
+                [color]="message.user_id === user?.id ? 'tertiary' : 'light'"
               >
                 <ion-avatar slot="start">
                   <ion-img [src]="message.user.image"></ion-img>
@@ -38,7 +38,7 @@
                 <ion-label>
                   <strong>{{ message.user.name }}</strong>
                   <ion-note
-                    [color]="message.user_id == user?.id ? 'light' : 'dark'"
+                    [color]="message.user_id === user?.id ? 'light' : 'dark'"
                     class="ion-text-wrap"
                   >
                     {{ message.content }}
@@ -46,7 +46,7 @@
                 </ion-label>
                 <div class="metadata-end-wrapper" slot="end">
                   <ion-note
-                    [color]="message.user_id == user?.id ? 'light' : 'dark'"
+                    [color]="message.user_id === user?.id ? 'light' : 'dark'"
                     >06:11</ion-note
                   >
                 </div>

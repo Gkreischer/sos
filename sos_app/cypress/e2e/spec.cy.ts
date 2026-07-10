@@ -129,7 +129,7 @@ describe('App is loaded', () => {
     it('should add a new category successfully', () => {
       cy.intercept('POST', '**/categories', {
         statusCode: 201,
-        body: { id: 1, name: 'Category 1' },
+        body: { name: 'Category 1' },
       }).as('addCategory');
 
       cy.get('ion-fab').click();
@@ -151,27 +151,44 @@ describe('App is loaded', () => {
       cy.get('[data-cy="add-category-modal"]').should('not.exist');
     });
 
+    beforeEach(() => {
+      cy.intercept('GET', '**/categories', {
+        statusCode: 200,
+        body: [
+          {
+            id: 1,
+            name: 'Category 1',
+          },
+        ],
+      }).as('getCategories');
+    });
+
     it('should update a category successfully', () => {
       cy.intercept('PUT', '**/categories/1', {
         statusCode: 200,
         body: { id: 1, name: 'Category 1 - Updated' },
       }).as('updateCategory');
 
-      cy.get('[data-cy="categories-list"] ion-item').eq(0).click();
+      cy.get('[data-cy="categories-list"] ion-item')
+        .contains('Category 1')
+        .click();
+
       cy.get('[data-cy="add-category-modal"]').should('be.visible');
 
-      cy.get('ion-input[formControlName="name"')
+      cy.get('ion-input[formControlName="name"]')
         .find('input')
         .clear()
         .type('Category 1 - Updated');
+
       cy.get('ion-button[type="submit"]').click();
 
       cy.wait('@updateCategory').its('response.statusCode').should('eq', 200);
+
       cy.get('[data-cy="categories-list"]').should('exist');
 
       cy.get('[data-cy="categories-list"] ion-item').should(
         'have.length.at.least',
-        2,
+        1,
       );
 
       cy.get('[data-cy="add-category-modal"]').should('not.exist');

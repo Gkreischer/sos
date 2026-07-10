@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -21,7 +21,7 @@ import { LoadingService } from 'src/app/_services/loading.service';
   styleUrls: ['./users-list.component.scss'],
   imports: [IonicModule, AsyncPipe, FormatPhonePipe],
 })
-export class UsersListComponent implements OnInit {
+export class UsersListComponent {
   userService = inject(UserService);
   modalService = inject(ModalService);
   loadingService = inject(LoadingService);
@@ -66,8 +66,6 @@ export class UsersListComponent implements OnInit {
       this.userService.userFilter(),
     );
   }
-
-  ngOnInit() {}
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.numPage++;

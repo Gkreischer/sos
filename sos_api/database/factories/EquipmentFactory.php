@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Category;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Equipment>
@@ -22,7 +23,7 @@ class EquipmentFactory extends Factory
             'description' => $this->faker->sentence(),
             'obs' => $this->faker->sentence(),
             'user_id' => User::all()->random()->id,
-            'category_id' => $this->faker->numberBetween(1, 20),
+            'category_id' => Category::all()->random()->id,
         ];
     }
 }

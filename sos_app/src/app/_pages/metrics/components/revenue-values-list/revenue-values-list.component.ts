@@ -1,22 +1,17 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { ChartData, ChartType } from 'chart.js';
-import { OrderTotalPriceByStatusInterface } from 'src/app/_interfaces/OrderTotalPriceByStatusInterface';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { IonicModule } from '@ionic/angular';
 import { BaseChartDirective } from 'ng2-charts';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-revenue-values-list',
-    templateUrl: './revenue-values-list.component.html',
-    styleUrls: ['./revenue-values-list.component.scss'],
-    imports: [
-        IonicModule,
-        BaseChartDirective,
-        CurrencyPipe,
-    ],
+  selector: 'app-revenue-values-list',
+  templateUrl: './revenue-values-list.component.html',
+  styleUrls: ['./revenue-values-list.component.scss'],
+  imports: [IonicModule, BaseChartDirective, CurrencyPipe],
 })
-export class RevenueValuesListComponent implements OnInit {
+export class RevenueValuesListComponent {
   metricsService = inject(MetricsService);
 
   totalPriceByStatus$ = this.metricsService.orderTotalPriceByStatus;
@@ -46,8 +41,6 @@ export class RevenueValuesListComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() {}
 
   getDataAndMakePolarAreaGraphic() {
     this.metricsService

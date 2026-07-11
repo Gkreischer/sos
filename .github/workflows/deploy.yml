@@ -1,0 +1,36 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Production
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build containers
+        run: |
+          podman compose build
+
+      - name: Restart containers
+        run: |
+          podman compose up -d
+
+      - name: Run migrations
+        run: |
+          podman exec laravel_app php artisan migrate --force
+
+      - name: Clear Laravel cache
+        run: |
+          podman exec laravel_app php artisan optimize:clear
+          podman exec laravel_app php artisan cache:clear
+
+      - name: Rebuild Laravel cache
+        run: |
+          podman exec laravel_app php artisan optimize

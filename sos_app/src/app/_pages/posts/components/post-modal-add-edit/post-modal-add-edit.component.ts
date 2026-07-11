@@ -15,12 +15,8 @@ import {
   IonButtons,
   IonIcon,
   IonContent,
-  IonText,
   IonCard,
   IonCardContent,
-  IonFab,
-  IonFabButton,
-  IonFabList,
 } from '@ionic/angular/standalone';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PostInterface } from 'src/app/_interfaces/PostInterface';
@@ -28,8 +24,9 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingService } from 'src/app/_services/loading.service';
-import { LoginService } from 'src/app/_services/login.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { addIcons } from 'ionicons';
+import { arrowBack } from 'ionicons/icons';
+
 @Component({
   selector: 'app-post-modal-add-edit',
   standalone: true,
@@ -67,6 +64,10 @@ export class PostModalAddEditComponent implements OnInit {
 
   formPost!: FormGroup;
 
+  constructor() {
+    addIcons({ arrowBack });
+  }
+
   ngOnInit() {
     this.mountForm();
     if (this.postId) {
@@ -94,14 +95,16 @@ export class PostModalAddEditComponent implements OnInit {
   update() {
     this.postService
       .updatePost(this.postId!, this.formPost.value)
-      .subscribe((res) => {
-        this.closeModal();
+      .subscribe((postUpdated) => {
+        console.log('postUpdated', postUpdated);
+
+        this.modalService.closeModal(postUpdated, 'confirm');
       });
   }
 
   submit() {
     this.postService.createPost(this.formPost.value).subscribe((res) => {
-      this.closeModal();
+      this.modalService.closeModal('', 'confirm');
     });
   }
 }

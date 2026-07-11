@@ -10,20 +10,23 @@ export class ModalService {
 
   async openModal(component: any, props?: Object, cssClass?: string) {
     const modal = await this.modalController.create({
-      component: component,
+      component,
       componentProps: props,
-      cssClass: `${cssClass}`,
+      cssClass: cssClass ?? '',
     });
-    modal.present();
+
+    await modal.present();
 
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
       return data;
     }
+
+    return null;
   }
 
-  closeModal(data?: any, role?: 'confirm' | 'cancel') {
-    this.modalController.dismiss(data, role);
+  async closeModal(data?: any, role?: 'confirm' | 'cancel') {
+    await this.modalController.dismiss(data, role);
   }
 }

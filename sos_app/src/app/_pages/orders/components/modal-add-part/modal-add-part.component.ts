@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { SearchbarCustomEvent, IonicModule } from '@ionic/angular';
+import { SearchbarCustomEvent } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { PartInterface } from 'src/app/_interfaces/PartInterface';
 import { ModalService } from 'src/app/_services/modal.service';
@@ -7,11 +7,55 @@ import { PartService } from 'src/app/_services/part.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonContent,
+  IonIcon,
+  IonSearchbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonSpinner,
+  IonNote,
+} from '@ionic/angular/standalone';
+
+import { addIcons } from 'ionicons';
+import { arrowBack, trash } from 'ionicons/icons';
+
 @Component({
   selector: 'app-modal-add-part',
   templateUrl: './modal-add-part.component.html',
   styleUrls: ['./modal-add-part.component.scss'],
-  imports: [IonicModule, FormsModule, AsyncPipe, CurrencyPipe],
+  imports: [
+    IonNote,
+    IonSpinner,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonSearchbar,
+    IonIcon,
+    IonContent,
+    IonButton,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    FormsModule,
+    AsyncPipe,
+    CurrencyPipe,
+  ],
 })
 export class ModalAddPartComponent {
   modalService = inject(ModalService);
@@ -21,7 +65,9 @@ export class ModalAddPartComponent {
   parts$: Observable<PartInterface[] | null> = this.partService.partsSearch;
   isLoading$ = this.loadingService.isLoading$;
 
-  constructor() {}
+  constructor() {
+    addIcons({ arrowBack, trash });
+  }
 
   close() {
     this.modalService.closeModal(null, 'cancel');

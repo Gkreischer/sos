@@ -10,14 +10,41 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
 
 import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
 import { effect } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonCardTitle,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonSpinner,
+  IonChip,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+} from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-orders-list',
   templateUrl: './orders-list.component.html',
   styleUrls: ['./orders-list.component.scss'],
-  imports: [IonicModule, AsyncPipe, DatePipe],
+  imports: [
+    IonInfiniteScrollContent,
+    IonInfiniteScroll,
+    IonChip,
+    IonSpinner,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonCardTitle,
+    IonCardContent,
+    IonCardHeader,
+    IonCard,
+    AsyncPipe,
+    DatePipe,
+  ],
 })
 export class OrdersListComponent {
   orderService = inject(OrderService);

@@ -28,6 +28,8 @@ import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { DatePipe, AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { OrderModalComponent } from '../order-modal/order-modal.component';
+import { addIcons } from 'ionicons';
+import { arrowBack, trash } from 'ionicons/icons';
 @Component({
   selector: 'app-order-client-history',
   templateUrl: './order-client-history.component.html',
@@ -63,7 +65,9 @@ export class OrderClientHistoryComponent implements OnInit {
     this.orderService.clientOrdersHistory$;
 
   isLoading$ = this.loadingService.isLoading$;
-  constructor() {}
+  constructor() {
+    addIcons({ arrowBack, trash });
+  }
 
   ngOnInit() {
     this.getClientOrdersHistory();

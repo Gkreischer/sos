@@ -1,13 +1,38 @@
 import { Component, effect, OnInit } from '@angular/core';
 import { inject } from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
-import { IonicModule } from '@ionic/angular';
 import { CurrencyPipe } from '@angular/common';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonNote,
+} from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-technician-data-list',
   templateUrl: './technician-data-list.component.html',
   styleUrls: ['./technician-data-list.component.scss'],
-  imports: [IonicModule, CurrencyPipe],
+  standalone: true,
+  imports: [
+    IonNote,
+    IonText,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    CurrencyPipe,
+  ],
 })
 export class TechnicianDataListComponent {
   metricsService = inject(MetricsService);

@@ -3,14 +3,28 @@ import { ChartData } from 'chart.js';
 import { chartTypes } from 'src/app/_charts/chartTypes';
 import { lineChartOptions } from 'src/app/_charts/lineChartOptions';
 import { MetricsService } from 'src/app/_services/metrics.service';
-import { IonicModule } from '@ionic/angular';
+
 import { BaseChartDirective } from 'ng2-charts';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-line-chart-total-price-between-periods',
   templateUrl: './line-chart-total-price-between-periods.component.html',
   styleUrls: ['./line-chart-total-price-between-periods.component.scss'],
-  imports: [IonicModule, BaseChartDirective],
+  imports: [
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    BaseChartDirective,
+  ],
 })
 export class LineChartTotalPriceBetweenPeriodsComponent {
   private metricsService = inject(MetricsService);

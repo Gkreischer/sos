@@ -5,17 +5,41 @@ import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { EquipmentModalComponent } from '../equipment-modal/equipment-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
-import { EquipmentFilterInterface } from 'src/app/_interfaces/EquipmentFilterInterface';
 import { effect } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonItem,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonList,
+  IonLabel,
+  IonSpinner,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-equipments-list',
   templateUrl: './equipments-list.component.html',
   styleUrls: ['./equipments-list.component.scss'],
-  imports: [IonicModule, AsyncPipe],
+  imports: [
+    IonInfiniteScrollContent,
+    IonInfiniteScroll,
+    IonSpinner,
+    IonLabel,
+    IonList,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonItem,
+    AsyncPipe,
+  ],
 })
 export class EquipmentsListComponent {
   equipmentService = inject(EquipmentService);

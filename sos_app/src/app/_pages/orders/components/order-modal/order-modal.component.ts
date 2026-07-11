@@ -65,6 +65,15 @@ import {
   IonSelectOption,
   IonTextarea,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  checkmarkDoneSharp,
+  printSharp,
+  trash,
+  arrowBack,
+  close,
+  searchSharp,
+} from 'ionicons/icons';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -139,7 +148,16 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({
+      checkmarkDoneSharp,
+      printSharp,
+      trash,
+      arrowBack,
+      close,
+      searchSharp,
+    });
+  }
 
   ngOnInit() {
     this.getOrderDetailsById();

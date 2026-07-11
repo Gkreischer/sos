@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { MetricFilterComponent } from './metric-filter.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -13,7 +11,7 @@ describe('MetricFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule, MetricFilterComponent],
+    imports: [ MaskitoDirective, ReactiveFormsModule, MetricFilterComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

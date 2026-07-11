@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { BarChartCounterComponent } from './bar-chart-counter.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -18,7 +16,7 @@ describe('BarChartCounterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), BaseChartDirective, BarChartCounterComponent],
+    imports: [ BaseChartDirective, BarChartCounterComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

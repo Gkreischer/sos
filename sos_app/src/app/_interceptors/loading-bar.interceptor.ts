@@ -4,9 +4,10 @@ import { finalize } from 'rxjs';
 
 let requests = 0;
 
-const loadingBar = document.createElement(
-  'ion-progress-bar',
-) as HTMLIonProgressBarElement;
+const loadingBar = document.createElement('ion-progress-bar') as HTMLElement & {
+  type: string;
+  color: string;
+};
 
 loadingBar.type = 'indeterminate';
 loadingBar.color = 'tertiary';

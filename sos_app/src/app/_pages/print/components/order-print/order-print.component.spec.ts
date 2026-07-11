@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { OrderPrintComponent } from './order-print.component';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -13,12 +11,11 @@ describe('OrderPrintComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), NgxPrintDirective, OrderPrintComponent],
+    imports: [ NgxPrintDirective, OrderPrintComponent],
     providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideRouter([]),
-    ],
+        provideRouter([])],
 }).compileComponents();
 
     fixture = TestBed.createComponent(OrderPrintComponent);

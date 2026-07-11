@@ -35,6 +35,8 @@ import { PostService } from 'src/app/_services/post.service';
 import { AlertService } from 'src/app/_services/alert.service';
 import { PostModalAddEditComponent } from '../post-modal-add-edit/post-modal-add-edit.component';
 import { ToastService } from 'src/app/_services/toast.service';
+import { addIcons } from 'ionicons';
+import { arrowBack } from 'ionicons/icons';
 @Component({
   selector: 'app-post-content',
   templateUrl: './post-content.component.html',
@@ -76,7 +78,9 @@ export class PostContentModalComponent {
   post!: PostInterface;
   user$: Observable<UserInterface | null> = this.loginService.user;
 
-  constructor() {}
+  constructor() {
+    addIcons({ arrowBack });
+  }
 
   confirmDelete() {
     this.alertService.presentAlert(
@@ -113,8 +117,18 @@ export class PostContentModalComponent {
     });
   }
 
-  openModalEdit(post: PostInterface) {
-    this.modalService.openModal(PostModalAddEditComponent, { postId: post.id });
+  async openModalEdit(post: PostInterface) {
+    const postUpdated = await this.modalService.openModal(
+      PostModalAddEditComponent,
+      {
+        postId: post.id,
+      },
+    );
+    console.log(postUpdated);
+    if (postUpdated) {
+      this.post = postUpdated;
+      this.closeModal();
+    }
   }
 
   closeModal() {

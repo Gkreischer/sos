@@ -11,13 +11,14 @@ import {
   IonToolbar,
   IonTitle,
   IonButtons,
-  IonButton,
   IonMenuButton,
   IonContent,
   IonIcon,
   IonFab,
   IonFabButton,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { addSharp } from 'ionicons/icons';
 @Component({
   selector: 'app-equipments',
   templateUrl: './equipments.page.html',
@@ -39,7 +40,9 @@ import {
 export class EquipmentsPage implements ViewWillEnter, ViewWillLeave {
   modalService = inject(ModalService);
   equipmentService = inject(EquipmentService);
-  constructor() {}
+  constructor() {
+    addIcons({ addSharp });
+  }
 
   ionViewWillEnter() {
     this.equipmentService.getEquipments().subscribe();

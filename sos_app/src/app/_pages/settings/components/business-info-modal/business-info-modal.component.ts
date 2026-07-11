@@ -13,7 +13,6 @@ import { ModalService } from 'src/app/_services/modal.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { SettingService } from 'src/app/_services/setting.service';
 import { ToastService } from 'src/app/_services/toast.service';
-import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { Observable } from 'rxjs';
 import { LoadingService } from 'src/app/_services/loading.service';
@@ -37,6 +36,8 @@ import {
 } from '@ionic/angular/standalone';
 import { phoneMask } from 'src/app/_masks/phoneMask';
 import { maskitoTransform } from '@maskito/core';
+import { addIcons } from 'ionicons';
+import { camera, arrowBack } from 'ionicons/icons';
 @Component({
   selector: 'app-business-info-modal',
   templateUrl: './business-info-modal.component.html',
@@ -83,7 +84,9 @@ export class BusinessInfoModalComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({ camera, arrowBack });
+  }
 
   ngOnInit() {
     this.mountForm();

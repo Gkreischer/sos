@@ -1,24 +1,23 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { phoneMask } from 'src/app/_masks/phoneMask';
 import { BusinessInfoInterface } from 'src/app/_interfaces/BusinessInfoInterface';
 import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
 import { OrderService } from 'src/app/_services/order.service';
 import { SettingService } from 'src/app/_services/setting.service';
 import { NgxPrintDirective } from 'ngx-print';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
-import { FormatPhonePipe } from 'src/app/_pipes/format-phone.pipe';
 import { UpperCasePipe } from '@angular/common';
+import { IonCard, IonCardContent } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-order-print',
   templateUrl: './order-print.component.html',
   styleUrls: ['./order-print.component.scss'],
   imports: [
+    IonCardContent,
+    IonCard,
     NgxPrintDirective,
-    IonicModule,
     AsyncPipe,
     CurrencyPipe,
     UpperCasePipe,

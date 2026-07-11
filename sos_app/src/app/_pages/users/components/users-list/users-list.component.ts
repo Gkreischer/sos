@@ -4,7 +4,7 @@ import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { ModalService } from 'src/app/_services/modal.service';
 import { UserService } from 'src/app/_services/user.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
-import { InfiniteScrollCustomEvent, IonicModule } from '@ionic/angular';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormatPhonePipe } from '../../../../_pipes/format-phone.pipe';
@@ -14,12 +14,51 @@ import {
   IonSearchbarCustomEvent,
 } from '@ionic/core';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonSearchbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonSpinner,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
-  imports: [IonicModule, AsyncPipe, FormatPhonePipe],
+  imports: [
+    IonInfiniteScrollContent,
+    IonInfiniteScroll,
+    IonSpinner,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonSearchbar,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonIcon,
+    IonButton,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    AsyncPipe,
+    FormatPhonePipe,
+  ],
 })
 export class UsersListComponent {
   userService = inject(UserService);

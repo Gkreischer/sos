@@ -1,26 +1,55 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {} from 'src/app/_masks/dateMask';
 
-import { IonicModule } from '@ionic/angular';
 import { MetricFilterComponent } from './components/metric-filter/metric-filter.component';
 import { BarChartCounterComponent } from './components/bar-chart-order-monthly-year-quantity/bar-chart-counter.component';
 import { PieOrderByStatusBetweenPeriodsComponent } from './components/pie-order-by-status-between-periods/pie-order-by-status-between-periods.component';
 import { LineChartTotalPriceBetweenPeriodsComponent } from './components/line-chart-total-price-between-periods/line-chart-total-price-between-periods.component';
 import { RevenueValuesListComponent } from './components/revenue-values-list/revenue-values-list.component';
 import { TechnicianDataListComponent } from './components/technician-data-list/technician-data-list.component';
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonTitle,
+  IonCardHeader,
+  IonContent,
+  IonCard,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonMenuButton,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-metrics',
   templateUrl: './metrics.page.html',
   styleUrls: ['./metrics.page.scss'],
+  standalone: true,
   imports: [
-    IonicModule,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCard,
+    IonContent,
+    IonCardHeader,
+    IonTitle,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
     MetricFilterComponent,
     BarChartCounterComponent,
     PieOrderByStatusBetweenPeriodsComponent,
     LineChartTotalPriceBetweenPeriodsComponent,
     RevenueValuesListComponent,
     TechnicianDataListComponent,
+    IonMenuButton,
   ],
 })
 export class MetricsPage {}

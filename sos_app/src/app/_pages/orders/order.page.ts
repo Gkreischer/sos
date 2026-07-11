@@ -3,18 +3,38 @@ import { ViewWillEnter } from '@ionic/angular';
 import { ModalService } from 'src/app/_services/modal.service';
 import { OrderModalComponent } from './components/order-modal/order-modal.component';
 
-import { IonicModule } from '@ionic/angular';
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
 import { OrderService } from 'src/app/_services/order.service';
 import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
 import { CodeReaderService } from 'src/app/_services/code-reader.service';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonContent,
+  IonMenuButton,
+  IonFabButton,
+  IonIcon,
+} from '@ionic/angular/standalone';
+
+import { addIcons } from 'ionicons';
+import { addSharp, qrCode } from 'ionicons/icons';
+
 @Component({
   selector: 'app-order',
   templateUrl: './order.page.html',
   styleUrls: ['./order.page.scss'],
   imports: [
-    IonicModule,
+    IonIcon,
+    IonFabButton,
+    IonContent,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonMenuButton,
     OrderFilterComponent,
     OrdersListComponent,
     TourAnchorIonPopoverDirective,
@@ -25,7 +45,9 @@ export class OrderPage implements ViewWillEnter {
   orderService = inject(OrderService);
   barCodeScannerService = inject(CodeReaderService);
 
-  constructor() {}
+  constructor() {
+    addIcons({ addSharp, qrCode });
+  }
 
   ionViewWillEnter() {
     this.orderService.getAll().subscribe();

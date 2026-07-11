@@ -6,14 +6,45 @@ import { PartService } from 'src/app/_services/part.service';
 import { PartModalComponent } from '../part-modal/part-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { effect, inject } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonInfiniteScroll,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonSpinner,
+  IonAvatar,
+  IonImg,
+  IonInfiniteScrollContent,
+} from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-parts-list',
   templateUrl: './parts-list.component.html',
   styleUrls: ['./parts-list.component.scss'],
-  imports: [IonicModule, AsyncPipe, CurrencyPipe],
+  imports: [
+    IonInfiniteScrollContent,
+    IonImg,
+    IonAvatar,
+    IonSpinner,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonInfiniteScroll,
+    AsyncPipe,
+    CurrencyPipe,
+  ],
 })
 export class PartsListComponent {
   partService = inject(PartService);

@@ -16,6 +16,8 @@ import {
   IonFabButton,
   IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { addSharp } from 'ionicons/icons';
 @Component({
   selector: 'app-users',
   templateUrl: './users.page.html',
@@ -37,7 +39,9 @@ import {
 export class UsersPage implements ViewWillEnter, ViewWillLeave {
   modalService = inject(ModalService);
   userService = inject(UserService);
-  constructor() {}
+  constructor() {
+    addIcons({ addSharp });
+  }
 
   ionViewWillEnter() {
     this.userService.getUsers().subscribe();

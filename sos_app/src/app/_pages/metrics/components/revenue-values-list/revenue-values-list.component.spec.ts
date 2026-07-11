@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { RevenueValuesListComponent } from './revenue-values-list.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -17,7 +15,7 @@ describe('RevenueValuesListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), BaseChartDirective, RevenueValuesListComponent],
+    imports: [ BaseChartDirective, RevenueValuesListComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

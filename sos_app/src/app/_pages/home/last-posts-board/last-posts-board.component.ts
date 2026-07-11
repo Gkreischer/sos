@@ -23,6 +23,8 @@ import { LoadingService } from 'src/app/_services/loading.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PostContentModalComponent } from '../../posts/components/post-content/post-content.component';
 import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
+import { addIcons } from 'ionicons';
+import { library } from 'ionicons/icons';
 @Component({
   selector: 'app-user-posts-board',
   templateUrl: './last-posts-board.component.html',
@@ -54,7 +56,9 @@ export class LastPostsBoardComponent {
   lastPosts$: Observable<PostInterface[]> = this.postService.posts$;
   isLoading$ = this.loadingService.isLoading$;
 
-  constructor() {}
+  constructor() {
+    addIcons({ library });
+  }
 
   goToPostsPage() {
     this.router.navigate(['/posts']);

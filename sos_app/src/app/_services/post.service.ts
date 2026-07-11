@@ -51,10 +51,8 @@ export class PostService {
     return this.http
       .put<PostInterface>(`${environment.baseUrl}/posts/${id}`, post)
       .pipe(
-        map((updatedPost) => {
-          const currentPosts = this.posts.value;
-
-          const posts = currentPosts.map((p) =>
+        tap((updatedPost) => {
+          const posts = this.posts.value.map((p) =>
             p.id === updatedPost.id ? updatedPost : p,
           );
 

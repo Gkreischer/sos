@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { UserInterface } from '../_interfaces/UserInterface';
 import { PaginateInterface } from '../_interfaces/PaginateInterface';
 import { EquipmentFilterInterface } from '../_interfaces/EquipmentFilterInterface';
-import { effect } from '@angular/core';
 import { signal } from '@angular/core';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

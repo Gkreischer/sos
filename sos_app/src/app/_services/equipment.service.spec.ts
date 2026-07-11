@@ -83,10 +83,10 @@ describe('EquipmentService', () => {
     const equipmentsPromisse = firstValueFrom(equipments$);
 
     const req = httpTestingController.expectOne((req) => {
-      return req.url.endsWith('/equipments');
+      return req.url.endsWith('/equipments/filter') && req.method === 'POST';
     });
 
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('POST');
 
     req.flush(mockPaginatedEquipments);
 

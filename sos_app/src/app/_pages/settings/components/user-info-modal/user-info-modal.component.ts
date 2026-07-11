@@ -19,21 +19,52 @@ import { MaskitoElementPredicate } from '@maskito/core';
 import { phoneMask } from 'src/app/_masks/phoneMask';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
-
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonCard,
+  IonContent,
+  IonCardContent,
+  IonRow,
+  IonCol,
+  IonImg,
+  IonLabel,
+  IonGrid,
+  IonInput,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { camera, arrowBack } from 'ionicons/icons';
 @Component({
   selector: 'app-user-info-modal',
   templateUrl: './user-info-modal.component.html',
   styleUrls: ['./user-info-modal.component.scss'],
   imports: [
-    IonicModule,
+    IonGrid,
+    IonLabel,
+    IonImg,
+    IonCol,
+    IonRow,
+    IonCardContent,
+    IonContent,
+    IonCard,
+    IonIcon,
+    IonButton,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
+    IonInput,
   ],
 })
 export class UserInfoModalComponent implements OnInit {
@@ -59,7 +90,9 @@ export class UserInfoModalComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({ camera, arrowBack });
+  }
 
   ngOnInit() {
     this.mountForm();

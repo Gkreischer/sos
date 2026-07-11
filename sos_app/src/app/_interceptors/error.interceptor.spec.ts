@@ -1,17 +1,49 @@
 import { TestBed } from '@angular/core/testing';
+import {
+  provideHttpClient,
+  withInterceptors,
+  HttpClient,
+} from '@angular/common/http';
+import {
+  provideHttpClientTesting,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 
 import { errorInterceptor } from './error.interceptor';
+import { ToastService } from '../_services/toast.service';
+import { LoginService } from '../_services/login.service';
 
 describe('ErrorInterceptor', () => {
-  beforeEach(() =>
+  let http: HttpClient;
+  let controller: HttpTestingController;
+
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [errorInterceptor],
-    }),
-  );
+      providers: [
+        provideHttpClient(withInterceptors([errorInterceptor])),
+        provideHttpClientTesting(),
+
+        {
+          provide: ToastService,
+          useValue: {
+            presentToast: jasmine.createSpy('presentToast'),
+          },
+        },
+
+        {
+          provide: LoginService,
+          useValue: {
+            logout: jasmine.createSpy('logout'),
+          },
+        },
+      ],
+    });
+
+    http = TestBed.inject(HttpClient);
+    controller = TestBed.inject(HttpTestingController);
+  });
 
   it('should be created', () => {
-    const interceptor: typeof errorInterceptor =
-      TestBed.inject(errorInterceptor);
-    expect(interceptor).toBeTruthy();
+    expect(errorInterceptor).toBeTruthy();
   });
 });

@@ -1,21 +1,25 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { UserInfoModalComponent } from './user-info-modal.component';
-
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideIonicAngular } from '@ionic/angular/standalone';
 describe('UserInfoModalComponent', () => {
   let component: UserInfoModalComponent;
   let fixture: ComponentFixture<UserInfoModalComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), UserInfoModalComponent]
-}).compileComponents();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [UserInfoModalComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideIonicAngular(),
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(UserInfoModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

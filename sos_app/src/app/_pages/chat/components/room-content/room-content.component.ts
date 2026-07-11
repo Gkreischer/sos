@@ -42,6 +42,8 @@ import { NotificationService } from 'src/app/_services/notification.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { AlertService } from 'src/app/_services/alert.service';
 import { RoomModalComponent } from './../room-modal/room-modal.component';
+import { addIcons } from 'ionicons';
+import { addSharp, trashSharp, pencilSharp, arrowBack } from 'ionicons/icons';
 @Component({
   selector: 'app-room-content',
   templateUrl: './room-content.component.html',
@@ -94,7 +96,9 @@ export class RoomContentComponent implements OnInit {
 
   messages$: Observable<RoomMessageInterface[]> = this.roomService.messages;
 
-  constructor() {}
+  constructor() {
+    addIcons({ addSharp, trashSharp, pencilSharp, arrowBack });
+  }
 
   ngOnInit() {
     this.mountForm();

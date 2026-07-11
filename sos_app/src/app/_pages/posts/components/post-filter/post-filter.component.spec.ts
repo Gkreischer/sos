@@ -1,16 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { PostFilterComponent } from './post-filter.component';
-
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 describe('PostFilterComponent', () => {
   let component: PostFilterComponent;
   let fixture: ComponentFixture<PostFilterComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PostFilterComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [PostFilterComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostFilterComponent);

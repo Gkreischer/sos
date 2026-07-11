@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { BusinessInfoModalComponent } from './business-info-modal.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -8,6 +6,7 @@ import { MaskitoDirective } from '@maskito/angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { provideIonicAngular } from '@ionic/angular/standalone';
 
 describe('BusinessInfoModalComponent', () => {
   let component: BusinessInfoModalComponent;
@@ -19,15 +18,17 @@ describe('BusinessInfoModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [
-        IonicModule.forRoot(),
+      imports: [
+        
         MaskitoDirective,
         ReactiveFormsModule,
         BaseChartDirective,
-        BusinessInfoModalComponent,
-    ],
-    providers: [provideHttpClient(), provideHttpClientTesting()],
-}).compileComponents();
+        BusinessInfoModalComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideIonicAngular()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BusinessInfoModalComponent);
     component = fixture.componentInstance;

@@ -11,15 +11,52 @@ import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { Observable } from 'rxjs';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonFab,
+  IonFabButton,
+  IonInput,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBack, trash } from 'ionicons/icons';
 @Component({
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',
   styleUrls: ['./category-modal.component.scss'],
-  imports: [IonicModule, FormsModule, ReactiveFormsModule, AsyncPipe],
+  imports: [
+    IonFabButton,
+    IonFab,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCard,
+    IonContent,
+    IonIcon,
+    IonButton,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    FormsModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    IonInput,
+  ],
 })
 export class CategoryModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -35,7 +72,9 @@ export class CategoryModalComponent implements OnInit {
 
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
-  constructor() {}
+  constructor() {
+    addIcons({ arrowBack, trash });
+  }
 
   ngOnInit() {
     this.mountForm();

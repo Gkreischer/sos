@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { OrderFilterComponent } from './order-filter.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -13,7 +11,7 @@ describe('OrderFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), MaskitoDirective, ReactiveFormsModule, OrderFilterComponent],
+    imports: [ MaskitoDirective, ReactiveFormsModule, OrderFilterComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

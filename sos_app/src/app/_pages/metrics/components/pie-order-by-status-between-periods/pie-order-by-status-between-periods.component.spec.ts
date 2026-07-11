@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { PieOrderByStatusBetweenPeriodsComponent } from './pie-order-by-status-between-periods.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -17,7 +15,7 @@ describe('PieOrderByStatusBetweenPeriodsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), BaseChartDirective, PieOrderByStatusBetweenPeriodsComponent],
+    imports: [ BaseChartDirective, PieOrderByStatusBetweenPeriodsComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

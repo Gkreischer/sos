@@ -1,14 +1,29 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SettingService } from 'src/app/_services/setting.service';
-import { IonicModule } from '@ionic/angular';
 import { MenuOptionComponent } from './components/menu-option/menu-option.component';
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonContent,
+  IonMenuButton,
+  IonTitle,
+} from '@ionic/angular/standalone';
 
 @Component({
-    selector: 'app-settings',
-    templateUrl: './settings.page.html',
-    styleUrls: ['./settings.page.scss'],
-    imports: [IonicModule, MenuOptionComponent]
+  selector: 'app-settings',
+  templateUrl: './settings.page.html',
+  styleUrls: ['./settings.page.scss'],
+  imports: [
+    IonTitle,
+    IonContent,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
+    MenuOptionComponent,
+    IonMenuButton,
+  ],
 })
 export class SettingsPage implements OnInit {
   settingService = inject(SettingService);

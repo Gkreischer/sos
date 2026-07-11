@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { LineChartTotalPriceBetweenPeriodsComponent } from './line-chart-total-price-between-periods.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -18,7 +16,7 @@ describe('LineChartTotalPriceBetweenPeriodsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), BaseChartDirective, LineChartTotalPriceBetweenPeriodsComponent],
+    imports: [ BaseChartDirective, LineChartTotalPriceBetweenPeriodsComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

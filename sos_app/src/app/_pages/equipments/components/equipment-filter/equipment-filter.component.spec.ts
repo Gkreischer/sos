@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { EquipmentFilterComponent } from './equipment-filter.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -12,7 +10,7 @@ describe('EquipmentFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), ReactiveFormsModule, EquipmentFilterComponent],
+    imports: [ ReactiveFormsModule, EquipmentFilterComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

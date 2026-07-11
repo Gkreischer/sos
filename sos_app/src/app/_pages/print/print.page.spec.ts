@@ -3,20 +3,17 @@ import { PrintPage } from './print.page';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { IonicModule } from '@ionic/angular';
-
 describe('PrintPage', () => {
   let component: PrintPage;
   let fixture: ComponentFixture<PrintPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot()],
+      imports: [],
       providers: [
         provideRouter([]),
         provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+        provideHttpClientTesting()],
     });
     fixture = TestBed.createComponent(PrintPage);
     component = fixture.componentInstance;

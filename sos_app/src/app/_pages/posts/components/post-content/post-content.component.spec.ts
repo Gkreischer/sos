@@ -1,22 +1,25 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { PostContentModalComponent } from './post-content.component';
-
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 describe('PostContentModalComponent', () => {
   let component: PostContentModalComponent;
   let fixture: ComponentFixture<PostContentModalComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [PostContentModalComponent],
-      imports: [IonicModule.forRoot()],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [PostContentModalComponent],
+      providers: [
+        provideIonicAngular(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostContentModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -1,27 +1,33 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  OnInit,
-  signal,
-  ViewChild,
-} from '@angular/core';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { Component, effect, inject, OnInit } from '@angular/core';
+import { ChartData } from 'chart.js';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { Chart } from 'chart.js';
 import { barChartOptions } from 'src/app/_charts/barChartOptions';
 import { chartTypes } from 'src/app/_charts/chartTypes';
-import { IonicModule } from '@ionic/angular';
 import { BaseChartDirective } from 'ng2-charts';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+} from '@ionic/angular/standalone';
+
 Chart.register(zoomPlugin);
 
 @Component({
-    selector: 'app-bar-chart-counter',
-    templateUrl: './bar-chart-counter.component.html',
-    styleUrls: ['./bar-chart-counter.component.scss'],
-    imports: [IonicModule, BaseChartDirective],
+  selector: 'app-bar-chart-counter',
+  templateUrl: './bar-chart-counter.component.html',
+  styleUrls: ['./bar-chart-counter.component.scss'],
+  imports: [
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    BaseChartDirective,
+  ],
 })
 export class BarChartCounterComponent implements OnInit {
   metricsService = inject(MetricsService);

@@ -42,12 +42,21 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ToastService } from 'src/app/_services/toast.service';
 import { LoadingService } from 'src/app/_services/loading.service';
-import { JsonPipe } from '@angular/common';
 import { UserInterface } from 'src/app/_interfaces/UserInterface';
 import { FormArray } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import { IonSpinner } from '@ionic/angular/standalone';
 import { LoginService } from 'src/app/_services/login.service';
+import { addIcons } from 'ionicons';
+import {
+  saveOutline,
+  closeSharp,
+  searchCircle,
+  pencilSharp,
+  close,
+  arrowBack,
+  trash,
+} from 'ionicons/icons';
 @Component({
   selector: 'app-room-modal',
   templateUrl: './room-modal.component.html',
@@ -105,7 +114,17 @@ export class RoomModalComponent implements OnInit {
 
   roomForm!: FormGroup;
 
-  constructor() {}
+  constructor() {
+    addIcons({
+      saveOutline,
+      closeSharp,
+      searchCircle,
+      pencilSharp,
+      close,
+      arrowBack,
+      trash,
+    });
+  }
 
   ngOnInit() {
     this.mountForm();

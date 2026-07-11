@@ -24,6 +24,8 @@ import { NotificationService } from 'src/app/_services/notification.service';
 import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import { RoomInterface } from 'src/app/_interfaces/RoomInterface';
 import { UserService } from 'src/app/_services/user.service';
+import { addIcons } from 'ionicons';
+import { addSharp } from 'ionicons/icons';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
@@ -53,7 +55,9 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
   roomService = inject(RoomService);
   notificationService = inject(NotificationService);
   userService = inject(UserService);
-  constructor() {}
+  constructor() {
+    addIcons({ addSharp });
+  }
 
   ionViewWillEnter() {
     this.getAllRooms();

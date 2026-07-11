@@ -12,20 +12,44 @@ import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderService } from 'src/app/_services/order.service';
 
 import { dateMask } from 'src/app/_masks/dateMask';
-import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonButton,
+  IonSelectOption,
+  IonInput,
+  IonSelect,
+} from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-order-filter',
   templateUrl: './order-filter.component.html',
   styleUrls: ['./order-filter.component.scss'],
   imports: [
-    IonicModule,
+    IonButton,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
+    IonSelectOption,
+    IonInput,
+    IonSelect,
+    IonSelectOption,
   ],
 })
 export class OrderFilterComponent implements OnInit {

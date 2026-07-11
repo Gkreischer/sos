@@ -14,16 +14,60 @@ import { CategoryService } from 'src/app/_services/category.service';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'src/app/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
 import { AlertService } from 'src/app/_services/alert.service';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonSelectOption,
+  IonFab,
+  IonFabButton,
+  IonInput,
+  IonTextarea,
+  IonSelect,
+} from '@ionic/angular/standalone';
+
+import { addIcons } from 'ionicons';
+import { trash, arrowBack } from 'ionicons/icons';
 
 @Component({
   selector: 'app-equipment-modal',
   templateUrl: './equipment-modal.component.html',
   styleUrls: ['./equipment-modal.component.scss'],
-  imports: [IonicModule, FormsModule, ReactiveFormsModule, AsyncPipe],
+  imports: [
+    IonFabButton,
+    IonFab,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCard,
+    IonContent,
+    IonIcon,
+    IonButton,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    FormsModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    IonSelectOption,
+    IonInput,
+    IonTextarea,
+    IonSelect,
+  ],
 })
 export class EquipmentModalComponent implements OnInit {
   modalService = inject(ModalService);
@@ -38,7 +82,9 @@ export class EquipmentModalComponent implements OnInit {
   categories: Observable<CategoryInterface[]> = this.categoryService.categories;
 
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
-  constructor() {}
+  constructor() {
+    addIcons({ trash, arrowBack });
+  }
 
   ngOnInit() {
     this.mountForm();

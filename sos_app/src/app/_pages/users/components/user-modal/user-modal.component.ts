@@ -23,29 +23,57 @@ import { phoneMask } from 'src/app/_masks/phoneMask';
 import { cepMask } from 'src/app/_masks/cepMask';
 import { cpfMask } from 'src/app/_masks/cpfMask';
 import { UserTypeService } from 'src/app/_services/user-type.service';
-import { IonicModule } from '@ionic/angular';
 import { MaskitoDirective } from '@maskito/angular';
 import { addIcons } from 'ionicons';
-import { trash } from 'ionicons/icons';
+import { arrowBack, trash } from 'ionicons/icons';
 import { LoadingService } from 'src/app/_services/loading.service';
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  switchMap,
-  map,
-  tap,
-} from 'rxjs';
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonIcon,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonSelectOption,
+  IonButton,
+  IonFab,
+  IonFabButton,
+  IonSelect,
+  IonInput,
+} from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.scss'],
   imports: [
-    IonicModule,
+    IonFabButton,
+    IonFab,
+    IonButton,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCard,
+    IonContent,
+    IonIcon,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
+    IonSelectOption,
+    IonSelect,
+    IonInput,
   ],
 })
 export class UserModalComponent implements OnInit {
@@ -77,7 +105,7 @@ export class UserModalComponent implements OnInit {
     (el as unknown as HTMLIonInputElement).getInputElement();
 
   constructor() {
-    addIcons({ trash });
+    addIcons({ trash, arrowBack });
   }
 
   ngOnInit() {

@@ -1,15 +1,37 @@
 import { Component, effect, inject } from '@angular/core';
 import { ChartData, ChartType } from 'chart.js';
 import { MetricsService } from 'src/app/_services/metrics.service';
-import { IonicModule } from '@ionic/angular';
 import { BaseChartDirective } from 'ng2-charts';
 import { CurrencyPipe } from '@angular/common';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonText,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-revenue-values-list',
   templateUrl: './revenue-values-list.component.html',
   styleUrls: ['./revenue-values-list.component.scss'],
-  imports: [IonicModule, BaseChartDirective, CurrencyPipe],
+  imports: [
+    IonText,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    BaseChartDirective,
+    CurrencyPipe,
+  ],
 })
 export class RevenueValuesListComponent {
   metricsService = inject(MetricsService);

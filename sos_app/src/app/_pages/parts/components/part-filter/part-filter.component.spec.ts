@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
 import { PartFilterComponent } from './part-filter.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -12,7 +10,7 @@ describe('PartFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [IonicModule.forRoot(), ReactiveFormsModule, PartFilterComponent],
+    imports: [ ReactiveFormsModule, PartFilterComponent],
     providers: [provideHttpClient(), provideHttpClientTesting()],
 }).compileComponents();
 

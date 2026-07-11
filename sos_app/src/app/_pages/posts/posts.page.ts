@@ -18,6 +18,8 @@ import { PostService } from 'src/app/_services/post.service';
 import { inject } from '@angular/core';
 import { ModalService } from 'src/app/_services/modal.service';
 import { PostModalAddEditComponent } from './components/post-modal-add-edit/post-modal-add-edit.component';
+import { addIcons } from 'ionicons';
+import { addSharp } from 'ionicons/icons';
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.page.html',
@@ -42,7 +44,9 @@ import { PostModalAddEditComponent } from './components/post-modal-add-edit/post
 export class PostsPage implements ViewWillEnter {
   postService = inject(PostService);
   modalService = inject(ModalService);
-  constructor() {}
+  constructor() {
+    addIcons({ addSharp });
+  }
 
   ionViewWillEnter() {
     this.postService.getPosts(1).subscribe();

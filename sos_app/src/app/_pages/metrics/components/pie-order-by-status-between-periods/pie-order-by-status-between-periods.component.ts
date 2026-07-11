@@ -4,14 +4,27 @@ import { chartTypes } from 'src/app/_charts/chartTypes';
 import { pieChartOptions } from 'src/app/_charts/pieChartOptions';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { IonicModule } from '@ionic/angular';
 import { BaseChartDirective } from 'ng2-charts';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-pie-order-by-status-between-periods',
   templateUrl: './pie-order-by-status-between-periods.component.html',
   styleUrls: ['./pie-order-by-status-between-periods.component.scss'],
-  imports: [IonicModule, BaseChartDirective],
+  imports: [
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    BaseChartDirective,
+  ],
 })
 export class PieOrderByStatusBetweenPeriodsComponent {
   metricsService = inject(MetricsService);

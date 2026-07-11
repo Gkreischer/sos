@@ -26,21 +26,66 @@ import { PartService } from 'src/app/_services/part.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { priceMask } from 'src/app/_masks/priceMask';
-import { IonicModule } from '@ionic/angular';
 import { AsyncPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { AlertService } from 'src/app/_services/alert.service';
 import { LoadingService } from 'src/app/_services/loading.service';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg,
+  IonLabel,
+  IonSelectOption,
+  IonFab,
+  IonFabButton,
+  IonInput,
+  IonTextarea,
+  IonSelect,
+} from '@ionic/angular/standalone';
+
+import { addIcons } from 'ionicons';
+import { camera, arrowBack, trash } from 'ionicons/icons';
+
 @Component({
   selector: 'app-part-modal',
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
   imports: [
-    IonicModule,
+    IonFabButton,
+    IonFab,
+    IonLabel,
+    IonImg,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonCard,
+    IonContent,
+    IonInput,
+    IonIcon,
+    IonButton,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonSelectOption,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
     AsyncPipe,
+    IonTextarea,
+    IonSelect,
+    IonSelectOption,
   ],
 })
 export class PartModalComponent implements OnInit {
@@ -67,7 +112,9 @@ export class PartModalComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({ camera, arrowBack, trash });
+  }
 
   ngOnInit() {
     this.mountForm();

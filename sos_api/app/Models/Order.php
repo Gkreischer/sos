@@ -16,7 +16,7 @@ class Order extends Model
     use HasFactory;
 
 
-    protected $with = ['user', 'equipment', 'orderParts', 'images', 'status', 'technician'];
+    protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician'];
 
     protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature'];
 
@@ -30,14 +30,9 @@ class Order extends Model
         return $this->belongsTo(Equipment::class);
     }
 
-    public function orderParts(): HasMany
+    public function parts(): HasMany
     {
         return $this->HasMany(OrderParts::class, 'order_id', 'id');
-    }
-
-    public function images(): HasMany
-    {
-        return $this->hasMany(Image::class);
     }
 
     public function status(): BelongsTo
@@ -48,6 +43,11 @@ class Order extends Model
     public function technician(): BelongsTo
     {
         return $this->belongsTo(User::class, 'technician_id', 'id');
+    }
+
+    public function pictures(): HasMany
+    {
+        return $this->hasMany(OrderPicture::class);
     }
 
     protected $casts = [

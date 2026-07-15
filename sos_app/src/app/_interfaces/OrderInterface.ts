@@ -2,7 +2,7 @@ import { EquipmentInterface } from './EquipmentInterface';
 import { OrderStatusInterface } from './OrderStatusInterface';
 import { PartInterface } from './PartInterface';
 import { UserInterface } from './UserInterface';
-
+import { PictureInterface } from './PictureInterface';
 export interface OrderInterface {
   id: number;
   title: string;
@@ -16,7 +16,7 @@ export interface OrderInterface {
   service_price: number;
   service_description: string;
   diagnostic: string;
-  order_parts: PartInterface[];
+  parts: PartInterface[];
   description: string;
   discount: number;
   obs: string;
@@ -24,6 +24,7 @@ export interface OrderInterface {
   status: OrderStatusInterface;
   user: UserInterface;
   signature: string;
+  pictures: PictureInterface[];
   created_at: Date;
   updated_at: Date;
 }

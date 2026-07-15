@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Camera, CameraDirection, MediaResult, Photo } from '@capacitor/camera';
-import { Filesystem, Directory, WriteFileResult } from '@capacitor/filesystem';
+import { Camera, CameraDirection, MediaResult } from '@capacitor/camera';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import { LocalFileInterface } from 'src/app/_interfaces/LocalFileInterface';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -137,5 +137,35 @@ export class PhotoService {
         }
       });
     });
+  }
+
+  async takePicture() {
+    try {
+      const result = (await Camera.takePhoto({
+        quality: 100,
+        includeMetadata: true,
+        targetWidth: 1280,
+        targetHeight: 720,
+      })) satisfies MediaResult;
+
+      if (!result) {
+        return false;
+      }
+
+      return {
+        webPath: result.webPath,
+        format: result.metadata?.format,
+        resolution: result.metadata?.resolution,
+      };
+    } catch (e) {
+      const error = e as any;
+      // error.code contains the structured error code (e.g. 'OS-PLUG-CAMR-0003')
+      // when thrown by the native layer. See the Errors section for all codes.
+      const message = error.code
+        ? `[${error.code}] ${error.message}`
+        : error.message;
+      console.error(message);
+      return;
+    }
   }
 }

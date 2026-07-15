@@ -47,7 +47,9 @@
                 <div class="metadata-end-wrapper" slot="end">
                   <ion-note
                     [color]="message.user_id === user?.id ? 'light' : 'dark'"
-                    >06:11</ion-note
+                    >{{
+                      message.created_at | date: "dd/MM/yyyy - HH:mm"
+                    }}</ion-note
                   >
                 </div>
               </ion-item>

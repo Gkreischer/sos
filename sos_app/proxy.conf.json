@@ -18,7 +18,8 @@
   },
   "/images": {
     "target": "http://localhost:9003",
-    "secure": false
+    "secure": false,
+    "changeOrigin": true
   },
   "/app": {
     "target": "ws://localhost:9003",

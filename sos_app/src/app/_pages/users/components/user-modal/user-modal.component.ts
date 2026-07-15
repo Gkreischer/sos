@@ -28,6 +28,7 @@ import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { UserPasswordModalComponent } from './../user-password-modal/user-password-modal.component';
 import {
   IonHeader,
   IonToolbar,
@@ -136,8 +137,6 @@ export class UserModalComponent implements OnInit {
       type_id: ['', [Validators.required]],
       district: [''],
       country: [''],
-      password: [''],
-      password_confirmation: [''],
     });
 
     this.observeCep();
@@ -251,7 +250,7 @@ export class UserModalComponent implements OnInit {
 
   enableInputPasswordsByUserType() {
     this.userForm.get('type_id')?.valueChanges.subscribe((typeId) => {
-      this.enablePasswordsInput = [1, 3, 4].includes(typeId);
+      this.enablePasswordsInput = [1, 3, 4, 5].includes(typeId);
     });
   }
 
@@ -263,6 +262,12 @@ export class UserModalComponent implements OnInit {
         state: res.uf,
         address: res.logradouro,
       });
+    });
+  }
+
+  openModalChangePassword() {
+    this.modalService.openModal(UserPasswordModalComponent, {
+      userId: this.user.id,
     });
   }
 }

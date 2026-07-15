@@ -289,4 +289,33 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|string|min:8|max:255|confirmed',
+                'password_confirmation' => 'required|string|min:8|max:255'
+            ]);
+
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
+
+            $user->update([
+                'password' => Hash::make($request->password)
+            ]);
+
+            return response([
+                'message' => 'Senha alterada com sucesso'
+            ], 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível alterar a senha',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "cypress": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "cypress/SKILL.md",
+      "computedHash": "08f6f278816397287b2ed6dca6754dcb9c68a45602afd8a6274b249711c36394"
+    }
+  }
+}

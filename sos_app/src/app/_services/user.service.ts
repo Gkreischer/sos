@@ -139,4 +139,14 @@ export class UserService {
         catchError(this.errorService.handleError),
       );
   }
+
+  updateUserPassword(user: UserInterface) {
+    return this.http
+      .put<UserInterface>(
+        `${environment.baseUrl}/user/password`,
+        user,
+        httpOptions,
+      )
+      .pipe(catchError(this.errorService.handleError));
+  }
 }

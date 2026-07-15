@@ -15,6 +15,7 @@ class UserTypeSeeder extends Seeder
             'customer' => 'Cliente',
             'technician' => 'Técnico',
             'attendant' => 'Atendente',
+            'contract' => 'Contrato',
         ];
 
         foreach ($types as $roleName => $typeName) {

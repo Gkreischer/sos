@@ -17,10 +17,8 @@ import {
   IonRow,
   IonCard,
   IonCardContent,
-  IonCardHeader,
   IonAvatar,
   IonImg,
-  IonCardSubtitle,
   IonNote,
   IonFab,
   IonFabButton,
@@ -76,6 +74,7 @@ import { addSharp, trashSharp, pencilSharp, arrowBack } from 'ionicons/icons';
     IonLabel,
     IonItem,
     IonList,
+    DatePipe,
   ],
 })
 export class RoomContentComponent implements OnInit {
@@ -118,6 +117,7 @@ export class RoomContentComponent implements OnInit {
     this.roomService
       .sendRoomMessage(this.room!.id, this.form.value.content)
       .subscribe((res) => {
+        console.log(res);
         this.form.reset();
       });
   }

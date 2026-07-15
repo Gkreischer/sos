@@ -81,6 +81,7 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
   }
 
   listenPrivateChannel() {
+    console.log('entrou');
     this.notificationService.listenPrivate<RoomInterface>(
       'rooms',
       '.new.room',

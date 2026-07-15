@@ -7,6 +7,7 @@ import { ErrorService } from './error.service';
 import { OrderFilterInterface } from '../_interfaces/OrderFilterInterface';
 import { PaginateInterface } from '../_interfaces/PaginateInterface';
 import { inject } from '@angular/core';
+import { PictureInterface } from '../_interfaces/PictureInterface';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -101,14 +102,41 @@ export class OrderService {
       );
   }
 
-  create(order: OrderInterface) {
+  create(order: OrderInterface, pictures: PictureInterface[]) {
+    const formData = new FormData();
+
+    console.log(order);
+    console.log(pictures);
+
+    Object.entries(order).forEach(([key, value]) => {
+      if (key === 'parts' || key === 'pictures') {
+        return;
+      }
+
+      formData.append(key, String(value ?? ''));
+    });
+
+    order.parts.forEach((part, index) => {
+      formData.append(`parts[${index}][id]`, String(part.id));
+      formData.append(`parts[${index}][quantity]`, String(part.quantity));
+      formData.append(`parts[${index}][price]`, String(part.price));
+    });
+
+    pictures.forEach((picture, index) => {
+      formData.append(
+        'pictures[]',
+        picture.blob,
+        `picture-${index}.${picture.format ?? 'jpg'}`,
+      );
+    });
+
     return this.http
-      .post<OrderInterface>(`${environment.baseUrl}/orders`, order, httpOptions)
+      .post<OrderInterface>(`${environment.baseUrl}/orders`, formData)
       .pipe(
         tap((res) => {
-          let orders = this.ordersSubject.getValue();
-          orders = [res, ...orders];
-          this.ordersSubject.next(orders);
+          const orders = this.ordersSubject.getValue();
+
+          this.ordersSubject.next([res, ...orders]);
           this.orderSubject.next(res);
         }),
         catchError(this.errorService.handleError),

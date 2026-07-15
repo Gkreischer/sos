@@ -39,7 +39,7 @@
               </tbody>
             </table>
           </div>
-          <div class="logo-image" style="width: 125px; height: 125px">
+          <div class="logo-image" style="max-width: 125px">
             <img src="{{ info.image }}" />
           </div>
         </div>
@@ -70,7 +70,7 @@
         }
         <h2><strong>Peças ou material</strong></h2>
         <br />
-        @if (order.order_parts.length > 0) {
+        @if (order.parts.length > 0) {
           <table width="100%" border="1px">
             <thead>
               <tr>
@@ -81,7 +81,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (part of order.order_parts; track part.id) {
+              @for (part of order.parts; track part.id) {
                 <tr>
                   <td>{{ part.name }}</td>
                   <td>x {{ part.quantity }}</td>

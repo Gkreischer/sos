@@ -69,6 +69,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::middleware(['role:admin|attendant'])->delete('/users/{id}', 'destroy');
                 Route::post('/users/add', 'store');
                 Route::post('/user/image/change', 'updateUserAvatarImage');
+                Route::put('/user/password', 'changePassword');
             });
 
             Route::controller(OrderController::class)->group(function () {

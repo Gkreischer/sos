@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\OrderParts;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
@@ -59,7 +58,7 @@ class OrderController extends Controller
                         ->toArray();
 
                     // Remove peças que não existem mais
-                    $order->orderParts()
+                    $order->parts()
                         ->when(!empty($ids), function ($query) use ($ids) {
                             $query->whereNotIn('id', $ids);
                         })
@@ -72,7 +71,7 @@ class OrderController extends Controller
                     // Atualiza ou cria peças
                     foreach ($request->parts as $part) {
 
-                        $order->orderParts()->updateOrCreate(
+                        $order->parts()->updateOrCreate(
                             [
                                 'id' => $part['id'] ?? null,
                             ],
@@ -94,7 +93,7 @@ class OrderController extends Controller
                 $order->load(
                     'user',
                     'equipment',
-                    'orderParts',
+                    'parts',
                     'images',
                     'status'
                 );
@@ -142,7 +141,7 @@ class OrderController extends Controller
                     'status:id,name'
                 ])
                 // Filtro por status
-                ->when(isset($status_id) && $status_id !== '', function ($query) use ($status_id) {
+                ->when(isset($status_id) && $status_id != 0, function ($query) use ($status_id) {
                     $query->where('orders.status_id', $status_id);
                 })
 
@@ -196,39 +195,69 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'user_id' => 'required|integer',
+            'equipment_id' => 'required|integer',
+            'status_id' => 'required|integer',
+
+            'description' => 'nullable|string',
+            'obs' => 'nullable|string',
+            'service_description' => 'nullable|string',
+            'diagnostic' => 'nullable|string',
+
+            'parts_price' => 'required|numeric|min:0',
+            'service_price' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0',
+            'discount' => 'required|numeric|min:0',
+
+            'signature' => 'nullable|string',
+            'parts' => 'nullable|array',
+            'parts.*.part_id' => 'required|integer',
+            'parts.*.quantity' => 'required|integer|min:1',
+            'parts.*.price' => 'required|numeric|min:0',
+            'pictures' => 'nullable|array',
+            'pictures.*' => 'image',
+        ]);
+
+        $storedPictures = [];
+
         try {
-            $data = $request->all();
 
-            $validators = Validator::make($data, [
-                'title' => 'required|string|max:255',
-                'user_id' => 'required|integer',
-                'equipment_id' => 'required|integer',
-                'status_id' => 'required|integer',
-                'description' => 'string',
-                'obs' => 'nullable|string',
-                'service_description' => 'nullable|string',
-                'diagnostic' => 'nullable|string',
-                'parts_price' => 'required|numeric|min:0',
-                'service_price' => 'required|numeric|min:0',
-                'total_price' => 'required|numeric|min:0',
-                'discount' => 'required|numeric|min:0',
-                'signature' => 'nullable|string',
-            ]);
+            $order = DB::transaction(function () use ($request, $data, &$storedPictures) {
 
-            if ($validators->fails()) {
-                return response($validators->errors(), 400);
+                $order = Order::create($data);
+
+                if ($request->hasFile('pictures')) {
+
+                    foreach ($request->file('pictures') as $picture) {
+
+                        $path = $picture->store("orders/{$order->id}", 'public');
+
+                        $publicPath = Storage::url($path);
+
+                        $order->pictures()->create([
+                            'path' => $publicPath,
+                        ]);
+                    }
+                }
+
+                return $order->fresh();
+            });
+
+            return response($order, 201);
+        } catch (\Throwable $e) {
+
+            // Remove arquivos que ficaram no disco
+            foreach ($storedPictures as $path) {
+                Storage::disk('public')->delete($path);
             }
 
-            $order = Order::create($data);
-
-            $order->load(['status', 'technician', 'user', 'equipment']);
-
-            return response($order);
-        } catch (Exception $e) {
-            return response([
-                'message' => 'Não foi possível criar a ordem de serviço',
-                'error' => $e->getMessage()
-            ], 404);
+            return response()->json([
+                'message' => 'Não foi possível criar a ordem de serviço.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 

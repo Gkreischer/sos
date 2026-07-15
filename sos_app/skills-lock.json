@@ -13,6 +13,12 @@
       "skillPath": "angular-new-app/SKILL.md",
       "computedHash": "d9f712544847ab80ef7ed20043820afd275c394ca05340c2f20a0f051e35d945"
     },
+    "cypress": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "cypress/SKILL.md",
+      "computedHash": "08f6f278816397287b2ed6dca6754dcb9c68a45602afd8a6274b249711c36394"
+    },
     "ionic-angular": {
       "source": "capawesome-team/skills",
       "sourceType": "github",

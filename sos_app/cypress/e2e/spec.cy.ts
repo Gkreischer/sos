@@ -414,199 +414,248 @@ describe('App is loaded', () => {
   });
 
   describe('Settings Tests', () => {
-    beforeEach(() => {
-      cy.login();
-      cy.visit('/configuracoes');
+      beforeEach(() => {
+        cy.login();
+        cy.visit('/configuracoes');
 
-      cy.intercept('GET', '**/settings/business-info*').as('getBusinessInfo');
+        cy.intercept('GET', '**/settings/business-info*').as('getBusinessInfo');
 
-      cy.intercept('PUT', '**/settings/business-info*', {
-        statusCode: 200,
-        body: {
-          id: 1,
-          name: 'SOS',
-          cnpj: '12345678901234',
-          cep: '12345678',
-          address: 'Rua teste',
-          city: 'São Paulo',
-          state: 'SP',
-          country: 'Brasil',
-          phone: '123456789',
-          image: 'https://picsum.photos/200/300',
-          website: 'https://sos.org.br',
-        },
-      }).as('updateBusinessInfo');
+        cy.intercept('PUT', '**/settings/business-info*', {
+          statusCode: 200,
+          body: {
+            id: 1,
+            name: 'SOS',
+            cnpj: '12345678901234',
+            cep: '12345678',
+            address: 'Rua teste',
+            city: 'São Paulo',
+            state: 'SP',
+            country: 'Brasil',
+            phone: '123456789',
+            image: 'https://picsum.photos/200/300',
+            website: 'https://sos.org.br',
+          },
+        }).as('updateBusinessInfo');
 
-      cy.intercept('PUT', '**/users/**', {
-        statusCode: 200,
-        body: {
-          id: 1,
-          name: 'SOS',
-          email: 'teste@teste.com',
-          cpf: '12345678901',
-          fantasy_name: 'SOS',
-          corporate_name: 'SOS',
-          cnpj: '12345678901234',
-          cep: '12345678',
-          address: 'Rua teste',
-          phone: '123456789',
-          city: 'São Paulo',
-          state: 'SP',
-          country: 'Brasil',
-          password: '12345678',
-          confirmPassword: '12345678',
-        },
-      }).as('updateUserInfo');
+        cy.intercept('PUT', '**/users/**', {
+          statusCode: 200,
+          body: {
+            id: 1,
+            name: 'SOS',
+            email: 'teste@teste.com',
+            cpf: '12345678901',
+            fantasy_name: 'SOS',
+            corporate_name: 'SOS',
+            cnpj: '12345678901234',
+            cep: '12345678',
+            address: 'Rua teste',
+            phone: '123456789',
+            city: 'São Paulo',
+            state: 'SP',
+            country: 'Brasil',
+            password: '12345678',
+            confirmPassword: '12345678',
+          },
+        }).as('updateUserInfo');
+      });
+
+      it('should navigate to settings page successfully', () => {
+        cy.url().should('include', '/configuracoes');
+        cy.get('[data-cy="settings-page"]').should('be.visible');
+      });
+      it('should display business info modal and update the data', () => {
+        cy.get('#business-info-button').should('be.visible').click();
+        cy.get('[data-cy="business-info-modal"]').should('be.visible');
+
+        cy.get('ion-input[formControlName="name"]')
+          .find('input')
+          .clear()
+          .type('SOS');
+
+        cy.get('ion-input[formControlName="cnpj"]')
+          .find('input')
+          .clear()
+          .type('12345678901234');
+
+        cy.get('ion-input[formControlName="email"]')
+          .find('input')
+          .clear()
+          .type('teste@teste.com');
+
+        cy.get('ion-input[formControlName="website"]')
+          .find('input')
+          .clear()
+          .type('https://sos.org.br');
+
+        cy.get('ion-input[formControlName="phone"]')
+          .find('input')
+          .clear()
+          .type('123456789');
+
+        cy.get('ion-input[formControlName="address"]')
+          .find('input')
+          .clear()
+          .type('Rua teste');
+
+        cy.get('ion-input[formControlName="address_number"]')
+          .find('input')
+          .clear()
+          .type('123');
+
+        cy.get('ion-input[formControlName="cep"]')
+          .find('input')
+          .clear()
+          .type('12345678');
+
+        cy.get('ion-input[formControlName="city"]')
+          .find('input')
+          .clear()
+          .type('São Paulo');
+
+        cy.get('ion-input[formControlName="state"]')
+          .find('input')
+          .clear()
+          .type('SP');
+
+        cy.get('ion-input[formControlName="country"]')
+          .find('input')
+          .clear()
+          .type('Brasil');
+
+        cy.get(
+          '[data-cy="business-info-modal"] ion-button[type="submit"]',
+        ).click();
+
+        cy.wait('@updateBusinessInfo')
+          .its('response.statusCode')
+          .should('eq', 200);
+
+        cy.get('ion-toast[color="success"]').should('exist');
+
+        cy.get('[data-cy="close-modal"]').click();
+        cy.get('[data-cy="business-info-modal"]').should('not.exist');
+      });
+      it('should display user info modal and update the data', () => {
+        cy.get('#user-info-button').should('be.visible').click();
+        cy.get('[data-cy="user-info-modal"]').should('be.visible');
+
+        cy.get('ion-input[formControlName="name"]')
+          .find('input')
+          .clear()
+          .type('SOS');
+
+        cy.get('ion-input[formControlName="email"]')
+          .find('input')
+          .clear()
+          .type('teste@teste.com');
+
+        cy.get('ion-input[formControlName="cpf"]')
+          .find('input')
+          .clear()
+          .type('12345678901');
+
+        cy.get('ion-input[formControlName="fantasy_name"]')
+          .find('input')
+          .clear()
+          .type('SOS');
+
+        cy.get('ion-input[formControlName="corporate_name"]')
+          .find('input')
+          .clear()
+          .type('SOS');
+
+        cy.get('ion-input[formControlName="cnpj"]')
+          .find('input')
+          .clear()
+          .type('12345678901234');
+
+        cy.get('ion-input[formControlName="cep"]')
+          .find('input')
+          .clear()
+          .type('12345678');
+
+        cy.get('ion-input[formControlName="address"]')
+          .find('input')
+          .clear()
+          .type('Rua teste');
+
+        cy.get('ion-input[formControlName="phone"]')
+          .find('input')
+          .clear()
+          .type('123456789');
+
+        cy.get('ion-input[formControlName="city"]')
+          .find('input')
+          .clear()
+          .type('São Paulo');
+
+        cy.get('ion-input[formControlName="state"]')
+          .find('input')
+          .clear()
+          .type('SP');
+
+        cy.get('ion-input[formControlName="country"]')
+          .find('input')
+          .clear()
+          .type('Brasil');
+
+        cy.get('[data-cy="user-info-modal"] ion-button[type="submit"]').click();
+
+        cy.wait('@updateUserInfo').its('response.statusCode').should('eq', 200);
+
+        cy.get('ion-toast[color="success"]').should('exist');
+
+        cy.get('[data-cy="close-modal"]').click();
+        cy.get('[data-cy="user-info-modal"]').should('not.exist');
+      });
     });
 
-    it('should navigate to settings page successfully', () => {
-      cy.url().should('include', '/configuracoes');
-      cy.get('[data-cy="settings-page"]').should('be.visible');
-    });
-    it('should display business info modal and update the data', () => {
-      cy.get('#business-info-button').should('be.visible').click();
-      cy.get('[data-cy="business-info-modal"]').should('be.visible');
+    describe('Users Tests', () => {
+        beforeEach(() => {
+          cy.intercept('POST', '**/users', {
+            statusCode: 200,
+            body: {
+              current_page: 1,
+              data: [
+                {
+                  id: 1,
+                  name: 'Cliente 1',
+                  type_id: 1,
+                  type: {
+                    id: 1,
+                    name: 'Cliente',
+                  },
+                  phone: '11999999999',
+                },
+              ],
+              per_page: 20,
+              total: 1,
+              last_page: 1,
+            },
+          }).as('getUsers');
 
-      cy.get('ion-input[formControlName="name"]')
-        .find('input')
-        .clear()
-        .type('SOS');
+          cy.login();
+          cy.visit('/usuarios');
 
-      cy.get('ion-input[formControlName="cnpj"]')
-        .find('input')
-        .clear()
-        .type('12345678901234');
+          cy.wait('@getUsers');
+        });
 
-      cy.get('ion-input[formControlName="email"]')
-        .find('input')
-        .clear()
-        .type('teste@teste.com');
+        it('should navigate to users page successfully', () => {
+          cy.url().should('include', '/usuarios');
+          cy.get('[data-cy="users-page"]').should('be.visible');
+        });
 
-      cy.get('ion-input[formControlName="website"]')
-        .find('input')
-        .clear()
-        .type('https://sos.org.br');
+        it('should display users list with at least one item', () => {
+          cy.get('[data-cy="users-list"]').should('exist');
 
-      cy.get('ion-input[formControlName="phone"]')
-        .find('input')
-        .clear()
-        .type('123456789');
+          cy.get('[data-cy="users-list"] ion-item').should(
+            'have.length.at.least',
+            1,
+          );
+        });
 
-      cy.get('ion-input[formControlName="address"]')
-        .find('input')
-        .clear()
-        .type('Rua teste');
-
-      cy.get('ion-input[formControlName="address_number"]')
-        .find('input')
-        .clear()
-        .type('123');
-
-      cy.get('ion-input[formControlName="cep"]')
-        .find('input')
-        .clear()
-        .type('12345678');
-
-      cy.get('ion-input[formControlName="city"]')
-        .find('input')
-        .clear()
-        .type('São Paulo');
-
-      cy.get('ion-input[formControlName="state"]')
-        .find('input')
-        .clear()
-        .type('SP');
-
-      cy.get('ion-input[formControlName="country"]')
-        .find('input')
-        .clear()
-        .type('Brasil');
-
-      cy.get(
-        '[data-cy="business-info-modal"] ion-button[type="submit"]',
-      ).click();
-
-      cy.wait('@updateBusinessInfo')
-        .its('response.statusCode')
-        .should('eq', 200);
-
-      cy.get('ion-toast[color="success"]').should('exist');
-
-      cy.get('[data-cy="close-modal"]').click();
-      cy.get('[data-cy="business-info-modal"]').should('not.exist');
-    });
-    it('should display user info modal and update the data', () => {
-      cy.get('#user-info-button').should('be.visible').click();
-      cy.get('[data-cy="user-info-modal"]').should('be.visible');
-
-      cy.get('ion-input[formControlName="name"]')
-        .find('input')
-        .clear()
-        .type('SOS');
-
-      cy.get('ion-input[formControlName="email"]')
-        .find('input')
-        .clear()
-        .type('teste@teste.com');
-
-      cy.get('ion-input[formControlName="cpf"]')
-        .find('input')
-        .clear()
-        .type('12345678901');
-
-      cy.get('ion-input[formControlName="fantasy_name"]')
-        .find('input')
-        .clear()
-        .type('SOS');
-
-      cy.get('ion-input[formControlName="corporate_name"]')
-        .find('input')
-        .clear()
-        .type('SOS');
-
-      cy.get('ion-input[formControlName="cnpj"]')
-        .find('input')
-        .clear()
-        .type('12345678901234');
-
-      cy.get('ion-input[formControlName="cep"]')
-        .find('input')
-        .clear()
-        .type('12345678');
-
-      cy.get('ion-input[formControlName="address"]')
-        .find('input')
-        .clear()
-        .type('Rua teste');
-
-      cy.get('ion-input[formControlName="phone"]')
-        .find('input')
-        .clear()
-        .type('123456789');
-
-      cy.get('ion-input[formControlName="city"]')
-        .find('input')
-        .clear()
-        .type('São Paulo');
-
-      cy.get('ion-input[formControlName="state"]')
-        .find('input')
-        .clear()
-        .type('SP');
-
-      cy.get('ion-input[formControlName="country"]')
-        .find('input')
-        .clear()
-        .type('Brasil');
-
-      cy.get('[data-cy="user-info-modal"] ion-button[type="submit"]').click();
-
-      cy.wait('@updateUserInfo').its('response.statusCode').should('eq', 200);
-
-      cy.get('ion-toast[color="success"]').should('exist');
-
-      cy.get('[data-cy="close-modal"]').click();
-      cy.get('[data-cy="user-info-modal"]').should('not.exist');
-    });
-  });
+        it('should display add button for new users', () => {
+          cy.get('ion-fab').should('be.visible');
+        });
+      });
 });

@@ -64,7 +64,9 @@ import {
   IonSelect,
   IonSelectOption,
   IonTextarea,
+  IonImg,
 } from '@ionic/angular/standalone';
+import { JsonPipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import {
   checkmarkDoneSharp,
@@ -73,12 +75,16 @@ import {
   arrowBack,
   close,
   searchSharp,
+  add,
 } from 'ionicons/icons';
+import { PhotoService } from 'src/app/_services/photo.service';
+import { PictureInterface } from 'src/app/_interfaces/PictureInterface';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
   styleUrls: ['./order-modal.component.scss'],
   imports: [
+    IonImg,
     IonCardTitle,
     IonCardHeader,
     FormsModule,
@@ -123,6 +129,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   moneyService = inject(MoneyService);
   loadingService = inject(LoadingService);
   signaturePad = viewChild(SignaturePadComponent);
+  photoService = inject(PhotoService);
 
   orderId?: number;
   orderReceived!: OrderInterface;
@@ -156,6 +163,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       arrowBack,
       close,
       searchSharp,
+      add,
     });
   }
 
@@ -226,14 +234,29 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       status_id: [this.orderId ? this.orderId : 1, [Validators.required]],
       service_description: [''],
       diagnostic: [''],
-      signature: ['', [Validators.required]],
+      signature: [''],
       parts: this.formBuilder.array([]),
       obs: [''],
       service_price: [0],
       parts_price: [0],
       total_price: [0],
       discount: [0],
+      pictures: this.formBuilder.array([]),
     });
+  }
+
+  get pictures() {
+    return this.orderForm.get('pictures') as FormArray;
+  }
+
+  addPicture(picture: PictureInterface) {
+    this.pictures.push(
+      this.formBuilder.group({
+        webPath: [picture.webPath, Validators.required], // preview
+        blob: [picture.blob, Validators.required], // upload
+        format: [picture.format],
+      }),
+    );
   }
 
   disabledSelectForDeliveredStatus() {
@@ -270,6 +293,19 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     });
   }
 
+  addPictures(pictures: PictureInterface[]) {
+    if (pictures.length === 0) return;
+
+    pictures.forEach((picture) => {
+      this.pictures.push(
+        this.formBuilder.group({
+          path: [picture.path],
+          id: [picture.id],
+        }),
+      );
+    });
+  }
+
   addPart(part: PartInterface) {
     this.parts.push(
       this.formBuilder.group({
@@ -299,6 +335,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     }
 
     this.orderService.getById(this.orderId).subscribe((order) => {
+      console.log(order);
       this.orderReceived = order;
 
       this.orderForm.patchValue({
@@ -312,7 +349,8 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       });
       this.clientSelected = order.user;
       this.technicianSelected = order.technician;
-      this.addParts(order.order_parts);
+      this.addParts(order.parts);
+      this.addPictures(order.pictures);
       this.getUserEquipments();
       this.disabledSelectForDeliveredStatus();
       this.patchFormTotalPrice();
@@ -346,15 +384,17 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   }
 
   submit() {
-    this.orderService.create(this.orderForm.value).subscribe((order) => {
-      this.toastService.presentToast(
-        'Ordem criada com sucesso',
-        'bottom',
-        4000,
-        'success',
-      );
-      this.closeModal();
-    });
+    this.orderService
+      .create(this.orderForm.value, this.pictures.value)
+      .subscribe((order) => {
+        this.toastService.presentToast(
+          'Ordem criada com sucesso',
+          'bottom',
+          4000,
+          'success',
+        );
+        this.closeModal();
+      });
   }
 
   update() {
@@ -453,5 +493,23 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   print() {
     this.closeModal();
     this.router.navigate(['/imprimir', this.orderId]);
+  }
+
+  async takePicture() {
+    const picture = await this.photoService.takePicture();
+
+    console.log(picture);
+
+    if (!picture) {
+      return;
+    }
+
+    const blob = await fetch(picture.webPath!).then((r) => r.blob());
+
+    this.addPicture({
+      webPath: picture.webPath!,
+      blob,
+      format: picture.format,
+    });
   }
 }

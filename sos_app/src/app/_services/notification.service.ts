@@ -20,7 +20,7 @@ export class NotificationService {
       key: environment.reverbKey,
 
       wsHost: environment.wsHost,
-      wsPort: Number(window.location.port) || 80,
+      wsPort: 8080,
       forceTLS: environment.wsScheme === 'wss',
 
       enabledTransports: environment.wsScheme === 'wss' ? ['wss'] : ['ws'],

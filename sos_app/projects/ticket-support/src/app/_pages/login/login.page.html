@@ -1,0 +1,54 @@
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" sizeLg="4">
+        <ion-card style="margin-top: 10rem">
+          <ion-card-header>
+            <ion-card-title>Login</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <form [formGroup]="form" (ngSubmit)="login()">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-input
+                      type="text"
+                      placeholder="Email"
+                      formControlName="email"
+                      fill="outline"
+                      labelPlacement="floating"
+                      label="Email"
+                    ></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-input
+                      type="password"
+                      placeholder="Senha"
+                      formControlName="password"
+                      fill="outline"
+                      labelPlacement="floating"
+                      label="Senha"
+                    ></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-button
+                      type="submit"
+                      color="primary"
+                      expand="block"
+                      [disabled]="form.invalid"
+                      >Entrar</ion-button
+                    >
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

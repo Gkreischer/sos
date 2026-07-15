@@ -43,8 +43,6 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    // 1. CORREÇÃO: BrowserModule REMOVIDO daqui. Não é necessário em aplicações Standalone!
-
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideCharts(withDefaultRegisterables()),
@@ -63,18 +61,14 @@ bootstrapApplication(AppComponent, {
       const token = await prefs.get('_t');
       if (token?.value) {
         try {
-          // firstValueFrom transforma o seu Observable do HTTP em uma Promise
-          // fazendo o Angular esperar a resposta da API antes do F5 terminar
           await firstValueFrom(loginService.verifyToken(token.value));
         } catch (err) {
-          // Opcional: deletar o token inválido aqui para limpar o storage
           await prefs.remove('_t');
           loginService.logout(); // Garante que o estado de login seja limpo
         }
       }
     }),
-    // 2. Estratégia de rotas do Ionic e localização PT-BR
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Dica: mude para 'pt-BR' para evitar problemas com moedas/datas brasileiras
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],
 }).catch((err) => console.error(err));

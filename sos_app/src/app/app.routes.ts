@@ -88,4 +88,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./_pages/chat/chat.page').then((m) => m.ChatPage),
   },
+  {
+    path: 'chamados',
+    loadComponent: () =>
+      import('./_pages/tickets/tickets.page').then((m) => m.TicketsPage),
+    canActivate: [loginGuard],
+  },
 ];

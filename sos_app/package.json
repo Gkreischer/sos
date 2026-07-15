@@ -16,7 +16,9 @@
     "dev": "ionic serve --configuration=development",
     "start:ci": "ng serve --host 0.0.0.0 --port 8100",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "start:tickets": "ionic serve --port=9004 --project=ticket-support --configuration=development",
+    "build:all": "bun run build && ionic build ticket-support"
   },
   "dependencies": {
     "@almothafar/angular-signature-pad": "^9.0.0",

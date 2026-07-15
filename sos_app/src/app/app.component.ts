@@ -55,6 +55,7 @@ import {
   trashSharp,
   chevronUpCircle,
   qrCode,
+  contractSharp,
 } from 'ionicons/icons';
 import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
 import { ToastService } from './_services/toast.service';
@@ -131,6 +132,13 @@ export class AppComponent implements OnInit {
       tourAnchor: 'menu.os',
     },
     {
+      title: 'Chamados',
+      url: '/chamados',
+      icon: 'contract',
+      id: 'button-sidebar-chamados',
+      tourAnchor: 'menu.chamados',
+    },
+    {
       title: 'Chat',
       url: '/chat',
       icon: 'chatbubbles',
@@ -190,6 +198,7 @@ export class AppComponent implements OnInit {
       trashSharp,
       chevronUpCircle,
       qrCode,
+      contractSharp,
     });
   }
 

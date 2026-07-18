@@ -1,10 +1,12 @@
+@let isLoading = isLoading$ | async;
 <ion-content>
   <ion-grid>
     <ion-row class="ion-justify-content-center">
-      <ion-col size="12" sizeLg="4">
+      <ion-col size="12" sizeLg="3">
         <ion-card style="margin-top: 10rem">
           <ion-card-header>
             <ion-card-title>Login</ion-card-title>
+            <ion-card-subtitle>Bem vindo a área dos clientes</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
             <form [formGroup]="form" (ngSubmit)="login()">
@@ -39,7 +41,7 @@
                       type="submit"
                       color="primary"
                       expand="block"
-                      [disabled]="form.invalid"
+                      [disabled]="form.invalid || isLoading"
                       >Entrar</ion-button
                     >
                   </ion-col>

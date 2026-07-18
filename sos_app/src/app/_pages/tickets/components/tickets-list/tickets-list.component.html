@@ -1,1 +1,68 @@
-<p>tickets-list works!</p>
+@let tickets = tickets$ | async;
+@let loading = isLoading$ | async;
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Chamados</ion-card-title>
+    <ion-card-subtitle
+      >Aqui você pode verificar chamados dos seus clientes</ion-card-subtitle
+    >
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      @if (loading && (!tickets || tickets.length === 0)) {
+        <ion-item lines="none">
+          <ion-label class="ion-text-center">
+            <ion-spinner></ion-spinner>
+          </ion-label>
+        </ion-item>
+      } @else {
+        @for (ticket of tickets; track ticket.id) {
+          <ion-item
+            lines="inset"
+            detail="true"
+            button="true"
+            (click)="openModalTicket(ticket)"
+          >
+            <ion-label>
+              <h2>{{ ticket.title }}</h2>
+              <ion-chip color="primary">
+                <ion-icon name="person"></ion-icon>
+                <ion-label>{{ ticket.user.name }}</ion-label>
+              </ion-chip>
+              <ion-chip
+                [color]="
+                  ticket.status_id === 1
+                    ? 'danger'
+                    : ticket.status_id === 2
+                      ? 'warning'
+                      : ticket.status_id === 3
+                        ? 'success'
+                        : ticket.status_id === 4
+                          ? 'dark'
+                          : 'light'
+                "
+              >
+                {{ ticket.status.name }}
+              </ion-chip>
+              <ion-chip>
+                <ion-icon name="calendar"></ion-icon>
+                <ion-label>{{
+                  ticket.created_at | date: "dd/MM/yyyy HH:mm:ss"
+                }}</ion-label>
+              </ion-chip>
+            </ion-label>
+          </ion-item>
+        }
+      }
+    </ion-list>
+    @if (infiniteScroll()) {
+      <ion-infinite-scroll
+        (ionInfinite)="onIonInfinite($event)"
+        loadingText="Carregando..."
+        loadingSpinner="bubbles"
+      >
+        <ion-infinite-scroll-content />
+      </ion-infinite-scroll>
+    }
+  </ion-card-content>
+</ion-card>

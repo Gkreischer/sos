@@ -1,3 +1,22 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
+  @let user = user$ | async;
+  @if (user) {
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="home">
+          <ion-icon name="home"></ion-icon>
+          Home
+        </ion-tab-button>
+        <ion-tab-button tab="tickets">
+          <ion-icon name="contract"></ion-icon>
+          Chamados
+        </ion-tab-button>
+        <ion-tab-button tab="profile">
+          <ion-icon name="person"></ion-icon>
+          Perfil
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  }
 </ion-app>

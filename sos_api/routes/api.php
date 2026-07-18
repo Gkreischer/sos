@@ -15,6 +15,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -114,6 +115,12 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/metrics/equipment', 'getEquipmentWithMostOrders');
             });
 
+            Route::middleware('role:admin|technician|attendant')->controller(MetricController::class)->group(function () {
+                Route::get('/metrics/pending-orders/count', 'getPendingOrdersCount');
+                Route::get('/metrics/in-progress/count', 'getInProgressOrdersCount');
+                Route::get('/metrics/clients/count', 'getTotalClientsCount');
+            });
+
             Route::controller(UserTypeController::class)->group(function () {
                 Route::get('/user-types', 'index');
             });
@@ -147,6 +154,14 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/messages', 'store');
                 Route::put('/messages/{id}', 'update');
                 Route::delete('/messages/{id}', 'destroy');
+            });
+
+            Route::controller(TicketController::class)->group(function () {
+                Route::post('/tickets/search', 'getByFilters');
+                Route::post('/tickets', 'store');
+                Route::get('/tickets/{id}', 'show');
+                Route::put('/tickets/{id}', 'update');
+                Route::delete('/tickets/{id}', 'destroy');
             });
         });
 

@@ -33,15 +33,20 @@
               <h2 class="ion-text-bold">{{ order.title }}</h2>
 
               <ion-chip color="primary">
-                {{ order.user.name }}
+                <ion-icon name="person"></ion-icon>
+                <ion-label>
+                  {{ order.user.name }}
+                </ion-label>
               </ion-chip>
 
               <ion-chip color="dark">
-                {{ order.equipment.name }}
+                <ion-icon name="hardware-chip"></ion-icon>
+                <ion-label>{{ order.equipment.name }}</ion-label>
               </ion-chip>
 
               <ion-chip>
-                {{ order.created_at | date: "short" }}
+                <ion-icon name="calendar"></ion-icon>
+                <ion-label>{{ order.created_at | date: "short" }}</ion-label>
               </ion-chip>
 
               <ion-chip

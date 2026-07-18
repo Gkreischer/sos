@@ -1,0 +1,74 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Filtros</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <form [formGroup]="form" (ngSubmit)="search()">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" sizeLg="3">
+            @let statuses = ordersStatuses$ | async;
+            <ion-select
+              labelPlacement="floating"
+              label="status"
+              fill="outline"
+              formControlName="status_id"
+            >
+              <ion-select-option value="0"> Nenhum status </ion-select-option>
+              @for (status of statuses; track status.id) {
+                <ion-select-option [value]="status.id">{{
+                  status.name
+                }}</ion-select-option>
+              } @empty {
+                <ion-select-option disabled="true">
+                  Nenhum status cadastrado
+                </ion-select-option>
+              }
+            </ion-select>
+          </ion-col>
+          <ion-col size="12" sizeLg="7">
+            <ion-input
+              fill="outline"
+              label="Pesquisar"
+              labelPlacement="floating"
+              formControlName="search"
+            ></ion-input>
+          </ion-col>
+          <ion-col size="12" sizeLg="2" class="btn-search">
+            <ion-button
+              [disabled]="this.form.invalid || (isLoading$ | async)"
+              type="submit"
+              expand="block"
+              color="primary"
+              class="full-button"
+            >
+              Buscar
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-input
+              labelPlacement="floating"
+              fill="outline"
+              label="De:"
+              type="text"
+              formControlName="start_date"
+              [maskito]="dateMask"
+              [maskitoElement]="maskPredicate"
+            ></ion-input>
+          </ion-col>
+          <ion-col>
+            <ion-input
+              labelPlacement="floating"
+              fill="outline"
+              label="Até:"
+              type="text"
+              formControlName="end_date"
+              [maskito]="dateMask"
+              [maskitoElement]="maskPredicate"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-card-content>
+</ion-card>

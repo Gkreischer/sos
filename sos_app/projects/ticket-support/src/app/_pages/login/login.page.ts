@@ -12,6 +12,7 @@ import {
   IonInput,
   IonCardHeader,
   IonCardTitle,
+  IonCardSubtitle,
 } from '@ionic/angular/standalone';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -23,13 +24,14 @@ import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { LoadingService } from 'src/app/_services/loading.service';
 import { ActivatedRoute } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
+import { Validators } from '@angular/forms';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
     IonCardTitle,
     IonCardHeader,
     IonButton,
@@ -65,8 +67,8 @@ export class LoginPage implements OnInit {
 
   mountForm() {
     this.form = this.formBuilder.group({
-      email: [''],
-      password: [''],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 

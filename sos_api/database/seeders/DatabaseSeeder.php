@@ -10,6 +10,7 @@ use App\Models\Part;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Room;
+use App\Models\Ticket;
 
 class DatabaseSeeder extends Seeder
 {
@@ -43,5 +44,6 @@ class DatabaseSeeder extends Seeder
 
         Post::factory()->count(50)->create();
         Room::factory()->count(20)->create();
+        Ticket::factory()->count(40)->create();
     }
 }

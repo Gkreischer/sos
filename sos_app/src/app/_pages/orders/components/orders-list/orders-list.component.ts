@@ -12,6 +12,8 @@ import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
 import { effect } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoadingService } from 'src/app/_services/loading.service';
+import { addIcons } from 'ionicons';
+import { calendar, hardwareChip, person } from 'ionicons/icons';
 import {
   IonCard,
   IonCardHeader,
@@ -24,6 +26,7 @@ import {
   IonChip,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonIcon,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -31,6 +34,7 @@ import {
   templateUrl: './orders-list.component.html',
   styleUrls: ['./orders-list.component.scss'],
   imports: [
+    IonIcon,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonChip,
@@ -58,6 +62,11 @@ export class OrdersListComponent {
 
   isLoading$ = this.loadingService.isLoading$;
   constructor() {
+    addIcons({
+      calendar,
+      hardwareChip,
+      person,
+    });
     effect((onCleanup) => {
       const filters = this.orderFilters();
 
@@ -75,16 +84,6 @@ export class OrdersListComponent {
         subscription.unsubscribe();
       });
     });
-  }
-
-  getOrders() {
-    this.orderService
-      .getAll(this.ordersPage, this.orderService.orderFilters())
-      .subscribe((res) => {
-        if (res.current_page >= res.last_page) {
-          this.infiniteScroll.set(false);
-        }
-      });
   }
 
   openModal(order: OrderInterface) {

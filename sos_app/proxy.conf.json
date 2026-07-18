@@ -1,28 +1,28 @@
 {
   "/api": {
-    "target": "http://localhost:9003",
+    "target": "http://localhost:9005",
     "secure": false,
     "changeOrigin": true
   },
 
   "/storage": {
-    "target": "http://localhost:9003",
+    "target": "http://localhost:9005",
     "secure": false,
     "changeOrigin": true
   },
 
   "/broadcasting": {
-    "target": "http://localhost:9003",
+    "target": "http://localhost:9005",
     "secure": false,
     "changeOrigin": true
   },
   "/images": {
-    "target": "http://localhost:9003",
+    "target": "http://localhost:9005",
     "secure": false,
     "changeOrigin": true
   },
   "/app": {
-    "target": "ws://localhost:9003",
+    "target": "ws://localhost:9005",
     "ws": true,
     "secure": false,
     "changeOrigin": true

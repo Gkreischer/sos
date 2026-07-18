@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    @if (!ticketId) {
+      <ion-title>Adicionar Ordem de Serviço</ion-title>
+    } @else {
+      <ion-title>Atualizar Ordem de Serviço</ion-title>
+    }
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+@let ticketStatuses = ticketStatuses$ | async;
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Informações do chamado</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="form">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
+                label="Cliente"
+                type="text"
+                formControlName="user"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-select
+                fill="outline"
+                labelPlacement="floating"
+                label="Status"
+                formControlName="status_id"
+              >
+                @for (status of ticketStatuses; track status.id) {
+                  <ion-select-option [value]="status.id">{{
+                    status.name
+                  }}</ion-select-option>
+                }
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
+                label="Título"
+                type="text"
+                formControlName="title"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-textarea
+                fill="outline"
+                labelPlacement="floating"
+                label="Descrição"
+                type="text"
+                rows="8"
+                formControlName="description"
+              ></ion-textarea>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { OrderMonthMetricInterface } from '../_interfaces/OrderMonthMetricInterface';
 import { catchError, tap } from 'rxjs';
 import { ErrorService } from './error.service';
-import { UserInterface } from '../_interfaces/UserInterface';
+import { CountInterface } from '../_interfaces/CountInterface';
 import { OrderMonthIncomesInterface } from '../_interfaces/OrderMonthIncomesInterface';
 import { OrderTotalPriceByStatusInterface } from '../_interfaces/OrderTotalPriceByStatusInterface';
 import { TechnicianMetricsInterface } from '../_interfaces/TechnicianMetricsInterface';
@@ -17,6 +17,9 @@ export class MetricsService {
   orderStatusMetrics = signal<Record<string, number>>({});
   orderTotalPriceByMonthMetric = signal([] as OrderMonthIncomesInterface[]);
   orderTotalPriceByStatus = signal([] as OrderTotalPriceByStatusInterface[]);
+  ordersPendingCount = signal<number | null>(null);
+  ordersInProgressCount = signal<number | null>(null);
+  totalClientsCount = signal<number | null>(null);
   usersOrdersMetrics$ = signal([] as TechnicianMetricsInterface[]);
 
   startDate$ = signal<string>(
@@ -97,6 +100,44 @@ export class MetricsService {
       .pipe(
         tap((res) => {
           this.usersOrdersMetrics$.set(res);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getPendingOrdersCount() {
+    return this.http
+      .get<CountInterface>(
+        `${environment.baseUrl}/metrics/pending-orders/count`,
+      )
+      .pipe(
+        tap((res) => {
+          console.log('service', res);
+          this.ordersPendingCount.set(res.result);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getInProgressOrdersCount() {
+    return this.http
+      .get<CountInterface>(`${environment.baseUrl}/metrics/in-progress/count`)
+      .pipe(
+        tap((res) => {
+          console.log('service', res);
+          this.ordersInProgressCount.set(res.result);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getTotalClientsCount() {
+    return this.http
+      .get<CountInterface>(`${environment.baseUrl}/metrics/clients/count`)
+      .pipe(
+        tap((res) => {
+          console.log('service', res);
+          this.totalClientsCount.set(res.result);
         }),
         catchError(this.errorService.handleError),
       );

@@ -9,10 +9,10 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\OrderStatusEnum;
 use App\Models\UserType;
 use App\Models\Equipment;
+use App\UserTypeEnum;
 
 class MetricController extends Controller
 {
@@ -328,6 +328,84 @@ class MetricController extends Controller
             );
 
             return response($metrics);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar as métricas de ordem de serviço',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getPendingOrdersCount()
+    {
+        try {
+
+
+
+            $cacheKey = 'metrics:orders:pending:count';
+
+            $metrics = Cache::tags('metrics')->remember(
+                $cacheKey,
+                now()->addHours(1),
+                function () {
+                    $orders = Order::where('status_id', OrderStatusEnum::PENDING)->count();
+
+                    return $orders;
+                }
+            );
+
+            return response(['result' => $metrics]);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar as métricas de ordem de serviço',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getInProgressOrdersCount()
+    {
+        try {
+
+
+
+            $cacheKey = 'metrics:orders:inprogress:count';
+
+            $metrics = Cache::tags('metrics')->remember(
+                $cacheKey,
+                now()->addHours(1),
+                function () {
+                    $orders = Order::where('status_id', OrderStatusEnum::IN_PROGRESS)->count();
+
+                    return $orders;
+                }
+            );
+
+            return response(['result' => $metrics]);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar as métricas de ordem de serviço',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getTotalClientsCount()
+    {
+        try {
+            $cacheKey = 'metrics:orders:clients:count';
+
+            $metrics = Cache::tags('metrics')->remember(
+                $cacheKey,
+                now()->addHours(1),
+                function () {
+                    $users = User::where('type_id', UserTypeEnum::CLIENT)->count();
+
+                    return $users;
+                }
+
+            );
+            return response(['result' => $metrics]);
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { UserModalComponent } from './components/user-modal/user-modal.component';
 import { UserFilterComponent } from './components/user-filter/user-filter.component';
 import { UsersListComponent } from './components/users-list/users-list.component';

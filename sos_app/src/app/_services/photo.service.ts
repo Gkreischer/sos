@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Camera, CameraDirection, MediaResult } from '@capacitor/camera';
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import { LocalFileInterface } from 'src/app/_interfaces/LocalFileInterface';
+import { LocalFileInterface } from 'shared';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 
 @Injectable({
   providedIn: 'root',

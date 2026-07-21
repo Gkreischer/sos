@@ -17,12 +17,12 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { inject } from '@angular/core';
-import { LoginService } from 'src/app/_services/login.service';
-import { UserLoginInterface } from 'src/app/_interfaces/UserLoginInterface';
+import { LoginService } from 'shared';
+import { UserLoginInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { ActivatedRoute } from '@angular/router';
 import { Validators } from '@angular/forms';
 @Component({

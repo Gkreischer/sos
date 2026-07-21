@@ -1,0 +1,18 @@
+<ion-card color="tertiary">
+  <ion-card-header>
+    <ion-card-title
+      ><ion-text color="light"
+        >Quantidade total de clientes</ion-text
+      ></ion-card-title
+    >
+  </ion-card-header>
+  <ion-card-content>
+    @if (count() === null) {
+      <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+    } @else {
+      <ion-text color="light">
+        <h1 color="light">{{ count() }}</h1>
+      </ion-text>
+    }
+  </ion-card-content>
+</ion-card>

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { OrderStatusInterface } from '../_interfaces/OrderStatusInterface';
-import { ErrorService } from './error.service';
+import { OrderStatusInterface } from 'shared';
+import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,8 +12,9 @@ export class OrderStatusService {
   http = inject(HttpClient);
   errorService = inject(ErrorService);
 
-  protected orderStatusSubject =
-    new BehaviorSubject<OrderStatusInterface[]>([]);
+  protected orderStatusSubject = new BehaviorSubject<OrderStatusInterface[]>(
+    [],
+  );
 
   constructor() {}
 

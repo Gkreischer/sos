@@ -14,10 +14,10 @@ import {
   IonSpinner,
 } from '@ionic/angular/standalone';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { LoadingService } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PostContentModalComponent } from '../post-content/post-content.component';
-import { PostInterface } from 'src/app/_interfaces/PostInterface';
+import { PostInterface } from 'shared';
 @Component({
   selector: 'app-posts-list',
   templateUrl: './posts-list.component.html',

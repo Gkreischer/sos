@@ -11,7 +11,7 @@ import { dateMask } from 'src/app/_masks/dateMask';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { maskitoTransform } from '@maskito/core';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 import {
   IonInput,

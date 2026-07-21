@@ -7,9 +7,9 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { EquipmentInterface } from '../_interfaces/EquipmentInterface';
-import { PaginateInterface } from '../_interfaces/PaginateInterface';
-import { UserInterface } from '../_interfaces/UserInterface';
+import { EquipmentInterface } from 'shared';
+import { PaginateInterface } from 'shared';
+import { UserInterface } from 'shared';
 
 describe('EquipmentService', () => {
   let service: EquipmentService;

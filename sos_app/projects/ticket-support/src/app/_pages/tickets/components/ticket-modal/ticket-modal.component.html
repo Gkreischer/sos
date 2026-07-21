@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon name="arrow-back-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Chamado de Atendimento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="medium">
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                label="Título"
+                labelPlacement="floating"
+                formControlName="title"
+                required
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-textarea
+                rows="6"
+                fill="outline"
+                label="Descrição"
+                formControlName="description"
+                labelPlacement="floating"
+                required
+              >
+              </ion-textarea>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button expand="block" [disabled]="form.invalid" type="submit"
+                >Criar</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

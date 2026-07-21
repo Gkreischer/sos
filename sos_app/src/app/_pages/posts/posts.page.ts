@@ -16,7 +16,7 @@ import { IonButtons, IonMenuButton } from '@ionic/angular/standalone';
 import { ViewWillEnter } from '@ionic/angular';
 import { PostService } from 'src/app/_services/post.service';
 import { inject } from '@angular/core';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PostModalAddEditComponent } from './components/post-modal-add-edit/post-modal-add-edit.component';
 import { addIcons } from 'ionicons';
 import { addSharp } from 'ionicons/icons';

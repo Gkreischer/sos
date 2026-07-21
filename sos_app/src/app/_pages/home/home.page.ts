@@ -19,10 +19,11 @@ import { ViewWillEnter, ViewDidEnter } from '@ionic/angular';
 import { TourService } from 'ngx-ui-tour-ionic';
 import tourSteps from 'src/app/_shared/utils/tour/tour';
 import { PreferencesPluginService } from 'src/app/_services/preferences-plugin.service';
-import { NotificationService } from 'src/app/_services/notification.service';
-import { OrdersPedingCountCardComponent } from './component/orders-peding-count-card/orders-peding-count-card.component';
-import { OrdersInprogressCountCardComponent } from './component/orders-inprogress-count-card/orders-inprogress-count-card.component';
-import { TotalClientsCountCardComponent } from './component/total-clients-count-card/total-clients-count-card.component';
+import { NotificationService } from 'shared';
+import { OrdersPedingCountCardComponent } from './components/orders-peding-count-card/orders-peding-count-card.component';
+import { OrdersInprogressCountCardComponent } from './components/orders-inprogress-count-card/orders-inprogress-count-card.component';
+import { TotalClientsCountCardComponent } from './components/total-clients-count-card/total-clients-count-card.component';
+import { ClockComponent } from './components/clock/clock.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -41,6 +42,7 @@ import { TotalClientsCountCardComponent } from './component/total-clients-count-
     OrdersPedingCountCardComponent,
     OrdersInprogressCountCardComponent,
     TotalClientsCountCardComponent,
+    ClockComponent,
   ],
 })
 export class HomePage implements ViewWillEnter, ViewDidEnter {

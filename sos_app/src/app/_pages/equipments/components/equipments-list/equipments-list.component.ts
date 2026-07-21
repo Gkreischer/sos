@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
+import { EquipmentInterface } from 'shared';
 import { EquipmentService } from 'src/app/_services/equipment.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { EquipmentModalComponent } from '../equipment-modal/equipment-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { effect } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonItem,
   IonCard,

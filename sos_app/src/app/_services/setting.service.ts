@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { BusinessInfoInterface } from '../_interfaces/BusinessInfoInterface';
+import { BusinessInfoInterface } from 'shared';
 import { environment } from 'src/environments/environment';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 
 @Injectable({
   providedIn: 'root',

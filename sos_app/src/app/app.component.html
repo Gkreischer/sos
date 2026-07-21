@@ -28,14 +28,17 @@
             <ion-img src="assets/person-shape.svg"></ion-img>
           </ion-card>
         }
-        <ion-list id="inbox-list" color="primary">
-          @if (userLogged) {
-            <ion-list-header>{{ userLogged.name }}</ion-list-header>
-            <ion-note>{{ userLogged.type.name }}</ion-note>
-          } @else {
-            <ion-list-header>OrceX</ion-list-header>
-            <ion-note>Sistema de Ordem de Serviço</ion-note>
-          }
+        <ion-list id="inbox-list">
+          <ion-item lines="none" color="primary">
+            @if (userLogged) {
+              <ion-label
+                ><ion-text color="light"
+                  ><h1>{{ userLogged.name }}</h1></ion-text
+                >
+                <p>{{ userLogged!.type.name }}</p>
+              </ion-label>
+            }
+          </ion-item>
 
           <ion-menu-toggle auto-hide="false" tourAnchor="menu.list">
             @for (p of appPages; track p.title; let i = $index) {
@@ -49,6 +52,8 @@
                 [id]="p.id"
                 data-cy="menu-item-home"
                 [tourAnchor]="p.tourAnchor!"
+                button="true"
+                (click)="resetBadge(p.title)"
               >
                 <ion-icon
                   aria-hidden="true"
@@ -57,17 +62,25 @@
                   [md]="p.icon + '-sharp'"
                 ></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
+                @if (p.badge) {
+                  <ion-badge slot="end" color="danger">
+                    {{ p.badge }}
+                  </ion-badge>
+                }
               </ion-item>
             }
-            <ion-button
-              expand="block"
-              color="danger"
-              (click)="logout()"
-              class="ion-margin-top"
-            >
-              Sair
-              <ion-icon name="exit"></ion-icon>
-            </ion-button>
+            <ion-item lines="none" color="primary">
+              <ion-button
+                class="ion-margin-top"
+                color="danger"
+                (click)="logout()"
+                size="medium"
+                style="width: 100%"
+              >
+                <ion-icon name="exit"></ion-icon>
+                Sair
+              </ion-button>
+            </ion-item>
           </ion-menu-toggle>
         </ion-list>
       </ion-content>

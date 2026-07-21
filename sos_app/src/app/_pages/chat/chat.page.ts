@@ -18,11 +18,11 @@ import {
 } from '@ionic/angular/standalone';
 import { RoomListComponent } from './components/room-list/room-list.component';
 import { RoomModalComponent } from './components/room-modal/room-modal.component';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { RoomService } from 'src/app/_services/room.service';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationService } from 'shared';
 import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
-import { RoomInterface } from 'src/app/_interfaces/RoomInterface';
+import { RoomInterface } from 'shared';
 import { UserService } from 'src/app/_services/user.service';
 import { addIcons } from 'ionicons';
 import { addSharp } from 'ionicons/icons';
@@ -81,7 +81,6 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
   }
 
   listenPrivateChannel() {
-    console.log('entrou');
     this.notificationService.listenPrivate<RoomInterface>(
       'rooms',
       '.new.room',

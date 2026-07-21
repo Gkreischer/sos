@@ -1,13 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { UserInterface } from '../_interfaces/UserInterface';
+import { UserInterface } from 'shared';
 import { catchError, tap, BehaviorSubject } from 'rxjs';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
-import { PaginateInterface } from '../_interfaces/PaginateInterface';
-import { UserTypeInterface } from '../_interfaces/UserTypeInterface';
-import { LoginService } from './login.service';
-import { UserFilterInterface } from '../_interfaces/UserFilterInterface';
+import { PaginateInterface } from 'shared';
+import { UserTypeInterface } from 'shared';
+import { LoginService } from 'shared';
+import { UserFilterInterface } from 'shared';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -17,8 +17,8 @@ const httpOptions = {
 })
 export class UserService {
   http = inject(HttpClient);
-  errorService = inject(ErrorService);
-  loginService = inject(LoginService);
+  errorService: ErrorService = inject(ErrorService);
+  loginService: LoginService = inject(LoginService);
 
   usersSubject = new BehaviorSubject<UserInterface[] | null>(null);
   userTypesSubject = new BehaviorSubject<UserTypeInterface[]>([]);

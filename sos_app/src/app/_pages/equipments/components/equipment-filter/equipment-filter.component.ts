@@ -19,7 +19,7 @@ import {
   IonRow,
   IonInput,
 } from '@ionic/angular/standalone';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 @Component({

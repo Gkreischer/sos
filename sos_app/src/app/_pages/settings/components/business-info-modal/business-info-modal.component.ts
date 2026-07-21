@@ -9,13 +9,13 @@ import {
 import { MaskitoElementPredicate } from '@maskito/core';
 import { cepMask } from 'src/app/_masks/cepMask';
 import { cnpjMask } from 'src/app/_masks/cnpjMask';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { SettingService } from 'src/app/_services/setting.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { Observable } from 'rxjs';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 import {
   IonHeader,

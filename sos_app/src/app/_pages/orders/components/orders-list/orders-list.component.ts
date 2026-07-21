@@ -1,17 +1,17 @@
 import { Component, inject, Signal, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
-import { ModalService } from 'src/app/_services/modal.service';
+import { OrderInterface } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { OrderService } from 'src/app/_services/order.service';
 import { OrderModalComponent } from '../order-modal/order-modal.component';
 
 import { map } from 'rxjs';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 
-import { OrderFilterInterface } from 'src/app/_interfaces/OrderFilterInterface';
+import { OrderFilterInterface } from 'shared';
 import { effect } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { addIcons } from 'ionicons';
 import { calendar, hardwareChip, person } from 'ionicons/icons';
 import {

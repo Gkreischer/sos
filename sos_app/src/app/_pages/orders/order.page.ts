@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ViewWillEnter } from '@ionic/angular';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { OrderModalComponent } from './components/order-modal/order-modal.component';
 
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';

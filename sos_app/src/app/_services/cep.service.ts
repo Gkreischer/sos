@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap, catchError } from 'rxjs';
-import { CepInterface } from '../_interfaces/CepInterface';
-import { ErrorService } from './error.service';
+import { CepInterface } from 'shared';
+import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',

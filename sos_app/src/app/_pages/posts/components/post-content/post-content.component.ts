@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PostInterface } from 'src/app/_interfaces/PostInterface';
+import { PostInterface } from 'shared';
 import {
   IonHeader,
   IonToolbar,
@@ -24,11 +24,11 @@ import {
   IonAvatar,
   IonLabel,
 } from '@ionic/angular/standalone';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { LoginService } from 'src/app/_services/login.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { LoginService } from 'shared';
+import { UserInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { PostService } from 'src/app/_services/post.service';

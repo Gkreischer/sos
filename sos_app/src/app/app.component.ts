@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { MenuController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { inject } from '@angular/core';
-import { LoginService } from './_services/login.service';
-import { UserInterface } from './_interfaces/UserInterface';
+import { LoginService } from 'shared';
+import { UserInterface } from '../../projects/shared/src/lib/_interfaces/UserInterface';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -24,6 +24,8 @@ import {
   IonLabel,
   IonRouterOutlet,
   IonButton,
+  IonBadge,
+  IonText,
 } from '@ionic/angular/standalone';
 import {
   settingsSharp,
@@ -60,14 +62,24 @@ import {
 import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
 import { ToastService } from './_services/toast.service';
 import { PhotoService } from './_services/photo.service';
-import { NotificationService } from 'src/app/_services/notification.service';
-import { UserLoginInterface } from './_interfaces/UserLoginInterface';
+import { NotificationService } from 'shared';
+import { UserLoginInterface } from '../../projects/shared/src/lib/_interfaces/UserLoginInterface';
 import { take } from 'rxjs';
+
+interface AppPage {
+  title: string;
+  url: string;
+  icon: string;
+  id: string;
+  tourAnchor?: string;
+  badge?: number;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
   imports: [
+    IonText,
     RouterLinkActive,
     RouterLink,
     AsyncPipe,
@@ -79,19 +91,18 @@ import { take } from 'rxjs';
     IonSplitPane,
     IonList,
     IonItem,
-    IonListHeader,
-    IonNote,
     IonMenuToggle,
     IonIcon,
     IonLabel,
     IonRouterOutlet,
     IonButton,
     TourIonPopoverModule,
+    IonBadge,
   ],
 })
 export class AppComponent implements OnInit {
   menuController = inject(MenuController);
-  loginService = inject(LoginService);
+  loginService: LoginService = inject(LoginService);
   router = inject(Router);
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
@@ -101,7 +112,7 @@ export class AppComponent implements OnInit {
 
   user!: Observable<UserInterface | null>;
 
-  public appPages = [
+  public appPages: AppPage[] = [
     { title: 'Home', url: '/home', icon: 'home', id: 'button-sidebar-home' },
     {
       title: 'Categorias',
@@ -137,6 +148,7 @@ export class AppComponent implements OnInit {
       icon: 'contract',
       id: 'button-sidebar-chamados',
       tourAnchor: 'menu.chamados',
+      badge: 0,
     },
     {
       title: 'Chat',
@@ -144,6 +156,7 @@ export class AppComponent implements OnInit {
       icon: 'chatbubbles',
       id: 'button-sidebar-chat',
       tourAnchor: 'menu.chat',
+      badge: 0,
     },
     {
       title: 'Usuários',
@@ -202,19 +215,52 @@ export class AppComponent implements OnInit {
     });
   }
 
+  incrementBadge(title: string) {
+    const page = this.appPages.find((p) => p.title === title);
+
+    if (page) {
+      page.badge = (page.badge ?? 0) + 1;
+    }
+  }
+
+  resetBadge(title: string) {
+    const page = this.appPages.find((p) => p.title === title);
+
+    if (page) {
+      page.badge = 0;
+    }
+  }
+
+  listeners = [
+    {
+      channel: 'tickets',
+      event: '.new.ticket',
+      callback: (data: any) => {
+        this.incrementBadge('Chamados');
+      },
+    },
+    {
+      channel: 'rooms',
+      event: '.new.room',
+      callback: (data: any) => {
+        this.incrementBadge('Chat');
+      },
+    },
+  ];
+
   ngOnInit() {
-    this.verifyIfIsLogged();
+    this.listenPrivateChannels();
   }
 
-  async getToken() {
-    return await this.loginService.preferencesPluginService.get('_t');
+  ngOnDestroy() {
+    this.listeners.forEach(({ channel, event, callback }) => {
+      this.notificationService.leave(channel);
+    });
   }
 
-  async verifyIfIsLogged() {
-    this.user$.pipe(take(1)).subscribe(async (user) => {
-      if (user) {
-        await this.menuController.open('main');
-      }
+  listenPrivateChannels() {
+    this.listeners.forEach(({ channel, event, callback }) => {
+      this.notificationService.listenPrivate(channel, event, callback);
     });
   }
 
@@ -226,7 +272,6 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.loginService.logout();
-    this.notificationService.leave('notifications');
   }
 
   async changeAvatarImage() {

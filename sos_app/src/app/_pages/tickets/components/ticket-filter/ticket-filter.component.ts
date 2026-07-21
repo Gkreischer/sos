@@ -15,7 +15,7 @@ import {
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { MaskitoDirective } from '@maskito/angular';
 import { dateMask } from 'src/app/_masks/dateMask';
 import { MaskitoElementPredicate } from '@maskito/core';

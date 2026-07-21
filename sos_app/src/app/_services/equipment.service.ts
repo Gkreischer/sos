@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { EquipmentInterface } from '../_interfaces/EquipmentInterface';
+import { EquipmentInterface } from 'shared';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
-import { UserInterface } from '../_interfaces/UserInterface';
-import { PaginateInterface } from '../_interfaces/PaginateInterface';
-import { EquipmentFilterInterface } from '../_interfaces/EquipmentFilterInterface';
+import { UserInterface } from 'shared';
+import { PaginateInterface } from 'shared';
+import { EquipmentFilterInterface } from 'shared';
 import { signal } from '@angular/core';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

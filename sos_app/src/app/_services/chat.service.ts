@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
-import { RoomMessageInterface } from 'src/app/_interfaces/RoomMessageInterface';
+import { RoomMessageInterface } from 'shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
+import { PaginateInterface } from 'shared';
 
 @Injectable({
   providedIn: 'root',

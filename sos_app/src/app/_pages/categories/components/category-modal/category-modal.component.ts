@@ -6,13 +6,13 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
+import { CategoryInterface } from 'shared';
 import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { Observable } from 'rxjs';
 import {
   IonHeader,

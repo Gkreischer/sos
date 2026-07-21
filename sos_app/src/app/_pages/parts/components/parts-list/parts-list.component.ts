@@ -1,13 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PartInterface } from 'src/app/_interfaces/PartInterface';
-import { ModalService } from 'src/app/_services/modal.service';
+import { PartInterface } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { PartModalComponent } from '../part-modal/part-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { effect, inject } from '@angular/core';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonInfiniteScroll,
   IonCard,

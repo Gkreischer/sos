@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartModalComponent } from './components/part-modal/part-modal.component';
 import { PartFilterComponent } from './components/part-filter/part-filter.component';
 import { PartsListComponent } from './components/parts-list/parts-list.component';

@@ -6,10 +6,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
-import { UserTypeInterface } from 'src/app/_interfaces/UserTypeInterface';
+import { UserTypeInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonCard,
   IonCardHeader,

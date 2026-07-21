@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
+import { CategoryInterface } from 'shared';
 import { CategoryService } from 'src/app/_services/category.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonContent,
   IonCard,

@@ -4,17 +4,17 @@ import {
   provideAppInitializer,
 } from '@angular/core';
 import { inject } from '@angular/core';
-import { LoginService } from './app/_services/login.service';
-import { PreferencesPluginService } from './app/_services/preferences-plugin.service';
+import { LoginService } from 'shared';
+import { PreferencesPluginService } from 'shared';
 import { firstValueFrom } from 'rxjs';
 import { environment } from './environments/environment';
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authenticationInterceptor } from './app/_interceptors/authentication.interceptor';
-import { errorInterceptor } from './app/_interceptors/error.interceptor';
-import { loadingBarInterceptor } from './app/_interceptors/loading-bar.interceptor';
-
+import { authenticationInterceptor } from 'shared';
+import { errorInterceptor } from 'shared';
+import { loadingBarInterceptor } from 'shared';
+import { APP_CONFIG, AppConfig } from 'shared';
 import {
   RouteReuseStrategy,
   provideRouter,
@@ -32,7 +32,7 @@ import {
   provideIonicAngular,
   IonicRouteStrategy,
 } from '@ionic/angular/standalone';
-import { errAndLoadingInterceptor } from './app/_interceptors/loading.interceptor';
+import { loadingInterceptor } from 'shared';
 
 registerLocaleData(localePtBr);
 defineCustomElements(window);
@@ -43,31 +43,48 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    {
+      provide: APP_CONFIG,
+      useValue: {
+        baseUrl: environment.baseUrl,
+        reverbPort: environment.reverbPort,
+        reverbHost: environment.reverbHost,
+        reverbKey: environment.reverbKey,
+        wsPort: environment.wsPort,
+        wsHost: environment.wsHost,
+        wsScheme: environment.wsScheme,
+        authEndpoint: environment.authEndpoint,
+      },
+    },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideCharts(withDefaultRegisterables()),
+
     provideHttpClient(
       withInterceptors([
         authenticationInterceptor,
         loadingBarInterceptor,
         errorInterceptor,
-        errAndLoadingInterceptor,
+        loadingInterceptor,
       ]),
     ),
+
     provideAppInitializer(async () => {
-      const prefs = inject(PreferencesPluginService);
-      const loginService = inject(LoginService);
+      const prefs: PreferencesPluginService = inject(PreferencesPluginService);
+      const loginService: LoginService = inject(LoginService);
 
       const token = await prefs.get('_t');
+
       if (token?.value) {
         try {
           await firstValueFrom(loginService.verifyToken(token.value));
         } catch (err) {
           await prefs.remove('_t');
-          loginService.logout(); // Garante que o estado de login seja limpo
+          loginService.logout();
         }
       }
     }),
+
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],

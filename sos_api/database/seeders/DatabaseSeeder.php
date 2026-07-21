@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Room;
 use App\Models\Ticket;
+use App\Models\UserType;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,9 +25,26 @@ class DatabaseSeeder extends Seeder
             UserTypeSeeder::class,
         ]);
 
-        User::factory()->count(100)->create();
+        $customers = User::factory()
+            ->count(60)
+            ->create([
+                'type_id' => UserType::where('name', 'Cliente')->value('id'),
+            ]);
+
+        User::factory()
+            ->count(20)
+            ->create([
+                'type_id' => UserType::where('name', 'Técnico')->value('id'),
+            ]);
         Category::factory()->count(20)->create();
-        Equipment::factory()->count(100)->create();
+
+        $customers->each(function ($customer) {
+            Equipment::factory()
+                ->count(rand(1, 5))
+                ->create([
+                    'user_id' => $customer->id,
+                ]);
+        });
 
         Part::factory()->count(50)->create();
 

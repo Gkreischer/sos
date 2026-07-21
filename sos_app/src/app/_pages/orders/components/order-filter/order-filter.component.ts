@@ -7,14 +7,14 @@ import {
 } from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
 import { Observable } from 'rxjs';
-import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
+import { OrderStatusInterface } from 'shared';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderService } from 'src/app/_services/order.service';
 
 import { dateMask } from 'src/app/_masks/dateMask';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonCard,
   IonCardHeader,

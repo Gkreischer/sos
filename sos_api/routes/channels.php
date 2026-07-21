@@ -20,3 +20,9 @@ Broadcast::channel('rooms', function ($user) {
 Broadcast::channel('room.{roomId}', function ($user) {
     return true;
 });
+Broadcast::channel('tickets', function ($user) {
+    return true;
+});
+Broadcast::channel('ticket.{ticketId}', function ($user) {
+    return true;
+});

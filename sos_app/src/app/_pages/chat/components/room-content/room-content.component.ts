@@ -24,20 +24,20 @@ import {
   IonFabButton,
   IonFabList,
 } from '@ionic/angular/standalone';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { RoomInterface } from 'src/app/_interfaces/RoomInterface';
+import { RoomInterface } from 'shared';
 import { RoomService } from 'src/app/_services/room.service';
-import { RoomMessageInterface } from 'src/app/_interfaces/RoomMessageInterface';
+import { RoomMessageInterface } from 'shared';
 import { IonSpinner } from '@ionic/angular/standalone';
 import { IonText } from '@ionic/angular/standalone';
-import { NotificationService } from 'src/app/_services/notification.service';
-import { LoginService } from 'src/app/_services/login.service';
+import { NotificationService } from 'shared';
+import { LoginService } from 'shared';
 import { AlertService } from 'src/app/_services/alert.service';
 import { RoomModalComponent } from './../room-modal/room-modal.component';
 import { addIcons } from 'ionicons';

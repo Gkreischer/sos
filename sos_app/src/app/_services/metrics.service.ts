@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { OrderMonthMetricInterface } from '../_interfaces/OrderMonthMetricInterface';
+import { OrderMonthMetricInterface } from 'shared';
 import { catchError, tap } from 'rxjs';
-import { ErrorService } from './error.service';
-import { CountInterface } from '../_interfaces/CountInterface';
-import { OrderMonthIncomesInterface } from '../_interfaces/OrderMonthIncomesInterface';
-import { OrderTotalPriceByStatusInterface } from '../_interfaces/OrderTotalPriceByStatusInterface';
-import { TechnicianMetricsInterface } from '../_interfaces/TechnicianMetricsInterface';
+import { ErrorService } from 'shared';
+import { CountInterface } from 'shared';
+import { OrderMonthIncomesInterface } from 'shared';
+import { OrderTotalPriceByStatusInterface } from 'shared';
+import { TechnicianMetricsInterface } from 'shared';
 
 @Injectable({
   providedIn: 'root',
@@ -112,7 +112,6 @@ export class MetricsService {
       )
       .pipe(
         tap((res) => {
-          console.log('service', res);
           this.ordersPendingCount.set(res.result);
         }),
         catchError(this.errorService.handleError),
@@ -124,7 +123,6 @@ export class MetricsService {
       .get<CountInterface>(`${environment.baseUrl}/metrics/in-progress/count`)
       .pipe(
         tap((res) => {
-          console.log('service', res);
           this.ordersInProgressCount.set(res.result);
         }),
         catchError(this.errorService.handleError),
@@ -136,7 +134,6 @@ export class MetricsService {
       .get<CountInterface>(`${environment.baseUrl}/metrics/clients/count`)
       .pipe(
         tap((res) => {
-          console.log('service', res);
           this.totalClientsCount.set(res.result);
         }),
         catchError(this.errorService.handleError),

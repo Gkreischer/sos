@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { SearchbarCustomEvent } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { PartInterface } from 'src/app/_interfaces/PartInterface';
-import { ModalService } from 'src/app/_services/modal.service';
+import { PartInterface } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonHeader,
   IonToolbar,

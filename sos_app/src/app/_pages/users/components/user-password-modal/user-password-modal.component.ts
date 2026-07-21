@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
-import { ModalService } from 'src/app/_services/modal.service';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { UserInterface } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
+import { LoadingService } from 'shared';
 import { addIcons } from 'ionicons';
 import { trash, arrowBack } from 'ionicons/icons';
 import {

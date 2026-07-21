@@ -22,15 +22,15 @@ import {
   IonInfiniteScrollContent,
 } from '@ionic/angular/standalone';
 import { TicketService } from 'src/app/_services/ticket.service';
-import { TicketInterface } from 'src/app/_interfaces/TicketInterface';
+import { TicketInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { LoadingService } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
 import { addIcons } from 'ionicons';
 import { person, calendar } from 'ionicons/icons';
-import { TicketFilterInterface } from 'src/app/_interfaces/TicketFilterInterface';
+import { TicketFilterInterface } from 'shared';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
   selector: 'app-tickets-list',

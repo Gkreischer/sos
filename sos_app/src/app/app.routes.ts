@@ -1,6 +1,5 @@
 import { Routes, PreloadAllModules, withPreloading } from '@angular/router';
-import { loginGuard } from './_guards/login.guard';
-import { introGuard } from './_guards/intro.guard';
+import { loginGuard } from 'shared';
 
 export const routes: Routes = [
   {

@@ -6,10 +6,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { inject } from '@angular/core';
-import { LoginService } from 'src/app/_services/login.service';
-import { ModalService } from 'src/app/_services/modal.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
-import { UserLoginInterface } from 'src/app/_interfaces/UserLoginInterface';
+import { LoginService } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
+import { UserInterface } from 'shared';
+import { UserLoginInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/app/_services/user.service';
 import { cnpjMask } from 'src/app/_masks/cnpjMask';
@@ -21,7 +21,7 @@ import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonHeader,
   IonToolbar,

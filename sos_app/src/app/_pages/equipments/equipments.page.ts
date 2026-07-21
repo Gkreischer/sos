@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { EquipmentModalComponent } from './components/equipment-modal/equipment-modal.component';
 
 import { EquipmentFilterComponent } from './components/equipment-filter/equipment-filter.component';

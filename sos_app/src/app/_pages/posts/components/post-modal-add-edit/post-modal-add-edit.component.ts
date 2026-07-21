@@ -18,12 +18,12 @@ import {
   IonCard,
   IonCardContent,
 } from '@ionic/angular/standalone';
-import { ModalService } from 'src/app/_services/modal.service';
-import { PostInterface } from 'src/app/_interfaces/PostInterface';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
+import { PostInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { addIcons } from 'ionicons';
 import { arrowBack } from 'ionicons/icons';
 

@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PartInterface } from '../_interfaces/PartInterface';
+import { PartInterface } from 'shared';
 import { environment } from 'src/environments/environment';
-import { ErrorService } from './error.service';
-import { BehaviorSubject, catchError, map, tap } from 'rxjs';
-import { PaginateInterface } from '../_interfaces/PaginateInterface';
-import { PartFilterInterface } from '../_interfaces/PartFilterInterface';
+import { ErrorService } from 'shared';
+import { BehaviorSubject, catchError, tap } from 'rxjs';
+import { PaginateInterface } from 'shared';
+import { PartFilterInterface } from 'shared';
 import { signal } from '@angular/core';
 import { inject } from '@angular/core';
 const httpOptions = {

@@ -1,6 +1,7 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
   @let user = user$ | async;
+  {{ user | json }}
   @if (user) {
     <ion-tabs>
       <ion-tab-bar slot="bottom">

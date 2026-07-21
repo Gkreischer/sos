@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { BusinessInfoModalComponent } from '../business-info-modal/business-info-modal.component';
 import { UserInfoModalComponent } from '../user-info-modal/user-info-modal.component';
 import {

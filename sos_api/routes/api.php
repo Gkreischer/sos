@@ -159,6 +159,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::controller(TicketController::class)->group(function () {
                 Route::post('/tickets/search', 'getByFilters');
                 Route::post('/tickets', 'store');
+                Route::get('/tickets/user', 'getUserTickets');
                 Route::get('/tickets/{id}', 'show');
                 Route::put('/tickets/{id}', 'update');
                 Route::delete('/tickets/{id}', 'destroy');

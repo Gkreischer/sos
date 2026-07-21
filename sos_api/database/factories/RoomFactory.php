@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -20,7 +20,7 @@ class RoomFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'created_by' => $this->faker->numberBetween(1, 100),
+            'created_by' => User::all()->random()->id,
             'private' => $this->faker->boolean(50),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

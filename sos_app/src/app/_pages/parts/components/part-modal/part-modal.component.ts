@@ -18,10 +18,10 @@ import {
   maskitoTransform,
 } from '@maskito/core';
 import { Observable, Subscription } from 'rxjs';
-import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
-import { PartInterface } from 'src/app/_interfaces/PartInterface';
+import { CategoryInterface } from 'shared';
+import { PartInterface } from 'shared';
 import { CategoryService } from 'src/app/_services/category.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'src/app/_services/photo.service';
@@ -29,7 +29,7 @@ import { priceMask } from 'src/app/_masks/priceMask';
 import { AsyncPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { AlertService } from 'src/app/_services/alert.service';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonHeader,
   IonToolbar,

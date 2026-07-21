@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { BusinessInfoInterface } from 'src/app/_interfaces/BusinessInfoInterface';
-import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
+import { BusinessInfoInterface } from 'shared';
+import { OrderInterface } from 'shared';
 import { OrderService } from 'src/app/_services/order.service';
 import { SettingService } from 'src/app/_services/setting.service';
 import { NgxPrintDirective } from 'ngx-print';

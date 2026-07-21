@@ -1,13 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { OrderInterface } from '../_interfaces/OrderInterface';
+import { OrderInterface } from 'shared';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { ErrorService } from './error.service';
-import { OrderFilterInterface } from '../_interfaces/OrderFilterInterface';
-import { PaginateInterface } from '../_interfaces/PaginateInterface';
+import { ErrorService } from 'shared';
+import { OrderFilterInterface } from 'shared';
+import { PaginateInterface } from 'shared';
 import { inject } from '@angular/core';
-import { PictureInterface } from '../_interfaces/PictureInterface';
+import { PictureInterface } from 'shared';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };

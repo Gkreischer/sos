@@ -6,6 +6,10 @@ use App\Models\Ticket;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Events\NewTicket;
+use App\Models\OrderStatus;
+use App\OrderStatusEnum;
 
 class TicketController extends Controller
 {
@@ -95,25 +99,42 @@ class TicketController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+
+            $validators = Validator::make($data, [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+            ]);
+
+            if ($validators->fails()) {
+                return response([
+                    'message' => 'Não foi possível salvar o chamado',
+                    'error' => $validators->errors()
+                ], 400);
+            }
+            $data['user_id'] = auth('sanctum')->user()->id;
+            $data['status_id'] = OrderStatus::where('id', OrderStatusEnum::PENDING)->first()->id;
+            $ticket = Ticket::create($data);
+            $ticket->load('user:id,name');
+            broadcast(new NewTicket($ticket));
+            return response($ticket);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível salvar o chamado',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket, int $id)
+    public function show(int $id)
     {
         try {
             $ticket = Ticket::findOrFail($id);
@@ -128,19 +149,31 @@ class TicketController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Ticket $ticket)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        try {
+            $data = $request->all();
+            $validators = Validator::make($data, [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+            ]);
+
+            if ($validators->fails()) {
+                return response([
+                    'message' => 'Não foi possível salvar o ticket',
+                    'error' => $validators->errors()
+                ], 400);
+            }
+            $ticket = $ticket->update($data);
+            return response($ticket);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível atualizar o ticket',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -149,5 +182,21 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         //
+    }
+
+    public function getUserTickets()
+    {
+        try {
+            $user_id = auth('sanctum')->user()->id;
+            $tickets = Ticket::where('user_id', $user_id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+            return response($tickets);
+        } catch (Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar os tickets',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

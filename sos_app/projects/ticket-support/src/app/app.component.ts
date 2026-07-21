@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import {
   IonApp,
   IonRouterOutlet,
@@ -8,10 +8,12 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home, person, contract } from 'ionicons/icons';
-import { LoginService } from './_services/login.service';
-import { AsyncPipe } from '@angular/common';
-
+import { home, person, contract, exit } from 'ionicons/icons';
+import { LoginService } from '../../../shared/src/lib/_services/login.service';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { take } from 'rxjs';
+import { UserInterface } from '../../../shared/src/lib/_interfaces/UserInterface';
+import { NotificationService } from 'shared';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,10 +26,12 @@ import { AsyncPipe } from '@angular/common';
     IonRouterOutlet,
     IonApp,
     AsyncPipe,
+    JsonPipe,
   ],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   loginService = inject(LoginService);
+  notificationService = inject(NotificationService);
 
   user$ = this.loginService.user;
 
@@ -36,8 +40,7 @@ export class AppComponent implements OnInit {
       home,
       person,
       contract,
+      exit,
     });
   }
-
-  ngOnInit() {}
 }

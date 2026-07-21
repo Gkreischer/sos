@@ -194,12 +194,6 @@ ion-content {
   --background: var(--ion-color-medium);
 }
 
-h1,
-h2,
-h3 {
-  color: var(--ion-color-dark);
-}
-
 ion-button {
   ion-icon {
     padding-bottom: 2px;
@@ -209,4 +203,24 @@ ion-button {
 
 .ion-margin-bottom {
   margin-bottom: 0.5rem;
+}
+
+ion-item.selected::part(native) {
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-dark);
+}
+
+#inbox-list ion-item.selected ion-icon {
+  color: var(--ion-color-dark);
+}
+
+#inbox-list ion-list-header {
+  background-color: var(--ion-color-primary);
+}
+
+ion-badge {
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
 }

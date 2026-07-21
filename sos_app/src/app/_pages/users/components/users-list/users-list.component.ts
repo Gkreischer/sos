@@ -1,7 +1,7 @@
 import { Component, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
-import { ModalService } from 'src/app/_services/modal.service';
+import { UserInterface } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { UserService } from 'src/app/_services/user.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
@@ -13,7 +13,7 @@ import {
   SearchbarChangeEventDetail,
   IonSearchbarCustomEvent,
 } from '@ionic/core';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import {
   IonToolbar,
   IonTitle,

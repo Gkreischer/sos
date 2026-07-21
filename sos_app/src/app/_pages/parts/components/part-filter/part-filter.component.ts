@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { PartService } from 'src/app/_services/part.service';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 import {
   IonCard,

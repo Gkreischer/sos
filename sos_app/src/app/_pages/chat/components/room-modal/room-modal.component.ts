@@ -27,7 +27,7 @@ import {
   IonImg,
   IonChip,
 } from '@ionic/angular/standalone';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { inject } from '@angular/core';
 import {
   ReactiveFormsModule,
@@ -37,16 +37,16 @@ import {
 } from '@angular/forms';
 import { RoomService } from 'src/app/_services/room.service';
 import { AlertService } from 'src/app/_services/alert.service';
-import { RoomInterface } from 'src/app/_interfaces/RoomInterface';
+import { RoomInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ToastService } from 'src/app/_services/toast.service';
-import { LoadingService } from 'src/app/_services/loading.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { LoadingService } from 'shared';
+import { UserInterface } from 'shared';
 import { FormArray } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import { IonSpinner } from '@ionic/angular/standalone';
-import { LoginService } from 'src/app/_services/login.service';
+import { LoginService } from 'shared';
 import { addIcons } from 'ionicons';
 import {
   saveOutline,

@@ -20,13 +20,13 @@ import {
   IonSelect,
   IonSelectOption,
 } from '@ionic/angular/standalone';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { TicketService } from 'src/app/_services/ticket.service';
-import { TicketInterface } from 'src/app/_interfaces/TicketInterface';
+import { TicketInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
-import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
+import { OrderStatusInterface } from 'shared';
 import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-ticket-modal',

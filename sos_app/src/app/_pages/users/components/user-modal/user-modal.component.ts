@@ -9,12 +9,12 @@ import {
 } from '@angular/forms';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import { Observable } from 'rxjs';
-import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
-import { UserTypeInterface } from 'src/app/_interfaces/UserTypeInterface';
+import { CategoryInterface } from 'shared';
+import { UserInterface } from 'shared';
+import { UserTypeInterface } from 'shared';
 import { AlertService } from 'src/app/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { UserService } from 'src/app/_services/user.service';
 import { CepService } from 'src/app/_services/cep.service';
@@ -26,7 +26,7 @@ import { UserTypeService } from 'src/app/_services/user-type.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { UserPasswordModalComponent } from './../user-password-modal/user-password-modal.component';
 import {

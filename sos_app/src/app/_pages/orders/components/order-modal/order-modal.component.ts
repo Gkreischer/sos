@@ -14,20 +14,20 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { CategoryInterface } from 'src/app/_interfaces/CategoryInterface';
+import { CategoryInterface } from 'shared';
 import { UsersListComponent } from 'src/app/_pages/users/components/users-list/users-list.component';
-import { ModalService } from 'src/app/_services/modal.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
+import { UserInterface } from 'shared';
 import { EquipmentService } from 'src/app/_services/equipment.service';
-import { EquipmentInterface } from 'src/app/_interfaces/EquipmentInterface';
+import { EquipmentInterface } from 'shared';
 import { OrderService } from 'src/app/_services/order.service';
-import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
+import { OrderInterface } from 'shared';
 import { AlertService } from 'src/app/_services/alert.service';
 import { ModalAddPartComponent } from '../modal-add-part/modal-add-part.component';
-import { PartInterface } from 'src/app/_interfaces/PartInterface';
+import { PartInterface } from 'shared';
 import { ToastService } from 'src/app/_services/toast.service';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
-import { OrderStatusInterface } from 'src/app/_interfaces/OrderStatusInterface';
+import { OrderStatusInterface } from 'shared';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import { priceMask } from 'src/app/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/services/money.service';
@@ -36,7 +36,7 @@ import { dateMask } from 'src/app/_masks/dateMask';
 
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { OrderClientHistoryComponent } from '../order-client-history/order-client-history.component';
 import {
   SignaturePadComponent,
@@ -78,7 +78,7 @@ import {
   add,
 } from 'ionicons/icons';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { PictureInterface } from 'src/app/_interfaces/PictureInterface';
+import { PictureInterface } from 'shared';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',

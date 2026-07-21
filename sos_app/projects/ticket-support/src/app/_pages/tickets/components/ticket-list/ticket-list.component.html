@@ -1,0 +1,34 @@
+@let tickets = tickets$ | async;
+@let isLoading = isLoading$ | async;
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Chamados</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    @if (isLoading && (!tickets || tickets.length === 0)) {
+      <ion-spinner></ion-spinner>
+    }
+    <ion-list>
+      @if (tickets) {
+        @for (ticket of tickets; track ticket.id) {
+          <ion-item
+            button="true"
+            detail="true"
+            (click)="openModalTicket(ticket)"
+          >
+            <ion-label>
+              <h2>{{ ticket.title }}</h2>
+              <p>{{ ticket.description }}</p>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Nenhum chamado cadastrado</h2>
+            </ion-label>
+          </ion-item>
+        }
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>

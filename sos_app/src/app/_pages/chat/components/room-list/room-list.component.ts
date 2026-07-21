@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RoomService } from 'src/app/_services/room.service';
 import { inject } from '@angular/core';
-import { RoomInterface } from 'src/app/_interfaces/RoomInterface';
+import { RoomInterface } from 'shared';
 import { Observable } from 'rxjs';
 import {
   IonList,
@@ -20,8 +20,8 @@ import {
   IonCardSubtitle,
 } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { LoadingService } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { RoomContentComponent } from './../room-content/room-content.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({

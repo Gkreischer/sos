@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { IonContent, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
 import { FormLoginComponent } from './components/form-login/form-login.component';
-import { LoginService } from 'src/app/_services/login.service';
-import { UserInterface } from 'src/app/_interfaces/UserInterface';
+import { LoginService } from 'shared';
+import { UserInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 @Component({

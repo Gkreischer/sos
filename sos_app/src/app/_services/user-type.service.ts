@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserFilterInterface } from '../_interfaces/UserFilterInterface';
-import { ErrorService } from './error.service';
-import { UserTypeInterface } from '../_interfaces/UserTypeInterface';
+import { ErrorService } from 'shared';
+import { UserTypeInterface } from 'shared';
 
 @Injectable({
   providedIn: 'root',

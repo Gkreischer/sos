@@ -16,11 +16,11 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { PostService } from 'src/app/_services/post.service';
-import { PostInterface } from 'src/app/_interfaces/PostInterface';
+import { PostInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
-import { ModalService } from 'src/app/_services/modal.service';
+import { LoadingService } from 'shared';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PostContentModalComponent } from '../../posts/components/post-content/post-content.component';
 import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
 import { addIcons } from 'ionicons';

@@ -14,7 +14,7 @@ import {
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PostService } from 'src/app/_services/post.service';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-post-filter',

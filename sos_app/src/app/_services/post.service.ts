@@ -1,11 +1,11 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { BehaviorSubject, tap, catchError, map } from 'rxjs';
-import { PostInterface } from 'src/app/_interfaces/PostInterface';
+import { PostInterface } from 'shared';
 import { HttpClient } from '@angular/common/http';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
-import { PaginateInterface } from 'src/app/_interfaces/PaginateInterface';
-import { PostFilterInterface } from 'src/app/_interfaces/PostFilterInterface';
+import { PaginateInterface } from 'shared';
+import { PostFilterInterface } from 'shared';
 @Injectable({
   providedIn: 'root',
 })

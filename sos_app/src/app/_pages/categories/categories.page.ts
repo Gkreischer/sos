@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
 import { ViewWillEnter } from '@ionic/angular';
 import { CategoriesListComponent } from './components/categories-list/categories-list.component';

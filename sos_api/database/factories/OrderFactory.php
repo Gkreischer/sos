@@ -20,14 +20,24 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        $customer = User::where('type_id', 2)
+            ->has('equipments') // ou has('equipments')
+            ->inRandomOrder()
+            ->first();
+
         return [
             'title' => $this->faker->sentence(),
-            'user_id' => User::all()->where('type_id', 2)->random()->id,
-            'status_id' => OrderStatus::all()->random()->id,
+
             'description' => $this->faker->sentence(),
             'obs' => $this->faker->sentence(),
-            'technician_id' => User::all()->where('type_id', 3)->random()->id,
-            'equipment_id' => Equipment::all()->random()->id,
+            'user_id' => $customer->id,
+            'equipment_id' => Equipment::where('user_id', $customer->id)
+                ->inRandomOrder()
+                ->value('id'),
+            'technician_id' => User::where('type_id', 3)
+                ->inRandomOrder()
+                ->value('id'),
+            'status_id' => OrderStatus::inRandomOrder()->value('id'),
             'diagnostic' => $this->faker->sentence(),
             'service_description' => $this->faker->sentence(),
             'service_price' => $this->faker->numberBetween(1, 1000),
@@ -35,7 +45,7 @@ class OrderFactory extends Factory
             'total_price' => $this->faker->numberBetween(1, 1000),
             'discount' => $this->faker->numberBetween(1, 1000),
             'created_at' => fake()->dateTimeBetween('-3 year', 'now'),
-            'updated_at' => Carbon::now()
+            'updated_at' => now(),
         ];
     }
 }

@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CategoryInterface } from '../_interfaces/CategoryInterface';
+import { CategoryInterface } from 'shared';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, catchError, tap } from 'rxjs';
-import { ErrorService } from './error.service';
+import { ErrorService } from 'shared';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

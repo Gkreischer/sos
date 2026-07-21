@@ -2,9 +2,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-
+    "rootDir": ".",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "strict": true,
@@ -17,13 +16,18 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
+    "ignoreDeprecations": "5.0",
+
+    "baseUrl": ".",
+    "paths": {
+      "shared": ["projects/shared/src/public-api.ts"]
+    },
     "target": "es2022",
     "module": "es2020",
     "lib": ["ES2018", "dom"],
     "useDefineForClassFields": false,
     "skipLibCheck": true
   },
-
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
@@ -32,10 +36,10 @@
   },
   "references": [
     {
-      "path": "./projects/ticket-support/tsconfig.app.json"
+      "path": "./projects/shared/tsconfig.lib.json"
     },
     {
-      "path": "./projects/ticket-support/tsconfig.spec.json"
+      "path": "./projects/shared/tsconfig.spec.json"
     }
   ]
 }

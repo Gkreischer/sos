@@ -20,13 +20,13 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 
-import { ModalService } from 'src/app/_services/modal.service';
+import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { inject } from '@angular/core';
 import { OrderService } from 'src/app/_services/order.service';
 import { Observable } from 'rxjs';
-import { OrderInterface } from 'src/app/_interfaces/OrderInterface';
+import { OrderInterface } from 'shared';
 import { DatePipe, AsyncPipe } from '@angular/common';
-import { LoadingService } from 'src/app/_services/loading.service';
+import { LoadingService } from 'shared';
 import { OrderModalComponent } from '../order-modal/order-modal.component';
 import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';

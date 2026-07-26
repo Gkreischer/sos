@@ -1,6 +1,6 @@
 import { OrderStatusInterface } from './OrderStatusInterface';
 import { UserInterface } from './UserInterface';
-
+import { EquipmentInterface } from './EquipmentInterface';
 export interface TicketInterface {
   id: number;
   title: string;
@@ -9,6 +9,8 @@ export interface TicketInterface {
   status: OrderStatusInterface;
   user_id: number;
   user: UserInterface;
+  equipment_id: number;
+  equipment: EquipmentInterface;
   created_at: Date;
   updated_at: Date;
 }

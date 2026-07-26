@@ -36,7 +36,7 @@ export class LineChartTotalPriceBetweenPeriodsComponent {
     datasets: [
       {
         data: [],
-        label: 'Movimentação financeira',
+        label: 'Valor total das OS Entregues',
       },
     ],
   };
@@ -62,7 +62,7 @@ export class LineChartTotalPriceBetweenPeriodsComponent {
         labels: data.map((item) => item.month),
         datasets: [
           {
-            label: 'Movimentação financeira',
+            label: 'Valor total das OS Entregues R$',
             data: data.map((item) => item.total_price),
           },
         ],

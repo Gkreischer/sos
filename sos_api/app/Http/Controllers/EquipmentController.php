@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
+use App\Models\User;
 
 class EquipmentController extends Controller
 {
@@ -23,7 +24,7 @@ class EquipmentController extends Controller
             // Cria uma chave única por página (ex: equipments_page_1, equipments_page_2)
             $cacheKey = 'equipments_page_' . $page;
 
-            $equipmentsCache = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+            $equipmentsCache = Cache::tags('equipments-list')->remember($cacheKey, now()->addMinutes(5), function () {
                 return Equipment::orderBy('created_at', 'desc')->paginate(20)->toArray();
             });
 
@@ -56,9 +57,15 @@ class EquipmentController extends Controller
                 return response($validator->errors(), 400);
             }
 
+            if (!isset($data['user_id'])) {
+                $data['user_id'] = auth('sanctum')->user()->id;
+            }
+
             $equipment = Equipment::create($data);
 
             Cache::tags('equipments-list')->flush();
+            Cache::tags('customer-equipments-list')->flush();
+
 
             $equipment->load(['category',  'user']);
 
@@ -171,6 +178,8 @@ class EquipmentController extends Controller
             $equipment->update($data);
 
             Cache::tags('equipments-list')->flush();
+            Cache::tags('customer-equipments-list')->flush();
+
 
             // Recarrega as relações após a atualização
             $equipment->load(['category', 'user']);
@@ -199,6 +208,7 @@ class EquipmentController extends Controller
             $equipment->delete();
 
             Cache::tags('equipments-list')->flush();
+            Cache::tags('customer-equipments-list')->flush();
 
             return response($equipment, 204);
         } catch (QueryException $e) {
@@ -217,7 +227,7 @@ class EquipmentController extends Controller
         }
     }
 
-    public function getUserEquipments(int $id)
+    public function getEquipmentsByUserId(int $id)
     {
         try {
             $equipments = Equipment::where('user_id', $id)->get();
@@ -231,6 +241,169 @@ class EquipmentController extends Controller
                 ],
                 500
             );
+        }
+    }
+
+    public function getCustomerEquipments()
+    {
+        try {
+            /** @var User $user */
+            $user = auth('sanctum')->user();
+
+            $cacheKey = 'equipments:customer:' . $user->id;
+
+            $equipmentsCache = Cache::tags('customer-equipments-list')->remember($cacheKey, now()->addMinutes(5), function () use ($user) {
+                return $user->equipments()->orderBy('created_at', 'desc')->paginate(20);
+            });
+
+            return response($equipmentsCache, 200);
+        } catch (Exception $e) {
+            return response(
+                [
+                    'message' => 'Erro ao obter os equipamentos do usuario',
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function getCustomerEquipmentById(int $id)
+    {
+        try {
+            /** @var User $user */
+            $user = auth('sanctum')->user();
+
+            if (!isset($user)) {
+                return response([
+                    'message' => 'Sem permissão de acesso',
+                    'error' => 'Usuário sem permissão'
+                ], 404);
+            }
+            $equipment = $user->equipments()->findOrFail($id);
+
+            return response($equipment, 200);
+        } catch (Exception $e) {
+            return response(
+                [
+                    'message' => 'Erro ao obter os equipamentos do usuario',
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function updateCustomerEquipment(int $id, Request $request)
+    {
+        try {
+            /** @var User $user */
+            $user = auth('sanctum')->user();
+
+            if (!isset($user)) {
+                return response([
+                    'message' => 'Sem permissão de acesso',
+                    'error' => 'Usuário sem permissão'
+                ], 404);
+            }
+
+            $equipment = $user->equipments()->findOrFail($id);
+            $data = $request->all();
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'description' => 'string|max:255|nullable',
+                'category_id' => 'required|exists:categories,id',
+                'user_id' => 'required|exists:users,id',
+                'obs' => 'string|max:255|nullable',
+            ]);
+
+            if ($validator->fails()) {
+                return response($validator->errors(), 400);
+            }
+
+            Cache::tags('customer-equipments-list')->flush();
+            $equipment->update($data);
+
+            return response($equipment, 200);
+        } catch (Exception $e) {
+            return response(
+                [
+                    'message' => 'Erro ao atualizar o equipamento do usuario',
+                    'error' => $e->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function getCustomerEquipmentsByFilter(Request $request)
+    {
+        try {
+            /** @var User $user */
+            $user = auth('sanctum')->user();
+
+            if (!isset($user)) {
+                return response([
+                    'message' => 'Sem permissão de acesso',
+                    'error' => 'Usuário sem permissão'
+                ], 404);
+            }
+
+            $description = trim($request->description ?? '');
+
+            $cacheKey = 'equipments:customer:filter:' . $user->id . ':' . $description;
+
+            $equipmentsCache = Cache::tags('customer-equipments-list')->remember($cacheKey, now()->addMinutes(5), function () use ($user, $description) {
+                $equipments = $user->equipments()
+                    ->select(
+                        'equipments.id',
+                        'equipments.name',
+                        'equipments.description',
+                        'equipments.category_id',
+                        'equipments.obs',
+                        'equipments.created_at'
+                    )
+                    ->with([
+                        'category:id,name',
+                    ])
+                    ->when($description !== '', function ($query) use ($description) {
+                        $query->where(function ($query) use ($description) {
+                            $query->where('equipments.name', 'LIKE', "%{$description}%")
+                                ->orWhereHas('category', function ($query) use ($description) {
+                                    $query->where('name', 'LIKE', "%{$description}%");
+                                });
+                        });
+                    })
+                    ->orderBy('equipments.created_at', 'desc')
+                    ->paginate(20);
+
+                return $equipments;
+            });
+
+
+            return response($equipmentsCache, 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível obter os equipamentos',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteCustomerEquipment(int $id)
+    {
+        try {
+            /** @var User $user */
+            $user = auth('sanctum')->user();
+            $equipment = $user->equipments()->findOrFail($id);
+            $equipment->delete();
+            Cache::tags('customer-equipments-list')->flush();
+            return response($equipment, 204);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível excluir o equipamento',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

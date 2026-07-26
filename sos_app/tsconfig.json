@@ -2,8 +2,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-    "rootDir": ".",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "strict": true,
@@ -14,19 +14,18 @@
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "importHelpers": true,
-    "ignoreDeprecations": "5.0",
-
-    "baseUrl": ".",
     "paths": {
-      "shared": ["projects/shared/src/public-api.ts"]
+      "shared": ["./projects/shared/src/public-api.ts"],
+      "@env/*": ["./src/environments/*"],
+      "@ticket/*": ["./projects/ticket-support/src/*"]
     },
     "target": "es2022",
     "module": "es2020",
-    "lib": ["ES2018", "dom"],
-    "useDefineForClassFields": false,
-    "skipLibCheck": true
+    "lib": ["es2018", "dom"],
+    "skipLibCheck": true,
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -36,10 +35,22 @@
   },
   "references": [
     {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    },
+    {
       "path": "./projects/shared/tsconfig.lib.json"
     },
     {
       "path": "./projects/shared/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ticket-support/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/ticket-support/tsconfig.spec.json"
     }
   ]
 }

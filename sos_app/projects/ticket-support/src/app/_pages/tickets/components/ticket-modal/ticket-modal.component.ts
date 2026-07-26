@@ -15,6 +15,8 @@ import {
   IonTextarea,
   IonCard,
   IonCardContent,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackSharp } from 'ionicons/icons';
@@ -25,6 +27,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { TicketService } from 'shared';
+import { LoadingService } from 'shared';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { EquipmentService } from '@ticket/app/_services/equipment.service';
 @Component({
   selector: 'app-ticket-modal',
   imports: [
@@ -43,17 +49,25 @@ import { TicketService } from 'shared';
     IonTitle,
     IonButton,
     ReactiveFormsModule,
+    AsyncPipe,
+    IonSelect,
+    IonSelectOption,
   ],
   templateUrl: './ticket-modal.component.html',
-  styleUrl: './ticket-modal.component.css',
+  styleUrl: './ticket-modal.component.scss',
 })
 export class TicketModalComponent implements OnInit {
   modalService = inject(ModalService);
   formBuilder = inject(FormBuilder);
   ticketService = inject(TicketService);
+  loadingService = inject(LoadingService);
+  equipmentService = inject(EquipmentService);
 
   form!: FormGroup;
   ticketId!: number;
+  equipments$: Observable<any> = this.equipmentService.equipments;
+
+  isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   constructor() {
     addIcons({
@@ -62,6 +76,7 @@ export class TicketModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getCustomerEquipments();
     this.mountForm();
     if (this.ticketId) {
       this.getTicketInfoById();
@@ -74,9 +89,14 @@ export class TicketModalComponent implements OnInit {
     });
   }
 
+  getCustomerEquipments() {
+    this.equipmentService.getCustomerEquipments().subscribe();
+  }
+
   mountForm() {
     this.form = this.formBuilder.group({
-      title: ['', [Validators.required]],
+      title: ['', [Validators.required, Validators.maxLength(255)]],
+      equipment_id: ['', [Validators.required]],
       description: ['', [Validators.required]],
     });
   }

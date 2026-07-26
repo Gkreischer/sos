@@ -11,7 +11,7 @@ const loadingBar = document.createElement('ion-progress-bar') as HTMLElement & {
 
 loadingBar.type = 'indeterminate';
 loadingBar.color = 'tertiary';
-loadingBar.style.height = '5px';
+loadingBar.style.height = '8px';
 loadingBar.style.opacity = '1';
 loadingBar.style.position = 'fixed';
 loadingBar.style.top = '0';

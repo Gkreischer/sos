@@ -139,28 +139,34 @@ class MetricController extends Controller
                 ], 400);
             }
 
-            $metrics = [];
-
             $cacheKey = 'metrics:order:total_price:' . $request->startDate . ':' . $request->endDate;
 
-            $metrics = Order::without([
-                'user',
-                'equipment',
-                'orderParts',
-                'images',
-                'status',
-                'technician'
-            ])
-                ->selectRaw("
+            $cache = Cache::tags('metrics')->remember(
+                $cacheKey,
+                now()->addMinutes(30),
+                function () use ($startDate, $endDate) {
+                    $metrics = Order::without([
+                        'user',
+                        'equipment',
+                        'orderParts',
+                        'images',
+                        'status',
+                        'technician'
+                    ])
+                        ->selectRaw("
                 DATE_FORMAT(created_at, '%Y-%m') as month,
                 SUM(total_price) as total_price
             ")
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get();
+                        ->where('status_id', OrderStatusEnum::DELIVERED)
+                        ->whereBetween('created_at', [$startDate, $endDate])
+                        ->groupBy('month')
+                        ->orderBy('month')
+                        ->get();
+                    return $metrics;
+                }
+            );
 
-            return response($metrics);
+            return response($cache);
         } catch (Exception $e) {
 
             return response([
@@ -253,31 +259,23 @@ class MetricController extends Controller
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
 
-                    $technicianType = UserType::where('name', 'Técnico')->first();
-
-                    if (!$technicianType) {
-                        return [];
-                    }
-
-                    $technicians = $technicianType->users()
-                        ->select('users.id', 'users.name')
-                        ->withCount(['orders' => function ($query) use ($startDate, $endDate) {
-                            $query->where('status_id', 3)->whereBetween('created_at', [$startDate, $endDate]);
-                        }])
-                        ->withSum(['orders as total_revenue' => function ($query) use ($startDate, $endDate) {
-                            $query->whereBetween('created_at', [$startDate, $endDate]);
-                        }], 'total_price')
-                        ->orderByDesc('orders_count')
+                    $technicians = User::query()
+                        ->where('type_id', UserTypeEnum::TECHNICIAN)
+                        ->withCount([
+                            'technician_orders as total_orders' => function ($query) use ($startDate, $endDate) {
+                                $query->where('status_id', OrderStatusEnum::FINISHED)
+                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                            }
+                        ])
+                        ->withSum([
+                            'technician_orders as total_revenue' => function ($query) use ($startDate, $endDate) {
+                                $query->where('status_id', OrderStatusEnum::FINISHED)
+                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                            }
+                        ], 'total_price')
+                        ->orderByDesc('total_revenue')
                         ->limit(5)
                         ->get();
-
-                    $technicians->transform(function ($technician) {
-                        $technician->total_orders = $technician->orders_count;
-                        $technician->total_revenue = $technician->total_revenue ?? 0;
-
-                        unset($technician->orders_count);
-                        return $technician;
-                    });
 
                     return $technicians;
                 }

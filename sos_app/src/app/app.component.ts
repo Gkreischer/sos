@@ -4,7 +4,7 @@ import { MenuController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { inject } from '@angular/core';
 import { LoginService } from 'shared';
-import { UserInterface } from '../../projects/shared/src/lib/_interfaces/UserInterface';
+import { UserInterface } from 'projects/shared/src/lib/_interfaces/UserInterface';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -17,8 +17,6 @@ import {
   IonSplitPane,
   IonList,
   IonItem,
-  IonListHeader,
-  IonNote,
   IonMenuToggle,
   IonIcon,
   IonLabel,
@@ -58,13 +56,17 @@ import {
   chevronUpCircle,
   qrCode,
   contractSharp,
+  earSharp,
 } from 'ionicons/icons';
 import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
 import { ToastService } from './_services/toast.service';
-import { PhotoService } from './_services/photo.service';
+import { PhotoService } from '../../projects/shared/src/lib/_services/photo.service';
 import { NotificationService } from 'shared';
 import { UserLoginInterface } from '../../projects/shared/src/lib/_interfaces/UserLoginInterface';
-import { take } from 'rxjs';
+import { TicketService } from 'src/app/_services/ticket.service';
+
+import { RoomService } from './_services/room.service';
+import { UserService } from '../../projects/ticket-support/src/app/_services/user.service';
 
 interface AppPage {
   title: string;
@@ -106,7 +108,10 @@ export class AppComponent implements OnInit {
   router = inject(Router);
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
+  userService = inject(UserService);
   notificationService = inject(NotificationService);
+  ticketService = inject(TicketService);
+  roomService = inject(RoomService);
 
   user$ = this.loginService.user;
 
@@ -173,6 +178,13 @@ export class AppComponent implements OnInit {
       tourAnchor: 'menu.metrics',
     },
     {
+      title: 'Logs',
+      url: '/atividades',
+      icon: 'ear',
+      id: 'button-sidebar-logs',
+      tourAnchor: 'menu.logs',
+    },
+    {
       title: 'Configurações',
       url: '/configuracoes',
       icon: 'settings',
@@ -212,6 +224,7 @@ export class AppComponent implements OnInit {
       chevronUpCircle,
       qrCode,
       contractSharp,
+      earSharp,
     });
   }
 
@@ -237,6 +250,10 @@ export class AppComponent implements OnInit {
       event: '.new.ticket',
       callback: (data: any) => {
         this.incrementBadge('Chamados');
+        this.ticketService.ticketsSubject.next([
+          data,
+          ...this.ticketService.ticketsSubject.value,
+        ]);
       },
     },
     {
@@ -244,12 +261,25 @@ export class AppComponent implements OnInit {
       event: '.new.room',
       callback: (data: any) => {
         this.incrementBadge('Chat');
+        this.roomService.roomsSubject.next([
+          data,
+          ...this.roomService.roomsSubject.value,
+        ]);
       },
     },
   ];
 
   ngOnInit() {
-    this.listenPrivateChannels();
+    this.getUser();
+  }
+
+  getUser() {
+    this.loginService.user.subscribe((user) => {
+      console.log(user);
+      if (user) {
+        this.listenPrivateChannels();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -290,7 +320,7 @@ export class AppComponent implements OnInit {
       );
       return;
     }
-    this.loginService.updateAvatarImage(response.imagePath).subscribe();
+    this.userService.updateAvatarImage(response.imagePath).subscribe();
     this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
   }
 

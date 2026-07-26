@@ -120,7 +120,7 @@ class TicketController extends Controller
             $data['user_id'] = auth('sanctum')->user()->id;
             $data['status_id'] = OrderStatus::where('id', OrderStatusEnum::PENDING)->first()->id;
             $ticket = Ticket::create($data);
-            $ticket->load('user:id,name');
+            $ticket->load(['user:id,name', 'status:id,name']);
             broadcast(new NewTicket($ticket));
             return response($ticket);
         } catch (\Exception $e) {

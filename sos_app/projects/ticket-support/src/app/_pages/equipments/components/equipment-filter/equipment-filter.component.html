@@ -1,0 +1,34 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Pesquisar</ion-card-title>
+    <ion-card-subtitle
+      >Digite o nome do equipamento ou categoria</ion-card-subtitle
+    >
+  </ion-card-header>
+  @let isLoading = isLoading$ | async;
+  <ion-card-content>
+    <form [formGroup]="filterForm" (ngSubmit)="searchEquipment()">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" sizeLg="10">
+            <ion-input
+              label="Descrição"
+              labelPlacement="floating"
+              formControlName="description"
+              fill="outline"
+            ></ion-input>
+          </ion-col>
+          <ion-col size="12" sizeLg="2">
+            <ion-button
+              class="full-button"
+              expand="block"
+              type="submit"
+              [disabled]="filterForm.invalid || isLoading"
+              >Buscar</ion-button
+            >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-card-content>
+</ion-card>

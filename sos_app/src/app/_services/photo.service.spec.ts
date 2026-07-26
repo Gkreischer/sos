@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PhotoService } from './photo.service';
+import { PhotoService } from '../../../projects/shared/src/lib/_services/photo.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 

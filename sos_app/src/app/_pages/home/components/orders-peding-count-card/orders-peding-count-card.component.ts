@@ -8,17 +8,23 @@ import {
   IonText,
   IonSkeletonText,
   IonCardSubtitle,
+  IonLabel,
+  IonIcon,
+  IonItem,
+  IonList,
+  IonNote,
 } from '@ionic/angular/standalone';
-
+import { addIcons } from 'ionicons';
+import { flame } from 'ionicons/icons';
 @Component({
   selector: 'app-orders-peding-count-card',
   imports: [
-    IonCardSubtitle,
+    IonList,
+    IonItem,
+    IonIcon,
+    IonLabel,
     IonSkeletonText,
-    IonText,
     IonCardContent,
-    IonCardTitle,
-    IonCardHeader,
     IonCard,
   ],
   templateUrl: './orders-peding-count-card.component.html',
@@ -28,6 +34,10 @@ export class OrdersPedingCountCardComponent implements OnInit {
   metricService = inject(MetricsService);
 
   count = this.metricService.ordersPendingCount;
+
+  constructor() {
+    addIcons({ flame });
+  }
 
   ngOnInit() {
     this.getCount();

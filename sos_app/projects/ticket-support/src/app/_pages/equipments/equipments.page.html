@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Equipamentos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-equipment-filter></app-equipment-filter>
+  <app-equipments-list></app-equipments-list>
+</ion-content>
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button color="primary" (click)="openModalAddEquipment()">
+    <ion-icon name="add-sharp"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

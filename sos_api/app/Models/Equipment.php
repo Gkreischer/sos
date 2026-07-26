@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Equipment extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'equipments';
 
@@ -21,6 +22,16 @@ class Equipment extends Model
         'user_id',
         'obs'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+    }
 
     protected $with = [
         'category',

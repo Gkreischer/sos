@@ -3,7 +3,7 @@ import { loginGuard } from 'shared';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -28,6 +28,14 @@ export const routes: Routes = [
     canActivate: [loginGuard],
     loadComponent: () =>
       import('./_pages/profile/profile.page').then((m) => m.ProfilePage),
+  },
+  {
+    path: 'equipments',
+    canActivate: [loginGuard],
+    loadComponent: () =>
+      import('./_pages/equipments/equipments.page').then(
+        (m) => m.EquipmentsPage,
+      ),
   },
   {
     path: '**',

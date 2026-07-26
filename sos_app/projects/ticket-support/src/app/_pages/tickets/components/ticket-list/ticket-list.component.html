@@ -2,7 +2,7 @@
 @let isLoading = isLoading$ | async;
 <ion-card>
   <ion-card-header>
-    <ion-card-title>Chamados</ion-card-title>
+    <ion-card-title>Lista de chamados</ion-card-title>
   </ion-card-header>
   <ion-card-content>
     @if (isLoading && (!tickets || tickets.length === 0)) {
@@ -18,7 +18,27 @@
           >
             <ion-label>
               <h2>{{ ticket.title }}</h2>
-              <p>{{ ticket.description }}</p>
+              <ion-chip color="primary">
+                <ion-label>
+                  <ion-icon name="calendar"></ion-icon>
+                  {{ ticket.created_at | date: "HH:mm dd/MM/yyyy" }}
+                </ion-label>
+              </ion-chip>
+              <ion-chip
+                [color]="
+                  ticket.status_id === 1
+                    ? 'danger'
+                    : ticket.status_id === 2
+                      ? 'warning'
+                      : ticket.status_id === 3
+                        ? 'success'
+                        : ticket.status_id === 4
+                          ? 'dark'
+                          : 'light'
+                "
+              >
+                {{ ticket.status.name }}
+              </ion-chip>
             </ion-label>
           </ion-item>
         } @empty {

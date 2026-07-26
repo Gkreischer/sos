@@ -1,0 +1,49 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Equipamentos cadastrados</ion-card-title>
+    <ion-card-subtitle>
+      Aqui você verifica seus equipamentos cadastrados
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    @let equipments = equipmentService.equipments | async;
+    @let loading = isLoading$ | async;
+
+    <ion-list data-cy="equipments-list">
+      @if (loading && (!equipments || equipments.length === 0)) {
+        <ion-item lines="none">
+          <ion-label class="ion-text-center">
+            <ion-spinner></ion-spinner>
+          </ion-label>
+        </ion-item>
+      } @else {
+        @for (equipment of equipments; track equipment.id) {
+          <ion-item button="true" detail="true" (click)="openModal(equipment)">
+            <ion-label>
+              <h3 class="ion-text-bold">
+                <strong>{{ equipment.category.name }}</strong>
+              </h3>
+              <h3>{{ equipment.name }}</h3>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none" data-cy="empty-equipments-message">
+            <ion-label>
+              <h2>Nenhum equipamento cadastrado</h2>
+            </ion-label>
+          </ion-item>
+        }
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+@if (infiniteScroll() && equipments && equipments.length > 0) {
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfinite($event)"
+    loadingSpinner="bubbles"
+    loadingText="Carregando..."
+  >
+    <ion-infinite-scroll-content />
+  </ion-infinite-scroll>
+}

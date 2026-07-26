@@ -12,14 +12,20 @@ import {
   IonCardContent,
   IonLabel,
   IonSpinner,
+  IonChip,
+  IonIcon,
 } from '@ionic/angular/standalone';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoadingService } from 'shared';
 import { ModalService } from 'shared';
 import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
+import { addIcons } from 'ionicons';
+import { calendar } from 'ionicons/icons';
 @Component({
   selector: 'app-ticket-list',
   imports: [
+    IonIcon,
+    IonChip,
     IonSpinner,
     IonLabel,
     IonCardContent,
@@ -29,9 +35,10 @@ import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
     IonList,
     IonItem,
     AsyncPipe,
+    DatePipe,
   ],
   templateUrl: './ticket-list.component.html',
-  styleUrl: './ticket-list.component.css',
+  styleUrl: './ticket-list.component.scss',
 })
 export class TicketListComponent implements OnInit {
   ticketService = inject(TicketService);
@@ -40,6 +47,10 @@ export class TicketListComponent implements OnInit {
 
   tickets$: Observable<TicketInterface[] | null> = this.ticketService.tickets;
   isLoading$ = this.loadingService.isLoading$;
+
+  constructor() {
+    addIcons({ calendar });
+  }
 
   ngOnInit() {
     this.getAllTickets();

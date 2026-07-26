@@ -11,7 +11,7 @@ import { OrderStatusInterface } from 'shared';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderService } from 'src/app/_services/order.service';
 
-import { dateMask } from 'src/app/_masks/dateMask';
+import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'shared';

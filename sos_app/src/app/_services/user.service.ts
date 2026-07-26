@@ -101,11 +101,12 @@ export class UserService {
             if (user.id === userReceived.id) {
               return userReceived;
             }
-            if (user.id === this.loginService.userSubject.value!.id) {
-              this.loginService.userSubject.next(userReceived);
-            }
+
             return user;
           });
+          if (this.loginService.userSubject.value?.id === userReceived.id) {
+            this.loginService.userSubject.next(userReceived);
+          }
 
           return this.usersSubject.next(newUsers ?? []);
         }),
@@ -140,13 +141,16 @@ export class UserService {
       );
   }
 
-  updateUserPassword(user: UserInterface) {
+  updateAvatarImage(imagePath: string) {
     return this.http
-      .put<UserInterface>(
-        `${environment.baseUrl}/user/password`,
-        user,
-        httpOptions,
-      )
-      .pipe(catchError(this.errorService.handleError));
+      .post<UserInterface>(`${environment.baseUrl}/user/image/change`, {
+        imagePath: imagePath,
+      })
+      .pipe(
+        tap((user) => {
+          this.loginService.userSubject.next(user);
+        }),
+        catchError(this.errorService.handleError),
+      );
   }
 }

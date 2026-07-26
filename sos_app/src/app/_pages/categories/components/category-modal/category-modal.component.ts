@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { CategoryInterface } from 'shared';
-import { AlertService } from 'src/app/_services/alert.service';
+import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { ToastService } from 'src/app/_services/toast.service';

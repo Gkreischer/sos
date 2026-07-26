@@ -9,16 +9,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
 
     protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician'];
 
     protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+    }
 
     public function user(): BelongsTo
     {

@@ -1,13 +1,15 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title>Dados do usuário</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" sizeMd="8" sizeLg="6">
+        <app-profile-info></app-profile-info>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

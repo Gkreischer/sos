@@ -10,10 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +45,17 @@ class User extends Authenticatable
         'password',
         'type_id'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logFillable()
+            ->logExcept(['password', 'remember_token'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -80,6 +94,11 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function technician_orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'technician_id');
     }
 
     public function posts()

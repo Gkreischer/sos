@@ -1,10 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    @if (!ticketId) {
-      <ion-title>Adicionar Ordem de Serviço</ion-title>
-    } @else {
-      <ion-title>Atualizar Ordem de Serviço</ion-title>
-    }
+    <ion-title>Chamado do cliente</ion-title>
     <ion-buttons slot="start">
       <ion-button shape="round" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -14,6 +10,7 @@
 </ion-header>
 
 @let ticketStatuses = ticketStatuses$ | async;
+@let equipments = equipments$ | async;
 <ion-content>
   <ion-card>
     <ion-card-header>
@@ -49,6 +46,24 @@
               </ion-select>
             </ion-col>
           </ion-row>
+          @if (equipments) {
+            <ion-row>
+              <ion-col size="12">
+                <ion-select
+                  fill="outline"
+                  labelPlacement="floating"
+                  label="Equipamento"
+                  formControlName="equipment_id"
+                >
+                  @for (equipment of equipments; track equipment.id) {
+                    <ion-select-option [value]="equipment.id">{{
+                      equipment.name
+                    }}</ion-select-option>
+                  }
+                </ion-select>
+              </ion-col>
+            </ion-row>
+          }
           <ion-row>
             <ion-col size="12">
               <ion-input

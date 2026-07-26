@@ -9,6 +9,8 @@
   </ion-toolbar>
 </ion-header>
 
+@let isLoading = isLoading$ | async;
+@let equipments = equipments$ | async;
 <ion-content color="medium">
   <ion-card>
     <ion-card-content>
@@ -22,9 +24,33 @@
                 labelPlacement="floating"
                 formControlName="title"
                 required
+                maxlength="255"
+                helperText="Descrição breve do chamado"
               ></ion-input>
             </ion-col>
           </ion-row>
+          @if (equipments) {
+            <ion-row>
+              <ion-col>
+                <ion-select
+                  label="Equipamento"
+                  formControlName="equipment_id"
+                  labelPlacement="floating"
+                  okText="Confirmar"
+                  cancelText="Cancelar"
+                  helperText="Selecione o equipamento"
+                  errorText="Nenhum equipamento selecionado"
+                  fill="outline"
+                >
+                  @for (equipment of equipments; track equipment.id) {
+                    <ion-select-option [value]="equipment.id">{{
+                      equipment.name
+                    }}</ion-select-option>
+                  }
+                </ion-select>
+              </ion-col>
+            </ion-row>
+          }
           <ion-row>
             <ion-col>
               <ion-textarea
@@ -34,14 +60,20 @@
                 formControlName="description"
                 labelPlacement="floating"
                 required
+                helperText="Dê detalhes do chamado"
               >
               </ion-textarea>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button expand="block" [disabled]="form.invalid" type="submit"
-                >Criar</ion-button
+              <ion-button
+                expand="block"
+                [disabled]="form.invalid || isLoading || ticketId"
+                type="submit"
+                >{{
+                  ticketId ? "Entraremos em contato em breve" : "Criar"
+                }}</ion-button
               >
             </ion-col>
           </ion-row>

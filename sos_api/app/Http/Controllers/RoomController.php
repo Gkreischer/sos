@@ -66,7 +66,7 @@ class RoomController extends Controller
             $room->load('creator:id,name,image');
             broadcast(new NewRoom($room));
 
-            return response()->json(['success' => true, 'room' => $room]);
+            return response(['success' => true, 'room' => $room]);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível criar a sala',
@@ -98,7 +98,7 @@ class RoomController extends Controller
                 return $user->id === $room->created_by;
             })->values());
 
-            return response()->json($room);
+            return response($room);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível encontrar a sala',

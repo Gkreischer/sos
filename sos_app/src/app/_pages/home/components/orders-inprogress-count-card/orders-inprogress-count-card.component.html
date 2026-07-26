@@ -1,15 +1,22 @@
 <ion-card color="warning">
-  <ion-card-header>
-    <ion-card-title>Qtd. de ordens em andamento</ion-card-title>
-    <ion-card-subtitle>Ordens com status em andamento</ion-card-subtitle>
-  </ion-card-header>
   <ion-card-content>
     @if (count() === null) {
       <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
     } @else {
-      <ion-text color="light">
-        <h1 color="light">{{ count() }}</h1>
-      </ion-text>
+      <ion-list>
+        <ion-item lines="none" color="warning">
+          <ion-icon
+            class="ion-no-margin"
+            name="hourglass"
+            slot="start"
+          ></ion-icon>
+
+          <ion-label>
+            <h1 color="light">{{ count() }}</h1>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <strong>Ordens com status em andamento</strong>
     }
   </ion-card-content>
 </ion-card>

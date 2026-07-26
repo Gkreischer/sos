@@ -1,7 +1,7 @@
 import { Injectable, inject, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ErrorService } from './error.service';
-import { BehaviorSubject, tap, catchError } from 'rxjs';
+import { BehaviorSubject, tap, catchError, switchMap, map, from } from 'rxjs';
 import { PreferencesPluginService } from './preferences-plugin.service';
 import { UserLoginInterface } from './../_interfaces/UserLoginInterface';
 import { UserInterface } from './../_interfaces/UserInterface';
@@ -28,14 +28,20 @@ export class LoginService {
     return this.userSubject.asObservable();
   }
 
-  public login(user: UserInterface) {
+  login(user: UserInterface) {
     return this.http
       .post<UserLoginInterface>(`${this.appConfig.baseUrl}/login`, user)
       .pipe(
-        tap((res) => {
-          res.user ? this.userSubject.next(res.user) : null;
-          this.setToken(res.token!);
-        }),
+        switchMap((res) =>
+          from(this.setToken(res.token!)).pipe(
+            map(() => {
+              if (res.user) {
+                this.userSubject.next(res.user);
+              }
+              return res;
+            }),
+          ),
+        ),
         catchError(this.errorService.handleError),
       );
   }
@@ -66,16 +72,9 @@ export class LoginService {
       );
   }
 
-  updateAvatarImage(imagePath: string) {
+  updateUserPassword(user: UserInterface) {
     return this.http
-      .post<UserInterface>(`${this.appConfig.baseUrl}/user/image/change`, {
-        imagePath: imagePath,
-      })
-      .pipe(
-        tap((user) => {
-          this.userSubject.next(user);
-        }),
-        catchError(this.errorService.handleError),
-      );
+      .put<UserInterface>(`${this.appConfig.baseUrl}/user/password`, user)
+      .pipe(catchError(this.errorService.handleError));
   }
 }

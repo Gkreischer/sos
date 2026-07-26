@@ -1,7 +1,6 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
   @let user = user$ | async;
-  {{ user | json }}
   @if (user) {
     <ion-tabs>
       <ion-tab-bar slot="bottom">
@@ -12,6 +11,10 @@
         <ion-tab-button tab="tickets">
           <ion-icon name="contract"></ion-icon>
           Chamados
+        </ion-tab-button>
+        <ion-tab-button tab="equipments">
+          <ion-icon name="hardware-chip"></ion-icon>
+          Equipamentos
         </ion-tab-button>
         <ion-tab-button tab="profile">
           <ion-icon name="person"></ion-icon>

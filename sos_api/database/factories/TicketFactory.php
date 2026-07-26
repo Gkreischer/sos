@@ -19,11 +19,17 @@ class TicketFactory extends Factory
      */
     public function definition(): array
     {
+
+        $user = User::has('equipments')
+            ->inRandomOrder()
+            ->first();
+        $user->load('equipments');
         return [
-            'user_id' => User::all()->random()->id,
+            'status_id' => OrderStatus::all()->random()->id,
+            'user_id' => $user->id,
+            'equipment_id' => $user->equipments()->inRandomOrder()->first()->id,
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->text(50),
-            'status_id' => OrderStatus::all()->random()->id,
             'created_at' => now(),
             'updated_at' => now(),
         ];

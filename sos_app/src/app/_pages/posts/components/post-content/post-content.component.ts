@@ -32,7 +32,7 @@ import { UserInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { PostService } from 'src/app/_services/post.service';
-import { AlertService } from 'src/app/_services/alert.service';
+import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { PostModalAddEditComponent } from '../post-modal-add-edit/post-modal-add-edit.component';
 import { ToastService } from 'src/app/_services/toast.service';
 import { addIcons } from 'ionicons';

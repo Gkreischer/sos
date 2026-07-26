@@ -36,7 +36,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { RoomService } from 'src/app/_services/room.service';
-import { AlertService } from 'src/app/_services/alert.service';
+import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { RoomInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';

@@ -24,7 +24,8 @@ import { AsyncPipe } from '@angular/common';
 import { UserService } from 'src/app/_services/user.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AlertService } from 'src/app/_services/alert.service';
+import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
+import { LoginService } from 'shared';
 @Component({
   selector: 'app-user-password-modal',
   standalone: true,
@@ -55,7 +56,7 @@ export class UserPasswordModalComponent implements OnInit {
   userService = inject(UserService);
   alertService = inject(AlertService);
   toastService = inject(ToastService);
-
+  loginService = inject(LoginService);
   user!: UserInterface;
 
   isLoading$ = this.loadingService.isLoading$;
@@ -107,7 +108,7 @@ export class UserPasswordModalComponent implements OnInit {
       );
       return;
     }
-    this.userService.updateUserPassword(this.form.value).subscribe({
+    this.loginService.updateUserPassword(this.form.value).subscribe({
       next: () => {
         this.closeModal();
         this.toastService.presentToast(

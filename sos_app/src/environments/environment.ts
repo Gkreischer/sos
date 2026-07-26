@@ -6,11 +6,14 @@ export const environment = {
   production: false,
   baseUrl: '/api/v1',
   storageUrl: '/storage',
+  cepUrl: 'https://viacep.com.br/ws/',
+
+  authEndpoint: '/broadcasting/auth',
+
   reverbKey: 'dv8upx8egffloafurncb',
   reverbHost: 'localhost',
   reverbPort: 8080,
-  authEndpoint: '/broadcasting/auth',
-  cepUrl: 'https://viacep.com.br/ws/',
+
   wsHost: 'localhost',
   wsPort: 8080,
   wsScheme: 'ws',

@@ -52,7 +52,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
     DatePipe,
   ],
   templateUrl: './tickets-list.component.html',
-  styleUrl: './tickets-list.component.css',
+  styleUrl: './tickets-list.component.scss',
 })
 export class TicketsListComponent implements OnInit {
   ticketService = inject(TicketService);

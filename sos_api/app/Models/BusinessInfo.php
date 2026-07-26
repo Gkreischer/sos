@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class BusinessInfo extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'business_info';
 
@@ -24,4 +26,14 @@ class BusinessInfo extends Model
         'state',
         'country',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+    }
 }

@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
-import { dateMask } from 'src/app/_masks/dateMask';
+import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { maskitoTransform } from '@maskito/core';

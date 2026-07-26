@@ -22,17 +22,17 @@ import { EquipmentService } from 'src/app/_services/equipment.service';
 import { EquipmentInterface } from 'shared';
 import { OrderService } from 'src/app/_services/order.service';
 import { OrderInterface } from 'shared';
-import { AlertService } from 'src/app/_services/alert.service';
+import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { ModalAddPartComponent } from '../modal-add-part/modal-add-part.component';
 import { PartInterface } from 'shared';
 import { ToastService } from 'src/app/_services/toast.service';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderStatusInterface } from 'shared';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
-import { priceMask } from 'src/app/_masks/priceMask';
+import { priceMask } from 'projects/shared/src/lib/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/services/money.service';
 import { Router } from '@angular/router';
-import { dateMask } from 'src/app/_masks/dateMask';
+import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
 
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
@@ -66,7 +66,6 @@ import {
   IonTextarea,
   IonImg,
 } from '@ionic/angular/standalone';
-import { JsonPipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import {
   checkmarkDoneSharp,
@@ -77,7 +76,7 @@ import {
   searchSharp,
   add,
 } from 'ionicons/icons';
-import { PhotoService } from 'src/app/_services/photo.service';
+import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { PictureInterface } from 'shared';
 @Component({
   selector: 'app-order-modal',

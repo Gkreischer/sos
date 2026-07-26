@@ -1,0 +1,10 @@
+ion-img::part(image) {
+  width: 200px;
+}
+ion-icon {
+  transform: translateY(2px);
+}
+
+ion-modal {
+  --height: auto;
+}

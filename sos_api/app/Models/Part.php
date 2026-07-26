@@ -5,14 +5,12 @@ namespace App\Models;
 use App\Casts\BrlDecimalCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Part extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $with = ['category'];
 
@@ -23,6 +21,16 @@ class Part extends Model
         'price',
         'category_id',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+    }
 
     protected $casts = [
         'price' => BrlDecimalCast::class,
@@ -39,7 +47,8 @@ class Part extends Model
         return $this->hasMany(Image::class);
     }
 
-    public function order() {
+    public function order()
+    {
         return $this->belongsToMany(Order::class, 'orders_parts');
     }
 }

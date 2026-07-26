@@ -50,6 +50,12 @@ export * from './lib/_services/modal.service';
 
 export * from './lib/_services/ticket.service';
 
+export * from './lib/_services/alert.service';
+
+export * from './lib/_services/cep.service';
+
+export * from './lib/_services/photo.service';
+
 export * from './lib/_interceptors/authentication.interceptor';
 
 export * from './lib/_interceptors/error.interceptor';
@@ -59,3 +65,15 @@ export * from './lib/_interceptors/loading-bar.interceptor';
 export * from './lib/_interceptors/loading.interceptor';
 
 export * from './lib/_guards/login.guard';
+
+export * from './lib/_masks/cepMask';
+
+export * from './lib/_masks/cnpjMask';
+
+export * from './lib/_masks/cpfMask';
+
+export * from './lib/_masks/phoneMask';
+
+export * from './lib/_masks/dateMask';
+
+export * from './lib/_masks/priceMask';

@@ -42,7 +42,6 @@ import { ClockComponent } from './components/clock/clock.component';
     OrdersPedingCountCardComponent,
     OrdersInprogressCountCardComponent,
     TotalClientsCountCardComponent,
-    ClockComponent,
   ],
 })
 export class HomePage implements ViewWillEnter, ViewDidEnter {

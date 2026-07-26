@@ -38,7 +38,7 @@ import { IonSpinner } from '@ionic/angular/standalone';
 import { IonText } from '@ionic/angular/standalone';
 import { NotificationService } from 'shared';
 import { LoginService } from 'shared';
-import { AlertService } from 'src/app/_services/alert.service';
+import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { RoomModalComponent } from './../room-modal/room-modal.component';
 import { addIcons } from 'ionicons';
 import { addSharp, trashSharp, pencilSharp, arrowBack } from 'ionicons/icons';
@@ -102,8 +102,14 @@ export class RoomContentComponent implements OnInit {
   ngOnInit() {
     this.mountForm();
     if (this.room) {
-      this.roomService.getRoomMessages(this.room.id).subscribe();
-      this.enterChannelRoom();
+      this.roomService.getRoomMessages(this.room.id).subscribe({
+        next: (messages) => {
+          this.enterChannelRoom();
+        },
+        error: (err) => {
+          this.modalService.closeModal();
+        },
+      });
     }
   }
 

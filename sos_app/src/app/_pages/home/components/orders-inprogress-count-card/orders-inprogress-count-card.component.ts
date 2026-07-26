@@ -8,12 +8,20 @@ import {
   IonCardSubtitle,
   IonCardContent,
   IonText,
+  IonLabel,
+  IonIcon,
+  IonList,
+  IonItem,
 } from '@ionic/angular/standalone';
-
+import { addIcons } from 'ionicons';
+import { hourglass } from 'ionicons/icons';
 @Component({
   selector: 'app-orders-inprogress-count-card',
   imports: [
-    IonText,
+    IonItem,
+    IonList,
+    IonIcon,
+    IonLabel,
     IonCardContent,
     IonCardSubtitle,
     IonCardTitle,
@@ -28,6 +36,10 @@ export class OrdersInprogressCountCardComponent implements OnInit {
   metricService = inject(MetricsService);
 
   count = this.metricService.ordersInProgressCount;
+
+  constructor() {
+    addIcons({ hourglass });
+  }
 
   ngOnInit() {
     this.getCount();

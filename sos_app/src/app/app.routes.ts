@@ -1,4 +1,4 @@
-import { Routes, PreloadAllModules, withPreloading } from '@angular/router';
+import { Routes } from '@angular/router';
 import { loginGuard } from 'shared';
 
 export const routes: Routes = [
@@ -77,11 +77,6 @@ export const routes: Routes = [
       import('./_pages/posts/posts.page').then((m) => m.PostsPage),
   },
   {
-    path: 'intro',
-    loadComponent: () =>
-      import('./_pages/intro/intro.page').then((m) => m.IntroPage),
-  },
-  {
     path: 'chat',
     canActivate: [loginGuard],
     loadComponent: () =>
@@ -89,8 +84,18 @@ export const routes: Routes = [
   },
   {
     path: 'chamados',
+    canActivate: [loginGuard],
+
     loadComponent: () =>
       import('./_pages/tickets/tickets.page').then((m) => m.TicketsPage),
+  },
+  {
+    path: 'atividades',
     canActivate: [loginGuard],
+
+    loadComponent: () =>
+      import('./_pages/activities/activities.page').then(
+        (m) => m.ActivitiesPage,
+      ),
   },
 ];

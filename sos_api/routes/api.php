@@ -16,6 +16,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\ActivityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::controller(LoginController::class)->group(function () {
                 Route::post('/verify', 'verifyToken');
                 Route::get('/logout', 'logout');
+                Route::put('/user/password', 'changePassword');
             });
 
             Route::controller(EquipmentController::class)->group(function () {
@@ -50,7 +52,9 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/equipments', 'store');
                 Route::put('/equipments/{id}', 'update');
                 Route::middleware(['role:admin|attendant'])->delete('/equipments/{id}', 'destroy');
-                Route::get('/users/{id}/equipments', 'getUserEquipments');
+                Route::get('/users/{id}/equipments', 'getEquipmentsByUserId');
+                Route::post('/customer/equipments/filter', 'getCustomerEquipmentsByFilter');
+                Route::get('/customer/equipments/{id}', 'getCustomerEquipmentById');
                 Route::post('/equipments/filter', 'getEquipmentByFilter');
             });
 
@@ -70,7 +74,6 @@ Route::middleware(['json.response'])->group(function () {
                 Route::middleware(['role:admin|attendant'])->delete('/users/{id}', 'destroy');
                 Route::post('/users/add', 'store');
                 Route::post('/user/image/change', 'updateUserAvatarImage');
-                Route::put('/user/password', 'changePassword');
             });
 
             Route::controller(OrderController::class)->group(function () {
@@ -163,6 +166,10 @@ Route::middleware(['json.response'])->group(function () {
                 Route::get('/tickets/{id}', 'show');
                 Route::put('/tickets/{id}', 'update');
                 Route::delete('/tickets/{id}', 'destroy');
+            });
+
+            Route::middleware('role:admin')->controller(ActivityController::class)->group(function () {
+                Route::get('/activities', 'index');
             });
         });
 

@@ -27,7 +27,14 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderStatusInterface } from 'shared';
-import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
+import { EquipmentService } from 'src/app/_services/equipment.service';
+import { EquipmentInterface } from 'shared';
 @Component({
   selector: 'app-ticket-modal',
   imports: [
@@ -53,12 +60,13 @@ import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
     ReactiveFormsModule,
   ],
   templateUrl: './ticket-modal.component.html',
-  styleUrl: './ticket-modal.component.css',
+  styleUrl: './ticket-modal.component.scss',
 })
 export class TicketModalComponent implements OnInit {
   modalService = inject(ModalService);
   ticketService = inject(TicketService);
   orderStatusService = inject(OrderStatusService);
+  equipmentService = inject(EquipmentService);
   formBuilder = inject(FormBuilder);
 
   ticketId?: number;
@@ -66,7 +74,8 @@ export class TicketModalComponent implements OnInit {
   ticket$: Observable<TicketInterface | null> = this.ticketService.ticket;
   ticketStatuses$: Observable<OrderStatusInterface[]> =
     this.orderStatusService.order_statuses;
-
+  equipments$: Observable<EquipmentInterface[]> =
+    this.equipmentService.equipments;
   form!: FormGroup;
 
   ngOnInit() {
@@ -79,32 +88,47 @@ export class TicketModalComponent implements OnInit {
 
   mountForm() {
     this.form = this.formBuilder.group({
-      title: [''],
-      description: [''],
-      status_id: [''],
-      user_id: [''],
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      status_id: ['', [Validators.required]],
+      user_id: ['', [Validators.required]],
+      equipment_id: ['', [Validators.required]],
       user: [{ value: '', disabled: true }],
     });
   }
 
+  getUserEquipments() {
+    const userId = this.form.get('user_id')?.value;
+
+    if (!userId) {
+      return;
+    }
+
+    this.equipmentService.getUserEquipments(userId).subscribe();
+  }
+
   getTicketStatuses() {
-    this.orderStatusService
-      .getOrderStatuses()
-      .subscribe((res) => console.log(res));
+    this.orderStatusService.getOrderStatuses().subscribe();
   }
 
   getTicketInfo() {
-    this.ticketService
-      .getTicket(this.ticketId!)
-      .subscribe((res) => this.patchForm(res));
+    this.ticketService.getTicket(this.ticketId!).subscribe((res) => {
+      this.patchForm(res);
+      console.log(res);
+    });
   }
 
   patchForm(ticket: TicketInterface) {
-    console.log(ticket);
     this.form.patchValue({
-      ...ticket,
+      title: ticket.title,
+      description: ticket.description,
+      status_id: ticket.status_id,
+      user_id: ticket.user_id,
+      equipment_id: ticket.equipment_id,
       user: ticket.user.name,
     });
+
+    this.getUserEquipments();
   }
 
   closeModal() {

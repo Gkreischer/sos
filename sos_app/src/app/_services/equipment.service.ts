@@ -32,11 +32,11 @@ export class EquipmentService {
     this.equipmentFilter.set(equipmentFilter);
   }
 
-  getUserEquipments(user: UserInterface) {
+  getUserEquipments(userId: UserInterface) {
     return this.http
       .get<
         EquipmentInterface[]
-      >(`${environment.baseUrl}/users/${user.id}/equipments`, httpOptions)
+      >(`${environment.baseUrl}/users/${userId}/equipments`, httpOptions)
       .pipe(
         tap((equipments) => {
           return this.equipmentsSubject.next(equipments);

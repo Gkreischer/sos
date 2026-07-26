@@ -7,10 +7,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MaskitoElementPredicate } from '@maskito/core';
-import { cepMask } from 'src/app/_masks/cepMask';
-import { cnpjMask } from 'src/app/_masks/cnpjMask';
+import { cepMask } from 'projects/shared/src/lib/_masks/cepMask';
+import { cnpjMask } from 'projects/shared/src/lib/_masks/cnpjMask';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
-import { PhotoService } from 'src/app/_services/photo.service';
+import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { SettingService } from 'src/app/_services/setting.service';
 import { ToastService } from 'src/app/_services/toast.service';
 import { MaskitoDirective } from '@maskito/angular';
@@ -34,7 +34,7 @@ import {
   IonLabel,
   IonInput,
 } from '@ionic/angular/standalone';
-import { phoneMask } from 'src/app/_masks/phoneMask';
+import { phoneMask } from 'projects/shared/src/lib/_masks/phoneMask';
 import { maskitoTransform } from '@maskito/core';
 import { addIcons } from 'ionicons';
 import { camera, arrowBack } from 'ionicons/icons';

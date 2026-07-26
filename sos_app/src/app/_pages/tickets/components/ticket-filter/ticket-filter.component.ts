@@ -17,7 +17,7 @@ import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'shared';
 import { MaskitoDirective } from '@maskito/angular';
-import { dateMask } from 'src/app/_masks/dateMask';
+import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
 import { MaskitoElementPredicate } from '@maskito/core';
 import { TicketService } from 'src/app/_services/ticket.service';
 @Component({
@@ -40,7 +40,7 @@ import { TicketService } from 'src/app/_services/ticket.service';
     IonSelect,
   ],
   templateUrl: './ticket-filter.component.html',
-  styleUrl: './ticket-filter.component.css',
+  styleUrl: './ticket-filter.component.scss',
 })
 export class TicketFilterComponent implements OnInit {
   formBuilder = inject(FormBuilder);

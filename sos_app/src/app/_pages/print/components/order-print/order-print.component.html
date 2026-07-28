@@ -50,7 +50,7 @@
       @let order = orderInfo | async;
       @if (order) {
         <div class="order-info">
-          <h2><strong>Informações da Ordem de Serviço</strong></h2>
+          <p><strong>Informações da Ordem de Serviço</strong></p>
           <br />
           <p><strong>Cliente: </strong>{{ order.user.name }}</p>
           <p><strong>Equipamento: </strong>{{ order.equipment.name }}</p>
@@ -60,7 +60,7 @@
         <hr />
         @if (order.technician_id) {
           <div class="diagnostic-info">
-            <h2><strong>Informações do Diagnóstico</strong></h2>
+            <p><strong>Informações do Diagnóstico</strong></p>
             <br />
             <p><strong>Técnico: </strong>{{ order.technician.name }}</p>
             <p><strong>Diagnóstico: </strong>{{ order.obs }}</p>
@@ -68,7 +68,7 @@
           </div>
           <hr />
         }
-        <h2><strong>Peças ou material</strong></h2>
+        <p><strong>Peças ou material</strong></p>
         <br />
         @if (order.parts.length > 0) {
           <table width="100%" border="1px">
@@ -103,7 +103,7 @@
 
         <hr />
         <div class="total-price-section">
-          <h2><strong>Valores totais</strong></h2>
+          <p><strong>Valores totais</strong></p>
           <br />
           <p>
             <strong>Serviço:</strong> {{ order.service_price | currency: "R$" }}

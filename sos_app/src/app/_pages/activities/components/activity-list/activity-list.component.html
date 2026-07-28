@@ -1,1 +1,144 @@
-<p>activity-list works!</p>
+@let activities = activities$ | async;
+@let isLoading = isLoading$ | async;
+@if (isLoading && (!activities || activities.length === 0)) {
+  <ion-card>
+    <ion-card-content>
+      <ion-spinner></ion-spinner>
+    </ion-card-content>
+  </ion-card>
+} @else {
+  @for (activity of activities; track activity.id) {
+    <ion-card class="activity-card">
+      <ion-card-header>
+        <ion-label class="ion-flex ion-flex-row ion-align-content-center">
+          <ion-icon
+            color="dark"
+            class="ion-margin-end"
+            size="large"
+            name="list-circle-outline"
+          ></ion-icon>
+          <ion-text color="dark" style="margin: auto 0"
+            ><h3 style="margin-bottom: 0">
+              <strong>Log #{{ activity.id }}</strong>
+            </h3></ion-text
+          >
+        </ion-label>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding">
+        <div class="ion-margin-start">
+          <p><strong>Atividade</strong></p>
+          <h3>
+            <ion-text color="primary">{{ activity.description }}</ion-text>
+          </h3>
+        </div>
+        <br />
+        <ion-list>
+          <ion-list-header color="light"
+            ><strong>Detalhes do log</strong></ion-list-header
+          >
+          <ion-item color="light" lines="full">
+            <ion-icon
+              name="grid-outline"
+              class="ion-margin-horizontal"
+            ></ion-icon>
+            <ion-label>
+              <ion-note><strong>Assunto</strong></ion-note>
+              <p>{{ activity.subject_type }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item color="light" lines="full">
+            <ion-icon
+              name="people-outline"
+              class="ion-margin-horizontal"
+            ></ion-icon>
+            <ion-label>
+              <ion-note><strong>Responsável</strong></ion-note>
+              <p>{{ activity.causer_type }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item color="light" lines="full">
+            <ion-icon
+              name="time-outline"
+              class="ion-margin-horizontal"
+            ></ion-icon>
+            <ion-label>
+              <ion-note><strong>Horário</strong></ion-note>
+              <p>{{ activity.created_at | date: "medium" }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <br />
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <ion-item slot="header" color="light">
+              <ion-label class="ion-margin-start"
+                ><strong>Metadados</strong></ion-label
+              >
+            </ion-item>
+            <div slot="content" class="ion-padding">
+              <ion-item lines="none">
+                <ion-icon
+                  name="globe-outline"
+                  class="ion-margin-horizontal"
+                  color="secondary"
+                ></ion-icon>
+                <ion-label>
+                  <ion-note><strong>IP</strong></ion-note>
+                  <p>{{ activity.properties.ip }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-icon
+                  name="browsers-outline"
+                  class="ion-margin-horizontal"
+                  color="secondary"
+                ></ion-icon>
+                <ion-label>
+                  <ion-note><strong>Navegador</strong></ion-note>
+                  <p>{{ activity.properties.user_agent }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-card>
+                <ion-card-content>
+                  <div
+                    class="ion-flex ion-align-content-center ion-margin-bottom"
+                  >
+                    <ion-icon
+                      size="large"
+                      color="dark"
+                      name="code-working-outline"
+                      class="ion-margin-end"
+                    ></ion-icon>
+                    <ion-label style="margin: auto 0">
+                      <ion-text color="dark"
+                        ><p><strong>Modificações</strong></p></ion-text
+                      >
+                    </ion-label>
+                  </div>
+                  <ion-card color="dark" class="ion-no-padding ion-no-margin">
+                    <ion-card-content style="font-family: monospace">
+                      @if (activity.attribute_changes.old) {
+                        Antes: {{ activity.attribute_changes.old | json }}
+                        <br />
+                      }
+
+                      Atual: {{ activity.attribute_changes.attributes | json }}
+                    </ion-card-content>
+                  </ion-card>
+                </ion-card-content>
+              </ion-card>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card-content>
+    </ion-card>
+  }
+  <ion-infinite-scroll
+    (ionInfinite)="onIonInfinite($event)"
+    loadingText="Carregando..."
+    loadingSpinner="bubbles"
+    [disabled]="!infiniteScroll()"
+  >
+    <ion-infinite-scroll-content />
+  </ion-infinite-scroll>
+}

@@ -411,4 +411,105 @@ class MetricController extends Controller
             ], 500);
         }
     }
+
+    public function getCustomerRevenueByPeriod(Request $request)
+    {
+        try {
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+
+            if (empty($startDate) || empty($endDate)) {
+                return response([
+                    'message' => 'Não foi possível obter as métricas de clientes',
+                    'error' => 'Necessário informar um período'
+                ], 400);
+            }
+
+            // Substituí as barras por hífen na chave do cache para evitar problemas de string
+            $cacheKey = 'metrics:order:customers:' . str_replace('/', '-', $request->startDate) . ':' . str_replace('/', '-', $request->endDate);
+
+            $metrics = Cache::tags('metrics')->remember(
+                $cacheKey,
+                now()->addMinutes(30),
+                function () use ($startDate, $endDate) {
+
+                    $customers = User::query()
+                        ->where('type_id', UserTypeEnum::CLIENT)
+                        ->withCount([
+                            'orders as total_orders' => function ($query) use ($startDate, $endDate) {
+                                $query->where('status_id', OrderStatusEnum::FINISHED)
+                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                            }
+                        ])
+                        ->withSum([
+                            'orders as total_revenue' => function ($query) use ($startDate, $endDate) {
+                                $query->where('status_id', OrderStatusEnum::FINISHED)
+                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                            }
+                        ], 'total_price')
+                        ->orderByDesc('total_revenue')
+                        ->limit(5)
+                        ->get();
+
+                    return $customers;
+                }
+            );
+
+            if (empty($metrics) && !is_array($metrics)) {
+                return response(['message' => 'Tipo cliente não encontrado'], 404);
+            }
+
+            return response($metrics, 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível carregar as métricas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getOrdersByPeriod(Request $request)
+    {
+        try {
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+
+            if (empty($startDate) || empty($endDate)) {
+                return response([
+                    'message' => 'Não foi possível obter as métricas de ordem de serviço',
+                    'error' => 'Necessário informar um período'
+                ], 400);
+            }
+
+            $page = $request->integer('page', 1);
+
+            $cacheKey = sprintf(
+                'metrics:order:by_period:%s:%s:page:%d',
+                $request->startDate,
+                $request->endDate,
+                $page
+            );
+
+            $metrics = Cache::tags('metrics')->remember(
+                $cacheKey,
+                now()->addMinutes(30),
+                function () use ($startDate, $endDate) {
+
+                    $orders = Order::with(['user', 'equipment', 'status'])
+                        ->whereBetween('created_at', [$startDate, $endDate])
+                        ->orderByDesc('created_at')
+                        ->paginate(20);
+                    return $orders;
+                }
+            );
+
+            return response($metrics);
+        } catch (Exception $e) {
+
+            return response([
+                'message' => 'Não foi possível carregar as métricas de ordem de serviço',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

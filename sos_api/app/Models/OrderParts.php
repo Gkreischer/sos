@@ -19,11 +19,11 @@ class OrderParts extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('user')
+            ->useLogName('order_parts')
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => 'Material de ordem ' . __("activity.events.{$eventName}"));
     }
 
     public function order(): BelongsTo

@@ -63,7 +63,6 @@ export class EquipmentsListComponent {
       const subscription = this.equipmentService
         .getCustomerEquipments(this.equipmentsPage, filters)
         .subscribe((res) => {
-          console.log('aqui', res);
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }

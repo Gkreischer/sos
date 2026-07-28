@@ -21,11 +21,13 @@
         @for (equipment of equipments; track equipment.id) {
           <ion-item button="true" detail="true" (click)="openModal(equipment)">
             <ion-label>
-              <h3 class="ion-text-bold">
-                {{ equipment.category.name }}
-              </h3>
-              <h3>{{ equipment.name }}</h3>
-              <p>{{ equipment.user.name }}</p>
+              <strong>
+                <ion-text color="dark">{{ equipment.category.name }}</ion-text>
+              </strong>
+              <p>
+                <ion-text color="dark">{{ equipment.name }}</ion-text>
+              </p>
+              <ion-note>{{ equipment.user.name }}</ion-note>
             </ion-label>
           </ion-item>
         } @empty {
@@ -37,14 +39,13 @@
         }
       }
     </ion-list>
+    <ion-infinite-scroll
+      (ionInfinite)="onIonInfinite($event)"
+      loadingSpinner="bubbles"
+      loadingText="Carregando..."
+      [disabled]="!infiniteScroll()"
+    >
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
   </ion-card-content>
 </ion-card>
-@if (infiniteScroll() && equipments && equipments.length > 0) {
-  <ion-infinite-scroll
-    (ionInfinite)="onIonInfinite($event)"
-    loadingSpinner="bubbles"
-    loadingText="Carregando..."
-  >
-    <ion-infinite-scroll-content />
-  </ion-infinite-scroll>
-}

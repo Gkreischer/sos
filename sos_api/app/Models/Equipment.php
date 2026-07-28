@@ -26,11 +26,11 @@ class Equipment extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('user')
+            ->useLogName('equipment')
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => 'Equipamento ' . __("activity.events.{$eventName}"));
     }
 
     protected $with = [

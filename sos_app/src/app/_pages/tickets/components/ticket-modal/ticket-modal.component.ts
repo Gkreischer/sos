@@ -93,7 +93,7 @@ export class TicketModalComponent implements OnInit {
       status_id: ['', [Validators.required]],
       user_id: ['', [Validators.required]],
       equipment_id: ['', [Validators.required]],
-      user: [{ value: '', disabled: true }],
+      user: [''],
     });
   }
 
@@ -114,7 +114,7 @@ export class TicketModalComponent implements OnInit {
   getTicketInfo() {
     this.ticketService.getTicket(this.ticketId!).subscribe((res) => {
       this.patchForm(res);
-      console.log(res);
+      this.getUserEquipments();
     });
   }
 
@@ -127,8 +127,6 @@ export class TicketModalComponent implements OnInit {
       equipment_id: ticket.equipment_id,
       user: ticket.user.name,
     });
-
-    this.getUserEquipments();
   }
 
   closeModal() {

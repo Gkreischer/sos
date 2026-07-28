@@ -123,7 +123,6 @@ export class RoomContentComponent implements OnInit {
     this.roomService
       .sendRoomMessage(this.room!.id, this.form.value.content)
       .subscribe((res) => {
-        console.log(res);
         this.form.reset();
       });
   }

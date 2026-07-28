@@ -31,16 +31,31 @@
               detail="true"
               button="true"
               (click)="openModalOrder(order.id)"
+              [ngClass]="
+                order.status_id === 1
+                  ? 'ion-card-bordered-danger'
+                  : order.status_id === 2
+                    ? 'ion-card-bordered-warning'
+                    : order.status_id === 3
+                      ? 'ion-card-bordered-success'
+                      : order.status_id === 4
+                        ? 'ion-card-bordered-dark'
+                        : 'ion-card-bordered-light'
+              "
             >
               <div
                 class="ion-margin-horizontal"
                 style="width: 50px; max-width: 80px; text-align: center"
               >
-                <h1>{{ order.id }}</h1>
+                <h3>{{ order.id }}</h3>
               </div>
 
               <ion-label class="ion-padding-start">
-                <h2 class="ion-text-bold">{{ order.title }}</h2>
+                <p>
+                  <strong
+                    ><ion-text color="dark">{{ order.title }}</ion-text></strong
+                  >
+                </p>
 
                 <ion-chip color="primary">
                   {{ order.user.name }}

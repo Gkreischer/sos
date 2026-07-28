@@ -32,6 +32,8 @@ import {
   IonSpinner,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonNote,
+  IonText,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -39,6 +41,8 @@ import {
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
   imports: [
+    IonText,
+    IonNote,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonSpinner,

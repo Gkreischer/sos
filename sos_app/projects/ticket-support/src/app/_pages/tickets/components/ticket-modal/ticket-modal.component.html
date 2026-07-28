@@ -46,6 +46,10 @@
                     <ion-select-option [value]="equipment.id">{{
                       equipment.name
                     }}</ion-select-option>
+                  } @empty {
+                    <ion-select-option disabled>
+                      Adicione um equipamento primeiro
+                    </ion-select-option>
                   }
                 </ion-select>
               </ion-col>

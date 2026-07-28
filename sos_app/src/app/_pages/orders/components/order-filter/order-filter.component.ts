@@ -88,7 +88,6 @@ export class OrderFilterComponent implements OnInit {
   }
 
   search() {
-    console.log(this.form.value);
     this.orderService.setOrderFilter(this.form.value);
   }
 

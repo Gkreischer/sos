@@ -24,11 +24,12 @@ class Order extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('user')
+            ->useLogName('order')
             ->logFillable()
+            ->logExcept(['signature'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => 'Ordem ' . __("activity.events.{$eventName}"));
     }
 
     public function user(): BelongsTo

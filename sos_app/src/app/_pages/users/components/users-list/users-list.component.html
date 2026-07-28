@@ -47,24 +47,33 @@
             (click)="returnClientIdMode ? returnClient(user) : openModal(user)"
           >
             <ion-label>
-              <h3 class="ion-text-bold">{{ user.type.name }}</h3>
-              <h3>{{ user.name }}</h3>
-              <p>{{ user.phone | formatPhone }}</p>
+              <p>
+                <strong
+                  ><ion-text color="dark">{{
+                    user.type.name
+                  }}</ion-text></strong
+                >
+              </p>
+              <p>
+                <ion-text color="dark">{{ user.name }}</ion-text>
+              </p>
+              <ion-note>{{ user.phone | formatPhone }}</ion-note>
             </ion-label>
           </ion-item>
         } @empty {
           <ion-item lines="none">
             <ion-label>
-              <h3>Nenhum usuário encontrado</h3>
+              <p><ion-text color="dark">Nenhum usuário encontrado</ion-text></p>
             </ion-label>
           </ion-item>
         }
       }
     </ion-list>
+    <ion-infinite-scroll
+      (ionInfinite)="onIonInfinite($event)"
+      [disabled]="!infiniteScroll()"
+    >
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </ion-card-content>
 </ion-card>
-@if (infiniteScroll() && usersReceived && usersReceived.length > 0) {
-  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-}

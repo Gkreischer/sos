@@ -34,6 +34,7 @@ import { PostInterface } from 'shared';
     IonItem,
     IonLabel,
     DatePipe,
+    IonText,
   ],
 })
 export class PostsListComponent {

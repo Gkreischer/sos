@@ -10,7 +10,7 @@ class ActivityController extends Controller
     public function index()
     {
         try {
-            $lastActivity = Activity::paginate(50);
+            $lastActivity = Activity::latest('id')->paginate(20);
             return response($lastActivity);
         } catch (\Exception $e) {
             return response([

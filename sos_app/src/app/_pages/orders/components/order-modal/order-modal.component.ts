@@ -33,8 +33,8 @@ import { priceMask } from 'projects/shared/src/lib/_masks/priceMask';
 import { MoneyService } from 'src/app/_shared/utils/services/money.service';
 import { Router } from '@angular/router';
 import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
-
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { ModalImageComponent } from 'shared';
+import { AsyncPipe, CurrencyPipe, JsonPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { LoadingService } from 'shared';
 import { OrderClientHistoryComponent } from '../order-client-history/order-client-history.component';
@@ -65,6 +65,9 @@ import {
   IonSelectOption,
   IonTextarea,
   IonImg,
+  IonFooter,
+  IonText,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -78,11 +81,15 @@ import {
 } from 'ionicons/icons';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { PictureInterface } from 'shared';
+import { OrderStatusEnum } from 'shared';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
   styleUrls: ['./order-modal.component.scss'],
   imports: [
+    IonNote,
+    IonText,
+    IonFooter,
     IonImg,
     IonCardTitle,
     IonCardHeader,
@@ -322,7 +329,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
 
   getUserEquipments() {
     this.equipmentService
-      .getUserEquipments(this.clientSelected!)
+      .getUserEquipments(this.clientSelected!.id)
       .subscribe((equipaments) => {
         this.equipments$ = this.equipmentService.equipments;
       });
@@ -334,7 +341,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     }
 
     this.orderService.getById(this.orderId).subscribe((order) => {
-      console.log(order);
       this.orderReceived = order;
 
       this.orderForm.patchValue({
@@ -344,7 +350,9 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
           priceMask,
         ),
         discount: maskitoTransform(order.discount.toString(), priceMask),
-        signature: this.signaturePad()?.fromDataURL(order.signature),
+        signature: order.signature
+          ? this.signaturePad()?.fromDataURL(order.signature)
+          : '',
       });
       this.clientSelected = order.user;
       this.technicianSelected = order.technician;
@@ -460,7 +468,9 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    orderStatus == 4 ? this.confirmOrderFinalization() : false;
+    orderStatus == OrderStatusEnum.DELIVERED
+      ? this.confirmOrderFinalization()
+      : false;
   }
 
   confirmOrderFinalization() {
@@ -497,8 +507,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   async takePicture() {
     const picture = await this.photoService.takePicture();
 
-    console.log(picture);
-
     if (!picture) {
       return;
     }
@@ -509,6 +517,12 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       webPath: picture.webPath!,
       blob,
       format: picture.format,
+    });
+  }
+
+  showImage(picture: PictureInterface) {
+    this.modalService.openModal(ModalImageComponent, {
+      imageUrl: picture.path,
     });
   }
 }

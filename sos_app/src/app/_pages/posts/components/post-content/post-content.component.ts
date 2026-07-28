@@ -124,7 +124,6 @@ export class PostContentModalComponent {
         postId: post.id,
       },
     );
-    console.log(postUpdated);
     if (postUpdated) {
       this.post = postUpdated;
       this.closeModal();

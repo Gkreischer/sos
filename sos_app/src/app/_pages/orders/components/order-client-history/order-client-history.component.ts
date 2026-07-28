@@ -11,6 +11,7 @@ import {
   IonCard,
   IonCardTitle,
   IonCardContent,
+  IonText,
 } from '@ionic/angular/standalone';
 import {
   IonToolbar,
@@ -25,7 +26,7 @@ import { inject } from '@angular/core';
 import { OrderService } from 'src/app/_services/order.service';
 import { Observable } from 'rxjs';
 import { OrderInterface } from 'shared';
-import { DatePipe, AsyncPipe } from '@angular/common';
+import { DatePipe, AsyncPipe, NgClass } from '@angular/common';
 import { LoadingService } from 'shared';
 import { OrderModalComponent } from '../order-modal/order-modal.component';
 import { addIcons } from 'ionicons';
@@ -35,6 +36,7 @@ import { arrowBack, trash } from 'ionicons/icons';
   templateUrl: './order-client-history.component.html',
   styleUrls: ['./order-client-history.component.scss'],
   imports: [
+    IonText,
     IonCardContent,
     IonCardTitle,
     IonCard,
@@ -53,6 +55,7 @@ import { arrowBack, trash } from 'ionicons/icons';
     IonIcon,
     DatePipe,
     AsyncPipe,
+    NgClass,
   ],
 })
 export class OrderClientHistoryComponent implements OnInit {

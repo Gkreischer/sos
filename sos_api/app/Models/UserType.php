@@ -19,11 +19,11 @@ class UserType extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('user')
+            ->useLogName('user_type')
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => 'Tipo de usuário ' . __("activity.events.{$eventName}"));
     }
 
     public function users()

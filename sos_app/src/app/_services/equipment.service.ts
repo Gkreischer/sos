@@ -32,7 +32,7 @@ export class EquipmentService {
     this.equipmentFilter.set(equipmentFilter);
   }
 
-  getUserEquipments(userId: UserInterface) {
+  getUserEquipments(userId: number) {
     return this.http
       .get<
         EquipmentInterface[]

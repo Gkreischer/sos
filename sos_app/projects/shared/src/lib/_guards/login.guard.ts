@@ -1,22 +1,21 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { PreferencesPluginService } from '../_services/preferences-plugin.service';
+import { LoginService } from '../_services/login.service';
+import { map, tap } from 'rxjs';
 
-export const loginGuard: CanActivateFn = async (route, state) => {
-  const router: Router = inject(Router);
-  const preferencesPluginService: PreferencesPluginService = inject(
-    PreferencesPluginService,
-  );
+export const loginGuard: CanActivateFn = (route, state) => {
+  const router = inject(Router);
+  const loginService = inject(LoginService);
 
-  const token = await preferencesPluginService.get('_t');
-
-  if (!token.value) {
-    // state.url contém o caminho completo que o usuário tentou acessar (ex: /produtos/detalhes)
-    await router.navigate(['/login'], {
-      queryParams: { returnUrl: state.url },
-    });
-    return false;
+  if (loginService.userSubject.value) {
+    return true;
   }
 
-  return true;
+  router.navigate(['/login'], {
+    queryParams: {
+      returnUrl: state.url,
+    },
+  });
+
+  return false;
 };

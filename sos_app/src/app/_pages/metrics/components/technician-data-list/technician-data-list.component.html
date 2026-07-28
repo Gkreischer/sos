@@ -5,21 +5,27 @@
       >Listagem da quantidade de OS feitas por cada Técnico no periodo
       informado</ion-card-subtitle
     >
-    <ion-card-content>
-      @for (user of technicianOrderMetrics$(); track user.id) {
-        <ion-list>
+    <ion-card-content class="ion-no-padding">
+      <ion-list>
+        @for (user of technicianOrderMetrics$(); track user.id) {
           <ion-item>
             <ion-label>
-              <h2>{{ user.name }}</h2>
+              <p>
+                <strong
+                  ><ion-text color="dark">{{ user.name }}</ion-text></strong
+                >
+              </p>
               <ion-note>{{ user.total_orders }} ordens</ion-note>
               <br />
               <ion-note>{{ user.total_revenue | currency: "BRL" }}</ion-note>
             </ion-label>
           </ion-item>
-        </ion-list>
-      } @empty {
-        <ion-text>Nenhuma informação encontrada</ion-text>
-      }
+        } @empty {
+          <ion-item>
+            <ion-text>Nenhuma informação encontrada</ion-text>
+          </ion-item>
+        }
+      </ion-list>
     </ion-card-content>
   </ion-card-header>
 </ion-card>

@@ -4,4 +4,6 @@ export interface PictureInterface {
   format?: string;
   path?: string;
   id?: number;
+  order_id?: number;
+  created_at?: Date;
 }

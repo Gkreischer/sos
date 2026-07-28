@@ -23,7 +23,9 @@
           @for (category of categoriesList; track category.id) {
             <ion-item button="true" detail="true" (click)="openModal(category)">
               <ion-label>
-                <h3>{{ category.name }}</h3>
+                <p>
+                  <ion-text color="dark">{{ category.name }}</ion-text>
+                </p>
               </ion-label>
             </ion-item>
           } @empty {

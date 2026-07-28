@@ -6,7 +6,7 @@
     <ion-card-title>Ordens de Serviço</ion-card-title>
   </ion-card-header>
 
-  <ion-card-content>
+  <ion-card-content class="ion-no-padding">
     <ion-list>
       @if (loading && (!orders || orders.length === 0)) {
         <ion-item lines="none">
@@ -17,7 +17,18 @@
       } @else {
         @for (order of orders; track order.id) {
           <ion-item
-            lines="inset"
+            [ngClass]="
+              order.status_id === 1
+                ? 'ion-card-bordered-danger'
+                : order.status_id === 2
+                  ? 'ion-card-bordered-warning'
+                  : order.status_id === 3
+                    ? 'ion-card-bordered-success'
+                    : order.status_id === 4
+                      ? 'ion-card-bordered-dark'
+                      : 'ion-card-bordered-light'
+            "
+            lines="full"
             detail="true"
             button="true"
             (click)="openModal(order)"
@@ -26,11 +37,13 @@
               class="ion-margin-horizontal"
               style="width: 50px; max-width: 80px; text-align: center"
             >
-              <h1>{{ order.id }}</h1>
+              <h3>{{ order.id }}</h3>
             </div>
 
             <ion-label class="ion-padding-start">
-              <h2 class="ion-text-bold">{{ order.title }}</h2>
+              <h4>
+                <strong>{{ order.title }}</strong>
+              </h4>
 
               <ion-chip color="primary">
                 <ion-icon name="person"></ion-icon>
@@ -39,7 +52,7 @@
                 </ion-label>
               </ion-chip>
 
-              <ion-chip color="dark">
+              <ion-chip color="tertiary">
                 <ion-icon name="hardware-chip"></ion-icon>
                 <ion-label>{{ order.equipment.name }}</ion-label>
               </ion-chip>
@@ -73,15 +86,14 @@
             </ion-label>
           </ion-item>
         }
-        @if (infiniteScroll()) {
-          <ion-infinite-scroll
-            (ionInfinite)="onIonInfinite($event)"
-            loadingText="Carregando..."
-            loadingSpinner="bubbles"
-          >
-            <ion-infinite-scroll-content />
-          </ion-infinite-scroll>
-        }
+        <ion-infinite-scroll
+          (ionInfinite)="onIonInfinite($event)"
+          loadingText="Carregando..."
+          loadingSpinner="bubbles"
+          [disabled]="!infiniteScroll()"
+        >
+          <ion-infinite-scroll-content />
+        </ion-infinite-scroll>
       }
     </ion-list>
   </ion-card-content>

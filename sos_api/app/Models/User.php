@@ -54,7 +54,7 @@ class User extends Authenticatable
             ->logExcept(['password', 'remember_token'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => 'Usuário ' . __("activity.events.{$eventName}"));
     }
 
     /**

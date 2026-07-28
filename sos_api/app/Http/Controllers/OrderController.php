@@ -94,7 +94,7 @@ class OrderController extends Controller
                     'user',
                     'equipment',
                     'parts',
-                    'images',
+                    'pictures',
                     'status'
                 );
 
@@ -178,7 +178,7 @@ class OrderController extends Controller
                 ->when(!$start_date && $end_date, function ($query) use ($end_date) {
                     $query->where('orders.created_at', '<=', $end_date);
                 })
-                ->orderByDesc('orders.created_at')
+                ->latest('orders.id')
                 ->limit(20)
                 ->paginate();
 

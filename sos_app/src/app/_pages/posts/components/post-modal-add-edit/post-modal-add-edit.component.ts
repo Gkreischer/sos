@@ -96,8 +96,6 @@ export class PostModalAddEditComponent implements OnInit {
     this.postService
       .updatePost(this.postId!, this.formPost.value)
       .subscribe((postUpdated) => {
-        console.log('postUpdated', postUpdated);
-
         this.modalService.closeModal(postUpdated, 'confirm');
       });
   }

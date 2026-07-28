@@ -7,7 +7,7 @@
       >Aqui você pode verificar chamados dos seus clientes</ion-card-subtitle
     >
   </ion-card-header>
-  <ion-card-content>
+  <ion-card-content class="ion-no-padding">
     <ion-list>
       @if (loading && (!tickets || tickets.length === 0)) {
         <ion-item lines="none">
@@ -22,9 +22,24 @@
             detail="true"
             button="true"
             (click)="openModalTicket(ticket)"
+            [ngClass]="
+              ticket.status_id === 1
+                ? 'ion-card-bordered-danger'
+                : ticket.status_id === 2
+                  ? 'ion-card-bordered-warning'
+                  : ticket.status_id === 3
+                    ? 'ion-card-bordered-success'
+                    : ticket.status_id === 4
+                      ? 'ion-card-bordered-dark'
+                      : 'ion-card-bordered-light'
+            "
           >
-            <ion-label>
-              <h2>{{ ticket.title }}</h2>
+            <ion-label class="ion-padding-start">
+              <p>
+                <strong
+                  ><ion-text color="dark">{{ ticket.title }}</ion-text></strong
+                >
+              </p>
               <ion-chip color="primary">
                 <ion-icon name="person"></ion-icon>
                 <ion-label>{{ ticket.user.name }}</ion-label>

@@ -25,6 +25,7 @@ import {
   IonLabel,
   IonSpinner,
   IonNote,
+  IonText,
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -35,6 +36,7 @@ import { arrowBack, trash } from 'ionicons/icons';
   templateUrl: './modal-add-part.component.html',
   styleUrls: ['./modal-add-part.component.scss'],
   imports: [
+    IonText,
     IonNote,
     IonSpinner,
     IonLabel,

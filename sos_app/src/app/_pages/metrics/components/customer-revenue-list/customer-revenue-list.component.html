@@ -1,0 +1,28 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Clientes com maior receita</ion-card-title>
+    <ion-card-subtitle
+      >Listagem de clientes que mais gastaram na sua empresa</ion-card-subtitle
+    >
+    <ion-card-content>
+      <ion-list>
+        @for (user of customerRevenueList$(); track user.id) {
+          <ion-item>
+            <ion-label>
+              <p>
+                <strong
+                  ><ion-text color="dark">{{ user.name }}</ion-text></strong
+                >
+              </p>
+              <ion-note>{{ user.total_orders }} ordens</ion-note>
+              <br />
+              <ion-note>{{ user.total_revenue | currency: "BRL" }}</ion-note>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <ion-text>Nenhuma informação encontrada</ion-text>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card-header>
+</ion-card>

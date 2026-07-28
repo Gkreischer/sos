@@ -40,6 +40,7 @@ ion-menu.md ion-item {
 
 ion-menu.md ion-item.selected ion-icon {
   color: var(--ion-color-primary);
+  padding-left: 1rem !important;
 }
 
 ion-menu.md ion-item ion-icon {

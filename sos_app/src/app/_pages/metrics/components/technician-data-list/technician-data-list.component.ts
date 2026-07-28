@@ -37,7 +37,7 @@ import {
 export class TechnicianDataListComponent {
   metricsService = inject(MetricsService);
 
-  technicianOrderMetrics$ = this.metricsService.usersOrdersMetrics$;
+  technicianOrderMetrics$ = this.metricsService.techiniciansOrdersMetrics$;
 
   constructor() {
     effect(() => {

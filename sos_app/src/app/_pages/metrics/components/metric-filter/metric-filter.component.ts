@@ -24,12 +24,16 @@ import {
   IonRow,
   IonCol,
   IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { search } from 'ionicons/icons';
 @Component({
   selector: 'app-metric-filter',
   templateUrl: './metric-filter.component.html',
   styleUrls: ['./metric-filter.component.scss'],
   imports: [
+    IonIcon,
     FormsModule,
     ReactiveFormsModule,
     MaskitoDirective,
@@ -63,7 +67,9 @@ export class MetricFilterComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({ search });
+  }
 
   ngOnInit() {
     this.mountForm();
@@ -78,11 +84,11 @@ export class MetricFilterComponent implements OnInit {
     this.form = this.formBuilder.group({
       startDate: [
         maskitoTransform(this.metricsService.startDate$(), dateMask),
-        [Validators.required],
+        [Validators.required, Validators.minLength(10)],
       ],
       endDate: [
         maskitoTransform(this.metricsService.endDate$(), dateMask),
-        [Validators.required],
+        [Validators.required, Validators.minLength(10)],
       ],
     });
   }

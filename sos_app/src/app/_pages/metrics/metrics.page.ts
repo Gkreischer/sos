@@ -5,8 +5,9 @@ import { MetricFilterComponent } from './components/metric-filter/metric-filter.
 import { BarChartCounterComponent } from './components/bar-chart-order-monthly-year-quantity/bar-chart-counter.component';
 import { PieOrderByStatusBetweenPeriodsComponent } from './components/pie-order-by-status-between-periods/pie-order-by-status-between-periods.component';
 import { LineChartTotalPriceBetweenPeriodsComponent } from './components/line-chart-total-price-between-periods/line-chart-total-price-between-periods.component';
-import { RevenueValuesListComponent } from './components/revenue-values-list/revenue-values-list.component';
+import { RevenueValuesListComponent } from './components/revenue-values-list-by-order-status/revenue-values-list.component';
 import { TechnicianDataListComponent } from './components/technician-data-list/technician-data-list.component';
+import { CustomerRevenueListComponent } from './components/customer-revenue-list/customer-revenue-list.component';
 import {
   IonHeader,
   IonToolbar,
@@ -23,7 +24,7 @@ import {
   IonCol,
   IonMenuButton,
 } from '@ionic/angular/standalone';
-
+import { OrdersByPeriodComponent } from './components/orders-by-period/orders-by-period.component';
 @Component({
   selector: 'app-metrics',
   templateUrl: './metrics.page.html',
@@ -34,7 +35,6 @@ import {
     IonRow,
     IonGrid,
     IonCardContent,
-    IonCardSubtitle,
     IonCardTitle,
     IonCard,
     IonContent,
@@ -49,6 +49,8 @@ import {
     LineChartTotalPriceBetweenPeriodsComponent,
     RevenueValuesListComponent,
     TechnicianDataListComponent,
+    CustomerRevenueListComponent,
+    OrdersByPeriodComponent,
     IonMenuButton,
   ],
 })

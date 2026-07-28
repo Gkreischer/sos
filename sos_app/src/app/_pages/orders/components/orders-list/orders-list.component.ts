@@ -10,7 +10,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
 
 import { OrderFilterInterface } from 'shared';
 import { effect } from '@angular/core';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { LoadingService } from 'shared';
 import { addIcons } from 'ionicons';
 import { calendar, hardwareChip, person } from 'ionicons/icons';
@@ -27,6 +27,7 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonIcon,
+  IonText,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -48,6 +49,7 @@ import {
     IonCard,
     AsyncPipe,
     DatePipe,
+    NgClass,
   ],
 })
 export class OrdersListComponent {

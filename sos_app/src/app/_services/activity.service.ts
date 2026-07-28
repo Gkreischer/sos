@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, catchError, tap } from 'rxjs';
+import { BehaviorSubject, catchError, tap, debounceTime } from 'rxjs';
 import { ActivityInterface } from 'src/app/_interfaces/ActivityInterface';
 import { PaginateInterface } from 'shared';
 
@@ -25,20 +25,20 @@ export class ActivityService {
     return this.activitiesSubject.asObservable();
   }
 
-  getActivities() {
+  getActivities(page: number = 1) {
     return this.http
       .get<
         PaginateInterface<ActivityInterface[]>
-      >(`${environment.baseUrl}/activities`)
+      >(`${environment.baseUrl}/activities${page ? `?page=${page}` : ''}`)
       .pipe(
         tap((res) => {
-          if (res.current_page >= res.last_page) {
+          if (res.current_page === 1) {
+            this.activitiesSubject.next(res.data);
+          } else {
             this.activitiesSubject.next([
               ...this.activitiesSubject.getValue(),
               ...res.data,
             ]);
-          } else {
-            this.activitiesSubject.next(res.data);
           }
         }),
         catchError(this.errorService.handleError),

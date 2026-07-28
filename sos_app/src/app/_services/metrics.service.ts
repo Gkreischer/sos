@@ -8,7 +8,8 @@ import { CountInterface } from 'shared';
 import { OrderMonthIncomesInterface } from 'shared';
 import { OrderTotalPriceByStatusInterface } from 'shared';
 import { TechnicianMetricsInterface } from 'shared';
-
+import { OrderInterface } from 'dist/shared';
+import { PaginateInterface } from 'shared';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,8 +21,9 @@ export class MetricsService {
   ordersPendingCount = signal<number | null>(null);
   ordersInProgressCount = signal<number | null>(null);
   totalClientsCount = signal<number | null>(null);
-  usersOrdersMetrics$ = signal([] as TechnicianMetricsInterface[]);
-
+  customerRevenueList = signal([] as any[]);
+  techiniciansOrdersMetrics$ = signal([] as TechnicianMetricsInterface[]);
+  ordersByPeriod = signal([] as OrderInterface[]);
   startDate$ = signal<string>(
     `01/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`,
   );
@@ -99,7 +101,7 @@ export class MetricsService {
       >(`${environment.baseUrl}/metrics/technicians`, period)
       .pipe(
         tap((res) => {
-          this.usersOrdersMetrics$.set(res);
+          this.techiniciansOrdersMetrics$.set(res);
         }),
         catchError(this.errorService.handleError),
       );
@@ -135,6 +137,39 @@ export class MetricsService {
       .pipe(
         tap((res) => {
           this.totalClientsCount.set(res.result);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getCustomerRevenueList(period: { startDate: string; endDate: string }) {
+    return this.http
+      .post<
+        TechnicianMetricsInterface[]
+      >(`${environment.baseUrl}/metrics/customers/revenue`, period)
+      .pipe(
+        tap((res) => {
+          this.customerRevenueList.set(res);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getOrdersByPeriod(
+    period: { startDate: string; endDate: string },
+    page?: number,
+  ) {
+    return this.http
+      .post<
+        PaginateInterface<OrderInterface[]>
+      >(`${environment.baseUrl}/metrics/orders/by-period${page ? `?page=${page}` : ''}`, period)
+      .pipe(
+        tap((res) => {
+          if (res && res.current_page === 1) {
+            this.ordersByPeriod.set(res.data);
+          } else {
+            this.ordersByPeriod.set([...this.ordersByPeriod(), ...res.data]);
+          }
         }),
         catchError(this.errorService.handleError),
       );

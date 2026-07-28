@@ -26,6 +26,7 @@ import { flame } from 'ionicons/icons';
     IonSkeletonText,
     IonCardContent,
     IonCard,
+    IonText,
   ],
   templateUrl: './orders-peding-count-card.component.html',
   styleUrl: './orders-peding-count-card.component.css',

@@ -13,21 +13,24 @@ import {
 export class CodeReaderService {
   constructor() {}
 
-  async scanCode() {
-    let code = await CapacitorBarcodeScanner.scanBarcode({
-      hint: CapacitorBarcodeScannerTypeHint.ALL,
-      scanInstructions: 'Por favor, escaneie o código de barra da OS',
-      scanButton: false,
-      scanText: 'Escanear',
-      cameraDirection: CapacitorBarcodeScannerCameraDirection.BACK,
-      scanOrientation: CapacitorBarcodeScannerScanOrientation.ADAPTIVE,
-      android: {
-        scanningLibrary: CapacitorBarcodeScannerAndroidScanningLibrary.ZXING,
-      },
-    });
-    if (!code.ScanResult) {
+  async scanCode(): Promise<string | false> {
+    try {
+      const code = await CapacitorBarcodeScanner.scanBarcode({
+        hint: CapacitorBarcodeScannerTypeHint.ALL,
+        scanInstructions: 'Por favor, escaneie o código de barra da OS',
+        scanButton: false,
+        scanText: 'Escanear',
+        cameraDirection: CapacitorBarcodeScannerCameraDirection.BACK,
+        scanOrientation: CapacitorBarcodeScannerScanOrientation.ADAPTIVE,
+        android: {
+          scanningLibrary: CapacitorBarcodeScannerAndroidScanningLibrary.ZXING,
+        },
+      });
+
+      return code.ScanResult || false;
+    } catch (error) {
+      console.error(error);
       return false;
     }
-    return code.ScanResult;
   }
 }

@@ -105,9 +105,6 @@ export class OrderService {
   create(order: OrderInterface, pictures: PictureInterface[]) {
     const formData = new FormData();
 
-    console.log(order);
-    console.log(pictures);
-
     Object.entries(order).forEach(([key, value]) => {
       if (key === 'parts' || key === 'pictures') {
         return;

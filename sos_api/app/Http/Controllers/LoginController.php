@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\UserType;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,55 +16,36 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        try {
-            $request->validate([
-                'email' => 'required|string|email',
-                'password' => 'required|string|min:8'
-            ]);
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-            $user = User::where('email', $request->email)
-                ->with('type')
-                ->first();
-
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response([
-                    'message' => 'Informações de login incorretas'
-                ], 401);
-            }
-
-            $userToken = $user->createToken($request->email)->plainTextToken;
-
+        if (! Auth::attempt($credentials)) {
             return response([
-                'token' => $userToken,
-                'user' => $user,
-
-            ]);
-        } catch (ValidationException $e) {
-            return response([
-                'message' => 'Dados inválidos',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Throwable $e) {
-            return response([
-                'message' => 'Não foi possível realizar login',
-                'error' => $e->getMessage(),
-            ], 500);
+                'message' => 'Credenciais inválidas'
+            ], 401);
         }
+
+        $request->session()->regenerate();
+
+        return response([
+            'user' => $request->user()->load('type')
+        ]);
     }
 
     public function logout(Request $request)
     {
-        $user = $request->user();
+        Auth::guard('web')->logout();
 
-        $user->tokens()->delete();
+        $request->session()->invalidate();
 
-        return response([
-            'message' => 'Sessão encerrada com sucesso',
-            'error' => null
-        ]);
+        $request->session()->regenerateToken();
+
+        return response()->noContent();
     }
 
-    public function verifyToken(Request $request)
+    public function verifyUser(Request $request)
     {
         try {
             $user = auth('sanctum')->user();

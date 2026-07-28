@@ -193,7 +193,6 @@ export class ProfileInfoComponent implements OnInit {
 
   async changeUserImage() {
     const result = await this.photoService.takePicture();
-    console.log(result);
     if (!result) {
       return;
     }

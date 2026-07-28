@@ -22,6 +22,8 @@ import {
   IonAvatar,
   IonImg,
   IonInfiniteScrollContent,
+  IonNote,
+  IonText,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -29,6 +31,8 @@ import {
   templateUrl: './parts-list.component.html',
   styleUrls: ['./parts-list.component.scss'],
   imports: [
+    IonText,
+    IonNote,
     IonInfiniteScrollContent,
     IonImg,
     IonAvatar,

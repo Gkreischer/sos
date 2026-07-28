@@ -18,6 +18,7 @@ import {
   IonAvatar,
   IonImg,
   IonCardSubtitle,
+  IonText,
 } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'shared';
@@ -29,6 +30,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
   templateUrl: './room-list.component.html',
   styleUrls: ['./room-list.component.scss'],
   imports: [
+    IonText,
     IonCardSubtitle,
     IonImg,
     IonAvatar,
@@ -74,8 +76,6 @@ export class RoomListComponent implements OnInit {
 
     this.roomService.getAll(this.roomsPage).subscribe({
       next: (res) => {
-        console.log(res.current_page, res.last_page);
-
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }

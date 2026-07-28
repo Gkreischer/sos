@@ -7,8 +7,15 @@ export interface ActivityInterface {
   event: string;
   causer_type: string;
   causer_id: number;
-  attribute_changes: string;
-  properties: string;
+  attribute_changes: {
+    attributes: Object;
+    old: Object;
+  };
+  properties: {
+    ip: string;
+    user_agent: string;
+    hostname: string;
+  };
   created_at: Date;
   updated_at: Date;
 }

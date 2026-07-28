@@ -26,5 +26,10 @@
     "ws": true,
     "secure": false,
     "changeOrigin": true
+  },
+  "/sanctum": {
+    "target": "http://localhost:9003",
+    "secure": false,
+    "changeOrigin": true
   }
 }

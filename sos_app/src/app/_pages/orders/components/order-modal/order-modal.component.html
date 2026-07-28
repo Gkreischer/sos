@@ -10,34 +10,6 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-      @if (orderReceived) {
-        <ion-button
-          fill="solid"
-          type="button"
-          color="tertiary"
-          (click)="print()"
-        >
-          <ion-icon name="print-sharp"></ion-icon>
-          Imprimir
-        </ion-button>
-      }
-      <ion-button
-        fill="solid"
-        [disabled]="
-          this.selectOrderStatusDisabled ||
-          orderForm.invalid ||
-          (isLoading$ | async)
-        "
-        type="button"
-        (click)="!orderId ? submit() : update()"
-        expand="block"
-        color="tertiary"
-      >
-        <ion-icon name="checkmark-done-sharp"></ion-icon>
-        {{ !orderId ? "Cadastrar" : "Atualizar" }}
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -48,7 +20,12 @@
         <ion-col [sizeXl]="orderReceived ? 4 : 12" [size]="12">
           <ion-card>
             <ion-card-header>
-              <ion-card-title>Informações da OS</ion-card-title>
+              <ion-card-title
+                >Informações da OS
+                @if (orderReceived) {
+                  # {{ orderReceived.id }}
+                }
+              </ion-card-title>
             </ion-card-header>
             <ion-card-content>
               <ion-grid>
@@ -177,10 +154,14 @@
                 </ion-row>
                 <ion-row>
                   @let pictures = orderForm.get("pictures")?.value;
-                  @if (pictures.length > 0) {
+                  @if (pictures && pictures.length > 0) {
                     @for (picture of pictures; track $index) {
                       <ion-col size="12" sizeXl="4">
-                        <ion-card class="ion-no-margin">
+                        <ion-card
+                          class="ion-no-margin"
+                          [button]="true"
+                          (click)="showImage(picture)"
+                        >
                           <ion-img
                             [src]="picture.path || picture.webPath"
                           ></ion-img>
@@ -220,6 +201,7 @@
                     <ion-button
                       expand="block"
                       type="button"
+                      color="danger"
                       (click)="clearSignature()"
                       type="button"
                       [disabled]="orderReceived"
@@ -304,6 +286,9 @@
                       ></ion-input>
                     </ion-col>
                   </ion-row>
+                  <ion-row>
+                    <ion-col> </ion-col>
+                  </ion-row>
                 </ion-grid>
               </ion-card-content>
             </ion-card>
@@ -371,7 +356,9 @@
                                   ) {
                                     <tr [formGroupName]="i">
                                       <td>
-                                        <p>{{ part.value.name }}</p>
+                                        <ion-note>{{
+                                          part.value.name
+                                        }}</ion-note>
                                       </td>
 
                                       <td with="20px">X</td>
@@ -392,7 +379,7 @@
                                         {{ part.value.price | currency: "R$" }}
                                       </td>
 
-                                      <td slot="end">
+                                      <td slot="end" class="ion-text-center">
                                         <ion-button
                                           color="danger"
                                           (click)="removePart(i)"
@@ -411,12 +398,16 @@
                           </form>
                         </ion-list>
                         <br />
-                        <h2>
-                          <span class="ion-text-bold"
-                            >Valor total das peças:</span
+                        <p>
+                          <strong
+                            ><ion-text color="dark"
+                              >Valor total das peças:
+                            </ion-text></strong
                           >
-                          {{ totalPartsPrice | currency: "R$" }}
-                        </h2>
+                          <ion-text color="dark">{{
+                            totalPartsPrice | currency: "R$"
+                          }}</ion-text>
+                        </p>
                       } @else {
                         <p>Nenhuma peça cadastrada</p>
                       }
@@ -446,3 +437,38 @@
     </ion-grid>
   </form>
 </ion-content>
+@let isLoading = isLoading$ | async;
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons
+      class="ion-justify-content-center ion-justify-content-md-end ion-padding-end"
+    >
+      @if (orderReceived) {
+        <ion-button
+          fill="solid"
+          type="button"
+          color="tertiary"
+          (click)="print()"
+          [disabled]="!orderReceived || isLoading"
+        >
+          <ion-icon name="print-sharp"></ion-icon>
+          Imprimir
+        </ion-button>
+      }
+      <ion-button
+        fill="solid"
+        [disabled]="
+          this.selectOrderStatusDisabled || orderForm.invalid || isLoading
+        "
+        type="button"
+        (click)="!orderId ? submit() : update()"
+        expand="block"
+        color="tertiary"
+      >
+        <ion-icon name="checkmark-done-sharp"></ion-icon>
+        {{ !orderId ? "Cadastrar" : "Atualizar" }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

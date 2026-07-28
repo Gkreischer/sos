@@ -274,8 +274,7 @@ export class AppComponent implements OnInit {
   }
 
   getUser() {
-    this.loginService.user.subscribe((user) => {
-      console.log(user);
+    this.user$.subscribe((user) => {
       if (user) {
         this.listenPrivateChannels();
       }
@@ -283,6 +282,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.logoutPrivateChannels();
+  }
+
+  logoutPrivateChannels() {
     this.listeners.forEach(({ channel, event, callback }) => {
       this.notificationService.leave(channel);
     });
@@ -301,7 +304,9 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.loginService.logout();
+    this.loginService.logout().subscribe(() => {
+      this.logoutPrivateChannels();
+    });
   }
 
   async changeAvatarImage() {

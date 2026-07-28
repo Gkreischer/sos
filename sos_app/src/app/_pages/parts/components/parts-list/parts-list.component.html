@@ -25,13 +25,17 @@
             </ion-avatar>
 
             <ion-label class="ion-padding-start">
-              <h3 class="ion-text-bold">
-                {{ part.category.name }}
-              </h3>
+              <strong
+                ><ion-text color="dark">{{
+                  part.category.name
+                }}</ion-text></strong
+              >
 
-              <h3>{{ part.name }}</h3>
+              <p>
+                <ion-text color="dark">{{ part.name }}</ion-text>
+              </p>
 
-              <p>{{ part.price | currency: "BRL" }}</p>
+              <ion-note>{{ part.price | currency: "BRL" }}</ion-note>
             </ion-label>
           </ion-item>
         } @empty {

@@ -32,24 +32,7 @@ import { inject } from '@angular/core';
     IonMenuButton,
   ],
 })
-export class TicketsPage implements ViewWillEnter, ViewWillLeave {
+export class TicketsPage {
   notificationService = inject(NotificationService);
-
-  ionViewWillEnter() {
-    this.listenPrivateChannel();
-  }
-
-  listenPrivateChannel() {
-    this.notificationService.listenPrivate('tickets', '.new.ticket', (data) => {
-      console.log(data);
-    });
-  }
-
-  ionViewWillLeave() {
-    this.notificationService.leave('tickets');
-  }
-
   constructor() {}
-
-  ngOnInit() {}
 }

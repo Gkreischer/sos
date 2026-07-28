@@ -53,6 +53,30 @@ export class RevenueValuesListComponent {
 
   public polarAreaChartType: ChartType = 'polarArea';
 
+  primaryColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--ion-color-primary')
+    .trim();
+
+  secondaryColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--ion-color-secondary')
+    .trim();
+
+  lightColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--ion-color-light')
+    .trim();
+
+  successColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--ion-color-success')
+    .trim();
+
+  dangerColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--ion-color-danger')
+    .trim();
+
+  warningColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--ion-color-warning')
+    .trim();
+
   constructor() {
     effect(() => {
       const startDate = this.metricsService.startDate;
@@ -77,6 +101,13 @@ export class RevenueValuesListComponent {
             {
               data: res.map((item) => item.revenue),
               label: 'R$',
+              backgroundColor: [
+                this.dangerColor,
+                this.warningColor,
+                this.successColor,
+                this.primaryColor,
+                this.lightColor,
+              ],
             },
           ],
         };

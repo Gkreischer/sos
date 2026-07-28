@@ -18,17 +18,18 @@ class Ticket extends Model
         'user_id',
         'title',
         'description',
+        'equipment_id',
         'status_id',
     ];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('user')
+            ->useLogName('ticket')
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => "Usuário {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => 'Chamado ' . __("activity.events.{$eventName}"));
     }
 
     public function user(): BelongsTo

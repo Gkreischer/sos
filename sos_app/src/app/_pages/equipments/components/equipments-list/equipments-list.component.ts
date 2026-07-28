@@ -20,6 +20,8 @@ import {
   IonSpinner,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonNote,
+  IonText,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -27,6 +29,8 @@ import {
   templateUrl: './equipments-list.component.html',
   styleUrls: ['./equipments-list.component.scss'],
   imports: [
+    IonText,
+    IonNote,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonSpinner,

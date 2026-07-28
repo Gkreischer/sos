@@ -64,6 +64,8 @@ export * from './lib/_interceptors/loading-bar.interceptor';
 
 export * from './lib/_interceptors/loading.interceptor';
 
+export * from './lib/_interceptors/credentials-interceptor';
+
 export * from './lib/_guards/login.guard';
 
 export * from './lib/_masks/cepMask';
@@ -77,3 +79,7 @@ export * from './lib/_masks/phoneMask';
 export * from './lib/_masks/dateMask';
 
 export * from './lib/_masks/priceMask';
+
+export * from './lib/_components/modal-image/modal-image.component';
+
+export * from './lib/_enum/OrderTypeEnum';

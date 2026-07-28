@@ -17,6 +17,7 @@ import {
   IonLabel,
   IonSpinner,
   IonList,
+  IonText,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -24,6 +25,7 @@ import {
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.scss'],
   imports: [
+    IonText,
     IonList,
     IonSpinner,
     IonLabel,

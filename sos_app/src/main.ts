@@ -33,7 +33,8 @@ import {
   IonicRouteStrategy,
 } from '@ionic/angular/standalone';
 import { loadingInterceptor } from 'shared';
-
+import { credentialsInterceptor } from 'shared';
+import { catchError, of } from 'rxjs';
 registerLocaleData(localePtBr);
 defineCustomElements(window);
 
@@ -62,29 +63,20 @@ bootstrapApplication(AppComponent, {
 
     provideHttpClient(
       withInterceptors([
-        authenticationInterceptor,
+        // authenticationInterceptor,
+        credentialsInterceptor,
         loadingBarInterceptor,
         errorInterceptor,
         loadingInterceptor,
       ]),
     ),
+    provideAppInitializer(() => {
+      const loginService = inject(LoginService);
 
-    provideAppInitializer(async () => {
-      const prefs: PreferencesPluginService = inject(PreferencesPluginService);
-      const loginService: LoginService = inject(LoginService);
-
-      const token = await prefs.get('_t');
-
-      if (token?.value) {
-        try {
-          await firstValueFrom(loginService.verifyToken(token.value));
-        } catch (err) {
-          await prefs.remove('_t');
-          loginService.logout();
-        }
-      }
+      return firstValueFrom(
+        loginService.loadUser().pipe(catchError(() => of(null))),
+      );
     }),
-
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],

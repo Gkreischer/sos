@@ -41,8 +41,8 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::controller(LoginController::class)->group(function () {
-                Route::post('/verify', 'verifyToken');
-                Route::get('/logout', 'logout');
+                Route::get('/user/verify', 'verifyUser');
+                Route::post('/logout', 'logout');
                 Route::put('/user/password', 'changePassword');
             });
 
@@ -116,6 +116,8 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/metrics/orders/revenue', 'getRevenueByStatus');
                 Route::post('/metrics/technicians', 'getTechnicianData');
                 Route::post('/metrics/equipment', 'getEquipmentWithMostOrders');
+                Route::post('/metrics/customers/revenue', 'getCustomerRevenueByPeriod');
+                Route::post('/metrics/orders/by-period', 'getOrdersByPeriod');
             });
 
             Route::middleware('role:admin|technician|attendant')->controller(MetricController::class)->group(function () {

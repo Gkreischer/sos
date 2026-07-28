@@ -20,11 +20,12 @@ import {
   IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonText,
 } from '@ionic/angular/standalone';
 import { TicketService } from 'src/app/_services/ticket.service';
 import { TicketInterface } from 'shared';
 import { Observable } from 'rxjs';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { LoadingService } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
@@ -35,6 +36,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
   selector: 'app-tickets-list',
   imports: [
+    IonText,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonIcon,
@@ -50,6 +52,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
     AsyncPipe,
     IonSpinner,
     DatePipe,
+    NgClass,
   ],
   templateUrl: './tickets-list.component.html',
   styleUrl: './tickets-list.component.scss',

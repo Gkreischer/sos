@@ -32,10 +32,12 @@
           <ion-item lines="none" color="primary">
             @if (userLogged) {
               <ion-label
-                ><ion-text color="light"
-                  ><h1>{{ userLogged.name }}</h1></ion-text
+                ><h2>
+                  <ion-text color="light">{{ userLogged.name }}</ion-text>
+                </h2>
+                <ion-text color="light"
+                  ><p>{{ userLogged!.type.name }}</p></ion-text
                 >
-                <p>{{ userLogged!.type.name }}</p>
               </ion-label>
             }
           </ion-item>
@@ -54,6 +56,7 @@
                 [tourAnchor]="p.tourAnchor!"
                 button="true"
                 (click)="resetBadge(p.title)"
+                class="menu-button"
               >
                 <ion-icon
                   aria-hidden="true"
@@ -74,6 +77,7 @@
                 class="ion-margin-top"
                 color="danger"
                 (click)="logout()"
+                type="button"
                 size="medium"
                 style="width: 100%"
               >

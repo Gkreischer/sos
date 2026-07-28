@@ -141,12 +141,12 @@ export class PhotoService {
 
   async takePicture() {
     try {
-      const result = (await Camera.takePhoto({
+      const result = await Camera.takePhoto({
         quality: 100,
         includeMetadata: true,
         targetWidth: 1280,
         targetHeight: 720,
-      })) satisfies MediaResult;
+      });
 
       if (!result) {
         return false;

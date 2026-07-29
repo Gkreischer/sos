@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Histórico de OS do equipamento</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="closeModal()">
+        <ion-icon color="light" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      @let ordersHistory = orderHistories$ | async;
+      @for (order of ordersHistory; track order.id) {
+        <ion-col size="12" sizeMd="4" sizeLg="4" sizeXl="3">
+          <ion-card
+            button="true"
+            (click)="openOrderModal(order)"
+            [class]="
+              order.status_id === 1
+                ? 'danger'
+                : order.status_id === 2
+                  ? 'warning'
+                  : order.status_id === 3
+                    ? 'success'
+                    : order.status_id === 4
+                      ? 'dark'
+                      : 'light'
+            "
+          >
+            <ion-card-content>
+              <ion-list>
+                <ion-item lines="none" class="ion-justify-content-lg-around">
+                  <p>
+                    <strong>OS #{{ order.id }}</strong>
+                  </p>
+                  <ion-chip
+                    slot="end"
+                    [color]="
+                      order.status_id === 1
+                        ? 'danger'
+                        : order.status_id === 2
+                          ? 'warning'
+                          : order.status_id === 3
+                            ? 'success'
+                            : order.status_id === 4
+                              ? 'dark'
+                              : 'light'
+                    "
+                    >{{ order.status.name }}</ion-chip
+                  >
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-icon slot="start" name="calendar"></ion-icon>
+                  <ion-label>
+                    <p>{{ order.created_at | date: "short" }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-icon slot="start" name="hardware-chip"></ion-icon>
+                  <ion-label>
+                    <p>{{ order.equipment.name }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-icon slot="start" name="card"></ion-icon>
+                  <ion-label>
+                    <p>{{ order.total_price | currency: "R$" }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -27,13 +27,16 @@ import {
   IonSelectOption,
   IonInput,
   IonSelect,
+  IonIcon,
 } from '@ionic/angular/standalone';
-
+import { addIcons } from 'ionicons';
+import { search } from 'ionicons/icons';
 @Component({
   selector: 'app-order-filter',
   templateUrl: './order-filter.component.html',
   styleUrls: ['./order-filter.component.scss'],
   imports: [
+    IonIcon,
     IonButton,
     IonCol,
     IonRow,
@@ -71,7 +74,9 @@ export class OrderFilterComponent implements OnInit {
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
-  constructor() {}
+  constructor() {
+    addIcons({ search });
+  }
 
   ngOnInit() {
     this.mountForm();

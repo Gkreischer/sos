@@ -20,12 +20,16 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { search } from 'ionicons/icons';
 @Component({
   selector: 'app-part-filter',
   templateUrl: './part-filter.component.html',
   styleUrls: ['./part-filter.component.scss'],
   imports: [
+    IonIcon,
     FormsModule,
     ReactiveFormsModule,
     AsyncPipe,
@@ -49,7 +53,9 @@ export class PartFilterComponent implements OnInit {
 
   filterForm!: FormGroup;
 
-  constructor() {}
+  constructor() {
+    addIcons({ search });
+  }
 
   ngOnInit() {
     this.mountForm();

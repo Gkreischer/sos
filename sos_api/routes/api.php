@@ -56,6 +56,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/customer/equipments/filter', 'getCustomerEquipmentsByFilter');
                 Route::get('/customer/equipments/{id}', 'getCustomerEquipmentById');
                 Route::post('/equipments/filter', 'getEquipmentByFilter');
+                Route::get('/equipments/{id}/history', 'getEquipmentOrderHistory');
             });
 
             Route::controller(CategoryController::class)->group(function () {

@@ -67,17 +67,22 @@
               </ion-chip>
             </ion-label>
           </ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-label class="ion-padding-start">
+              <p><ion-text color="dark">Nenhum chamado encontrado</ion-text></p>
+            </ion-label>
+          </ion-item>
         }
       }
     </ion-list>
-    @if (infiniteScroll()) {
-      <ion-infinite-scroll
-        (ionInfinite)="onIonInfinite($event)"
-        loadingText="Carregando..."
-        loadingSpinner="bubbles"
-      >
-        <ion-infinite-scroll-content />
-      </ion-infinite-scroll>
-    }
+    <ion-infinite-scroll
+      (ionInfinite)="onIonInfinite($event)"
+      loadingText="Carregando..."
+      loadingSpinner="bubbles"
+      [disabled]="!infiniteScroll()"
+    >
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
   </ion-card-content>
 </ion-card>

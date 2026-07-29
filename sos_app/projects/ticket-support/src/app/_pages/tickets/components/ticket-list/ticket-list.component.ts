@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { TicketService } from 'shared';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -14,6 +14,8 @@ import {
   IonSpinner,
   IonChip,
   IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
 } from '@ionic/angular/standalone';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { LoadingService } from 'shared';
@@ -21,9 +23,12 @@ import { ModalService } from 'shared';
 import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
 import { addIcons } from 'ionicons';
 import { calendar } from 'ionicons/icons';
+import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
   selector: 'app-ticket-list',
   imports: [
+    IonInfiniteScrollContent,
+    IonInfiniteScroll,
     IonIcon,
     IonChip,
     IonSpinner,
@@ -48,6 +53,9 @@ export class TicketListComponent implements OnInit {
   tickets$: Observable<TicketInterface[] | null> = this.ticketService.tickets;
   isLoading$ = this.loadingService.isLoading$;
 
+  infiniteScroll = signal(true);
+  ticketsPage = 1;
+
   constructor() {
     addIcons({ calendar });
   }
@@ -62,5 +70,22 @@ export class TicketListComponent implements OnInit {
 
   openModalTicket(ticket: TicketInterface) {
     this.modalService.openModal(TicketModalComponent, { ticketId: ticket.id });
+  }
+
+  onIonInfinite(event: InfiniteScrollCustomEvent) {
+    this.ticketsPage++;
+
+    this.ticketService.getUserTickets(this.ticketsPage).subscribe({
+      next: (res) => {
+        if (res.current_page >= res.last_page) {
+          this.infiniteScroll.set(false);
+        }
+
+        event.target.complete();
+      },
+      error: () => {
+        event.target.complete();
+      },
+    });
   }
 }

@@ -26,7 +26,11 @@
             >
               <strong>{{ status.name }}</strong>
             </ion-text>
-            <p>{{ status.revenue | currency: "BRL" }}</p>
+            <p>
+              <ion-text color="dark">{{
+                status.revenue | currency: "BRL"
+              }}</ion-text>
+            </p>
           </ion-col>
         } @empty {
           <ion-text>Nenhuma informação encontrada</ion-text>

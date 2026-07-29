@@ -11,6 +11,7 @@ import {
   IonCardTitle,
   IonSelectOption,
   IonSelect,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
@@ -20,9 +21,12 @@ import { MaskitoDirective } from '@maskito/angular';
 import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
 import { MaskitoElementPredicate } from '@maskito/core';
 import { TicketService } from 'src/app/_services/ticket.service';
+import { addIcons } from 'ionicons';
+import { search } from 'ionicons/icons';
 @Component({
   selector: 'app-ticket-filter',
   imports: [
+    IonIcon,
     IonButton,
     IonInput,
     IonCol,
@@ -56,6 +60,10 @@ export class TicketFilterComponent implements OnInit {
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
+
+  constructor() {
+    addIcons({ search });
+  }
 
   ngOnInit() {
     this.getOrderStatuses();

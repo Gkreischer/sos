@@ -18,15 +18,19 @@ import {
   IonGrid,
   IonRow,
   IonInput,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { LoadingService } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { addIcons } from 'ionicons';
+import { search } from 'ionicons/icons';
 @Component({
   selector: 'app-equipment-filter',
   templateUrl: './equipment-filter.component.html',
   styleUrls: ['./equipment-filter.component.scss'],
   imports: [
+    IonIcon,
     IonRow,
     IonGrid,
     IonButton,
@@ -50,6 +54,7 @@ export class EquipmentFilterComponent implements OnInit {
   filterForm!: FormGroup;
 
   constructor() {
+    addIcons({ search });
     effect(() => {
       const filters = this.equipmentService.equipmentFilter();
 

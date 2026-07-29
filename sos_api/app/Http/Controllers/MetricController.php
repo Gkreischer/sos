@@ -474,6 +474,8 @@ class MetricController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
             $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
 
+            $description = $request->input('description');
+
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
@@ -484,19 +486,28 @@ class MetricController extends Controller
             $page = $request->integer('page', 1);
 
             $cacheKey = sprintf(
-                'metrics:order:by_period:%s:%s:page:%d',
+                'metrics:order:by_period:%s:%s:%s:page:%d',
                 $request->startDate,
                 $request->endDate,
+                md5($description ?? ''),
                 $page
             );
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
-                function () use ($startDate, $endDate) {
+                function () use ($startDate, $endDate, $description) {
 
                     $orders = Order::with(['user', 'equipment', 'status'])
                         ->whereBetween('created_at', [$startDate, $endDate])
+                        ->when($description, function ($query) use ($description) {
+                            $query->where(function ($q) use ($description) {
+                                $q->where('title', 'like', "%{$description}%")
+                                    ->orWhereHas('user', function ($user) use ($description) {
+                                        $user->where('name', 'like', "%{$description}%");
+                                    });
+                            });
+                        })
                         ->orderByDesc('created_at')
                         ->paginate(20);
                     return $orders;

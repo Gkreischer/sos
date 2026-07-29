@@ -4,7 +4,7 @@ import { EquipmentInterface } from 'shared';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
-import { UserInterface } from 'shared';
+import { OrderInterface } from 'shared';
 import { PaginateInterface } from 'shared';
 import { EquipmentFilterInterface } from 'shared';
 import { signal } from '@angular/core';
@@ -22,10 +22,16 @@ export class EquipmentService {
 
   equipmentFilter = signal<EquipmentFilterInterface | null>(null);
 
+  equipmentOrderHistory = new BehaviorSubject<OrderInterface[] | null>(null);
+
   constructor() {}
 
   get equipments() {
     return this.equipmentsSubject.asObservable();
+  }
+
+  get equipmentOrderHistory$() {
+    return this.equipmentOrderHistory.asObservable();
   }
 
   setEquipmentFilter(equipmentFilter: EquipmentFilterInterface | null) {
@@ -118,6 +124,26 @@ export class EquipmentService {
             (equipment) => equipment.id !== id,
           );
           return this.equipmentsSubject.next(newEquipments);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  getOrderHistory(equipmentId: number) {
+    return this.http
+      .get<
+        PaginateInterface<OrderInterface[]>
+      >(`${environment.baseUrl}/equipments/${equipmentId}/history`, httpOptions)
+      .pipe(
+        tap((res) => {
+          if (res.current_page === 1) {
+            this.equipmentOrderHistory.next(res.data);
+          } else {
+            this.equipmentOrderHistory.next([
+              ...this.equipmentOrderHistory.getValue()!,
+              ...res.data,
+            ]);
+          }
         }),
         catchError(this.errorService.handleError),
       );

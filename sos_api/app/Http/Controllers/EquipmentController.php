@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use App\Models\User;
+use App\Models\Order;
 
 class EquipmentController extends Controller
 {
@@ -402,6 +403,23 @@ class EquipmentController extends Controller
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível excluir o equipamento',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getEquipmentOrderHistory(int $id)
+    {
+        try {
+
+            $orders = Order::with(['user', 'equipment', 'status', 'parts', 'technician', 'pictures'])
+                ->where('equipment_id', $id)
+                ->orderBy('created_at')
+                ->paginate(20);
+            return response($orders);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Não foi possível obter o histórico do equipamento',
                 'error' => $e->getMessage()
             ], 500);
         }

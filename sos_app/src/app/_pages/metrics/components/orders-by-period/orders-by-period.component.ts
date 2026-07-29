@@ -2,7 +2,6 @@ import { Component, inject, effect, signal } from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { Subscription } from 'rxjs';
 import {
-  IonCardHeader,
   IonItem,
   IonList,
   IonCardContent,
@@ -10,12 +9,12 @@ import {
   IonRow,
   IonCol,
   IonGrid,
-  IonCardTitle,
   IonIcon,
   IonLabel,
   IonChip,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonSearchbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { people, hardwareChip, calendar, card } from 'ionicons/icons';

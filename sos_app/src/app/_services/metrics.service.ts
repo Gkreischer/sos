@@ -24,6 +24,7 @@ export class MetricsService {
   customerRevenueList = signal([] as any[]);
   techiniciansOrdersMetrics$ = signal([] as TechnicianMetricsInterface[]);
   ordersByPeriod = signal([] as OrderInterface[]);
+
   startDate$ = signal<string>(
     `01/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`,
   );
@@ -156,7 +157,7 @@ export class MetricsService {
   }
 
   getOrdersByPeriod(
-    period: { startDate: string; endDate: string },
+    period: { startDate: string; endDate: string; description?: string },
     page?: number,
   ) {
     return this.http

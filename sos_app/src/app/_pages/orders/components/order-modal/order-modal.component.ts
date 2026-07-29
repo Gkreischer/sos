@@ -78,10 +78,12 @@ import {
   close,
   searchSharp,
   add,
+  search,
 } from 'ionicons/icons';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { PictureInterface } from 'shared';
 import { OrderStatusEnum } from 'shared';
+import { EquipmentOrderHistoryModalComponent } from '../equipment-order-history-modal/equipment-order-history-modal.component';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -170,6 +172,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       close,
       searchSharp,
       add,
+      search,
     });
   }
 
@@ -524,5 +527,13 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     this.modalService.openModal(ModalImageComponent, {
       imageUrl: picture.path,
     });
+  }
+
+  openModalEquipmentHistory() {
+    this.modalService.openModal(
+      EquipmentOrderHistoryModalComponent,
+      { equipmentId: this.orderForm.get('equipment_id')?.value },
+      'full-modal',
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, effect, signal } from '@angular/core';
+import { Component, inject, effect, signal, OnDestroy } from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { Subscription } from 'rxjs';
 import {
@@ -15,17 +15,33 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonSearchbar,
+  IonCardHeader,
+  IonCardTitle,
+  IonButtons,
+  IonButton,
+  IonToolbar,
+  IonText,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { people, hardwareChip, calendar, card } from 'ionicons/icons';
+import {
+  people,
+  hardwareChip,
+  calendar,
+  card,
+  cloudDownload,
+} from 'ionicons/icons';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 import { OrderInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { OrderModalComponent } from 'src/app/_pages/orders/components/order-modal/order-modal.component';
+import { SpreadSheetService } from 'src/app/_services/spreadsheet.service';
+
 @Component({
   selector: 'app-orders-by-period',
   imports: [
+    IonCardTitle,
+    IonCardHeader,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonChip,
@@ -40,6 +56,7 @@ import { OrderModalComponent } from 'src/app/_pages/orders/components/order-moda
     IonLabel,
     DatePipe,
     CurrencyPipe,
+    IonButton,
   ],
   templateUrl: './orders-by-period.component.html',
   styleUrl: './orders-by-period.component.scss',
@@ -47,6 +64,7 @@ import { OrderModalComponent } from 'src/app/_pages/orders/components/order-moda
 export class OrdersByPeriodComponent {
   metricsService = inject(MetricsService);
   modalService = inject(ModalService);
+  spreadSheetService = inject(SpreadSheetService);
   ordersByPeriod$ = this.metricsService.ordersByPeriod;
 
   subscription?: Subscription;
@@ -54,7 +72,7 @@ export class OrdersByPeriodComponent {
   page: number = 1;
 
   constructor() {
-    addIcons({ people, hardwareChip, calendar, card });
+    addIcons({ people, hardwareChip, calendar, card, cloudDownload });
     effect((onCleanup) => {
       const startDate = this.metricsService.startDate;
       const endDate = this.metricsService.endDate;
@@ -83,7 +101,7 @@ export class OrdersByPeriodComponent {
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.page++;
-    this.metricsService
+    this.subscription = this.metricsService
       .getOrdersByPeriod(
         {
           startDate: this.metricsService.startDate,
@@ -105,5 +123,13 @@ export class OrdersByPeriodComponent {
       { orderId: order.id },
       'full-modal',
     );
+  }
+
+  generateOrderByPeriodMetricCSV() {
+    this.spreadSheetService.generateOrdersByPeriodMetricCSV();
+  }
+
+  generateOrderByPeriodMetricXLSX() {
+    this.spreadSheetService.generateOrdersByPeriodMetricXLSX();
   }
 }

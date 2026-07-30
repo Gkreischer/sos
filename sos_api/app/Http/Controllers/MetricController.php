@@ -498,7 +498,7 @@ class MetricController extends Controller
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate, $description) {
 
-                    $orders = Order::with(['user', 'equipment', 'status'])
+                    $orders = Order::with(['user', 'equipment', 'status', 'parts'])
                         ->whereBetween('created_at', [$startDate, $endDate])
                         ->when($description, function ($query) use ($description) {
                             $query->where(function ($q) use ($description) {

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {
@@ -100,6 +101,8 @@ class OrderController extends Controller
 
                 return $order;
             });
+
+            Cache::tags('metrics')->flush();
 
             return response($order);
         } catch (Exception $e) {
@@ -245,6 +248,8 @@ class OrderController extends Controller
 
                 return $order->fresh();
             });
+
+            Cache::tags('metrics')->flush();
 
             return response($order, 201);
         } catch (\Throwable $e) {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -69,6 +69,14 @@ export class MetricFilterComponent implements OnInit {
 
   constructor() {
     addIcons({ search });
+    effect((onCleanup) => {
+      const startDate = this.metricsService.startDate;
+      const endDate = this.metricsService.endDate;
+
+      onCleanup(() => {
+        this.form.reset();
+      });
+    });
   }
 
   ngOnInit() {

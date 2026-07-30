@@ -37,6 +37,6 @@ export class HomePage {
   constructor() {}
 
   logout() {
-    this.loginService.logout();
+    this.loginService.logout().subscribe();
   }
 }

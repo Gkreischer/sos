@@ -26,11 +26,12 @@ import { ToastService } from 'src/app/_services/toast.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { LoginService } from 'shared';
+import { IonInputPasswordToggle } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-user-password-modal',
   standalone: true,
   templateUrl: './user-password-modal.component.html',
-  styleUrl: './user-password-modal.component.css',
+  styleUrl: './user-password-modal.component.scss',
   imports: [
     IonHeader,
     IonToolbar,
@@ -47,6 +48,7 @@ import { LoginService } from 'shared';
     IonButton,
     AsyncPipe,
     ReactiveFormsModule,
+    IonInputPasswordToggle,
   ],
 })
 export class UserPasswordModalComponent implements OnInit {
@@ -57,7 +59,7 @@ export class UserPasswordModalComponent implements OnInit {
   alertService = inject(AlertService);
   toastService = inject(ToastService);
   loginService = inject(LoginService);
-  user!: UserInterface;
+  userId!: number;
 
   isLoading$ = this.loadingService.isLoading$;
 
@@ -68,6 +70,7 @@ export class UserPasswordModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.userId);
     this.mountForm();
   }
 
@@ -82,6 +85,7 @@ export class UserPasswordModalComponent implements OnInit {
         '',
         [Validators.required, Validators.minLength(8)],
       ],
+      user_id: [this.userId],
     });
   }
 

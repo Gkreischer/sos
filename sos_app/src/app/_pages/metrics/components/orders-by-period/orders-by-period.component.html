@@ -1,80 +1,108 @@
-<ion-grid>
-  <ion-row>
-    @for (order of ordersByPeriod$(); track order.id) {
-      <ion-col size="12" sizeMd="4" sizeLg="4" sizeXl="3">
-        <ion-card
-          button="true"
-          (click)="openOrderModal(order)"
-          [class]="
-            order.status_id === 1
-              ? 'danger'
-              : order.status_id === 2
-                ? 'warning'
-                : order.status_id === 3
-                  ? 'success'
-                  : order.status_id === 4
-                    ? 'dark'
-                    : 'light'
-          "
-        >
-          <ion-card-content>
-            <ion-list>
-              <ion-item lines="none" class="ion-justify-content-lg-around">
-                <p>
-                  <strong>OS #{{ order.id }}</strong>
-                </p>
-                <ion-chip
-                  slot="end"
-                  [color]="
-                    order.status_id === 1
-                      ? 'danger'
-                      : order.status_id === 2
-                        ? 'warning'
-                        : order.status_id === 3
-                          ? 'success'
-                          : order.status_id === 4
-                            ? 'dark'
-                            : 'light'
-                  "
-                  >{{ order.status.name }}</ion-chip
-                >
-              </ion-item>
-              <ion-item lines="none">
-                <ion-icon slot="start" name="people"></ion-icon>
-                <ion-label>
-                  <p>{{ order.user.name }}</p>
-                </ion-label>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-icon slot="start" name="calendar"></ion-icon>
-                <ion-label>
-                  <p>{{ order.created_at | date: "short" }}</p>
-                </ion-label>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-icon slot="start" name="hardware-chip"></ion-icon>
-                <ion-label>
-                  <p>{{ order.equipment.name }}</p>
-                </ion-label>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-icon slot="start" name="card"></ion-icon>
-                <ion-label>
-                  <p>{{ order.total_price | currency: "R$" }}</p>
-                </ion-label>
-              </ion-item>
-            </ion-list>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    }
-  </ion-row>
-  <ion-infinite-scroll
-    (ionInfinite)="onIonInfinite($event)"
-    loadingText="Carregando..."
-    loadingSpinner="bubbles"
-    [disabled]="!infiniteScroll()"
+<ion-card>
+  <ion-card-header
+    class="ion-justify-content-between"
+    style="flex-direction: row"
   >
-    <ion-infinite-scroll-content />
-  </ion-infinite-scroll>
-</ion-grid>
+    <ion-card-title class="ion-justify-content-around">
+      Ordens por período
+    </ion-card-title>
+    <div class="ion-flex ion-justify-content-end">
+      <ion-button
+        (click)="generateOrderByPeriodMetricCSV()"
+        class="ion-margin-start"
+      >
+        <ion-icon color="white" name="cloud-download"></ion-icon>
+        Gerar .csv
+      </ion-button>
+      <ion-button
+        (click)="generateOrderByPeriodMetricXLSX()"
+        class="ion-margin-start"
+      >
+        <ion-icon color="white" name="cloud-download"></ion-icon>
+        Gerar .xlsx
+      </ion-button>
+    </div>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        @for (order of ordersByPeriod$(); track order.id) {
+          <ion-col size="12" sizeMd="4" sizeLg="4" sizeXl="3">
+            <ion-card
+              button="true"
+              (click)="openOrderModal(order)"
+              [class]="
+                order.status_id === 1
+                  ? 'danger'
+                  : order.status_id === 2
+                    ? 'warning'
+                    : order.status_id === 3
+                      ? 'success'
+                      : order.status_id === 4
+                        ? 'dark'
+                        : 'light'
+              "
+            >
+              <ion-card-content>
+                <ion-list>
+                  <ion-item lines="none" class="ion-justify-content-lg-around">
+                    <p>
+                      <strong>OS #{{ order.id }}</strong>
+                    </p>
+                    <ion-chip
+                      slot="end"
+                      [color]="
+                        order.status_id === 1
+                          ? 'danger'
+                          : order.status_id === 2
+                            ? 'warning'
+                            : order.status_id === 3
+                              ? 'success'
+                              : order.status_id === 4
+                                ? 'dark'
+                                : 'light'
+                      "
+                      >{{ order.status.name }}</ion-chip
+                    >
+                  </ion-item>
+                  <ion-item lines="none">
+                    <ion-icon slot="start" name="people"></ion-icon>
+                    <ion-label>
+                      <p>{{ order.user.name }}</p>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item lines="none">
+                    <ion-icon slot="start" name="calendar"></ion-icon>
+                    <ion-label>
+                      <p>{{ order.created_at | date: "short" }}</p>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item lines="none">
+                    <ion-icon slot="start" name="hardware-chip"></ion-icon>
+                    <ion-label>
+                      <p>{{ order.equipment.name }}</p>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item lines="none">
+                    <ion-icon slot="start" name="card"></ion-icon>
+                    <ion-label>
+                      <p>{{ order.total_price | currency: "R$" }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        }
+      </ion-row>
+      <ion-infinite-scroll
+        (ionInfinite)="onIonInfinite($event)"
+        loadingText="Carregando..."
+        loadingSpinner="bubbles"
+        [disabled]="!infiniteScroll()"
+      >
+        <ion-infinite-scroll-content />
+      </ion-infinite-scroll>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>

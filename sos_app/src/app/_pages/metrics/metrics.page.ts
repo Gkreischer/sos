@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {} from 'projects/shared/src/lib/_masks/dateMask';
 
 import { MetricFilterComponent } from './components/metric-filter/metric-filter.component';
@@ -25,6 +25,8 @@ import {
   IonMenuButton,
 } from '@ionic/angular/standalone';
 import { OrdersByPeriodComponent } from './components/orders-by-period/orders-by-period.component';
+import { ViewDidLeave } from '@ionic/angular';
+import { MetricsService } from 'src/app/_services/metrics.service';
 @Component({
   selector: 'app-metrics',
   templateUrl: './metrics.page.html',
@@ -34,11 +36,7 @@ import { OrdersByPeriodComponent } from './components/orders-by-period/orders-by
     IonCol,
     IonRow,
     IonGrid,
-    IonCardContent,
-    IonCardTitle,
-    IonCard,
     IonContent,
-    IonCardHeader,
     IonTitle,
     IonButtons,
     IonToolbar,
@@ -54,4 +52,14 @@ import { OrdersByPeriodComponent } from './components/orders-by-period/orders-by
     IonMenuButton,
   ],
 })
-export class MetricsPage {}
+export class MetricsPage implements ViewDidLeave {
+  metricsService = inject(MetricsService);
+
+  ionViewDidLeave() {
+    console.log('view did leave');
+    this.metricsService.startDate$.set(
+      `01/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`,
+    );
+    this.metricsService.endDate$.set(new Date().toLocaleDateString('pt-BR'));
+  }
+}

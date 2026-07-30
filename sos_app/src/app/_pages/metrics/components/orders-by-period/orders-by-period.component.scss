@@ -27,3 +27,7 @@ ion-icon {
 p {
   color: var(--ion-color-dark);
 }
+
+ion-item::part(inner) {
+  padding-right: 0px !important;
+}

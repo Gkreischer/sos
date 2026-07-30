@@ -51,6 +51,7 @@
     "@maskito/kit": "^5.2.2",
     "@maskito/phone": "^5.3.1",
     "@swimlane/ngx-charts": "^23.1.0",
+    "angular-csv-ext": "^1.0.5",
     "angularx-qrcode": "^20.0.0",
     "chart.js": "^4.3.0",
     "chartjs-plugin-datalabels": "^2.2.0",
@@ -66,6 +67,8 @@
     "rxjs": "~7.8.1",
     "socket.io-client": "^4.8.3",
     "tslib": "^2.6.3",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "xlsx-js-style": "^1.2.0",
     "zone.js": "~0.15.1"
   },
   "devDependencies": {

@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\UserType;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -64,7 +65,12 @@ class LoginController extends Controller
     public function changePassword(Request $request)
     {
         try {
-            $user = $request->user();
+
+            if (!$request->user_id) {
+                $user = $request->user();
+            } else {
+                $user = User::findOrFail($request->user_id);
+            }
 
             $validator = Validator::make($request->all(), [
                 'password' => 'required|string|min:8|max:255|confirmed',
@@ -76,19 +82,21 @@ class LoginController extends Controller
             }
 
             $user->update([
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
             ]);
 
+            // Encerra todas as outras sessões do usuário,
+            // mantendo a sessão atual ativa.
             $user->tokens()->delete();
 
             return response([
-                'message' => 'Senha alterada com sucesso'
+                'message' => 'Senha alterada com sucesso.',
             ], 200);
         } catch (\Exception $e) {
             return response([
-                'message' => 'Não foi possível alterar a senha',
-                'error' => $e->getMessage()
-            ]);
+                'message' => 'Não foi possível alterar a senha.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

@@ -8,22 +8,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12">
-        <app-room-list></app-room-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <app-room-list></app-room-list>
+  <ion-fab
+    slot="fixed"
+    vertical="bottom"
+    horizontal="end"
+    tourAnchor="chat.add-button"
+  >
+    <ion-fab-button color="tertiary" (click)="openModalAddRoom()">
+      <ion-icon name="add-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
-
-<ion-fab
-  slot="fixed"
-  vertical="bottom"
-  horizontal="end"
-  tourAnchor="chat.add-button"
->
-  <ion-fab-button color="tertiary" (click)="openModalAddRoom()">
-    <ion-icon name="add-sharp"></ion-icon>
-  </ion-fab-button>
-</ion-fab>

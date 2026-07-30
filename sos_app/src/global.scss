@@ -214,6 +214,14 @@ ion-item.menu-button::part(native) {
   --padding-start: 0.5rem;
 }
 
+ion-list#inbox-list {
+  background-color: var(--ion-color-primary);
+}
+
+ion-item.selected {
+  border-radius: 8px !important;
+}
+
 ion-item.selected::part(native) {
   background-color: var(--ion-color-light);
   color: var(--ion-color-dark);
@@ -318,4 +326,29 @@ ion-note {
 
 .ion-card-bordered-light {
   border-left: 5px solid var(--ion-color-dark);
+}
+
+ion-card {
+  border-radius: 15px !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+ion-chip {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+ion-button {
+  --border-radius: 15px !important;
+}
+
+@media screen and (min-width: 1366px) {
+  ion-fab {
+    transform: translateX(-15px);
+  }
+}
+
+ion-input,
+ion-textarea,
+ion-select {
+  --border-radius: 8px !important;
 }

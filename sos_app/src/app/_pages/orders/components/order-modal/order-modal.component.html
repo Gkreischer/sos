@@ -170,7 +170,7 @@
                   @let pictures = orderForm.get("pictures")?.value;
                   @if (pictures && pictures.length > 0) {
                     @for (picture of pictures; track $index) {
-                      <ion-col size="12" sizeXl="4">
+                      <ion-col size="6" sizeMd="4">
                         <ion-card
                           class="ion-no-margin"
                           [button]="true"

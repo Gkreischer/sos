@@ -1,33 +1,35 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ModalService } from 'shared';
 import {
-  IonHeader,
   IonToolbar,
-  IonTitle,
   IonButtons,
   IonButton,
   IonIcon,
   IonImg,
   IonContent,
-  IonCard,
+  IonBackdrop,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
 @Component({
   selector: 'lib-modal-image',
   imports: [
-    IonCard,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonBackdrop,
     IonContent,
     IonImg,
     IonIcon,
     IonButton,
     IonButtons,
-    IonTitle,
     IonToolbar,
-    IonHeader,
   ],
   templateUrl: './modal-image.component.html',
-  styleUrl: './modal-image.component.css',
+  styleUrl: './modal-image.component.scss',
 })
 export class ModalImageComponent {
   imageUrl = signal<string>('');

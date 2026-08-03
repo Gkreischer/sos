@@ -12,6 +12,6 @@ export const environment = {
   cepUrl: 'https://viacep.com.br/ws/',
 
   wsHost: window.location.hostname,
-  wsPort: 8080,
+  wsPort: 9003,
   wsScheme: 'ws',
 };

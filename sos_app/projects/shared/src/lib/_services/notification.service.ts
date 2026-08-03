@@ -22,7 +22,7 @@ export class NotificationService {
       key: this.appConfig.reverbKey,
 
       wsHost: this.appConfig.wsHost,
-      wsPort: 8080,
+      wsPort: this.appConfig.wsPort,
 
       forceTLS: this.appConfig.wsScheme === 'wss',
 

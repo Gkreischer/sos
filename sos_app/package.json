@@ -18,7 +18,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "start:tickets": "ionic serve --port=9004 --project=ticket-support --configuration=development",
-    "build:all": "npm run build && ionic build ticket-support",
+    "build:all": "npm run build && ng build ticket-support --configuration=production --base-href /ticket-support/",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -30,7 +30,6 @@
     "@angular/core": "^20.3.22",
     "@angular/forms": "^20.3.22",
     "@angular/platform-browser": "^20.3.22",
-    "@angular/platform-browser-dynamic": "^20.3.22",
     "@angular/router": "^20.3.22",
     "@capacitor/android": "^8.4.1",
     "@capacitor/app": "^8.1.1",

@@ -1,28 +1,31 @@
 # ===========================
-# Etapa 1 - Build do Angular usando Bun
+# Etapa 1 - Build do Angular usando Node.js
 # ===========================
-# Utilizamos a imagem oficial do Bun baseada em Alpine para manter a leveza
-FROM oven/bun:alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
-# Copia os arquivos de definição de dependências
+# Copia os arquivos de dependências
 COPY ./sos_app/package*.json ./
+COPY ./sos_app/capacitor-barcode-scanner-3.1.0.tgz ./
 
-# 'bun install --frozen-lockfile' é o equivalente direto e ultra rápido do 'npm ci'
-RUN bun install --frozen-lockfile
+# Instala as dependências
+RUN npm ci
 
+# Copia o restante da aplicação
 COPY ./sos_app .
 
-# Executa o script de build de produção utilizando o Bun
-RUN bun run build
+# Executa o build de produção
+RUN npm run build:all
 
 # ===========================
 # Etapa 2 - Nginx
 # ===========================
 FROM nginx:alpine
 
+# Copia a configuração do Nginx
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# O Bun buildará o Angular exatamente no mesmo diretório configurado no seu angular.json
+# Copia os arquivos gerados pelo Angular
 COPY --from=build /app/www/browser /usr/share/nginx/html
+COPY --from=build /app/dist/ticket-support/browser /usr/share/nginx/html/ticket-support

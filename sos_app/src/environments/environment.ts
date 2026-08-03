@@ -15,7 +15,7 @@ export const environment = {
   reverbPort: 8080,
 
   wsHost: 'localhost',
-  wsPort: 8080,
+  wsPort: 9003,
   wsScheme: 'ws',
 };
 

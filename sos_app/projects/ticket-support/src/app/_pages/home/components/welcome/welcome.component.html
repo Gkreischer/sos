@@ -1,1 +1,59 @@
-<p>welcome works!</p>
+@let businessInfo = businessInfo$ | async;
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Painel do Cliente</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="6">
+          <ion-text color="dark" class="ion-text-center"
+            ><h2 class="ion-margin-bottom">
+              Seja bem-vindo ao Portal do Cliente!
+            </h2></ion-text
+          >
+          <br />
+          <div class="ion-flex ion-justify-content-center">
+            <ion-img [src]="businessInfo!.image" alt="logo"></ion-img>
+          </div>
+          <br />
+          <ion-text color="dark">
+            <h2 class="ion-text-center ion-text-md-start ion-margin-top">
+              Aqui você pode abrir e acompanhar chamados, cadastrar e gerenciar
+              seus equipamentos, atualizar seus dados cadastrais e manter seu
+              perfil sempre atualizado, tudo de forma rápida, prática e segura.
+            </h2>
+          </ion-text>
+        </ion-col>
+        <ion-col size="12" sizeMd="6">
+          <br />
+          <div class="ion-flex ion-justify-content-center">
+            <ion-chip color="tertiary"><strong>Ações rápidas</strong></ion-chip>
+          </div>
+          <br />
+          <ion-button
+            color="primary"
+            fill="outline"
+            expand="block"
+            type="button"
+            routerLink="/tickets"
+          >
+            <ion-icon slot="start" name="ticket"></ion-icon>
+            <ion-label>Criar chamado</ion-label>
+          </ion-button>
+          <br />
+          <ion-button
+            color="primary"
+            fill="outline"
+            expand="block"
+            type="button"
+            routerLink="/profile"
+          >
+            <ion-icon slot="start" name="person-circle"></ion-icon>
+            <ion-label>Perfil</ion-label>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>

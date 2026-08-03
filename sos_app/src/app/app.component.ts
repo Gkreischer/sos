@@ -152,7 +152,7 @@ export class AppComponent implements OnInit {
       url: '/chamados',
       icon: 'contract',
       id: 'button-sidebar-chamados',
-      tourAnchor: 'menu.chamados',
+      tourAnchor: 'menu.tickets',
       badge: 0,
     },
     {
@@ -272,6 +272,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.getUser();
   }
+
+  verifyDevide() {}
 
   getUser() {
     this.user$.subscribe((user) => {

@@ -69,14 +69,6 @@ export class MetricFilterComponent implements OnInit {
 
   constructor() {
     addIcons({ search });
-    effect((onCleanup) => {
-      const startDate = this.metricsService.startDate;
-      const endDate = this.metricsService.endDate;
-
-      onCleanup(() => {
-        this.form.reset();
-      });
-    });
   }
 
   ngOnInit() {

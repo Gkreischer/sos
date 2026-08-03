@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SettingService } from 'src/app/_services/setting.service';
+import { SettingService } from 'shared';
 import { MenuOptionComponent } from './components/menu-option/menu-option.component';
 import {
   IonHeader,

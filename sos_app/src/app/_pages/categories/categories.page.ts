@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
-import { ViewWillEnter } from '@ionic/angular';
+import { ViewWillEnter, ViewDidEnter } from '@ionic/angular';
 import { CategoriesListComponent } from './components/categories-list/categories-list.component';
 import { CategoryService } from 'src/app/_services/category.service';
 import {
@@ -18,7 +18,8 @@ import {
 
 import { addIcons } from 'ionicons';
 import { addSharp } from 'ionicons/icons';
-
+import { TourService } from 'ngx-ui-tour-ionic';
+import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.page.html',
@@ -34,17 +35,23 @@ import { addSharp } from 'ionicons/icons';
     IonHeader,
     CategoriesListComponent,
     IonMenuButton,
+    TourAnchorIonPopoverDirective,
   ],
 })
-export class CategoriesPage implements ViewWillEnter {
+export class CategoriesPage implements ViewWillEnter, ViewDidEnter {
   modalService = inject(ModalService);
   categoriesService = inject(CategoryService);
+  tourService = inject(TourService);
   constructor() {
     addIcons({ addSharp });
   }
 
   ionViewWillEnter() {
     this.categoriesService.getCategories().subscribe();
+  }
+
+  ionViewDidEnter() {
+    console.log(this.tourService.anchors);
   }
 
   openModal() {

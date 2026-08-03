@@ -37,8 +37,14 @@ const tourSteps = [
     route: '/ordem-servico',
   },
   {
+    anchorId: 'menu.tickets',
+    content: 'Aqui você gerencia chamados realizados pelos seus clientes',
+    title: 'Chamados',
+    route: '/chamados',
+  },
+  {
     anchorId: 'menu.chat',
-    content: 'Aqui você se comunica com sua empresa',
+    content: 'Aqui você se comunica com outros colaboradores',
     title: 'Chat',
     route: '/chat',
   },
@@ -55,16 +61,23 @@ const tourSteps = [
     route: '/relatorios',
   },
   {
+    anchorId: 'menu.logs',
+    content: 'Aqui você verifica as ações realizadas no sistema',
+    title: 'Logs do sistema',
+    route: '/atividades',
+  },
+  {
     anchorId: 'menu.settings',
     content: 'Aqui você gerencia seus dados do usuário e do seu negócio',
     title: 'Configurações do seu usuário e negócio',
     route: '/configuracoes',
   },
   {
-    anchorId: 'os.add-button',
-    content: 'Para criar uma nova ordem de serviço, basta clicar aqui',
-    title: 'Criar Ordem de Serviço',
-    route: '/ordem-servico',
+    anchorId: 'category.add-button',
+    content:
+      'Vamos criar sua primeira categoria. Clique no botão de adicionar abaixo',
+    title: 'Criar categoria',
+    route: '/categorias',
   },
 ].map((step) => ({
   ...step,

@@ -36,14 +36,13 @@
         }
       }
     </ion-list>
+    <ion-infinite-scroll
+      (ionInfinite)="onIonInfinite($event)"
+      loadingSpinner="bubbles"
+      loadingText="Carregando..."
+      [disabled]="!infiniteScroll()"
+    >
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
   </ion-card-content>
 </ion-card>
-@if (infiniteScroll() && equipments && equipments.length > 0) {
-  <ion-infinite-scroll
-    (ionInfinite)="onIonInfinite($event)"
-    loadingSpinner="bubbles"
-    loadingText="Carregando..."
-  >
-    <ion-infinite-scroll-content />
-  </ion-infinite-scroll>
-}

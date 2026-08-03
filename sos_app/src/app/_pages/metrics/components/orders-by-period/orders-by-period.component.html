@@ -31,7 +31,7 @@
             <ion-card
               button="true"
               (click)="openOrderModal(order)"
-              [class]="
+              class="{{
                 order.status_id === 1
                   ? 'danger'
                   : order.status_id === 2
@@ -41,7 +41,7 @@
                       : order.status_id === 4
                         ? 'dark'
                         : 'light'
-              "
+              }} ion-no-margin ion-card-hover"
             >
               <ion-card-content>
                 <ion-list>
@@ -89,6 +89,14 @@
                       <p>{{ order.total_price | currency: "R$" }}</p>
                     </ion-label>
                   </ion-item>
+                  @if (order.parts.length > 0) {
+                    <ion-item lines="none">
+                      <ion-icon slot="start" name="bag-handle"></ion-icon>
+                      <ion-label>
+                        <p>Possui material adquirido</p>
+                      </ion-label>
+                    </ion-item>
+                  }
                 </ion-list>
               </ion-card-content>
             </ion-card>

@@ -9,9 +9,15 @@
 
 <ion-content data-cy="categories-page">
   <app-categories-list></app-categories-list>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="tertiary" (click)="openModal()">
-      <ion-icon name="add-sharp"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
+
+<ion-fab
+  slot="fixed"
+  vertical="bottom"
+  horizontal="end"
+  tourAnchor="category.add-button"
+>
+  <ion-fab-button color="tertiary" (click)="openModal()">
+    <ion-icon name="add-sharp"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

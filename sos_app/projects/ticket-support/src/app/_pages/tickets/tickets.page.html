@@ -5,7 +5,13 @@
 </ion-header>
 
 <ion-content>
-  <app-ticket-list></app-ticket-list>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" sizeXl="6">
+        <app-ticket-list></app-ticket-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button color="primary" (click)="openModalTicket()">

@@ -10,6 +10,9 @@ import {
   IonIcon,
   IonButton,
   IonLabel,
+  IonCol,
+  IonGrid,
+  IonRow,
 } from '@ionic/angular/standalone';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { LoginService } from 'shared';
@@ -19,6 +22,9 @@ import { LoginService } from 'shared';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    IonRow,
+    IonGrid,
+    IonCol,
     IonButton,
     IonIcon,
     IonButtons,

@@ -9,6 +9,9 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  IonCol,
+  IonGrid,
+  IonRow,
 } from '@ionic/angular/standalone';
 import { TicketModalComponent } from './components/ticket-modal/ticket-modal.component';
 import { ModalService } from 'shared';
@@ -23,6 +26,9 @@ import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
   styleUrls: ['./tickets.page.scss'],
   standalone: true,
   imports: [
+    IonRow,
+    IonGrid,
+    IonCol,
     IonIcon,
     IonFabButton,
     IonFab,

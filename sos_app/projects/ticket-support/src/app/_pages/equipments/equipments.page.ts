@@ -9,6 +9,9 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  IonCol,
+  IonGrid,
+  IonRow,
 } from '@ionic/angular/standalone';
 import { EquipmentsListComponent } from './components/equipments-list/equipments-list.component';
 import { EquipmentFilterComponent } from './components/equipment-filter/equipment-filter.component';
@@ -22,6 +25,9 @@ import { EquipmentModalComponent } from './components/equipment-modal/equipment-
   styleUrls: ['./equipments.page.scss'],
   standalone: true,
   imports: [
+    IonRow,
+    IonGrid,
+    IonCol,
     IonIcon,
     IonFabButton,
     IonFab,

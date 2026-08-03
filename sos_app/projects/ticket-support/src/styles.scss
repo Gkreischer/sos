@@ -39,3 +39,22 @@ ion-select::part(text) {
 .ion-flex {
   display: flex !important;
 }
+
+ion-card {
+  border-radius: 15px !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+ion-chip {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+ion-button {
+  --border-radius: 15px !important;
+}
+
+ion-input,
+ion-textarea,
+ion-select {
+  --border-radius: 8px !important;
+}

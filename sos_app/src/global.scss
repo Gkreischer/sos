@@ -206,10 +206,6 @@ ion-button {
   }
 }
 
-.ion-margin-bottom {
-  margin-bottom: 0.5rem;
-}
-
 ion-item.menu-button::part(native) {
   --padding-start: 0.5rem;
 }
@@ -351,4 +347,9 @@ ion-input,
 ion-textarea,
 ion-select {
   --border-radius: 8px !important;
+}
+
+.ion-card-hover:hover {
+  transform: translateY(-10px);
+  transition: transform 0.2s ease-in-out;
 }

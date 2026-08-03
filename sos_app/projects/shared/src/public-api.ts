@@ -56,6 +56,8 @@ export * from './lib/_services/cep.service';
 
 export * from './lib/_services/photo.service';
 
+export * from './lib/_services/setting.service';
+
 export * from './lib/_interceptors/authentication.interceptor';
 
 export * from './lib/_interceptors/error.interceptor';

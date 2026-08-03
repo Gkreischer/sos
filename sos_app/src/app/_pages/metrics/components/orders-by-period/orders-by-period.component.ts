@@ -29,6 +29,7 @@ import {
   calendar,
   card,
   cloudDownload,
+  bagHandle,
 } from 'ionicons/icons';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
@@ -72,7 +73,14 @@ export class OrdersByPeriodComponent {
   page: number = 1;
 
   constructor() {
-    addIcons({ people, hardwareChip, calendar, card, cloudDownload });
+    addIcons({
+      people,
+      hardwareChip,
+      calendar,
+      card,
+      cloudDownload,
+      bagHandle,
+    });
     effect((onCleanup) => {
       const startDate = this.metricsService.startDate;
       const endDate = this.metricsService.endDate;

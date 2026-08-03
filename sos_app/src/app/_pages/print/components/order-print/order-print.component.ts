@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { BusinessInfoInterface } from 'shared';
 import { OrderInterface } from 'shared';
 import { OrderService } from 'src/app/_services/order.service';
-import { SettingService } from 'src/app/_services/setting.service';
+import { SettingService } from 'shared';
 import { NgxPrintDirective } from 'ngx-print';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { UpperCasePipe } from '@angular/common';

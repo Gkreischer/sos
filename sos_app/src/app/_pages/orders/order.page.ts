@@ -57,7 +57,7 @@ export class OrderPage implements ViewWillEnter {
     this.modalService.openModal(OrderModalComponent);
   }
 
-  async getCode() {
+  async getBarcode() {
     const orderId = await this.barCodeScannerService.scanCode();
     if (!orderId) {
       return;

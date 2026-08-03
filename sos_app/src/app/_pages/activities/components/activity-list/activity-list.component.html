@@ -43,7 +43,10 @@
             ></ion-icon>
             <ion-label>
               <ion-note><strong>Assunto</strong></ion-note>
-              <p>{{ activity.subject_type }}</p>
+              <p>
+                {{ activity.subject_type }} -
+                <ion-note>({{ activity.subject_id }})</ion-note>
+              </p>
             </ion-label>
           </ion-item>
           <ion-item color="light" lines="full">
@@ -53,7 +56,10 @@
             ></ion-icon>
             <ion-label>
               <ion-note><strong>Responsável</strong></ion-note>
-              <p>{{ activity.causer_type }}</p>
+              <p>
+                {{ activity.causer_type }} -
+                <ion-note>({{ activity.causer_id }})</ion-note>
+              </p>
             </ion-label>
           </ion-item>
           <ion-item color="light" lines="full">

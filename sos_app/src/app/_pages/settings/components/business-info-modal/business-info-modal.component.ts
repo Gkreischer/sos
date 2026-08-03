@@ -11,7 +11,7 @@ import { cepMask } from 'projects/shared/src/lib/_masks/cepMask';
 import { cnpjMask } from 'projects/shared/src/lib/_masks/cnpjMask';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
-import { SettingService } from 'src/app/_services/setting.service';
+import { SettingService } from 'shared';
 import { ToastService } from 'src/app/_services/toast.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { Observable } from 'rxjs';

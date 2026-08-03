@@ -5,8 +5,14 @@
 </ion-header>
 
 <ion-content>
-  <app-equipment-filter></app-equipment-filter>
-  <app-equipments-list></app-equipments-list>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" sizeXl="6">
+        <app-equipment-filter></app-equipment-filter>
+        <app-equipments-list></app-equipments-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button color="primary" (click)="openModalAddEquipment()">

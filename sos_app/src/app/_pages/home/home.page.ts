@@ -12,7 +12,7 @@ import {
   IonCol,
 } from '@ionic/angular/standalone';
 import { LastPostsBoardComponent } from './last-posts-board/last-posts-board.component';
-import { MenuController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular/standalone';
 import { inject } from '@angular/core';
 import { PostService } from 'src/app/_services/post.service';
 import { ViewWillEnter, ViewDidEnter } from '@ionic/angular';
@@ -24,6 +24,7 @@ import { OrdersPedingCountCardComponent } from './components/orders-peding-count
 import { OrdersInprogressCountCardComponent } from './components/orders-inprogress-count-card/orders-inprogress-count-card.component';
 import { TotalClientsCountCardComponent } from './components/total-clients-count-card/total-clients-count-card.component';
 import { ClockComponent } from './components/clock/clock.component';
+import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -50,11 +51,13 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
   tourService = inject(TourService);
   preferenceService = inject(PreferencesPluginService);
   notificationService = inject(NotificationService);
+  platformService = inject(Platform);
+  menuService = inject(MenuController);
   constructor() {}
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.postService.getLastPosts().subscribe();
-    this.menuController.enable(true, 'main');
+    await this.menuController.enable(true, 'main');
   }
 
   ionViewDidEnter() {
@@ -74,7 +77,7 @@ export class HomePage implements ViewWillEnter, ViewDidEnter {
 
     this.tourService.initialize(tourSteps);
     this.tourService.start();
-    this.menuController.open('main');
+    await this.menuController.open('main');
 
     await this.tutorialIsViewed();
 

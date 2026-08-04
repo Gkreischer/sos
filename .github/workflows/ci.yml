@@ -12,18 +12,15 @@ on:
       - develop
 
 jobs:
-  frontend:
-    name: Frontend Ionic Angular
+  ci:
+    name: Build, Test and E2E
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: sos_app
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Frontend
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -31,60 +28,7 @@ jobs:
           cache: npm
           cache-dependency-path: sos_app/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Build Angular
-        run: npm run build
-
-      - name: Run Cypress
-        uses: cypress-io/github-action@v6
-        with:
-            working-directory: sos_app
-            install: false
-            start: npm run start:ci
-            wait-on: http://localhost:8100
-
-  backend:
-    name: Backend Laravel
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: sos_api
-
-    services:
-      mysql:
-        image: mariadb:latest
-
-        env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: laravel
-          MARIADB_USER: laravel
-          MARIADB_PASSWORD: secret
-
-        ports:
-          - 3306:3306
-
-        options: >-
-          --health-cmd="healthcheck.sh --connect"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      redis:
-        image: redis:latest
-
-        ports:
-          - 6379:6379
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      # Backend
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -92,22 +36,66 @@ jobs:
           extensions: mbstring, pdo, pdo_mysql, redis
           coverage: none
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Install frontend dependencies
+        working-directory: sos_app
+        run: npm ci
 
-      - name: Prepare Laravel environment
+      - name: Install backend dependencies
+        working-directory: sos_api
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare environment files
+        working-directory: sos_api
         run: |
-          cp .env.ci.example .env
-          php artisan key:generate
+          cp production.env.example production.env
+          cp mariadb.example.env mariadb.env
+
+      - name: Start application
+        working-directory: sos_api
+        run: docker compose up -d --build
+
+      - name: Wait for Laravel
+        run: |
+          timeout 180 bash -c '
+          until curl -fs http://localhost:9003 > /dev/null; do
+            echo "Waiting for Laravel..."
+            sleep 5
+          done
+          '
 
       - name: Run migrations
-        run: php artisan migrate --force
-        env:
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: laravel
-          DB_USERNAME: laravel
-          DB_PASSWORD: secret
+        working-directory: sos_api
+        run: |
+          docker compose exec -T app php artisan migrate --force
 
-      - name: Run tests
-        run: php artisan test
+      - name: Frontend lint
+        working-directory: sos_app
+        run: npm run lint
+
+      - name: Build Angular
+        working-directory: sos_app
+        run: npm run build
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: sos_app
+          install: false
+          start: npm start
+          wait-on: http://localhost:8100
+          wait-on-timeout: 120
+
+      - name: Run Laravel tests
+        working-directory: sos_api
+        run: |
+          docker compose exec -T app php artisan test
+
+      - name: Show container logs
+        if: failure()
+        working-directory: sos_api
+        run: docker compose logs
+
+      - name: Stop containers
+        if: always()
+        working-directory: sos_api
+        run: docker compose down -v

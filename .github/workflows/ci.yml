@@ -45,10 +45,10 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Prepare environment files
-        working-directory: sos_api
+        working-directory: sos
         run: |
-          cp production.env.example production.env
-          cp mariadb.example.env mariadb.env
+          cp production.env.example ./sos_api/production.env
+          cp mariadb.example.env ./sos_api/mariadb.env
 
       - name: Start application
         working-directory: sos_api

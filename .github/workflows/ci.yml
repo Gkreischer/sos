@@ -45,7 +45,7 @@ jobs:
         with:
             working-directory: sos_app
             install: false
-            start: npm start
+            start: npm run start:ci
             wait-on: http://localhost:8100
 
   backend:

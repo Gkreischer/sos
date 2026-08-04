@@ -45,7 +45,6 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Prepare environment files
-        working-directory: sos
         run: |
           cp production.env.example ./sos_api/production.env
           cp mariadb.example.env ./sos_api/mariadb.env

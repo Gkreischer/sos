@@ -8,7 +8,7 @@ import { CountInterface } from 'shared';
 import { OrderMonthIncomesInterface } from 'shared';
 import { OrderTotalPriceByStatusInterface } from 'shared';
 import { TechnicianMetricsInterface } from 'shared';
-import { OrderInterface } from 'dist/shared';
+import { OrderInterface } from 'shared';
 import { PaginateInterface } from 'shared';
 @Injectable({
   providedIn: 'root',

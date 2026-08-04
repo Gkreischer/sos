@@ -96,7 +96,7 @@ jobs:
 
       - name: Prepare Laravel environment
         run: |
-          cp .env.example .env
+          cp .env.ci.example .env
           php artisan key:generate
 
       - name: Run migrations

@@ -3,7 +3,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { MetricsService } from './metrics.service';
 import * as XLSX from 'xlsx-js-style';
 import { WorkSheet } from 'xlsx';
-import { OrderInterface, PartInterface } from 'dist/shared';
+import { OrderInterface, PartInterface } from 'shared';
 @Injectable({
   providedIn: 'root',
 })

@@ -57,7 +57,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/core';
   templateUrl: './tickets-list.component.html',
   styleUrl: './tickets-list.component.scss',
 })
-export class TicketsListComponent implements OnInit {
+export class TicketsListComponent {
   ticketService = inject(TicketService);
   loadingService = inject(LoadingService);
   modalService = inject(ModalService);
@@ -94,8 +94,6 @@ export class TicketsListComponent implements OnInit {
       });
     });
   }
-
-  ngOnInit() {}
 
   openModalTicket(ticket: TicketInterface) {
     this.modalService.openModal(TicketModalComponent, { ticketId: ticket.id });

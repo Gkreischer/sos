@@ -30,8 +30,6 @@ import { ActivityListComponent } from './components/activity-list/activity-list.
     IonMenuButton,
   ],
 })
-export class ActivitiesPage implements OnInit {
+export class ActivitiesPage {
   constructor() {}
-
-  ngOnInit() {}
 }

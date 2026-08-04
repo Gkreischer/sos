@@ -56,7 +56,6 @@ export class MetricsPage implements ViewDidLeave {
   metricsService = inject(MetricsService);
 
   ionViewDidLeave() {
-    console.log('view did leave');
     this.metricsService.startDate$.set(
       `01/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`,
     );

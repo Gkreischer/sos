@@ -5,7 +5,7 @@ export const environment = {
   storageUrl: '/storage',
   authEndpoint: '/broadcasting/auth',
 
-  reverbKey: 'dv8upx8egffloafurncb',
+  reverbKey: '',
   reverbHost: 'localhost',
   reverbPort: 8080,
 

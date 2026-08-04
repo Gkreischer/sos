@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -102,7 +102,7 @@ interface AppPage {
     IonBadge,
   ],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   menuController = inject(MenuController);
   loginService: LoginService = inject(LoginService);
   router = inject(Router);

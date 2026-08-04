@@ -58,6 +58,7 @@ import { SpreadSheetService } from 'src/app/_services/spreadsheet.service';
     DatePipe,
     CurrencyPipe,
     IonButton,
+    IonText,
   ],
   templateUrl: './orders-by-period.component.html',
   styleUrl: './orders-by-period.component.scss',

@@ -13,5 +13,5 @@ export const environment = {
 
   reverbHost: 'localhost',
   reverbPort: 8080,
-  reverbKey: 'dv8upx8egffloafurncb',
+  reverbKey: '',
 };

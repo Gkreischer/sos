@@ -43,9 +43,10 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v6
         with:
-          working-directory: sos_app
-          install: false
-          command: npm run cypress:run
+            working-directory: sos_app
+            install: false
+            start: npm start
+            wait-on: http://localhost:8100
 
   backend:
     name: Backend Laravel

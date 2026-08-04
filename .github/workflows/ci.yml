@@ -46,7 +46,7 @@ jobs:
 
       - name: Prepare environment files
         run: |
-          cp production.example.env ./sos_api/production.env
+          cp production.example.env ./production.env
           cp mariadb.example.env ./mariadb.env
 
       - name: Start application

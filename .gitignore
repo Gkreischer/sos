@@ -13,7 +13,6 @@ sos_api/bootstrap/cache/*.php
 # Ambiente
 sos_api/.env
 
-
 # Node
 sos_app/node_modules/
 
@@ -35,5 +34,6 @@ sos_app/cypress/downloads/
 Thumbs.db
 
 mariadb.env
-dev.env
 production.env
+
+

@@ -2,6 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const port = window.location.port
+  ? Number(window.location.port)
+  : window.location.protocol === 'https:'
+    ? 443
+    : 9003;
+
 export const environment = {
   production: false,
   baseUrl: '/api/v1',
@@ -10,13 +16,13 @@ export const environment = {
 
   authEndpoint: '/broadcasting/auth',
 
-  reverbKey: '',
-  reverbHost: 'localhost',
+  reverbKey: 'GENERATEYOUROWNKEY',
+  reverbHost: window.location.hostname,
   reverbPort: 8080,
 
-  wsHost: 'localhost',
-  wsPort: 9003,
-  wsScheme: 'ws',
+  wsHost: window.location.hostname,
+  wsPort: port,
+  wsScheme: window.location.protocol === 'https:' ? 'wss' : 'ws',
 };
 
 /*

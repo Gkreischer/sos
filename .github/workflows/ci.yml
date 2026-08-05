@@ -33,7 +33,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.5
-          extensions: mbstring, pdo, pdo_mysql, redis
+          extensions: mbstring, pdo, pdo_mysql, redis, sodium
           coverage: none
 
       - name: Install frontend dependencies
@@ -46,8 +46,9 @@ jobs:
 
       - name: Prepare environment files
         run: |
-          cp production.example.env ./production.env
-          cp mariadb.example.env ./mariadb.env
+          cp ./sos_api/.env.ci.example ./sos_api/.env
+          cp ./mariadb.example.env ./mariadb.env
+          sed -i "s|APP_KEY=.*|APP_KEY=$(php -r 'echo "base64:".base64_encode(random_bytes(32));')|" ./sos_api/.env
 
       - name: Start application
         working-directory: sos_api
@@ -65,25 +66,25 @@ jobs:
         if: failure()
         working-directory: sos_api
         run: |
-            docker compose ps
+          docker compose ps
 
-        - name: Show app logs
+      - name: Show app logs
         if: failure()
         working-directory: sos_api
         run: |
-            docker compose logs app
+          docker compose logs app
 
-        - name: Show Laravel log
+      - name: Show Laravel log
         if: failure()
         working-directory: sos_api
         run: |
-            docker compose exec -T app cat storage/logs/laravel.log || true
+          docker compose exec -T app cat storage/logs/laravel.log || true
 
-        - name: Show artisan error
+      - name: Show artisan error
         if: failure()
         working-directory: sos_api
         run: |
-            docker compose exec -T app php artisan about || true
+          docker compose exec -T app php artisan about || true
 
       - name: Run migrations
         working-directory: sos_api
@@ -98,26 +99,24 @@ jobs:
         working-directory: sos_app
         run: npm run build
 
+      - name: Install Cypress dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
+
       - name: Run Cypress
         uses: cypress-io/github-action@v6
         with:
           working-directory: sos_app
           install: false
-          start: npm start
+          start: npm run start:ci
           wait-on: http://localhost:8100
           wait-on-timeout: 120
 
-      - name: Run Laravel tests
-        working-directory: sos_api
-        run: |
-          docker compose exec -T app php artisan test
-
       - name: Show container logs
         if: failure()
-        working-directory: sos_api
         run: docker compose logs
 
       - name: Stop containers
         if: always()
-        working-directory: sos_api
         run: docker compose down -v

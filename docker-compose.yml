@@ -12,8 +12,10 @@ services:
 
     restart: unless-stopped
 
-    env_file:
-      - production.env
+    environment:
+        LARAVEL_ENABLE_QUEUE_WORKER: 1
+        LARAVEL_ENABLE_SCHEDULER: 1
+        LARAVEL_ENABLE_REVERB: 1
 
     depends_on:
       mariadb:
@@ -91,7 +93,7 @@ services:
   phpmyadmin:
     image: docker.io/phpmyadmin/phpmyadmin:latest
     container_name: sos-phpmyadmin
-    restart: unless-stopped
+    # restart: unless-stopped
 
     ports:
       - "8081:80"

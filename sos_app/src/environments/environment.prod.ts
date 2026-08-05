@@ -1,3 +1,9 @@
+const port = window.location.port
+  ? Number(window.location.port)
+  : window.location.protocol === 'https:'
+    ? 443
+    : 9003;
+
 export const environment = {
   production: true,
 
@@ -5,13 +11,13 @@ export const environment = {
   storageUrl: '/storage',
   authEndpoint: '/broadcasting/auth',
 
-  reverbKey: '',
+  reverbKey: 'GENERATEYOUROWNKEY',
   reverbHost: 'localhost',
   reverbPort: 8080,
 
   cepUrl: 'https://viacep.com.br/ws/',
 
-  wsHost: window.location.hostname,
-  wsPort: 9003,
-  wsScheme: 'ws',
+  wsHost: 'localhost',
+  wsPort: port,
+  wsScheme: window.location.protocol === 'https:' ? 'wss' : 'ws',
 };

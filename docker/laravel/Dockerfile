@@ -2,7 +2,6 @@ FROM docker.io/shinsenter/laravel:php8.5-alpine
 
 WORKDIR /var/www/html
 
-# Copia apenas os arquivos do Composer
 COPY ./sos_api/composer.json ./sos_api/composer.lock ./
 
 RUN composer install \
@@ -10,8 +9,14 @@ RUN composer install \
     --optimize-autoloader \
     --no-interaction
 
-# Agora copia o restante da aplicação
 COPY ./sos_api .
+
+# Remova os caches DEPOIS do COPY
+RUN rm -f bootstrap/cache/*.php
+
+RUN cp .env.example .env
+
+RUN php artisan key:generate --force
 
 RUN rm -f bootstrap/cache/config.php \
     bootstrap/cache/routes-v7.php \

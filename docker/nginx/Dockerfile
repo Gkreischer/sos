@@ -1,7 +1,7 @@
 # ===========================
 # Etapa 1 - Build do Angular usando Node.js
 # ===========================
-FROM node:22-alpine AS build
+FROM docker.io/library/node:22-alpine AS build
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ RUN npm run build:all
 # ===========================
 # Etapa 2 - Nginx
 # ===========================
-FROM nginx:stable-alpine
+FROM docker.io/library/nginx:stable-alpine
 
 # Copia a configuração do Nginx
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf

@@ -1,8 +1,6 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { UserFilterComponent } from './user-filter.component';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 
 describe('UserFilterComponent', () => {
   let component: UserFilterComponent;
@@ -10,9 +8,9 @@ describe('UserFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, UserFilterComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
+      imports: [UserFilterComponent] // For standalone components, we can import directly
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(UserFilterComponent);
     component = fixture.componentInstance;
@@ -21,5 +19,17 @@ describe('UserFilterComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have a filter button', () => {
+    const filterButton = fixture.debugElement.query(By.css('button'));
+    expect(filterButton).toBeTruthy();
+  });
+
+  it('should call searchUser when button is clicked', () => {
+    const spy = spyOn(component, 'searchUser');
+    const button = fixture.debugElement.query(By.css('button'));
+    button.triggerEventHandler('click', null);
+    expect(spy).toHaveBeenCalled();
   });
 });

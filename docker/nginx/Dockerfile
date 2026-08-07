@@ -21,7 +21,7 @@ RUN npm run build:all
 # ===========================
 # Etapa 2 - Nginx
 # ===========================
-FROM nginx:alpine
+FROM nginx:stable-alpine
 
 # Copia a configuração do Nginx
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf

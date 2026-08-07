@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { SettingService } from './setting.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { EquipmentService } from './equipment.service';
 
 describe('SettingService', () => {
   let service: SettingService;

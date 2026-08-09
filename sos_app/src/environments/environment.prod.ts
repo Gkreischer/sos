@@ -1,9 +1,3 @@
-const port = window.location.port
-  ? Number(window.location.port)
-  : window.location.protocol === 'https:'
-    ? 443
-    : 9003;
-
 export const environment = {
   production: true,
 
@@ -17,7 +11,7 @@ export const environment = {
 
   cepUrl: 'https://viacep.com.br/ws/',
 
-  wsHost: 'localhost',
-  wsPort: port,
+  wsHost: window.location.hostname,
+  wsPort: 9003,
   wsScheme: window.location.protocol === 'https:' ? 'wss' : 'ws',
 };

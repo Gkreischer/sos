@@ -37,3 +37,4 @@ mariadb.env
 production.env
 
 
+mariadb.example.env

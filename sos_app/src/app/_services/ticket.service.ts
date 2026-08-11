@@ -51,6 +51,14 @@ export class TicketService {
       );
   }
 
+  updateTicket(ticket: TicketInterface) {
+    return this.ticketSubject.next(ticket);
+  }
+
+  updateTickets(ticket: TicketInterface) {
+    this.ticketsSubject.next([...this.ticketsSubject.getValue(), ticket]);
+  }
+
   getTicket(id: number) {
     return this.http
       .get<TicketInterface>(`${environment.baseUrl}/tickets/${id}`)

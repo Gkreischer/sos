@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('orders_parts', function (Blueprint $table) {
             $table->id();
-            $table->index('order_id');
             $table->foreignId('order_id')->constrained('orders');
             $table->text('name');
             $table->decimal('quantity', 15, 2)->default(0);

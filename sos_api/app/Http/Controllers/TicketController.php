@@ -48,10 +48,13 @@ class TicketController extends Controller
                 'tickets.created_at',
                 'tickets.status_id',
                 'tickets.user_id',
+                'tickets.equipment_id',
+                'tickets.description',
             )
             ->with([
                 'user:id,name',
-                'status:id,name'
+                'status:id,name',
+                'equipment:id,name',
             ])
             // Filtro por status
             ->when(isset($status_id) && $status_id != 0, function ($query) use ($status_id) {

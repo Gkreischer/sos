@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Ticket;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -205,6 +206,8 @@ class OrderController extends Controller
             'equipment_id' => 'required|integer',
             'status_id' => 'required|integer',
 
+            'ticket_id' => 'nullable|integer|exists:tickets,id',
+
             'description' => 'nullable|string',
             'obs' => 'nullable|string',
             'service_description' => 'nullable|string',
@@ -231,6 +234,12 @@ class OrderController extends Controller
             $order = DB::transaction(function () use ($request, $data, &$storedPictures) {
 
                 $order = Order::create($data);
+
+                if (!empty($data['ticket_id'])) {
+                    $ticket = Ticket::findOrFail($data['ticket_id']);
+
+                    $order->ticket()->save($ticket);
+                }
 
                 if ($request->hasFile('pictures')) {
 
@@ -259,7 +268,7 @@ class OrderController extends Controller
                 Storage::disk('public')->delete($path);
             }
 
-            return response()->json([
+            return response([
                 'message' => 'Não foi possível criar a ordem de serviço.',
                 'error' => $e->getMessage(),
             ], 500);

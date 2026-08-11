@@ -12,10 +12,11 @@ class Ticket extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $with = ['user', 'status'];
+    protected $with = ['user', 'status', 'equipment'];
 
     protected $fillable = [
         'user_id',
+        'order_id',
         'title',
         'description',
         'equipment_id',
@@ -40,5 +41,15 @@ class Ticket extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class);
+    }
+
+    public function equipment(): BelongsTo
+    {
+        return $this->belongsTo(Equipment::class);
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
     }
 }

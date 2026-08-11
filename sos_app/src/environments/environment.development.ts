@@ -6,11 +6,11 @@ export const environment = {
 
   authEndpoint: '/broadcasting/auth',
 
-  reverbKey: 'GENERATEYOUROWNKEY',
+  reverbKey: 'tjek9Pc9',
   reverbHost: window.location.hostname,
   reverbPort: 8080,
 
   wsHost: window.location.hostname,
-  wsPort: 9003,
+  wsPort: 8080,
   wsScheme: window.location.protocol === 'https:' ? 'wss' : 'ws',
 };

@@ -38,3 +38,4 @@ production.env
 
 
 mariadb.example.env
+sos_api/.env.example

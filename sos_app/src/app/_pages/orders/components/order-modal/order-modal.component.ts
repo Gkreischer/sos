@@ -84,6 +84,7 @@ import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { PictureInterface } from 'shared';
 import { OrderStatusEnum } from 'shared';
 import { EquipmentOrderHistoryModalComponent } from '../equipment-order-history-modal/equipment-order-history-modal.component';
+import { TicketInterface } from 'shared';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -150,7 +151,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     this.orderStatusService.order_statuses;
   selectOrderStatusDisabled = false;
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
-
+  ticket?: TicketInterface | null;
   priceMask = priceMask;
   dateMask = dateMask;
 
@@ -177,10 +178,29 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getOrderDetailsById();
     this.mountForm();
-    this.patchFormTotalPrice();
     this.getOrderStatuses();
+    if (this.orderId) {
+      this.getOrderDetailsById();
+      this.patchFormTotalPrice();
+    }
+    if (this.ticket) {
+      console.log(this.ticket);
+      this.patchFormWithTicket(this.ticket);
+    }
+  }
+
+  patchFormWithTicket(ticket: TicketInterface) {
+    this.orderForm.patchValue({
+      title: ticket.title,
+      description: ticket.description,
+      status_id: ticket.status_id,
+      user_id: ticket.user_id,
+      equipment_id: ticket.equipment_id,
+      user: ticket.user.name,
+    });
+    this.clientSelected = ticket.user;
+    this.getUserEquipments();
   }
 
   get parts() {
@@ -394,8 +414,14 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   }
 
   submit() {
+    const orderData = this.orderForm.value;
+    if (this.ticket) {
+      console.log(this.ticket);
+      orderData.ticket_id = this.ticket.id;
+    }
+    console.log(orderData);
     this.orderService
-      .create(this.orderForm.value, this.pictures.value)
+      .create(orderData, this.pictures.value)
       .subscribe((order) => {
         this.toastService.presentToast(
           'Ordem criada com sucesso',
@@ -403,7 +429,10 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
           4000,
           'success',
         );
-        this.closeModal();
+        this.modalService.closeModal(
+          this.ticket ? (orderData.order_id = order.id) : null,
+          'confirm',
+        );
       });
   }
 
@@ -424,9 +453,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       'success',
     );
   }
-  closeModal() {
-    this.modalService.closeModal();
-  }
 
   showAlertCancelOrder() {
     this.alertService.presentAlert(
@@ -443,7 +469,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
           text: 'Confirmar',
           role: 'confirm',
           handler: () => {
-            this.closeModal();
+            this.modalService.closeModal();
           },
         },
       ],
@@ -503,7 +529,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   }
 
   print() {
-    this.closeModal();
+    this.modalService.closeModal();
     this.router.navigate(['/imprimir', this.orderId]);
   }
 

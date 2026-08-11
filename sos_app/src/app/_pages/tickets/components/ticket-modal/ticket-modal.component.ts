@@ -11,7 +11,6 @@ import {
   IonCard,
   IonRow,
   IonCol,
-  IonItem,
   IonGrid,
   IonCardHeader,
   IonCardTitle,
@@ -19,6 +18,7 @@ import {
   IonTextarea,
   IonSelect,
   IonSelectOption,
+  IonText,
 } from '@ionic/angular/standalone';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { TicketService } from 'src/app/_services/ticket.service';
@@ -35,9 +35,14 @@ import {
 } from '@angular/forms';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { EquipmentInterface } from 'shared';
+import { addIcons } from 'ionicons';
+import { send } from 'ionicons/icons';
+import TicketStatus from 'src/app/_enums/ticketStatus';
+import { OrderModalComponent } from 'src/app/_pages/orders/components/order-modal/order-modal.component';
 @Component({
   selector: 'app-ticket-modal',
   imports: [
+    IonText,
     IonTextarea,
     IonInput,
     IonCardTitle,
@@ -70,13 +75,19 @@ export class TicketModalComponent implements OnInit {
   formBuilder = inject(FormBuilder);
 
   ticketId?: number;
-
+  ticketStatusesEnum = TicketStatus;
   ticket$: Observable<TicketInterface | null> = this.ticketService.ticket;
   ticketStatuses$: Observable<OrderStatusInterface[]> =
     this.orderStatusService.order_statuses;
   equipments$: Observable<EquipmentInterface[]> =
     this.equipmentService.equipments;
+  ticketToOrderModal?: TicketInterface | null;
+  orderId?: number;
   form!: FormGroup;
+
+  constructor() {
+    addIcons({ send });
+  }
 
   ngOnInit() {
     this.getTicketStatuses();
@@ -113,6 +124,7 @@ export class TicketModalComponent implements OnInit {
 
   getTicketInfo() {
     this.ticketService.getTicket(this.ticketId!).subscribe((res) => {
+      this.ticketToOrderModal = res;
       this.patchForm(res);
       this.getUserEquipments();
     });
@@ -131,5 +143,15 @@ export class TicketModalComponent implements OnInit {
 
   closeModal() {
     this.modalService.closeModal();
+  }
+
+  async convertToOrder() {
+    const orderId = await this.modalService.openModal(OrderModalComponent, {
+      ticket: this.ticketToOrderModal,
+    });
+    if (orderId) {
+      this.ticketToOrderModal!.order_id = orderId;
+      this.ticketService.updateTicket(this.ticketToOrderModal!);
+    }
   }
 }

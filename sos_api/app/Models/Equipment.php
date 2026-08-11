@@ -57,4 +57,9 @@ class Equipment extends Model
     {
         return $this->hasMany(Order::class, 'equipment_id');
     }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class, 'equipment_id');
+    }
 }

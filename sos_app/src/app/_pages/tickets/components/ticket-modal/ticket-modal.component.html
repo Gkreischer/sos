@@ -11,6 +11,7 @@
 
 @let ticketStatuses = ticketStatuses$ | async;
 @let equipments = equipments$ | async;
+@let ticket = ticket$ | async;
 <ion-content>
   <ion-card>
     <ion-card-header>
@@ -90,6 +91,33 @@
               ></ion-textarea>
             </ion-col>
           </ion-row>
+          @if (
+            ticket &&
+            ticket.status_id === ticketStatusesEnum.Pending &&
+            ticket.equipment_id
+          ) {
+            <ion-row>
+              <ion-col size="12">
+                <ion-button
+                  expand="block"
+                  type="button"
+                  (click)="convertToOrder()"
+                  [disabled]="ticket.order_id"
+                >
+                  @if (ticket.order_id) {
+                    <ion-text color="light"
+                      >Ordem de serviço já cadastrada #
+                      {{ ticket.order_id }}</ion-text
+                    >
+                  } @else {
+                    <ion-icon slot="start" name="send"></ion-icon>
+
+                    Converter em ordem de serviço
+                  }
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          }
         </ion-grid>
       </form>
     </ion-card-content>

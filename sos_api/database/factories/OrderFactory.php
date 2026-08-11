@@ -27,7 +27,7 @@ class OrderFactory extends Factory
 
         return [
             'title' => $this->faker->sentence(),
-
+            'uid' => $this->faker->uuid(),
             'description' => $this->faker->sentence(),
             'obs' => $this->faker->sentence(),
             'user_id' => $customer->id,

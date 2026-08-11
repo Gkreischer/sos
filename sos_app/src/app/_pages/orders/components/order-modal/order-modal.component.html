@@ -6,7 +6,7 @@
       <ion-title>Atualizar Ordem de Serviço</ion-title>
     }
     <ion-buttons slot="start">
-      <ion-button shape="round" (click)="closeModal()">
+      <ion-button (click)="this.modalService.closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -65,8 +65,9 @@
                 <ion-row>
                   @let equipments = equipments$ | async;
                   @let equipmentId = orderForm.get("equipment_id")?.value;
+                  @let orderStatuses = orderStatuses$ | async;
+
                   <ion-col size="12" [sizeLg]="equipmentId ? 4 : 12">
-                    @let orderStatuses = orderStatuses$ | async;
                     @if (orderStatuses$) {
                       <ion-select
                         fill="outline"
@@ -478,7 +479,7 @@
         type="button"
         (click)="!orderId ? submit() : update()"
         expand="block"
-        color="tertiary"
+        color="light"
       >
         <ion-icon name="checkmark-done-sharp"></ion-icon>
         {{ !orderId ? "Cadastrar" : "Atualizar" }}

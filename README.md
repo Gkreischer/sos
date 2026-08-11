@@ -63,17 +63,15 @@ O sistema utiliza Docker Compose para orquestrar todos os serviços necessários
 - **nginx**: Servidor web para frontend
 - **mariadb**: Banco de dados MariaDB
 - **redis**: Cache e filas
-- **phpmyadmin**: Interface web para gerenciamento do banco de dados
 
 ### Portas Expostas
 - **9003**: Interface administrativa do sistema
 - **9004**: Painel externo para verificação de ordens (clientes)
-- **8081**: Interface phpMyAdmin para gerenciamento do banco de dados
 
 ## ⚙️ Configuração
 
 ### 1. Banco de Dados MariaDB
-No arquivo `mariadb.env`, você precisa alterar a senha do usuário `sos`:
+No arquivo `mariadb.example.env`, você precisa alterar a senha do usuário `sos` e renomear para `mariadb.env`:
 
 ```env
 MARIADB_ROOT_PASSWORD=root
@@ -110,7 +108,6 @@ docker-compose up -d
 3. Acesse os serviços:
 - Interface administrativa: http://localhost:9003
 - Painel externo: http://localhost:9004
-- phpMyAdmin: http://localhost:8081
 
 ## 📝 Observações
 

@@ -11,15 +11,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Ramsey\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Order extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, HasUuids;
 
 
     protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician'];
 
-    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature'];
+    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature', 'uid'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -62,10 +65,33 @@ class Order extends Model
         return $this->hasMany(OrderPicture::class);
     }
 
+    public function ticket(): HasOne
+    {
+        return $this->hasOne(Ticket::class);
+    }
+
     protected $casts = [
         'discount' => BrlDecimalCast::class,
         'service_price' => BrlDecimalCast::class,
         'parts_price' => 'decimal:2',
         'total_price' => 'decimal:2',
     ];
+
+    /**
+     * Generate a new UUID for the model.
+     */
+    public function newUniqueId(): string
+    {
+        return (string) Uuid::uuid4();
+    }
+
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uid'];
+    }
 }

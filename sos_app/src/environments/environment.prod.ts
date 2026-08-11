@@ -9,7 +9,7 @@ export const environment = {
   reverbHost: 'localhost',
   reverbPort: 8080,
 
-  cepUrl: 'https://viacep.com.br/ws/',
+  cepUrl: 'https://viacep.com.br/ws',
 
   wsHost: window.location.hostname,
   wsPort: 9003,

@@ -52,6 +52,6 @@ export class WelcomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.settingService.getBusinessInfo().subscribe((res) => console.log(res));
+    this.settingService.getBusinessInfo().subscribe();
   }
 }

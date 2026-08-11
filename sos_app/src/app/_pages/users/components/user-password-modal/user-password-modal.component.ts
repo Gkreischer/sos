@@ -70,7 +70,6 @@ export class UserPasswordModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.userId);
     this.mountForm();
   }
 

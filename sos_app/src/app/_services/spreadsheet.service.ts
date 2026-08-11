@@ -56,7 +56,6 @@ export class SpreadSheetService {
 
   async generateOrdersByPeriodMetricXLSX() {
     const XLSX = await import('xlsx-js-style');
-    console.log(this.ordersByPeriod$());
     const ordersData = this.ordersByPeriod$().map((order) => ({
       id: order.id,
       titulo: order.title,

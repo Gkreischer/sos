@@ -38,7 +38,7 @@ import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
     TourAnchorIonPopoverDirective,
   ],
 })
-export class CategoriesPage implements ViewWillEnter, ViewDidEnter {
+export class CategoriesPage implements ViewWillEnter {
   modalService = inject(ModalService);
   categoriesService = inject(CategoryService);
   tourService = inject(TourService);
@@ -48,10 +48,6 @@ export class CategoriesPage implements ViewWillEnter, ViewDidEnter {
 
   ionViewWillEnter() {
     this.categoriesService.getCategories().subscribe();
-  }
-
-  ionViewDidEnter() {
-    console.log(this.tourService.anchors);
   }
 
   openModal() {

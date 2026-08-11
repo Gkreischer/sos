@@ -89,28 +89,7 @@ services:
 
     networks:
       - sos
-
-  phpmyadmin:
-    image: docker.io/phpmyadmin/phpmyadmin:latest
-    container_name: sos-phpmyadmin
-    # restart: unless-stopped
-
-    ports:
-      - "8081:80"
-
-    environment:
-      PMA_HOST: mariadb
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: root
-
-    depends_on:
-      mariadb:
-        condition: service_healthy
-
-    networks:
-      - sos
-
+      
 volumes:
   mariadb_data:
   redis_data:

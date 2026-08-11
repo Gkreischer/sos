@@ -98,4 +98,9 @@ export const routes: Routes = [
         (m) => m.ActivitiesPage,
       ),
   },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('shared').then((m) => m.NotFoundComponent),
+  }
 ];

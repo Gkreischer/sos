@@ -15,8 +15,8 @@ export class FormatPhonePipe implements PipeTransform {
     if (length === 13) {
       const countryCode = value.slice(0, 2);
       const areaCode = value.slice(2, 4);
-      const firstPart = value.slice(4, 8);
-      const secondPart = value.slice(8);
+      const firstPart = value.slice(4, 9);
+      const secondPart = value.slice(9);
 
       return `+${countryCode} (${areaCode}) ${firstPart}-${secondPart}`;
     }

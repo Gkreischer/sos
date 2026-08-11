@@ -133,12 +133,13 @@ class UserController extends Controller
         //
         try {
             $user = User::findOrFail($id);
+            $userCopy = $user;
 
             $user->delete();
 
             Cache::tags('users-list')->flush();
 
-            return response($user, 200);
+            return response($userCopy, 200);
         }
         // Make an exception for QueryException
         catch (\Illuminate\Database\QueryException $e) {

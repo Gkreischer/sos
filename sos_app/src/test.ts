@@ -1,12 +1,34 @@
 /// <reference types="jasmine" />
 
+import 'zone.js';
 import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
-import { BrowserTestingModule } from '@angular/platform-browser/testing';
-import { platformBrowserTesting } from '@angular/platform-browser/testing';
 
-// First, initialize the Angular testing environment.
+import { getTestBed, TestBed, TestModuleMetadata } from '@angular/core/testing';
+
+import {
+  BrowserTestingModule,
+  platformBrowserTesting,
+} from '@angular/platform-browser/testing';
+
+import { testProviders } from 'shared';
+
 getTestBed().initTestEnvironment(
   BrowserTestingModule,
   platformBrowserTesting(),
+  {
+    teardown: {
+      destroyAfterEach: true,
+    },
+  },
 );
+
+const originalConfigureTestingModule =
+  TestBed.configureTestingModule.bind(TestBed);
+
+TestBed.configureTestingModule = (moduleDef: TestModuleMetadata) => {
+  moduleDef.providers ??= [];
+
+  moduleDef.providers.push(...testProviders);
+
+  return originalConfigureTestingModule(moduleDef);
+};

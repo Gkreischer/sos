@@ -3,6 +3,7 @@ import { PostContentModalComponent } from './post-content.component';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { APP_CONFIG } from 'shared';
 describe('PostContentModalComponent', () => {
   let component: PostContentModalComponent;
   let fixture: ComponentFixture<PostContentModalComponent>;
@@ -14,6 +15,7 @@ describe('PostContentModalComponent', () => {
         provideIonicAngular(),
         provideHttpClient(),
         provideHttpClientTesting(),
+        { provide: APP_CONFIG, useValue: {} },
       ],
     }).compileComponents();
 

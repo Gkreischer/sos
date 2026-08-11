@@ -118,7 +118,7 @@ export class UserService {
     return this.http
       .delete(`${environment.baseUrl}/users/${user.id}`, httpOptions)
       .pipe(
-        tap(() => {
+        tap((res) => {
           const newUsers = this.usersSubject.value?.filter(
             (userListItem) => userListItem.id !== user.id,
           );

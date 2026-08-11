@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { UserService } from './user.service';
 import { environment } from 'src/environments/environment';
 import { UserInterface } from 'shared';
 import { PaginateInterface } from 'shared';
-
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 describe('UserService', () => {
   let service: UserService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [UserService]
+      providers: [UserService, provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(UserService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -40,7 +40,7 @@ describe('UserService', () => {
       per_page: 10,
       prev_page_url: '',
       total: 1,
-      to: 1
+      to: 1,
     };
 
     service.getUsers().subscribe((response) => {
@@ -80,13 +80,14 @@ describe('UserService', () => {
 
   it('should delete a user', () => {
     const mockUser = { id: 1, name: 'John Doe' } as UserInterface;
+    const mockResponse = { id: 1, name: 'John Doe' } as UserInterface;
 
     service.deleteUser(mockUser).subscribe((response) => {
-      expect(response).toBeUndefined(); // DELETE requests typically don't return data
+      expect(response).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/users/1`);
     expect(req.request.method).toBe('DELETE');
-    req.flush({});
+    req.flush(mockResponse);
   });
 });

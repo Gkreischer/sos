@@ -1,24 +1,27 @@
 import { loadingInterceptor } from './loading.interceptor';
 import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
 import { LoadingService } from '../_services/loading.service';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 
 describe('loadingInterceptor', () => {
   let httpMock: HttpTestingController;
   let loadingService: LoadingService;
+  let httpClient: HttpClient;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withInterceptors([loadingInterceptor])),
         provideHttpClientTesting(),
-        LoadingService,
+        { provide: LoadingService, useValue: jasmine.createSpyObj('LoadingService', ['show', 'hide']) },
       ],
     });
 
     httpMock = TestBed.inject(HttpTestingController);
     loadingService = TestBed.inject(LoadingService);
+    httpClient = TestBed.inject(HttpClient);
   });
 
   afterEach(() => {
@@ -26,10 +29,10 @@ describe('loadingInterceptor', () => {
   });
 
   it('should call show and hide on request', () => {
-    spyOn(loadingService, 'show');
-    spyOn(loadingService, 'hide');
+    // Make an HTTP request to trigger the interceptor
+    httpClient.get('/test').subscribe();
 
-    const req = httpMock.expectOne('http://localhost/test');
+    const req = httpMock.expectOne('/test');
     req.flush({});
 
     expect(loadingService.show).toHaveBeenCalled();

@@ -87,3 +87,5 @@ export * from './lib/_components/modal-image/modal-image.component';
 export * from './lib/_pages/not-found/not-found.component';
 
 export * from './lib/_enum/OrderTypeEnum';
+
+export * from './lib/_tests/test-providers';

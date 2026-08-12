@@ -6,8 +6,12 @@ import { OrderInterface } from 'shared';
 import { OrderService } from 'src/app/_services/order.service';
 import { SettingService } from 'shared';
 import { NgxPrintDirective } from 'ngx-print';
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
-import { UpperCasePipe } from '@angular/common';
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  DatePipe,
+  UpperCasePipe,
+} from '@angular/common';
 import { IonCard, IonCardContent } from '@ionic/angular/standalone';
 
 @Component({
@@ -21,6 +25,7 @@ import { IonCard, IonCardContent } from '@ionic/angular/standalone';
     AsyncPipe,
     CurrencyPipe,
     UpperCasePipe,
+    DatePipe,
   ],
 })
 export class OrderPrintComponent implements OnInit {

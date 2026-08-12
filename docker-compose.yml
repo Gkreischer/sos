@@ -18,7 +18,7 @@ services:
         LARAVEL_ENABLE_REVERB: 1
 
     depends_on:
-      mariadb:
+      pgsql:
         condition: service_healthy
 
       redis:
@@ -53,22 +53,23 @@ services:
     networks:
       - sos
 
-  mariadb:
-    image: docker.io/library/mariadb:latest
-    container_name: sos-mariadb
+  pgsql:
+    image: docker.io/library/postgres:18.4-alpine
+    container_name: sos-pgsql
     restart: unless-stopped
 
     env_file:
-      - mariadb.env
+      - pgsql.env
 
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - pgsql_data:/var/lib/postgresql/18/docker
 
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+        test: ["CMD-SHELL", "pg_isready"]
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 10s
 
     networks:
       - sos
@@ -91,7 +92,7 @@ services:
       - sos
       
 volumes:
-  mariadb_data:
+  pgsql_data:
   redis_data:
 
 networks:

@@ -8,9 +8,10 @@ O SOS é um sistema completo de gerenciamento de ordens de serviço que permite:
 
 - Gestão de ordens de serviço com código de barras
 - Visualização de métricas e estatísticas
+- Acompanhamento de histórico de clientes e equipamentos
 - Painel externo para verificação de ordens (porta 9004)
 - Sistema de notificações em tempo real via Reverb/Pusher
-- Banco de dados MariaDB
+- Banco de dados PostgreSQL
 
 ## 🏗️ Estrutura do Projeto
 
@@ -18,7 +19,7 @@ O SOS é um sistema completo de gerenciamento de ordens de serviço que permite:
 .
 ├── docker/                    # Arquivos de configuração Docker
 ├── docker-compose.yml          # Composição dos serviços Docker
-├── mariadb.env                 # Configuração do banco de dados MariaDB
+├── pgsql.env                 # Configuração do banco de dados MariaDB
 ├── sos_api/                    # Backend Laravel
 │   ├── app/                    # Código da aplicação
 │   ├── config/                 # Configurações
@@ -37,13 +38,14 @@ O SOS é um sistema completo de gerenciamento de ordens de serviço que permite:
 - **Painel Externo**: Interface pública para clientes verificarem o status de suas ordens (porta 9004)
 - **Notificações em Tempo Real**: Utilizando Reverb/Pusher para atualizações instantâneas
 - **Gestão Completa**: Criação, edição, visualização e acompanhamento de ordens de serviço
+- **Histórico de cliente e equipamento**: Acompanhe todas as ordens feitas com poucos cliques
 
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend (Laravel)
 - PHP 8.5
 - Laravel Framework
-- MariaDB (MySQL)
+- PostgreSQL
 - Redis
 - Reverb (para broadcasting)
 - Docker Compose
@@ -61,7 +63,7 @@ O sistema utiliza Docker Compose para orquestrar todos os serviços necessários
 ### Serviços
 - **app**: Backend Laravel
 - **nginx**: Servidor web para frontend
-- **mariadb**: Banco de dados MariaDB
+- **pgsql**: Banco de dados MariaDB
 - **redis**: Cache e filas
 
 ### Portas Expostas
@@ -71,13 +73,12 @@ O sistema utiliza Docker Compose para orquestrar todos os serviços necessários
 ## ⚙️ Configuração
 
 ### 1. Banco de Dados MariaDB
-No arquivo `mariadb.example.env`, você precisa alterar a senha do usuário `sos` e renomear para `mariadb.env`:
+No arquivo `pgsql.example.env`, você precisa alterar a senha do usuário `sos` e renomear para `pgsql.env`:
 
 ```env
-MARIADB_ROOT_PASSWORD=root
-MARIADB_DATABASE=sos
-MARIADB_USER=sos
-MARIADB_PASSWORD=NOVA_SENHA_AQUI
+POSTGRES_USER=sos
+POSTGRES_DB=sos
+POSTGRES_PASSWORD=CHANGEYOURPASSWORD
 ```
 
 ### 2. Configuração do Backend Laravel
@@ -86,8 +87,7 @@ No arquivo `sos_api/.env`, você precisa alterar as seguintes variáveis:
 ```env
 APP_KEY=GENERATEYOUROWNKEY
 DB_PASSWORD=NOVA_SENHA_BANCO
-BROADCAST_DRIVER=reverb
-REVERB_APP_ID=432064
+REVERB_APP_ID=RANDOMNUMBER
 REVERB_APP_KEY=GENERATEYOUROWNKEY (use a mesma key em environment.prod.ts, na pasta sos_app)
 REVERB_APP_SECRET=GENERATEYOUROWNSECRET
 ```
@@ -132,14 +132,14 @@ npm install
 
 ### Backup do banco de dados
 ```bash
-docker exec sos-mariadb mysqldump -u root -p <senha> sos > backup_sos.sql
+docker exec -it sos-pgsql pg_dump -U sos -d sos > backup_sos.sql
 ```
 
 ### Logs dos serviços
 ```bash
 docker logs sos-backend
 docker logs sos-nginx
-docker logs sos-mariadb
+docker logs sos-pgsql
 ```
 
 ## 📄 Licença

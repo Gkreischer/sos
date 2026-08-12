@@ -29,6 +29,7 @@
                 type="text"
                 formControlName="user"
                 [readonly]="true"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -39,6 +40,7 @@
                 labelPlacement="floating"
                 label="Status"
                 formControlName="status_id"
+                required
               >
                 @for (status of ticketStatuses; track status.id) {
                   <ion-select-option [value]="status.id">{{
@@ -56,6 +58,7 @@
                   labelPlacement="floating"
                   label="Equipamento"
                   formControlName="equipment_id"
+                  required
                 >
                   @for (equipment of equipments; track equipment.id) {
                     <ion-select-option [value]="equipment.id">{{
@@ -75,6 +78,7 @@
                 type="text"
                 formControlName="title"
                 [readonly]="true"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -88,6 +92,7 @@
                 rows="8"
                 formControlName="description"
                 [readonly]="true"
+                required
               ></ion-textarea>
             </ion-col>
           </ion-row>

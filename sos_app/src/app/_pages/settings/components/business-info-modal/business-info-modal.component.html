@@ -19,12 +19,9 @@
         <ion-grid>
           @if (this.form.get("image")?.value) {
             <ion-row>
-              <ion-col>
-                <ion-card>
-                  <ion-img
-                    width="25%"
-                    [src]="form.get('image')?.value"
-                  ></ion-img>
+              <ion-col class="ion-flex ion-justify-content-center">
+                <ion-card class="custom-width">
+                  <ion-img [src]="form.get('image')?.value"></ion-img>
                 </ion-card>
               </ion-col>
             </ion-row>
@@ -44,6 +41,7 @@
                 fill="outline"
                 label="Nome"
                 formControlName="name"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -56,6 +54,7 @@
                 fill="outline"
                 label="CNPJ"
                 formControlName="cnpj"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -66,6 +65,7 @@
                 fill="outline"
                 label="Email"
                 formControlName="email"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -89,6 +89,20 @@
                 formControlName="phone"
                 [maskito]="phoneMask"
                 [maskitoElement]="maskPredicate"
+                required
+              ></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-input
+                [maskito]="cepMask"
+                [maskitoElement]="maskPredicate"
+                labelPlacement="floating"
+                fill="outline"
+                label="CEP"
+                formControlName="cep"
+                required
+                inputmode="numeric"
+                (ionChange)="verifyCep()"
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -99,6 +113,7 @@
                 fill="outline"
                 label="Endereço"
                 formControlName="address"
+                required
               ></ion-input>
             </ion-col>
             <ion-col size="12" sizeXl="2">
@@ -107,18 +122,7 @@
                 fill="outline"
                 label="Número"
                 formControlName="address_number"
-              ></ion-input>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-input
-                [maskito]="cepMask"
-                [maskitoElement]="maskPredicate"
-                labelPlacement="floating"
-                fill="outline"
-                label="CEP"
-                formControlName="cep"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -129,29 +133,32 @@
                 fill="outline"
                 label="Cidade"
                 formControlName="city"
+                required
               ></ion-input>
             </ion-col>
-          </ion-row>
-          <ion-row>
             <ion-col>
               <ion-input
                 labelPlacement="floating"
                 fill="outline"
                 label="Estado"
                 formControlName="state"
+                required
+                maxlength="2"
+                inputmode="text"
               ></ion-input>
             </ion-col>
-          </ion-row>
-          <ion-row>
+
             <ion-col>
               <ion-input
                 labelPlacement="floating"
                 fill="outline"
                 label="País"
                 formControlName="country"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col>
               <ion-button

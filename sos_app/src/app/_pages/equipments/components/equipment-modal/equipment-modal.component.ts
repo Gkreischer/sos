@@ -99,7 +99,7 @@ export class EquipmentModalComponent implements OnInit {
   mountForm() {
     this.formEquipment = this.formBuilder.group({
       name: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      description: [''],
       category_id: ['', [Validators.required]],
       user_id: ['', [Validators.required]],
       user_name: ['', [Validators.required]],

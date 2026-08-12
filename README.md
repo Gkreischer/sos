@@ -56,6 +56,10 @@ O SOS é um sistema completo de gerenciamento de ordens de serviço que permite:
 - Capacitor
 - Barcode Scanner
 
+## 🗄️ Banco de Dados
+
+[📊 Visualizar diagrama no dbdiagram.io](https://dbdiagram.io/d/SOS-631b5dd70911f91ba5744380)
+
 ## 🐳 Deploy com Docker Compose
 
 O sistema utiliza Docker Compose para orquestrar todos os serviços necessários:

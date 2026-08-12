@@ -44,6 +44,7 @@
                 labelPlacement="floating"
                 label="Nome"
                 formControlName="name"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -57,6 +58,8 @@
                 formControlName="price"
                 type="string"
                 fill="outline"
+                required
+                inputmode="numeric"
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -70,6 +73,7 @@
                   okText="Confirmar"
                   cancelText="Cancelar"
                   fill="outline"
+                  required
                 >
                   @for (category of categories; track $index) {
                     <ion-select-option value="{{ category.id }}">{{

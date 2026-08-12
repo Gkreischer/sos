@@ -9,3 +9,7 @@ ion-icon {
   transform: translateY(-0.1rem);
   color: var(--ion-color-light);
 }
+
+ion-item::part(native) {
+  padding-left: 0;
+}

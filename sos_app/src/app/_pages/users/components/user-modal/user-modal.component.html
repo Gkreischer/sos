@@ -83,6 +83,7 @@
                 placeholder="CPF"
                 [maskito]="cpfMask"
                 [maskitoElement]="maskPredicate"
+                inputmode="numeric"
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -96,6 +97,15 @@
                 placeholder="CNPJ"
                 [maskito]="cnpjMask"
                 [maskitoElement]="maskPredicate"
+              ></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-input
+                fill="outline"
+                labelPlacement="floating"
+                type="text"
+                formControlName="fantasy_name"
+                label="Nome fantasia"
               ></ion-input>
             </ion-col>
           </ion-row>

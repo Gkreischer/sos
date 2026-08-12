@@ -26,6 +26,7 @@
                   [value]="post.content"
                   fill="outline"
                   rows="10"
+                  readonly
                 >
                 </ion-textarea>
               </ion-text>
@@ -51,20 +52,20 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
+  @let user = user$ | async;
+  @if (user!.id === post!.user.id) {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="tertiary">
+        <ion-icon name="chevron-up-circle"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button color="warning" (click)="openModalEdit(post)">
+          <ion-icon name="pencil-sharp"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button color="danger" (click)="confirmDelete()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+  }
 </ion-content>
-@let user = user$ | async;
-@if (user!.id === post!.user.id) {
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="tertiary">
-      <ion-icon name="chevron-up-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button color="warning" (click)="openModalEdit(post)">
-        <ion-icon name="pencil-sharp"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button color="danger" (click)="confirmDelete()">
-        <ion-icon name="trash"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-}

@@ -31,7 +31,7 @@ import { arrowBack } from 'ionicons/icons';
   selector: 'app-post-modal-add-edit',
   standalone: true,
   templateUrl: './post-modal-add-edit.component.html',
-  styleUrl: './post-modal-add-edit.component.css',
+  styleUrl: './post-modal-add-edit.component.scss',
   imports: [
     IonCardContent,
     IonCard,

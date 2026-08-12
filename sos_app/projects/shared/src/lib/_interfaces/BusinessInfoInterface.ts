@@ -6,6 +6,7 @@ export interface BusinessInfoInterface {
   phone: string;
   address: string;
   address_number: number;
+  cep: string;
   state: string;
   city: string;
   country: string;

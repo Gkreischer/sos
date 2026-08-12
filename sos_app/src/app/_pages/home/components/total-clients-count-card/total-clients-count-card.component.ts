@@ -25,7 +25,7 @@ import { peopleSharp } from 'ionicons/icons';
     IonCard,
   ],
   templateUrl: './total-clients-count-card.component.html',
-  styleUrl: './total-clients-count-card.component.css',
+  styleUrl: './total-clients-count-card.component.scss',
 })
 export class TotalClientsCountCardComponent implements OnInit {
   metricService = inject(MetricsService);

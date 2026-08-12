@@ -14,7 +14,11 @@
                   ><ion-text color="dark">{{ user.name }}</ion-text></strong
                 >
               </p>
-              <ion-note>{{ user.total_orders }} ordens</ion-note>
+              <ion-note>{{
+                user.total_orders > 1
+                  ? user.total_orders + " ordens"
+                  : user.total_orders + " ordem"
+              }}</ion-note>
               <br />
               <ion-note>{{ user.total_revenue | currency: "BRL" }}</ion-note>
             </ion-label>

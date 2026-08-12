@@ -23,7 +23,6 @@ import { NotificationService } from 'shared';
 import { OrdersPedingCountCardComponent } from './components/orders-peding-count-card/orders-peding-count-card.component';
 import { OrdersInprogressCountCardComponent } from './components/orders-inprogress-count-card/orders-inprogress-count-card.component';
 import { TotalClientsCountCardComponent } from './components/total-clients-count-card/total-clients-count-card.component';
-import { ClockComponent } from './components/clock/clock.component';
 import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-home',

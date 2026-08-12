@@ -491,7 +491,7 @@ describe('App is loaded', () => {
       cy.get('ion-input[formControlName="cep"]')
         .find('input')
         .clear()
-        .type('12345678');
+        .type('20090003');
 
       cy.get('ion-input[formControlName="city"]')
         .find('input')
@@ -540,25 +540,10 @@ describe('App is loaded', () => {
         .clear()
         .type('12345678901');
 
-      cy.get('ion-input[formControlName="fantasy_name"]')
-        .find('input')
-        .clear()
-        .type('SOS');
-
-      cy.get('ion-input[formControlName="corporate_name"]')
-        .find('input')
-        .clear()
-        .type('SOS');
-
-      cy.get('ion-input[formControlName="cnpj"]')
-        .find('input')
-        .clear()
-        .type('12345678901234');
-
       cy.get('ion-input[formControlName="cep"]')
         .find('input')
         .clear()
-        .type('12345678');
+        .type('20090003');
 
       cy.get('ion-input[formControlName="address"]')
         .find('input')

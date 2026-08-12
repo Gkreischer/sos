@@ -38,6 +38,7 @@ import { phoneMask } from 'projects/shared/src/lib/_masks/phoneMask';
 import { maskitoTransform } from '@maskito/core';
 import { addIcons } from 'ionicons';
 import { camera, arrowBack } from 'ionicons/icons';
+import { CepService } from 'shared';
 @Component({
   selector: 'app-business-info-modal',
   templateUrl: './business-info-modal.component.html',
@@ -71,6 +72,7 @@ export class BusinessInfoModalComponent implements OnInit {
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
   loadingService = inject(LoadingService);
+  cepService = inject(CepService);
 
   form!: FormGroup;
   businessAlreadyExists = false;
@@ -101,6 +103,7 @@ export class BusinessInfoModalComponent implements OnInit {
     this.settingService.getBusinessInfo().subscribe((data) => {
       data.cnpj = maskitoTransform(data.cnpj, cnpjMask);
       data.phone = maskitoTransform(data.phone, phoneMask);
+      data.cep = maskitoTransform(data.cep, cepMask);
       this.form.patchValue(data);
       this.businessAlreadyExists = true;
     });
@@ -116,7 +119,7 @@ export class BusinessInfoModalComponent implements OnInit {
       address_number: ['', [Validators.required]],
       cep: ['', [Validators.required]],
       city: ['', [Validators.required]],
-      state: ['', [Validators.required]],
+      state: ['', [Validators.required, Validators.maxLength(2)]],
       country: ['', [Validators.required]],
       image: ['', [Validators.required]],
       website: [''],
@@ -189,5 +192,18 @@ export class BusinessInfoModalComponent implements OnInit {
           'success',
         );
       });
+  }
+
+  verifyCep() {
+    this.cepService.getCep(this.form.get('cep')?.value).subscribe((res) => {
+      if (res) {
+        this.form.patchValue({
+          cep: res.cep,
+          state: res.uf,
+          city: res.localidade,
+          address: res.logradouro,
+        });
+      }
+    });
   }
 }

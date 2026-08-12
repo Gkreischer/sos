@@ -4,23 +4,23 @@ import {
   FormBuilder,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { inject } from '@angular/core';
 import { LoginService } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
-import { UserInterface } from 'shared';
 import { UserLoginInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/app/_services/user.service';
 import { cnpjMask } from 'projects/shared/src/lib/_masks/cnpjMask';
 import { cepMask } from 'projects/shared/src/lib/_masks/cepMask';
 import { cpfMask } from 'projects/shared/src/lib/_masks/cpfMask';
-import { MaskitoElementPredicate } from '@maskito/core';
+import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import { phoneMask } from 'projects/shared/src/lib/_masks/phoneMask';
 import { ToastService } from 'src/app/_services/toast.service';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { MaskitoDirective } from '@maskito/angular';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'shared';
 import {
   IonHeader,
@@ -41,6 +41,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { camera, arrowBack } from 'ionicons/icons';
+import { CepService } from 'shared';
 @Component({
   selector: 'app-user-info-modal',
   templateUrl: './user-info-modal.component.html',
@@ -75,6 +76,7 @@ export class UserInfoModalComponent implements OnInit {
   toastService = inject(ToastService);
   photoService = inject(PhotoService);
   loadingService = inject(LoadingService);
+  cepService = inject(CepService);
   userForm!: FormGroup;
 
   cnpjMask = cnpjMask;
@@ -104,6 +106,9 @@ export class UserInfoModalComponent implements OnInit {
       this.user = this.loginService.user;
       if (user) {
         this.userId = user.id;
+        user.cpf = maskitoTransform(user.cpf, cpfMask);
+        user.phone = maskitoTransform(user.phone, phoneMask);
+        user.cep = maskitoTransform(user.cep, cepMask);
         this.userForm.patchValue(user);
       }
     });
@@ -111,18 +116,17 @@ export class UserInfoModalComponent implements OnInit {
 
   mountForm() {
     this.userForm = this.formBuilder.group({
-      name: [],
-      email: [],
-      cpf: [],
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      cpf: ['', [Validators.required]],
       fantasy_name: [],
       corporate_name: [],
-      cnpj: [],
-      cep: [],
-      address: [],
-      phone: [],
-      city: [],
-      state: [],
-      country: [],
+      cep: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required, Validators.maxLength(2)]],
+      country: ['', [Validators.required]],
       image: [],
       password: [],
       confirmPassword: [],
@@ -183,5 +187,19 @@ export class UserInfoModalComponent implements OnInit {
     }
 
     this.userForm.get('image')?.setValue(image.webviewPath);
+  }
+
+  verifyCep() {
+    this.cepService.getCep(this.userForm.get('cep')?.value).subscribe((res) => {
+      if (res) {
+        console.log(res);
+        this.userForm.patchValue({
+          cep: res.cep,
+          state: res.uf,
+          city: res.localidade,
+          address: res.logradouro,
+        });
+      }
+    });
   }
 }

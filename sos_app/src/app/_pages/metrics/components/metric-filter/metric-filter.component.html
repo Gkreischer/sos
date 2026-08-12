@@ -14,24 +14,26 @@
             <ion-input
               fill="outline"
               labelPlacement="floating"
-              [placeholder]="'Início'"
+              label="Início"
               formControlName="startDate"
               [maskito]="dateMask"
               [maskitoElement]="maskPredicate"
               inputmode="numeric"
               [clearOnEdit]="true"
+              required
             ></ion-input>
           </ion-col>
           <ion-col size="12" sizeLg="2">
             <ion-input
               fill="outline"
               labelPlacement="floating"
-              [placeholder]="'Fim'"
+              label="Fim"
               formControlName="endDate"
               [maskito]="dateMask"
               [maskitoElement]="maskPredicate"
               inputmode="numeric"
               [clearOnEdit]="true"
+              required
             ></ion-input>
           </ion-col>
           <ion-col size="12" sizeLg="2">

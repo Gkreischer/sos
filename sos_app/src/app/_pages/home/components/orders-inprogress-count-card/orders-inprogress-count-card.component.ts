@@ -23,7 +23,7 @@ import { hourglass } from 'ionicons/icons';
     IonSkeletonText,
   ],
   templateUrl: './orders-inprogress-count-card.component.html',
-  styleUrl: './orders-inprogress-count-card.component.css',
+  styleUrl: './orders-inprogress-count-card.component.scss',
 })
 export class OrdersInprogressCountCardComponent implements OnInit {
   metricService = inject(MetricsService);

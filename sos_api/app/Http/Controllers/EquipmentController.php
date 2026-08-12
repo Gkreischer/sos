@@ -50,7 +50,7 @@ class EquipmentController extends Controller
             // Make validation with Validator
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'description' => 'string|max:255',
+                'description' => 'nullable|string',
                 'category_id' => 'required|exists:categories,id',
             ]);
 

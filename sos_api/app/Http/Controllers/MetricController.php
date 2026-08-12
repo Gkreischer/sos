@@ -10,7 +10,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\OrderStatusEnum;
-use App\Models\UserType;
 use App\Models\Equipment;
 use App\UserTypeEnum;
 
@@ -19,19 +18,24 @@ class MetricController extends Controller
     public function getCountOrderByPeriod(Request $request)
     {
         try {
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)
+                ->startOfDay()
+                ->toDateTimeString();
 
-            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
-            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)
+                ->endOfDay()
+                ->toDateTimeString();
 
             if (empty($startDate) || empty($endDate)) {
-
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
                     'error' => 'Necessário informar um período'
                 ], 400);
             }
 
-            $cacheKey = 'metrics:order:count_by_month:' . $request->startDate . ':' . $request->endDate;
+            $cacheKey = 'metrics:order:count_by_month:'
+                . $request->startDate . ':'
+                . $request->endDate;
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -47,12 +51,12 @@ class MetricController extends Controller
                         'technician'
                     ])
                         ->selectRaw("
-                                DATE_FORMAT(created_at, '%Y-%m') as month,
-                                COUNT(*) as count
-                            ")
+                        TO_CHAR(created_at, 'YYYY-MM') as month,
+                        COUNT(*) as count
+                    ")
                         ->whereBetween('created_at', [$startDate, $endDate])
-                        ->groupBy('month')
-                        ->orderBy('month')
+                        ->groupByRaw("TO_CHAR(created_at, 'YYYY-MM')")
+                        ->orderByRaw("TO_CHAR(created_at, 'YYYY-MM')")
                         ->get()
                         ->toArray();
                 }
@@ -127,25 +131,31 @@ class MetricController extends Controller
     public function getTotalPriceOrderByPeriod(Request $request)
     {
         try {
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)
+                ->startOfDay()
+                ->toDateTimeString();
 
-            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
-            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)
+                ->endOfDay()
+                ->toDateTimeString();
 
             if (empty($startDate) || empty($endDate)) {
-
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
                     'error' => 'Necessário informar um período'
                 ], 400);
             }
 
-            $cacheKey = 'metrics:order:total_price:' . $request->startDate . ':' . $request->endDate;
+            $cacheKey = 'metrics:order:total_price:'
+                . $request->startDate . ':'
+                . $request->endDate;
 
             $cache = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
-                    $metrics = Order::without([
+
+                    return Order::without([
                         'user',
                         'equipment',
                         'orderParts',
@@ -154,15 +164,14 @@ class MetricController extends Controller
                         'technician'
                     ])
                         ->selectRaw("
-                DATE_FORMAT(created_at, '%Y-%m') as month,
-                SUM(total_price) as total_price
-            ")
-                        ->where('status_id', OrderStatusEnum::DELIVERED)
+                        TO_CHAR(created_at, 'YYYY-MM') as month,
+                        SUM(total_price) as total_price
+                    ")
+                        ->where('status_id', OrderStatusEnum::DELIVERED->value)
                         ->whereBetween('created_at', [$startDate, $endDate])
-                        ->groupBy('month')
-                        ->orderBy('month')
+                        ->groupByRaw("TO_CHAR(created_at, 'YYYY-MM')")
+                        ->orderByRaw("TO_CHAR(created_at, 'YYYY-MM')")
                         ->get();
-                    return $metrics;
                 }
             );
 
@@ -241,8 +250,13 @@ class MetricController extends Controller
     public function getTechnicianData(Request $request)
     {
         try {
-            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
-            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)
+                ->startOfDay()
+                ->toDateTimeString();
+
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)
+                ->endOfDay()
+                ->toDateTimeString();
 
             if (empty($startDate) || empty($endDate)) {
                 return response([
@@ -251,39 +265,53 @@ class MetricController extends Controller
                 ], 400);
             }
 
-            // Substituí as barras por hífen na chave do cache para evitar problemas de string
-            $cacheKey = 'metrics:order:technician:' . str_replace('/', '-', $request->startDate) . ':' . str_replace('/', '-', $request->endDate);
+            $cacheKey = 'metrics:order:technician:'
+                . str_replace('/', '-', $request->startDate)
+                . ':'
+                . str_replace('/', '-', $request->endDate);
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
 
-                    $technicians = User::query()
-                        ->where('type_id', UserTypeEnum::TECHNICIAN)
+                    return User::query()
+                        ->where('type_id', UserTypeEnum::TECHNICIAN->value)
+
+                        ->whereHas('technician_orders', function ($query) use ($startDate, $endDate) {
+                            $query->where('status_id', OrderStatusEnum::FINISHED->value)
+                                ->whereBetween('created_at', [
+                                    $startDate,
+                                    $endDate
+                                ]);
+                        })
+
                         ->withCount([
                             'technician_orders as total_orders' => function ($query) use ($startDate, $endDate) {
-                                $query->where('status_id', OrderStatusEnum::FINISHED)
-                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                                $query->where('status_id', OrderStatusEnum::FINISHED->value)
+                                    ->whereBetween('created_at', [
+                                        $startDate,
+                                        $endDate
+                                    ]);
                             }
                         ])
+
                         ->withSum([
                             'technician_orders as total_revenue' => function ($query) use ($startDate, $endDate) {
-                                $query->where('status_id', OrderStatusEnum::FINISHED)
-                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                                $query->where('status_id', OrderStatusEnum::FINISHED->value)
+                                    ->whereBetween('created_at', [
+                                        $startDate,
+                                        $endDate
+                                    ]);
                             }
                         ], 'total_price')
-                        ->orderByDesc('total_revenue')
-                        ->limit(5)
-                        ->get();
 
-                    return $technicians;
+                        ->get()
+                        ->sortByDesc('total_revenue')
+                        ->take(5)
+                        ->values();
                 }
             );
-
-            if (empty($metrics) && !is_array($metrics)) {
-                return response(['message' => 'Tipo técnico não encontrado'], 404);
-            }
 
             return response($metrics, 200);
         } catch (\Exception $e) {
@@ -346,7 +374,7 @@ class MetricController extends Controller
                 $cacheKey,
                 now()->addHours(1),
                 function () {
-                    $orders = Order::where('status_id', OrderStatusEnum::PENDING)->count();
+                    $orders = Order::where('status_id', OrderStatusEnum::PENDING->value)->count();
 
                     return $orders;
                 }
@@ -373,7 +401,7 @@ class MetricController extends Controller
                 $cacheKey,
                 now()->addHours(1),
                 function () {
-                    $orders = Order::where('status_id', OrderStatusEnum::IN_PROGRESS)->count();
+                    $orders = Order::where('status_id', OrderStatusEnum::IN_PROGRESS->value)->count();
 
                     return $orders;
                 }
@@ -397,7 +425,7 @@ class MetricController extends Controller
                 $cacheKey,
                 now()->addHours(1),
                 function () {
-                    $users = User::where('type_id', UserTypeEnum::CLIENT)->count();
+                    $users = User::where('type_id', UserTypeEnum::CLIENT->value)->count();
 
                     return $users;
                 }
@@ -415,8 +443,13 @@ class MetricController extends Controller
     public function getCustomerRevenueByPeriod(Request $request)
     {
         try {
-            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
-            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)
+                ->startOfDay()
+                ->toDateTimeString();
+
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)
+                ->endOfDay()
+                ->toDateTimeString();
 
             if (empty($startDate) || empty($endDate)) {
                 return response([
@@ -425,44 +458,58 @@ class MetricController extends Controller
                 ], 400);
             }
 
-            // Substituí as barras por hífen na chave do cache para evitar problemas de string
-            $cacheKey = 'metrics:order:customers:' . str_replace('/', '-', $request->startDate) . ':' . str_replace('/', '-', $request->endDate);
+            $cacheKey = 'metrics:order:customers:'
+                . str_replace('/', '-', $request->startDate)
+                . ':'
+                . str_replace('/', '-', $request->endDate);
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate) {
 
-                    $customers = User::query()
-                        ->where('type_id', UserTypeEnum::CLIENT)
+                    return User::query()
+                        ->where('type_id', UserTypeEnum::CLIENT->value)
+                        ->whereHas('orders', function ($query) use ($startDate, $endDate) {
+                            $query->where('status_id', OrderStatusEnum::FINISHED->value)
+                                ->whereBetween('created_at', [
+                                    $startDate,
+                                    $endDate
+                                ]);
+                        })
                         ->withCount([
                             'orders as total_orders' => function ($query) use ($startDate, $endDate) {
-                                $query->where('status_id', OrderStatusEnum::FINISHED)
-                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                                $query->where('status_id', OrderStatusEnum::FINISHED->value)
+                                    ->whereBetween('created_at', [
+                                        $startDate,
+                                        $endDate
+                                    ]);
                             }
                         ])
                         ->withSum([
                             'orders as total_revenue' => function ($query) use ($startDate, $endDate) {
-                                $query->where('status_id', OrderStatusEnum::FINISHED)
-                                    ->whereBetween('created_at', [$startDate, $endDate]);
+                                $query->where('status_id', OrderStatusEnum::FINISHED->value)
+                                    ->whereBetween('created_at', [
+                                        $startDate,
+                                        $endDate
+                                    ]);
                             }
                         ], 'total_price')
-                        ->orderByDesc('total_revenue')
-                        ->limit(5)
-                        ->get();
-
-                    return $customers;
+                        ->get()
+                        ->map(function ($customer) {
+                            $customer->total_revenue = $customer->total_revenue ?? 0;
+                            return $customer;
+                        })
+                        ->sortByDesc('total_revenue')
+                        ->take(5)
+                        ->values();
                 }
             );
-
-            if (empty($metrics) && !is_array($metrics)) {
-                return response(['message' => 'Tipo cliente não encontrado'], 404);
-            }
 
             return response($metrics, 200);
         } catch (\Exception $e) {
             return response([
-                'message' => 'Não foi possível carregar as métricas',
+                'message' => 'Não foi possível carregar as métricas de clientes',
                 'error' => $e->getMessage()
             ], 500);
         }

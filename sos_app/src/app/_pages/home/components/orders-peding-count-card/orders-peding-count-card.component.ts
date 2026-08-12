@@ -2,17 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import {
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonText,
   IonSkeletonText,
-  IonCardSubtitle,
   IonLabel,
   IonIcon,
   IonItem,
   IonList,
-  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { flame } from 'ionicons/icons';
@@ -29,7 +25,7 @@ import { flame } from 'ionicons/icons';
     IonText,
   ],
   templateUrl: './orders-peding-count-card.component.html',
-  styleUrl: './orders-peding-count-card.component.css',
+  styleUrl: './orders-peding-count-card.component.scss',
 })
 export class OrdersPedingCountCardComponent implements OnInit {
   metricService = inject(MetricsService);

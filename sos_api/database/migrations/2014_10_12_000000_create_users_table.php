@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('state', 2)->nullable();
             $table->string('district')->nullable();
             $table->string('country')->nullable();
-            $table->string('image')->nullable()->nullable();
+            $table->string('image')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();

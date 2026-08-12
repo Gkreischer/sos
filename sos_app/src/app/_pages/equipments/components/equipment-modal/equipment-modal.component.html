@@ -32,6 +32,7 @@
                 label="Nome do cliente"
                 labelPlacement="floating"
                 (click)="searchClient()"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -43,6 +44,7 @@
                 formControlName="name"
                 label="Nome do equipamento"
                 labelPlacement="floating"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -56,6 +58,7 @@
                   okText="Confirmar"
                   cancelText="Cancelar"
                   fill="outline"
+                  required
                 >
                   @for (category of categories; track category.id) {
                     <ion-select-option [value]="category.id">{{
@@ -90,32 +93,23 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              @if (equipment) {
-                <ion-button
-                  type="submit"
-                  expand="block"
-                  [disabled]="formEquipment.invalid || isLoading"
-                  >Editar</ion-button
-                >
-              } @else {
-                <ion-button
-                  type="submit"
-                  expand="block"
-                  [disabled]="formEquipment.invalid || isLoading"
-                  >Cadastrar</ion-button
-                >
-              }
+              <ion-button
+                type="submit"
+                expand="block"
+                [disabled]="formEquipment.invalid || isLoading"
+                >{{ equipment ? "Atualizar" : "Cadastrar" }}</ion-button
+              >
             </ion-col>
           </ion-row>
         </ion-grid>
       </form>
     </ion-card-content>
   </ion-card>
+  @if (equipment) {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button color="danger" (click)="confirmDelete()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  }
 </ion-content>
-@if (equipment) {
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="danger" (click)="confirmDelete()">
-      <ion-icon name="trash"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-}

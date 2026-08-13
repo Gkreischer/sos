@@ -14,6 +14,7 @@
 </ion-header>
 
 <ion-content>
+  {{ orderForm.value | json }}
   <form [formGroup]="orderForm">
     <ion-grid>
       <ion-row>
@@ -115,8 +116,6 @@
                           </ion-select-option>
                         }
                       </ion-select>
-                    } @else {
-                      <ion-note>Selecione um cliente primeiro</ion-note>
                     }
                   </ion-col>
                   @if (equipments && equipmentId) {
@@ -133,12 +132,39 @@
                     </ion-col>
                   }
                 </ion-row>
+
+                <ion-row>
+                  <ion-col>
+                    <ion-select
+                      formControlName="attendant_id"
+                      label="Atendente"
+                      fill="outline"
+                      labelPlacement="floating"
+                      label="Atendente"
+                      required
+                    >
+                      @if (orderReceived) {
+                        <ion-select-option
+                          [value]="orderReceived.attendant_id"
+                          >{{ orderReceived.attendant.name }}</ion-select-option
+                        >
+                      } @else {
+                        @let attendant = loginService.user | async;
+                        @if (attendant) {
+                          <ion-select-option [value]="attendant.id">{{
+                            attendant.name
+                          }}</ion-select-option>
+                        }
+                      }
+                    </ion-select>
+                  </ion-col>
+                </ion-row>
                 <ion-row>
                   <ion-col>
                     <ion-input
                       formControlName="title"
                       placeholder="Título"
-                      label="Título da OS"
+                      label="Título da Orden de Serviço"
                       labelPlacement="floating"
                       fill="outline"
                       required

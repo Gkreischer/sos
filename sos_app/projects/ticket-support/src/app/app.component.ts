@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, person, contract, exit, hardwareChip } from 'ionicons/icons';
-import { LoginService } from '../../../shared/src/lib/_services/login.service';
+import { LoginService } from 'shared';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { NotificationService } from 'shared';
 @Component({

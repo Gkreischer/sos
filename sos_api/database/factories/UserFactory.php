@@ -42,7 +42,7 @@ class UserFactory extends Factory
             'state' => strtoupper($this->faker->lexify('??')),
             'country' => $this->faker->country(),
             'image' => 'https://picsum.photos/200/300',
-            'type_id' => UserType::all()->random()->id,
+            'type_id' => $this->faker->randomElement(UserType::pluck('id')->toArray()),
 
         ];
     }

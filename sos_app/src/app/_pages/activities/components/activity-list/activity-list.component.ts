@@ -107,7 +107,6 @@ export class ActivityListComponent implements OnInit {
     this.infiniteScroll.set(true);
 
     this.activityService.getActivities(this.ticketsPage).subscribe((res) => {
-      console.log(res);
       if (res.current_page >= res.last_page) {
         this.infiniteScroll.set(false);
       }

@@ -20,7 +20,7 @@ class Order extends Model
     use HasFactory, LogsActivity, HasUuids;
 
 
-    protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician'];
+    protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician', 'attendant'];
 
     protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature', 'uid'];
 
@@ -58,6 +58,11 @@ class Order extends Model
     public function technician(): BelongsTo
     {
         return $this->belongsTo(User::class, 'technician_id', 'id');
+    }
+
+    public function attendant(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'attendant_id', 'id');
     }
 
     public function pictures(): HasMany

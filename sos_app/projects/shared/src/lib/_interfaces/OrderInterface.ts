@@ -13,6 +13,8 @@ export interface OrderInterface {
   parts_price: number;
   technician_id: number;
   technician: UserInterface;
+  attendant_id: number;
+  attendant: UserInterface;
   service_price: number;
   service_description: string;
   diagnostic: string;

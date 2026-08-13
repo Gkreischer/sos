@@ -40,6 +40,9 @@
               detailIcon="add-circle"
               (click)="addPart(part)"
             >
+              <ion-avatar slot="start">
+                <ion-img src="{{ part.image }}"></ion-img>
+              </ion-avatar>
               <ion-label class="ion-padding-horizontal">
                 <p>
                   <strong

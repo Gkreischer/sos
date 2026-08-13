@@ -12,6 +12,7 @@ use App\Models\Post;
 use App\Models\Room;
 use App\Models\Ticket;
 use App\Models\UserType;
+use App\Enums\UserTypeEnum;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,13 +29,19 @@ class DatabaseSeeder extends Seeder
         $customers = User::factory()
             ->count(60)
             ->create([
-                'type_id' => UserType::where('name', 'Cliente')->value('id'),
+                'type_id' => UserTypeEnum::CLIENT->value
             ]);
 
-        User::factory()
-            ->count(20)
+        $attendants = User::factory()
+            ->count(5)
             ->create([
-                'type_id' => UserType::where('name', 'Técnico')->value('id'),
+                'type_id' => UserTypeEnum::ATTENDANT->value
+            ]);
+
+        $technicians = User::factory()
+            ->count(5)
+            ->create([
+                'type_id' => UserTypeEnum::TECHNICIAN->value
             ]);
         Category::factory()->count(20)->create();
 

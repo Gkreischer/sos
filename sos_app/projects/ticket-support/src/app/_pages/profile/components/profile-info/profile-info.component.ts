@@ -217,7 +217,6 @@ export class ProfileInfoComponent implements OnInit {
     }
     this.cepService.getCep(this.form.get('cep')?.value).subscribe((res) => {
       if (res) {
-        console.log(res);
         this.form.patchValue({
           cep: res.cep,
           state: res.uf,
@@ -244,6 +243,6 @@ export class ProfileInfoComponent implements OnInit {
         blob,
         format: picture.format,
       })
-      .subscribe((res) => console.log(res));
+      .subscribe();
   }
 }

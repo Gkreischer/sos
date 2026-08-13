@@ -97,7 +97,9 @@ class OrderController extends Controller
                     'equipment',
                     'parts',
                     'pictures',
-                    'status'
+                    'status',
+                    'attendant',
+                    'technician'
                 );
 
                 return $order;
@@ -247,7 +249,7 @@ class OrderController extends Controller
             'user_id' => 'required|integer',
             'equipment_id' => 'required|integer',
             'status_id' => 'required|integer',
-
+            'attendant_id' => 'required|integer|exists:users,id',
             'ticket_id' => 'nullable|integer|exists:tickets,id',
 
             'description' => 'nullable|string',
@@ -273,8 +275,8 @@ class OrderController extends Controller
 
         try {
 
-            $order = DB::transaction(function () use ($request, $data, &$storedPictures) {
-
+            $order = DB::transaction(function () use ($request, $data) {
+                $data['user_id'] = auth('sanctum')->user()->id;
                 $order = Order::create($data);
 
                 if (!empty($data['ticket_id'])) {
@@ -322,7 +324,7 @@ class OrderController extends Controller
         try {
             $order = User::findOrFail($id)->orders()->with('status')->orderByDesc('created_at')->get();
 
-            $order->load(['status', 'technician', 'user', 'equipment']);
+            $order->load(['status', 'technician', 'user', 'equipment', 'attendant']);
 
             return response($order);
         } catch (Exception $e) {

@@ -65,7 +65,7 @@ export class TicketListComponent implements OnInit {
   }
 
   getAllTickets() {
-    this.ticketService.getUserTickets().subscribe((res) => console.log(res));
+    this.ticketService.getUserTickets().subscribe();
   }
 
   openModalTicket(ticket: TicketInterface) {

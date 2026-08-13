@@ -56,6 +56,6 @@ export class TechnicianDataListComponent {
         startDate: this.metricsService.startDate$(),
         endDate: this.metricsService.endDate$(),
       })
-      .subscribe((res) => console.log(res));
+      .subscribe();
   }
 }

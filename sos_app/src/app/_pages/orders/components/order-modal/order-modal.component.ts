@@ -85,6 +85,7 @@ import { PictureInterface } from 'shared';
 import { OrderStatusEnum } from 'shared';
 import { EquipmentOrderHistoryModalComponent } from '../equipment-order-history-modal/equipment-order-history-modal.component';
 import { TicketInterface } from 'shared';
+import { LoginService } from 'shared';
 @Component({
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
@@ -124,6 +125,7 @@ import { TicketInterface } from 'shared';
     IonInput,
     IonSelect,
     IonTextarea,
+    JsonPipe,
   ],
 })
 export class OrderModalComponent implements OnInit, AfterViewInit {
@@ -139,9 +141,10 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   loadingService = inject(LoadingService);
   signaturePad = viewChild(SignaturePadComponent);
   photoService = inject(PhotoService);
-
+  loginService = inject(LoginService);
   orderId?: number;
   orderReceived!: OrderInterface;
+  userLogged = this.loginService.user;
   orderForm!: FormGroup;
   categories$?: Observable<CategoryInterface[]>;
   equipments$?: Observable<EquipmentInterface[]>;
@@ -258,6 +261,10 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       equipment_id: ['', [Validators.required]],
       user_id: ['', [Validators.required]],
       technician_id: [''],
+      attendant_id: [
+        !this.orderReceived ? this.loginService.userSubject.value?.id : null,
+        [Validators.required],
+      ],
       status_id: [this.orderId ? this.orderId : 1, [Validators.required]],
       service_description: [''],
       diagnostic: [''],
@@ -414,10 +421,8 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   submit() {
     const orderData = this.orderForm.value;
     if (this.ticket) {
-      console.log(this.ticket);
       orderData.ticket_id = this.ticket.id;
     }
-    console.log(orderData);
     this.orderService
       .create(orderData, this.pictures.value)
       .subscribe((order) => {
@@ -495,7 +500,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    orderStatus == OrderStatusEnum.DELIVERED
+    orderStatus == OrderStatusEnum.DELIVERED && this.orderReceived
       ? this.confirmOrderFinalization()
       : false;
   }

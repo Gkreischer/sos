@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { UserInterface } from 'shared';
+import { PictureInterface, UserInterface } from 'shared';
 import { catchError, tap, BehaviorSubject } from 'rxjs';
 import { ErrorService } from 'shared';
 import { environment } from 'src/environments/environment';
@@ -141,14 +141,19 @@ export class UserService {
       );
   }
 
-  updateAvatarImage(imagePath: string) {
+  updateAvatarImage(picture: PictureInterface) {
+    const formData = new FormData();
+
+    formData.append(
+      'image',
+      picture.blob,
+      `avatar.${picture.blob.type.split('/')[1] ?? 'jpg'}`,
+    );
     return this.http
-      .post<UserInterface>(`${environment.baseUrl}/user/image/change`, {
-        imagePath: imagePath,
-      })
+      .post<UserInterface>(`${environment.baseUrl}/user/avatar`, formData)
       .pipe(
         tap((user) => {
-          this.loginService.userSubject.next(user);
+          return this.loginService.userSubject.next(user);
         }),
         catchError(this.errorService.handleError),
       );

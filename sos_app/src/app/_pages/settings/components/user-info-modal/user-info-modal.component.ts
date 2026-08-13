@@ -134,10 +134,6 @@ export class UserInfoModalComponent implements OnInit {
   }
 
   async updateUser() {
-    const verifyImageWasChanged = this.verifyIfImageWasSelected();
-    if (verifyImageWasChanged) {
-      await this.uploadImage();
-    }
     this.userService
       .updateUser(this.userForm.value, this.userId)
       .subscribe((user) => {
@@ -155,47 +151,12 @@ export class UserInfoModalComponent implements OnInit {
     this.modalService.closeModal();
   }
 
-  async uploadImage() {
-    const response = await this.photoService.startUpload();
-
-    if (!response) {
-      this.toastService.presentToast(
-        'Nenhum arquivo selecionado',
-        'bottom',
-        3000,
-        'danger',
-      );
-      return;
-    }
-    this.userForm.get('image')?.setValue(response.imagePath);
-    this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
-  }
-
-  verifyIfImageWasSelected() {
-    let imageBlob = this.userForm.get('image')?.value as string;
-    if (imageBlob.startsWith('blob')) {
-      return true;
-    }
-    return;
-  }
-
-  async selectImage() {
-    const image = await this.photoService.selectImage();
-
-    if (!image) {
-      return;
-    }
-
-    this.userForm.get('image')?.setValue(image.webviewPath);
-  }
-
   verifyCep() {
     if (!this.userForm.get('cep')?.value) {
       return;
     }
     this.cepService.getCep(this.userForm.get('cep')?.value).subscribe((res) => {
       if (res) {
-        console.log(res);
         this.userForm.patchValue({
           cep: res.cep,
           state: res.uf,
@@ -204,5 +165,15 @@ export class UserInfoModalComponent implements OnInit {
         });
       }
     });
+  }
+
+  async takePicture() {
+    const picture = await this.photoService.takePicture();
+
+    if (!picture) {
+      return;
+    }
+
+    this.userService.updateAvatarImage(picture).subscribe();
   }
 }

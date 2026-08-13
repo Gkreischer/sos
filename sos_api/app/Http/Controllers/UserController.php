@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Models\UserType;
+use App\Enums\UserTypeEnum;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -261,7 +261,7 @@ class UserController extends Controller
 
             $users = Cache::tags('users-list')->remember($cacheKey, now()->addMinutes(5), function () use ($query, $descriptionFilter, $typeFilter) {
                 /** @var \Illuminate\Database\Eloquent\Builder $query */
-                return $query->with('type')->orderByDesc('created_at')->paginate(20)->toArray();
+                return $query->with('type')->orderByDesc('created_at')->orderBy('id')->paginate(20)->toArray();
             });
 
             return response($users, 200);
@@ -299,7 +299,7 @@ class UserController extends Controller
 
             return response($user);
         } catch (\Exception $e) {
-            return response()->json([
+            return response([
                 'message' => 'Não foi possível atualizar a imagem',
                 'error' => $e->getMessage(),
             ], 500);

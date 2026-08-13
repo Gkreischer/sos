@@ -101,6 +101,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'technician_id');
     }
 
+    public function attendant_orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'attendant_id');
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class, 'user_id', 'id');

@@ -9,36 +9,46 @@ import { ErrorService } from './error.service';
 import { PreferencesPluginService } from './preferences-plugin.service';
 import { NotificationService } from './notification.service';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 describe('LoginService', () => {
   let service: LoginService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       providers: [
+        {
+          provide: APP_CONFIG,
+          useValue: {
+            baseUrl: environment.baseUrl,
+            reverbPort: environment.reverbPort,
+            reverbHost: environment.reverbHost,
+            reverbKey: environment.reverbKey,
+            wsPort: environment.wsPort,
+            wsHost: environment.wsHost,
+            wsScheme: environment.wsScheme,
+            authEndpoint: environment.authEndpoint,
+          },
+        },
         LoginService,
         provideHttpClient(),
         provideHttpClientTesting(),
         provideIonicAngular(),
         provideRouter([]),
+
         {
-          provide: APP_CONFIG,
-          useValue: {
-            baseUrl: 'http://localhost:3000',
-            reverbPort: 8080,
-            reverbHost: 'localhost',
-            reverbKey: 'test-key',
-            wsPort: 6001,
-            wsHost: 'localhost',
-            wsScheme: 'ws',
-            authEndpoint: '/sanctum/token',
-          },
+          provide: ErrorService,
+          useValue: jasmine.createSpyObj('ErrorService', ['handleError']),
         },
-        { provide: ErrorService, useValue: jasmine.createSpyObj('ErrorService', ['handleError']) },
         { provide: PreferencesPluginService, useValue: {} },
-        { provide: NotificationService, useValue: jasmine.createSpyObj('NotificationService', ['listen']) },
-        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
+        {
+          provide: NotificationService,
+          useValue: jasmine.createSpyObj('NotificationService', ['listen']),
+        },
+        {
+          provide: Router,
+          useValue: jasmine.createSpyObj('Router', ['navigate']),
+        },
       ],
     });
     service = TestBed.inject(LoginService);

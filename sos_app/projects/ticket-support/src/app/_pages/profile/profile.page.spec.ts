@@ -3,7 +3,7 @@ import { ProfilePage } from './profile.page';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
-import { FormBuilder } from '@angular/forms';
+
 import { of } from 'rxjs';
 import { LoginService } from 'shared';
 import { LoadingService } from 'shared';
@@ -12,15 +12,16 @@ import { ModalService } from 'shared';
 import { UserService } from '@ticket/app/_services/user.service';
 import { PhotoService } from 'shared';
 import { APP_CONFIG } from 'shared';
-
+import { environment } from 'src/environments/environment';
+import { FormBuilder } from '@angular/forms';
 describe('ProfilePage', () => {
   let component: ProfilePage;
   let fixture: ComponentFixture<ProfilePage>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     // Create mocks for all services
     const loginService = jasmine.createSpyObj('LoginService', ['user']);
-    loginService.user = of({ 
+    loginService.user = of({
       cpf: '123.456.789-00',
       name: 'Test User',
       email: 'test@test.com',
@@ -33,10 +34,12 @@ describe('ProfilePage', () => {
       image: '',
       phone: '',
       state: '',
-      doc_type: '1'
+      doc_type: '1',
     });
 
-    const loadingService = jasmine.createSpyObj('LoadingService', ['isLoading$']);
+    const loadingService = jasmine.createSpyObj('LoadingService', [
+      'isLoading$',
+    ]);
     loadingService.isLoading$ = of(false);
 
     const toastService = jasmine.createSpyObj('ToastService', ['presentToast']);
@@ -48,41 +51,38 @@ describe('ProfilePage', () => {
     const photoService = jasmine.createSpyObj('PhotoService', ['takePicture']);
     photoService.takePicture.and.resolveTo(null); // mock the promise
 
-    const formBuilder = jasmine.createSpyObj('FormBuilder', ['group']);
-    // We need to mock the form group that is returned by formBuilder.group
-    const formGroup = jasmine.createSpyObj('FormGroup', ['patchValue', 'get', 'value', 'setErrors']);
-    formGroup.value = {};
-    formBuilder.group.and.returnValue(formGroup);
-
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [ProfilePage],
       providers: [
+        {
+          provide: APP_CONFIG,
+          useValue: {
+            baseUrl: environment.baseUrl,
+            reverbPort: environment.reverbPort,
+            reverbHost: environment.reverbHost,
+            reverbKey: environment.reverbKey,
+            wsPort: environment.wsPort,
+            wsHost: environment.wsHost,
+            wsScheme: environment.wsScheme,
+            authEndpoint: environment.authEndpoint,
+          },
+        },
         provideHttpClient(),
         provideHttpClientTesting(),
         provideIonicAngular(),
-        { provide: APP_CONFIG, useValue: { 
-            baseUrl: 'http://localhost:3000',
-            reverbPort: 8080,
-            reverbHost: 'localhost',
-            reverbKey: 'test-key',
-            wsPort: 6001,
-            wsHost: 'localhost',
-            wsScheme: 'ws',
-            authEndpoint: '/sanctum/token',
-          } },
+
         { provide: LoginService, useValue: loginService },
         { provide: LoadingService, useValue: loadingService },
         { provide: ToastService, useValue: toastService },
         { provide: ModalService, useValue: modalService },
         { provide: UserService, useValue: userService },
         { provide: PhotoService, useValue: photoService },
-        { provide: FormBuilder, useValue: formBuilder }
-      ]
+      ],
     });
     fixture = TestBed.createComponent(ProfilePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

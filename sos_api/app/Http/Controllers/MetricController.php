@@ -9,9 +9,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\OrderStatusEnum;
+use App\Enums\OrderStatusEnum;
 use App\Models\Equipment;
-use App\UserTypeEnum;
+use App\Enums\UserTypeEnum;
 
 class MetricController extends Controller
 {

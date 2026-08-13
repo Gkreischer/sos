@@ -26,6 +26,8 @@ import {
   IonSpinner,
   IonNote,
   IonText,
+  IonAvatar,
+  IonImg,
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -36,6 +38,7 @@ import { arrowBack, trash } from 'ionicons/icons';
   templateUrl: './modal-add-part.component.html',
   styleUrls: ['./modal-add-part.component.scss'],
   imports: [
+    IonImg,
     IonText,
     IonNote,
     IonSpinner,
@@ -57,6 +60,7 @@ import { arrowBack, trash } from 'ionicons/icons';
     FormsModule,
     AsyncPipe,
     CurrencyPipe,
+    IonAvatar,
   ],
 })
 export class ModalAddPartComponent {

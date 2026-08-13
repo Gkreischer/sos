@@ -7,6 +7,7 @@ use App\Models\Equipment;
 use App\Models\OrderStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Enums\UserTypeEnum;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
@@ -20,7 +21,7 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $customer = User::where('type_id', 2)
+        $customer = User::where('type_id', UserTypeEnum::CLIENT->value)
             ->has('equipments') // ou has('equipments')
             ->inRandomOrder()
             ->first();
@@ -34,7 +35,10 @@ class OrderFactory extends Factory
             'equipment_id' => Equipment::where('user_id', $customer->id)
                 ->inRandomOrder()
                 ->value('id'),
-            'technician_id' => User::where('type_id', 3)
+            'technician_id' => User::where('type_id', UserTypeEnum::TECHNICIAN->value)
+                ->inRandomOrder()
+                ->value('id'),
+            'attendant_id' => User::where('type_id', UserTypeEnum::ATTENDANT->value)
                 ->inRandomOrder()
                 ->value('id'),
             'status_id' => OrderStatus::inRandomOrder()->value('id'),

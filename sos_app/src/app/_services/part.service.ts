@@ -103,14 +103,12 @@ export class PartService {
       )
       .pipe(
         tap((partReceived) => {
-          console.log(partReceived);
           const newParts = this.partsSubject.value.map((part) => {
             if (part.id === partReceived.id) {
               return partReceived;
             }
             return part;
           });
-          console.log(newParts);
           return this.partsSubject.next(newParts);
         }),
         catchError(this.errorService.handleError),

@@ -66,7 +66,7 @@ import { UserLoginInterface } from '../../projects/shared/src/lib/_interfaces/Us
 import { TicketService } from 'src/app/_services/ticket.service';
 
 import { RoomService } from './_services/room.service';
-import { UserService } from '../../projects/ticket-support/src/app/_services/user.service';
+import { UserService } from 'src/app/_services/user.service';
 
 interface AppPage {
   title: string;
@@ -318,12 +318,6 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.userService
-      .updateAvatarImage({
-        webPath: picture.webPath!,
-        blob: picture.blob,
-        format: picture.format,
-      })
-      .subscribe((res) => console.log(res));
+    this.userService.updateAvatarImage(picture).subscribe();
   }
 }

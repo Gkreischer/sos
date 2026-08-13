@@ -38,6 +38,8 @@ import { UserService } from '@ticket/app/_services/user.service';
 import { UserInterface } from 'shared';
 import { IonInputPasswordToggle } from '@ionic/angular/standalone';
 import { PhotoService } from 'shared';
+import { filter, take, exhaustMap } from 'rxjs';
+import { CepService } from 'shared';
 @Component({
   selector: 'app-profile-info',
   imports: [
@@ -71,6 +73,7 @@ export class ProfileInfoComponent implements OnInit {
   modalService = inject(ModalService);
   userService = inject(UserService);
   photoService = inject(PhotoService);
+  cepService = inject(CepService);
 
   form!: FormGroup;
   formPassword!: FormGroup;
@@ -99,13 +102,18 @@ export class ProfileInfoComponent implements OnInit {
 
   getUser() {
     this.loginService.user.subscribe((res) => {
-      this.user = res!;
+      if (res && res.cpf) {
+        this.form.get('doc_type')?.setValue('1');
+      } else {
+        this.form.get('doc_type')?.setValue('2');
+      }
       this.form.patchValue({
         ...res!,
-        cpf: maskitoTransform(res!.cpf, cpfMask),
-        cnpj: maskitoTransform(res!.cnpj, cnpjMask),
-        cep: maskitoTransform(res!.cep, cepMask),
-        phone: maskitoTransform(res!.phone, phoneMask),
+        cpf: res?.cpf ? maskitoTransform(res.cpf, cpfMask) : null,
+        cnpj: res?.cnpj ? maskitoTransform(res.cnpj, cnpjMask) : null,
+        cep: res?.cep ? maskitoTransform(res.cep, cepMask) : null,
+        phone: res?.phone ? maskitoTransform(res.phone, phoneMask) : null,
+        state: res?.state ? res.state.toUpperCase() : null,
       });
     });
   }
@@ -113,22 +121,19 @@ export class ProfileInfoComponent implements OnInit {
   mountForm() {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      email: [
-        { value: '', disabled: true },
-        [Validators.required, Validators.email],
-      ],
+      email: [[Validators.required, Validators.email]],
       address: [''],
       cep: [''],
       city: [''],
-      cnpj: [{ value: '', disabled: true }],
+      cnpj: [],
       corporate_name: [''],
       country: [''],
-      cpf: [{ value: '', disabled: true }],
+      cpf: [],
       district: [''],
       fantasy_name: [''],
       image: [''],
       state: [''],
-      phone: [''],
+      phone: ['', [Validators.required]],
       doc_type: ['1', [Validators.required]],
     });
 
@@ -164,16 +169,31 @@ export class ProfileInfoComponent implements OnInit {
   }
 
   submit() {
-    this.userService
-      .updateUser(this.form.value)
-      .subscribe((res: UserInterface) => {
-        this.modalService.closeModal();
-        this.toastService.presentToast(
-          'Dados atualizados com sucesso',
-          'bottom',
-          4000,
-          'success',
-        );
+    this.user$
+      .pipe(
+        filter((user): user is UserInterface => !!user),
+        take(1),
+        exhaustMap((user) =>
+          this.userService.updateUser({
+            ...this.form.value,
+            id: user.id,
+          }),
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.modalService.closeModal();
+
+          this.toastService.presentToast(
+            'Dados atualizados com sucesso',
+            'bottom',
+            4000,
+            'success',
+          );
+        },
+        error: (error) => {
+          console.error(error);
+        },
       });
   }
 
@@ -191,10 +211,39 @@ export class ProfileInfoComponent implements OnInit {
     });
   }
 
-  async changeUserImage() {
-    const result = await this.photoService.takePicture();
-    if (!result) {
+  verifyCep() {
+    if (!this.form.get('cep')?.value) {
       return;
     }
+    this.cepService.getCep(this.form.get('cep')?.value).subscribe((res) => {
+      if (res) {
+        console.log(res);
+        this.form.patchValue({
+          cep: res.cep,
+          state: res.uf,
+          city: res.localidade,
+          address: res.logradouro,
+          district: res.bairro,
+        });
+      }
+    });
+  }
+
+  async takePicture() {
+    const picture = await this.photoService.takePicture();
+
+    if (!picture) {
+      return;
+    }
+
+    const blob = await fetch(picture.webPath!).then((r) => r.blob());
+
+    this.userService
+      .updateAvatarImage({
+        webPath: picture.webPath!,
+        blob,
+        format: picture.format,
+      })
+      .subscribe((res) => console.log(res));
   }
 }

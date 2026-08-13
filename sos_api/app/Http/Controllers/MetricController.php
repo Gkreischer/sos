@@ -518,10 +518,17 @@ class MetricController extends Controller
     public function getOrdersByPeriod(Request $request)
     {
         try {
-            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->startOfDay()->toDateTimeString();
-            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay()->toDateTimeString();
+            $startDate = Carbon::createFromFormat(
+                'd/m/Y',
+                $request->startDate
+            )->startOfDay()->toDateTimeString();
 
-            $description = $request->input('description');
+            $endDate = Carbon::createFromFormat(
+                'd/m/Y',
+                $request->endDate
+            )->endOfDay()->toDateTimeString();
+
+            $description = trim($request->input('description', ''));
 
             if (empty($startDate) || empty($endDate)) {
                 return response([
@@ -536,7 +543,7 @@ class MetricController extends Controller
                 'metrics:order:by_period:%s:%s:%s:page:%d',
                 $request->startDate,
                 $request->endDate,
-                md5($description ?? ''),
+                md5($description),
                 $page
             );
 
@@ -545,25 +552,44 @@ class MetricController extends Controller
                 now()->addMinutes(30),
                 function () use ($startDate, $endDate, $description) {
 
-                    $orders = Order::with(['user', 'equipment', 'status', 'parts'])
-                        ->whereBetween('created_at', [$startDate, $endDate])
-                        ->when($description, function ($query) use ($description) {
-                            $query->where(function ($q) use ($description) {
-                                $q->where('title', 'like', "%{$description}%")
-                                    ->orWhereHas('user', function ($user) use ($description) {
-                                        $user->where('name', 'like', "%{$description}%");
-                                    });
-                            });
-                        })
+                    return Order::with([
+                        'user',
+                        'equipment',
+                        'status',
+                        'parts'
+                    ])
+                        ->whereBetween('created_at', [
+                            $startDate,
+                            $endDate
+                        ])
+                        ->when(
+                            !empty($description),
+                            function ($query) use ($description) {
+                                $query->where(function ($q) use ($description) {
+
+                                    // Busca pelo título
+                                    $q->whereRaw(
+                                        'unaccent(title) ILIKE unaccent(?)',
+                                        ["%{$description}%"]
+                                    )
+
+                                        // Busca pelo usuário
+                                        ->orWhereHas('user', function ($user) use ($description) {
+                                            $user->whereRaw(
+                                                'unaccent(name) ILIKE unaccent(?)',
+                                                ["%{$description}%"]
+                                            );
+                                        });
+                                });
+                            }
+                        )
                         ->orderByDesc('created_at')
                         ->paginate(20);
-                    return $orders;
                 }
             );
 
             return response($metrics);
         } catch (Exception $e) {
-
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
                 'error' => $e->getMessage()

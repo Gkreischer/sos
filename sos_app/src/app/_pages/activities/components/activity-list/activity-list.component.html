@@ -36,20 +36,8 @@
           <ion-list-header color="light"
             ><strong>Detalhes do log</strong></ion-list-header
           >
-          <ion-item color="light" lines="full">
-            <ion-icon
-              name="grid-outline"
-              class="ion-margin-horizontal"
-            ></ion-icon>
-            <ion-label>
-              <ion-note><strong>Assunto</strong></ion-note>
-              <p>
-                {{ activity.subject_type }} -
-                <ion-note>({{ activity.subject_id }})</ion-note>
-              </p>
-            </ion-label>
-          </ion-item>
-          @if (activity.causer_id) {
+
+          @if (activity.causer && activity.causer.name) {
             <ion-item color="light" lines="full">
               <ion-icon
                 name="people-outline"
@@ -58,8 +46,29 @@
               <ion-label>
                 <ion-note><strong>Responsável</strong></ion-note>
                 <p>
-                  {{ activity.causer_type }} -
-                  <ion-note>({{ activity.causer_id }})</ion-note>
+                  {{ activity.causer_type + " -" }}
+                  <ion-note
+                    >{{ "(" + activity.causer_id + ") -" }}
+                    {{ activity.causer.name }}</ion-note
+                  >
+                </p>
+              </ion-label>
+            </ion-item>
+          }
+          @if (activity.subject && activity.subject.name) {
+            <ion-item color="light" lines="full">
+              <ion-icon
+                name="grid-outline"
+                class="ion-margin-horizontal"
+              ></ion-icon>
+              <ion-label>
+                <ion-note><strong>Assunto</strong></ion-note>
+                <p>
+                  {{ activity.subject_type + " -" }}
+                  <ion-note
+                    >{{ "(" + activity.subject_id + ") -" }}
+                    {{ activity.subject.name }}</ion-note
+                  >
                 </p>
               </ion-label>
             </ion-item>

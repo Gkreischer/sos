@@ -5,6 +5,7 @@ import { BehaviorSubject, tap, catchError } from 'rxjs';
 import { APP_CONFIG } from 'shared';
 import { UserInterface } from 'shared';
 import { LoginService } from 'shared';
+import { PictureInterface } from 'shared';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,11 +16,19 @@ export class UserService {
   errorService = inject(ErrorService);
   loginService = inject(LoginService);
 
-  updateAvatarImage(imagePath: string) {
+  updateAvatarImage(picture: PictureInterface) {
+    const formData = new FormData();
+
+    formData.append(
+      'image',
+      picture.blob,
+      `avatar.${picture.blob.type.split('/')[1] ?? 'jpg'}`,
+    );
     return this.http
-      .post<UserInterface>(`${this.appConfig.baseUrl}/user/image/change`, {
-        imagePath: imagePath,
-      })
+      .post<UserInterface>(
+        `${this.appConfig.baseUrl}/user/image/change`,
+        formData,
+      )
       .pipe(
         tap((user) => {
           this.loginService.userSubject.next(user);

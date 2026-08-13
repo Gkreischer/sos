@@ -15,29 +15,38 @@ class PostController extends Controller
     public function index(Request $request)
     {
         try {
-
-            $description = $request->input('description');
-            $page = request()->get('page', 1);
+            $description = trim($request->input('description', ''));
+            $page = $request->get('page', 1);
 
             $cacheKey = 'posts_description_' . $description . '_page_' . $page;
 
             $posts = Cache::tags('posts-list')->remember(
                 $cacheKey,
                 now()->addMinutes(5),
-                function () use ($description, $page) {
-                    $posts = Post::query()->when($description, function ($query) use ($description) {
-                        $query->where('title', 'like', '%' . $description . '%')
-                            ->orWhere('content', 'like', '%' . $description . '%');
-                    })->with('user:id,name,image')
-                        ->orderBy('created_at', 'desc')
-                        ->paginate(20)->toArray();
-                    return $posts;
+                function () use ($description) {
+                    return Post::query()
+                        ->when(!empty($description), function ($query) use ($description) {
+                            $query->where(function ($q) use ($description) {
+                                $q->whereRaw(
+                                    'unaccent(title) ILIKE unaccent(?)',
+                                    ["%{$description}%"]
+                                )
+                                    ->orWhereRaw(
+                                        'unaccent(content) ILIKE unaccent(?)',
+                                        ["%{$description}%"]
+                                    );
+                            });
+                        })
+                        ->with('user:id,name,image')
+                        ->orderByDesc('created_at')
+                        ->paginate(20)
+                        ->toArray();
                 }
             );
 
-            return response($posts);
+            return response()->json($posts);
         } catch (\Exception $e) {
-            return response([
+            return response()->json([
                 'message' => 'Erro ao obter os avisos',
                 'error' => $e->getMessage(),
             ], 500);

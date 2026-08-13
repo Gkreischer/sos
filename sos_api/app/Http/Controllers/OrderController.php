@@ -118,16 +118,21 @@ class OrderController extends Controller
     public function searchByFilter(Request $request)
     {
         try {
-
             $status_id = $request->status_id;
-            $search_term = trim($request->search);
+            $search_term = trim($request->search ?? '');
 
             $start_date = !empty($request->start_date)
-                ? Carbon::createFromFormat('d/m/Y', trim($request->start_date))->startOfDay()
+                ? Carbon::createFromFormat(
+                    'd/m/Y',
+                    trim($request->start_date)
+                )->startOfDay()
                 : null;
 
             $end_date = !empty($request->end_date)
-                ? Carbon::createFromFormat('d/m/Y', trim($request->end_date))->endOfDay()
+                ? Carbon::createFromFormat(
+                    'd/m/Y',
+                    trim($request->end_date)
+                )->endOfDay()
                 : null;
 
             $orders = Order::query()
@@ -144,56 +149,93 @@ class OrderController extends Controller
                     'equipment:id,name',
                     'status:id,name'
                 ])
+
                 // Filtro por status
-                ->when(isset($status_id) && $status_id != 0, function ($query) use ($status_id) {
-                    $query->where('orders.status_id', $status_id);
-                })
+                ->when(
+                    isset($status_id) && $status_id != 0,
+                    function ($query) use ($status_id) {
+                        $query->where(
+                            'orders.status_id',
+                            $status_id
+                        );
+                    }
+                )
 
                 // Filtro por texto
-                ->when(!empty($search_term), function ($query) use ($search_term) {
-                    $query->where(function ($q) use ($search_term) {
+                ->when(
+                    !empty($search_term),
+                    function ($query) use ($search_term) {
+                        $query->where(function ($q) use ($search_term) {
 
-                        // Busca por ID
-                        if (is_numeric($search_term)) {
-                            $q->orWhere('orders.id', (int) $search_term);
-                        }
+                            // Busca por ID
+                            if (is_numeric($search_term)) {
+                                $q->orWhere(
+                                    'orders.id',
+                                    (int) $search_term
+                                );
+                            }
 
-                        // Busca por título
-                        $q->orWhere('orders.title', 'LIKE', '%' . $search_term . '%')
+                            // Busca por título
+                            $q->orWhereRaw(
+                                'unaccent(orders.title) ILIKE unaccent(?)',
+                                ["%{$search_term}%"]
+                            )
 
-                            // Busca por usuário
-                            ->orWhereHas('user', function ($q2) use ($search_term) {
-                                $q2->where('name', 'LIKE', '%' . $search_term . '%');
-                            });
-                    });
-                })
+                                // Busca por usuário
+                                ->orWhereHas('user', function ($q2) use ($search_term) {
+                                    $q2->whereRaw(
+                                        'unaccent(name) ILIKE unaccent(?)',
+                                        ["%{$search_term}%"]
+                                    );
+                                });
+                        });
+                    }
+                )
 
                 // Entre duas datas
-                ->when($start_date && $end_date, function ($query) use ($start_date, $end_date) {
-                    $query->whereBetween('orders.created_at', [$start_date, $end_date]);
-                })
+                ->when(
+                    $start_date && $end_date,
+                    function ($query) use ($start_date, $end_date) {
+                        $query->whereBetween(
+                            'orders.created_at',
+                            [$start_date, $end_date]
+                        );
+                    }
+                )
 
                 // Maior ou igual à data inicial
-                ->when($start_date && !$end_date, function ($query) use ($start_date) {
-                    $query->where('orders.created_at', '>=', $start_date);
-                })
+                ->when(
+                    $start_date && !$end_date,
+                    function ($query) use ($start_date) {
+                        $query->where(
+                            'orders.created_at',
+                            '>=',
+                            $start_date
+                        );
+                    }
+                )
 
                 // Menor ou igual à data final
-                ->when(!$start_date && $end_date, function ($query) use ($end_date) {
-                    $query->where('orders.created_at', '<=', $end_date);
-                })
+                ->when(
+                    !$start_date && $end_date,
+                    function ($query) use ($end_date) {
+                        $query->where(
+                            'orders.created_at',
+                            '<=',
+                            $end_date
+                        );
+                    }
+                )
+
                 ->latest('orders.id')
-                ->limit(20)
-                ->paginate();
+                ->paginate(20);
 
-
-            return response($orders);
+            return response()->json($orders);
         } catch (Exception $e) {
-
-            return response([
+            return response()->json([
                 'message' => 'Não foi possível carregar as ordens de serviço',
-                'error' => $e->getMessage()
-            ], 404);
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 

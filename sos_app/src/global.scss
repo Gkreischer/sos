@@ -349,3 +349,15 @@ ion-select {
   transform: translateY(-10px);
   transition: transform 0.2s ease-in-out;
 }
+
+ion-input[required],
+ion-textarea[required] {
+  .label-text::after {
+    content: "*";
+    color: var(--ion-color-danger);
+  }
+}
+ion-select[required]::part(label)::after {
+  content: "*";
+  color: var(--ion-color-danger);
+}

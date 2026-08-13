@@ -69,15 +69,15 @@ Route::middleware(['json.response'])->group(function () {
 
             Route::controller(UserController::class)->group(function () {
 
-                Route::post('/users', 'getUsersWithFilter');
+                Route::middleware(['role:admin|technician|attendant'])->post('/users', 'getUsersWithFilter');
                 Route::get('/users/{id}', 'show');
                 Route::put('/users/{id}', 'update');
-                Route::middleware(['role:admin|attendant'])->delete('/users/{id}', 'destroy');
-                Route::post('/users/add', 'store');
+                Route::middleware(['role:admin|technician|attendant'])->delete('/users/{id}', 'destroy');
+                Route::middleware(['role:admin|technician|attendant'])->post('/users/add', 'store');
                 Route::post('/user/image/change', 'updateUserAvatarImage');
             });
 
-            Route::controller(OrderController::class)->group(function () {
+            Route::middleware(['role:admin|technician|attendant'])->controller(OrderController::class)->group(function () {
                 Route::get('/orders', 'getAll');
                 Route::post('/orders', 'store');
                 Route::get('/orders/{id}', 'getById');
@@ -94,7 +94,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::get('/parts/{id}', 'getById');
                 Route::put('/parts/{id}', 'update');
                 Route::post('/parts/filter', 'getPartByDescFilter');
-                Route::delete('/parts/{id}', 'destroy');
+                Route::middleware(['role:admin|technician|attendant'])->delete('/parts/{id}', 'destroy');
             });
 
             Route::controller(PhotoController::class)->group(function () {
@@ -108,6 +108,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::controller(BusinessInfoController::class)->group(function () {
                 Route::get('/settings/business-info', 'getBusinessInfo');
                 Route::middleware(['role:admin'])->put('/settings/business-info', 'storeBusinessInfo');
+                Route::middleware(['role:admin'])->post('/settings/business-info/logo', 'updateBusinessLogo');
             });
 
             Route::middleware('role:admin')->controller(MetricController::class)->group(function () {
@@ -131,7 +132,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::get('/user-types', 'index');
             });
 
-            Route::controller(PostController::class)->group(function () {
+            Route::middleware(['role:admin|technician|attendant'])->controller(PostController::class)->group(function () {
                 Route::post('/posts/filter', 'index');
                 Route::get('/posts/last', 'getLastPosts');
                 Route::get('/posts/{id}', 'show');
@@ -144,7 +145,7 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('/notifications', 'sendMessage');
             });
 
-            Route::controller(RoomController::class)->group(function () {
+            Route::middleware(['role:admin|technician|attendant'])->controller(RoomController::class)->group(function () {
                 Route::get('/rooms', 'index');
                 Route::post('/rooms/room/messages', 'getRoomMessages');
                 Route::get('/room/{id}/users', 'getRoomUsers');

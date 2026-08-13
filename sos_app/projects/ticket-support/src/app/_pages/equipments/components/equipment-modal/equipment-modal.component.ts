@@ -32,6 +32,7 @@ import {
   IonInput,
   IonTextarea,
   IonSelect,
+  IonNote,
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -42,6 +43,7 @@ import { AlertService } from 'shared';
   templateUrl: './equipment-modal.component.html',
   styleUrls: ['./equipment-modal.component.scss'],
   imports: [
+    IonNote,
     IonCol,
     IonRow,
     IonGrid,
@@ -91,7 +93,7 @@ export class EquipmentModalComponent implements OnInit {
   mountForm() {
     this.formEquipment = this.formBuilder.group({
       name: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      description: [''],
       category_id: ['', [Validators.required]],
       obs: [''],
     });

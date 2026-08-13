@@ -4,7 +4,7 @@ import { BehaviorSubject, catchError, tap } from 'rxjs';
 import { BusinessInfoInterface } from 'shared';
 import { environment } from 'src/environments/environment';
 import { ErrorService } from 'shared';
-
+import { PictureInterface } from 'shared';
 @Injectable({
   providedIn: 'root',
 })
@@ -43,6 +43,30 @@ export class SettingService {
       .pipe(
         tap((data) => {
           return this.settings.next(data);
+        }),
+        catchError(this.errorService.handleError),
+      );
+  }
+
+  changeBusinessLogo(picture: PictureInterface) {
+    const formData = new FormData();
+
+    formData.append(
+      'image',
+      picture.blob,
+      `logo.${picture.blob.type.split('/')[1] ?? 'jpg'}`,
+    );
+    return this.http
+      .post<BusinessInfoInterface>(
+        `${environment.baseUrl}/settings/business-info/logo`,
+        formData,
+      )
+      .pipe(
+        tap((data) => {
+          return this.settings.next({
+            ...this.settings.getValue(),
+            image: data.image,
+          });
         }),
         catchError(this.errorService.handleError),
       );

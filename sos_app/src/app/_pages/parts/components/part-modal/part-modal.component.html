@@ -18,7 +18,7 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      <form [formGroup]="formPart" (ngSubmit)="!part ? submit() : update()">
+      <form [formGroup]="formPart" (ngSubmit)="!partId ? submit() : update()">
         <ion-grid>
           @if (this.formPart.get("image")?.value) {
             <ion-row>

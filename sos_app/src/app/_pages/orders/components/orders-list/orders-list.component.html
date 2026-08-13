@@ -86,15 +86,15 @@
             </ion-label>
           </ion-item>
         }
-        <ion-infinite-scroll
-          (ionInfinite)="onIonInfinite($event)"
-          loadingText="Carregando..."
-          loadingSpinner="bubbles"
-          [disabled]="!infiniteScroll()"
-        >
-          <ion-infinite-scroll-content />
-        </ion-infinite-scroll>
       }
     </ion-list>
+    <ion-infinite-scroll
+      (ionInfinite)="onIonInfinite($event)"
+      loadingText="Carregando..."
+      loadingSpinner="bubbles"
+      [disabled]="!infiniteScroll()"
+    >
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
   </ion-card-content>
 </ion-card>

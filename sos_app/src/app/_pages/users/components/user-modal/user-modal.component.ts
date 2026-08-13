@@ -135,11 +135,10 @@ export class UserModalComponent implements OnInit {
       city: [''],
       state: ['', [Validators.minLength(2), Validators.maxLength(2)]],
       type_id: ['', [Validators.required]],
-      district: [''],
-      country: [''],
+      district: ['', [Validators.required]],
+      country: ['', [Validators.required]],
     });
 
-    this.observeCep();
     this.enableInputPasswordsByUserType();
   }
 
@@ -235,33 +234,26 @@ export class UserModalComponent implements OnInit {
     });
   }
 
-  observeCep() {
-    this.userForm
-      .get('cep')
-      ?.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        filter((cep) => cep?.length === 9),
-      )
-      .subscribe((cep) => {
-        this.searchCep(cep);
-      });
+  verifyCep() {
+    if (!this.userForm.get('cep')?.value) {
+      return;
+    }
+    this.cepService.getCep(this.userForm.get('cep')?.value).subscribe((res) => {
+      if (res) {
+        this.userForm.patchValue({
+          cep: res.cep,
+          state: res.uf,
+          city: res.localidade,
+          address: res.logradouro,
+          district: res.bairro,
+        });
+      }
+    });
   }
 
   enableInputPasswordsByUserType() {
     this.userForm.get('type_id')?.valueChanges.subscribe((typeId) => {
       this.enablePasswordsInput = [1, 3, 4, 5].includes(typeId);
-    });
-  }
-
-  searchCep(cep: string) {
-    this.cepService.getCep(cep).subscribe((res) => {
-      this.userForm.patchValue({
-        district: res.bairro,
-        city: res.localidade,
-        state: res.uf,
-        address: res.logradouro,
-      });
     });
   }
 

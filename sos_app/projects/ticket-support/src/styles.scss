@@ -58,3 +58,15 @@ ion-textarea,
 ion-select {
   --border-radius: 8px !important;
 }
+
+ion-input[required],
+ion-textarea[required] {
+  .label-text::after {
+    content: "*";
+    color: var(--ion-color-danger);
+  }
+}
+ion-select[required]::part(label)::after {
+  content: "*";
+  color: var(--ion-color-danger);
+}

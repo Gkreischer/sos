@@ -156,6 +156,7 @@ export class PhotoService {
         webPath: result.webPath,
         format: result.metadata?.format,
         resolution: result.metadata?.resolution,
+        blob: await fetch(result.webPath!).then((r) => r.blob()),
       };
     } catch (e) {
       const error = e as any;

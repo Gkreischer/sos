@@ -1,5 +1,5 @@
 export interface PictureInterface {
-  webPath: string;
+  webPath?: string;
   blob: Blob;
   format?: string;
   path?: string;

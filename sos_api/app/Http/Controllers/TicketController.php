@@ -56,49 +56,84 @@ class TicketController extends Controller
                 'status:id,name',
                 'equipment:id,name',
             ])
+
             // Filtro por status
-            ->when(isset($status_id) && $status_id != 0, function ($query) use ($status_id) {
-                $query->where('tickets.status_id', $status_id);
-            })
+            ->when(
+                isset($status_id) && $status_id != 0,
+                function ($query) use ($status_id) {
+                    $query->where('tickets.status_id', $status_id);
+                }
+            )
 
             // Filtro por texto
-            ->when(!empty($search_term), function ($query) use ($search_term) {
-                $query->where(function ($q) use ($search_term) {
+            ->when(
+                !empty($search_term),
+                function ($query) use ($search_term) {
+                    $query->where(function ($q) use ($search_term) {
 
-                    // Busca por ID
-                    if (is_numeric($search_term)) {
-                        $q->orWhere('tickets.id', (int) $search_term);
-                    }
+                        // Busca por ID
+                        if (is_numeric($search_term)) {
+                            $q->orWhere('tickets.id', (int) $search_term);
+                        }
 
-                    // Busca por título
-                    $q->orWhere('tickets.title', 'LIKE', '%' . $search_term . '%')
+                        // Busca por título ignorando maiúsculas/minúsculas
+                        // e acentos
+                        $q->orWhereRaw(
+                            'unaccent(tickets.title) ILIKE unaccent(?)',
+                            ["%{$search_term}%"]
+                        )
 
-                        // Busca por usuário
-                        ->orWhereHas('user', function ($q2) use ($search_term) {
-                            $q2->where('name', 'LIKE', '%' . $search_term . '%');
-                        });
-                });
-            })
+                            // Busca por usuário ignorando
+                            // maiúsculas/minúsculas e acentos
+                            ->orWhereHas('user', function ($q2) use ($search_term) {
+                                $q2->whereRaw(
+                                    'unaccent(name) ILIKE unaccent(?)',
+                                    ["%{$search_term}%"]
+                                );
+                            });
+                    });
+                }
+            )
 
             // Entre duas datas
-            ->when($start_date && $end_date, function ($query) use ($start_date, $end_date) {
-                $query->whereBetween('tickets.created_at', [$start_date, $end_date]);
-            })
+            ->when(
+                $start_date && $end_date,
+                function ($query) use ($start_date, $end_date) {
+                    $query->whereBetween(
+                        'tickets.created_at',
+                        [$start_date, $end_date]
+                    );
+                }
+            )
 
             // Maior ou igual à data inicial
-            ->when($start_date && !$end_date, function ($query) use ($start_date) {
-                $query->where('tickets.created_at', '>=', $start_date);
-            })
+            ->when(
+                $start_date && !$end_date,
+                function ($query) use ($start_date) {
+                    $query->where(
+                        'tickets.created_at',
+                        '>=',
+                        $start_date
+                    );
+                }
+            )
 
             // Menor ou igual à data final
-            ->when(!$start_date && $end_date, function ($query) use ($end_date) {
-                $query->where('tickets.created_at', '<=', $end_date);
-            })
-            ->orderByDesc('tickets.created_at')
-            ->limit(20)
-            ->paginate();
+            ->when(
+                !$start_date && $end_date,
+                function ($query) use ($end_date) {
+                    $query->where(
+                        'tickets.created_at',
+                        '<=',
+                        $end_date
+                    );
+                }
+            )
 
-        return response($tickets);
+            ->orderByDesc('tickets.created_at')
+            ->paginate(20);
+
+        return response()->json($tickets);
     }
 
     /**
@@ -140,7 +175,7 @@ class TicketController extends Controller
     public function show(int $id)
     {
         try {
-            $ticket = Ticket::findOrFail($id);
+            $ticket = Ticket::with('order')->findOrFail($id);
 
             return response($ticket);
         } catch (Exception $e) {
@@ -191,7 +226,7 @@ class TicketController extends Controller
     {
         try {
             $user_id = auth('sanctum')->user()->id;
-            $tickets = Ticket::where('user_id', $user_id)
+            $tickets = Ticket::with('order')->where('user_id', $user_id)
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
             return response($tickets);

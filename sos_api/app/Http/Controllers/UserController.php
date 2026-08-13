@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\UserType;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -21,7 +22,7 @@ class UserController extends Controller
         //
 
         try {
-            $users = User::with('type')->select('id', 'name', 'phone', 'type_id', 'cpf', 'cnpj', 'cep')->paginate(20);
+            $users = User::with('type')->select('id', 'name', 'phone', 'type_id', 'cpf', 'cnpj', 'cep')->orderByDesc('created_at')->paginate(20);
 
             return response($users, 200);
         } catch (Exception $e) {
@@ -66,19 +67,6 @@ class UserController extends Controller
 
             $data = $request->all();
 
-            $types = UserType::pluck('id', 'name');
-
-            if (
-                !empty($data['type_id']) &&
-                is_numeric($data['type_id']) &&
-                request()->user()->type_id !== $types['Administrador']
-            ) {
-                return response([
-                    'message' => 'Não é possível alterar o tipo de usuário',
-                    'error' => 'Não é possível alterar o tipo de usuário'
-                ], 403);
-            }
-
             if (!empty($data['password']) && !empty($data['password_confirmation']) && $data['password'] != $data['password_confirmation'] && strlen($data['password']) >= 8 && strlen($data['password_confirmation']) >= 8) {
                 return response([
                     'message' => 'A confirmação da senha não confere',
@@ -86,7 +74,6 @@ class UserController extends Controller
                 ], 400);
             }
 
-            // Make validation with Validator
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $id,
@@ -106,11 +93,13 @@ class UserController extends Controller
                 return response($validator->errors(), 400);
             }
 
+            $validated = $validator->validated();
+
             $user = User::lockForUpdate()->findOrFail($id);
 
-            DB::transaction(function () use ($user, $data) {
+            DB::transaction(function () use ($user, $validated) {
 
-                $user->update($data);
+                $user->update($validated);
             });
             $user->load('type');
 
@@ -171,7 +160,7 @@ class UserController extends Controller
 
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
+                'email' => 'required|string|email|max:255|unique:users,email',
                 'cpf' => 'nullable|string|max:14',
                 'fantasy_name' => 'nullable|string|max:255',
                 'corporate_name' => 'nullable|string|max:255',
@@ -191,11 +180,14 @@ class UserController extends Controller
                 return response($validator->errors(), 400);
             }
 
+            $validated = $validator->validated();
+
+
             if (!empty($data['password']) && !empty($data['password_confirmation'])) {
-                $data['password'] = Hash::make($data['password']);
+                $validated['password'] = Hash::make($validated['password']);
             }
 
-            $user = User::create($data);
+            $user = User::create($validated);
             $user->load('type');
 
             Cache::tags('users-list')->flush();
@@ -232,12 +224,26 @@ class UserController extends Controller
             $query = User::query();
 
             if (!empty($data['description'])) {
-                $query->where(function ($q) use ($data) {
-                    $q->where('name', 'LIKE', '%' . $data['description'] . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $data['description'] . '%')
-                        ->orWhere('email', 'LIKE', '%' . $data['description'] . '%')
-                        ->orWhereHas('type', function ($q) use ($data) {
-                            $q->where('name', 'LIKE', '%' . $data['description'] . '%');
+                $search = $data['description'];
+
+                $query->where(function ($q) use ($search) {
+                    $q->whereRaw(
+                        'unaccent(name) ILIKE unaccent(?)',
+                        ["%{$search}%"]
+                    )
+                        ->orWhereRaw(
+                            'unaccent(phone) ILIKE unaccent(?)',
+                            ["%{$search}%"]
+                        )
+                        ->orWhereRaw(
+                            'unaccent(email) ILIKE unaccent(?)',
+                            ["%{$search}%"]
+                        )
+                        ->orWhereHas('type', function ($q) use ($search) {
+                            $q->whereRaw(
+                                'unaccent(name) ILIKE unaccent(?)',
+                                ["%{$search}%"]
+                            );
                         });
                 });
             }
@@ -255,7 +261,7 @@ class UserController extends Controller
 
             $users = Cache::tags('users-list')->remember($cacheKey, now()->addMinutes(5), function () use ($query, $descriptionFilter, $typeFilter) {
                 /** @var \Illuminate\Database\Eloquent\Builder $query */
-                return $query->with('type')->paginate(20)->toArray();
+                return $query->with('type')->orderByDesc('created_at')->paginate(20)->toArray();
             });
 
             return response($users, 200);
@@ -270,24 +276,33 @@ class UserController extends Controller
     public function updateUserAvatarImage(Request $request)
     {
         try {
-            if (!isset($request->imagePath)) {
-                return response([
-                    'message' => 'Não foi recebida informação da imagem',
-                    'error' => throw new Exception('Não foi possível receber informações da imagem')
-                ]);
-            }
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            ]);
 
             $user = $request->user();
+
+            // Remove a imagem antiga, caso exista
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+
+            // Salva a nova imagem
+            $path = $request->file('image')->store('avatars', 'public');
+
+            // Atualiza o usuário
             $user->update([
-                'image' => $request->imagePath
+                'image' => Storage::url($path),
             ]);
 
-            return $user->load('type');
+            $user->load('type');
+
+            return response($user);
         } catch (\Exception $e) {
-            return response([
+            return response()->json([
                 'message' => 'Não foi possível atualizar a imagem',
-                'error' => $e->getMessage()
-            ]);
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

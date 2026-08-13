@@ -17,6 +17,13 @@ import {
   IonCardContent,
   IonSelect,
   IonSelectOption,
+  IonToast,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonChip,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackSharp } from 'ionicons/icons';
@@ -29,11 +36,16 @@ import {
 import { TicketService } from 'shared';
 import { LoadingService } from 'shared';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
 import { EquipmentService } from '@ticket/app/_services/equipment.service';
+import { EquipmentInterface } from 'shared';
+import { TicketInterface } from 'shared';
 @Component({
   selector: 'app-ticket-modal',
   imports: [
+    IonNote,
+    IonChip,
+    IonLabel,
     IonCardContent,
     IonCard,
     IonTextarea,
@@ -52,6 +64,8 @@ import { EquipmentService } from '@ticket/app/_services/equipment.service';
     AsyncPipe,
     IonSelect,
     IonSelectOption,
+    DatePipe,
+    IonText,
   ],
   templateUrl: './ticket-modal.component.html',
   styleUrl: './ticket-modal.component.scss',
@@ -65,7 +79,9 @@ export class TicketModalComponent implements OnInit {
 
   form!: FormGroup;
   ticketId!: number;
-  equipments$: Observable<any> = this.equipmentService.equipments;
+  ticket$: Observable<TicketInterface | null> = this.ticketService.ticket;
+  equipments$: Observable<EquipmentInterface[]> =
+    this.equipmentService.equipments;
 
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 

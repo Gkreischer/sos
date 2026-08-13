@@ -77,6 +77,8 @@ export class BusinessInfoModalComponent implements OnInit {
   form!: FormGroup;
   businessAlreadyExists = false;
 
+  businessInfo$ = this.settingService.businessInfo$;
+
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
   cnpjMask = cnpjMask;
@@ -121,7 +123,6 @@ export class BusinessInfoModalComponent implements OnInit {
       city: ['', [Validators.required]],
       state: ['', [Validators.required, Validators.maxLength(2)]],
       country: ['', [Validators.required]],
-      image: ['', [Validators.required]],
       website: [''],
     });
   }
@@ -141,47 +142,27 @@ export class BusinessInfoModalComponent implements OnInit {
       });
   }
 
-  async uploadImage() {
-    const response = await this.photoService.startUpload();
+  async takePicture() {
+    const picture = await this.photoService.takePicture();
 
-    if (!response) {
+    if (!picture) {
+      return;
+    }
+
+    this.settingService.changeBusinessLogo(picture).subscribe((res) => {
+      this.form.get('image')?.setValue(res.image);
       this.toastService.presentToast(
-        'Nenhum arquivo selecionado',
+        'Logo alterado com sucesso',
         'bottom',
         3000,
-        'danger',
+        'success',
       );
-      return;
-    }
-    this.form.get('image')?.setValue(response.imagePath);
-    this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
-  }
-
-  verifyIfImageWasSelected() {
-    let imageBlob = this.form.get('image')?.value as string;
-    if (imageBlob.startsWith('blob')) {
-      return true;
-    }
-    return;
-  }
-
-  async selectImage() {
-    const image = await this.photoService.selectImage();
-
-    if (!image) {
-      return;
-    }
-
-    this.form.get('image')?.setValue(image.webviewPath);
+    });
   }
 
   async update() {
     const formatedPhone = this.form.get('phone')?.value;
     this.form.get('phone')?.setValue(formatedPhone.replace(/\D/g, ''));
-    const verifyImageWasChanged = this.verifyIfImageWasSelected();
-    if (verifyImageWasChanged) {
-      await this.uploadImage();
-    }
     this.settingService
       .updateBusinessInfo(this.form.value)
       .subscribe((businessInfo) => {
@@ -195,6 +176,9 @@ export class BusinessInfoModalComponent implements OnInit {
   }
 
   verifyCep() {
+    if (!this.form.get('cep')?.value) {
+      return;
+    }
     this.cepService.getCep(this.form.get('cep')?.value).subscribe((res) => {
       if (res) {
         this.form.patchValue({

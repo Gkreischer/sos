@@ -42,6 +42,9 @@
                       <ion-input
                         type="text"
                         fill="outline"
+                        required
+                        labelPlacement="floating"
+                        label="Cliente"
                         [value]="clientSelected?.name"
                         (click)="selectClientId()"
                         placeholder="Clique aqui para selecionar um cliente"
@@ -113,7 +116,7 @@
                         }
                       </ion-select>
                     } @else {
-                      <p>Selecione um cliente primeiro</p>
+                      <ion-note>Selecione um cliente primeiro</ion-note>
                     }
                   </ion-col>
                   @if (equipments && equipmentId) {

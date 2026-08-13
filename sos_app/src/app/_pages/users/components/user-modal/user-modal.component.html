@@ -28,6 +28,7 @@
                   label="Tipo"
                   formControlName="type_id"
                   placeholder="Tipo"
+                  required
                 >
                   @for (type of types; track type.id) {
                     <ion-select-option [value]="type.id">{{
@@ -47,6 +48,7 @@
                 labelPlacement="floating"
                 label="Nome"
                 formControlName="name"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -58,6 +60,8 @@
                 label="Email"
                 formControlName="email"
                 placeholder="Email"
+                required
+                email
               ></ion-input>
             </ion-col>
             <ion-col>
@@ -69,6 +73,7 @@
                 label="Telefone"
                 formControlName="phone"
                 placeholder="Telefone"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -130,6 +135,9 @@
                 placeholder="CEP"
                 [maskito]="cepMask"
                 [maskitoElement]="maskPredicate"
+                (ionChange)="verifyCep()"
+                inputmode="numeric"
+                required
               ></ion-input>
             </ion-col>
             <ion-col>
@@ -169,6 +177,7 @@
                 label="País"
                 formControlName="country"
                 placeholder="País"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>

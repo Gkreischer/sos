@@ -13,18 +13,18 @@
             style="border-radius: 5%"
             tourAnchor="menu.start"
             button
-            (click)="changeAvatarImage()"
+            (click)="takePicture()"
             data-cy="menu-item-profile"
           >
             <ion-img
-              src="{{ userLogged.image }}"
+              [src]="userLogged.image"
               alt="User Image"
               class="user-image"
               data-cy="menu-item-profile"
             ></ion-img>
           </ion-card>
         } @else {
-          <ion-card button (click)="changeAvatarImage()">
+          <ion-card button (click)="takePicture()">
             <ion-img src="assets/person-shape.svg"></ion-img>
           </ion-card>
         }

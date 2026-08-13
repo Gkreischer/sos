@@ -27,7 +27,7 @@
       <ion-searchbar
         class="ion-no-padding ion-padding-bottom"
         placeholder="Pesquisar o nome do usuário"
-        (ionChange)="searchUser($event)"
+        (ionInput)="searchUser($event)"
         debounce="1000"
       />
     }

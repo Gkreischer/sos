@@ -11,6 +11,7 @@
 
 @let isLoading = isLoading$ | async;
 @let equipments = equipments$ | async;
+@let ticket = ticket$ | async;
 <ion-content color="medium">
   <ion-card>
     <ion-card-content>
@@ -85,4 +86,28 @@
       </form>
     </ion-card-content>
   </ion-card>
+  @if (ticketId && ticket && ticket.order_id !== null) {
+    <ion-card color="warning">
+      <ion-card-content>
+        <h2><strong>Ordem de serviço criada</strong></h2>
+        <br />
+        <ion-label>Número da ordem: </ion-label>
+        <ion-chip>
+          <ion-label>{{ ticket.order_id }}</ion-label>
+        </ion-chip>
+        <br />
+        <ion-label>Status: </ion-label>
+        <ion-chip>
+          <ion-label>{{ ticket.status.name }}</ion-label>
+        </ion-chip>
+        <br />
+        <ion-label><strong>Última atualização: </strong></ion-label>
+        <ion-chip>
+          <ion-label>
+            {{ ticket.updated_at | date: "dd/MM/yyyy - HH:mm" }}
+          </ion-label>
+        </ion-chip>
+      </ion-card-content>
+    </ion-card>
+  }
 </ion-content>

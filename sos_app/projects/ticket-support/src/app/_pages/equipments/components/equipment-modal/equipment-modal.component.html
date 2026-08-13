@@ -28,6 +28,7 @@
                 formControlName="name"
                 label="Nome do equipamento"
                 labelPlacement="floating"
+                required
               ></ion-input>
             </ion-col>
           </ion-row>
@@ -41,6 +42,7 @@
                   okText="Confirmar"
                   cancelText="Cancelar"
                   fill="outline"
+                  required
                 >
                   @for (category of categories; track category.id) {
                     <ion-select-option [value]="category.id">{{
@@ -74,13 +76,19 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col>
+            <ion-col class="ion-text-center">
               <ion-button
                 type="submit"
                 expand="block"
                 [disabled]="formEquipment.invalid || isLoading || equipment"
                 >Cadastrar</ion-button
               >
+              @if (equipment) {
+                <ion-note
+                  >Para alterações no equipamento, por favor, entrar em contato
+                  com a empresa.</ion-note
+                >
+              }
             </ion-col>
           </ion-row>
         </ion-grid>

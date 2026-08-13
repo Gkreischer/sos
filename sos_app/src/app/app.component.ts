@@ -311,33 +311,19 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  async changeAvatarImage() {
-    await this.selectImage();
-  }
+  async takePicture() {
+    const picture = await this.photoService.takePicture();
 
-  async uploadImage() {
-    const response = await this.photoService.startUpload();
-
-    if (!response) {
-      this.toastService.presentToast(
-        'Nenhum arquivo selecionado',
-        'bottom',
-        3000,
-        'danger',
-      );
-      return;
-    }
-    this.userService.updateAvatarImage(response.imagePath).subscribe();
-    this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
-  }
-
-  async selectImage() {
-    const image = await this.photoService.selectImage();
-
-    if (!image) {
+    if (!picture) {
       return;
     }
 
-    await this.uploadImage();
+    this.userService
+      .updateAvatarImage({
+        webPath: picture.webPath!,
+        blob: picture.blob,
+        format: picture.format,
+      })
+      .subscribe((res) => console.log(res));
   }
 }

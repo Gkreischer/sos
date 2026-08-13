@@ -68,10 +68,11 @@ class PartController extends Controller
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string|max:255',
                     'description' => 'nullable|string|max:255',
-                    'price' => 'required|integer',
+                    'price' => 'required|string',
                     'category_id' => 'required|numeric',
                     'created_at' => 'nullable|date',
                     'updated_at' => 'nullable|date',
+                    'image' => 'string|nullable|url',
                 ]);
 
                 $validatedData = $validator->validate();
@@ -104,23 +105,29 @@ class PartController extends Controller
 
     public function getPartByDescFilter(Request $request)
     {
-
         try {
-
-            $data = $request->all();
+            $description = trim($request->input('description', ''));
 
             $part = Part::query()
-                ->when(!empty($data['description']), function ($query) use ($data) {
-                    $query->where('name', 'LIKE', '%' . $data['description'] . '%')
-                        ->orWhere('description', 'LIKE', '%' . $data['description'] . '%');
+                ->when(!empty($description), function ($query) use ($description) {
+                    $query->where(function ($q) use ($description) {
+                        $q->whereRaw(
+                            'unaccent(name) ILIKE unaccent(?)',
+                            ["%{$description}%"]
+                        )
+                            ->orWhereRaw(
+                                'unaccent(description) ILIKE unaccent(?)',
+                                ["%{$description}%"]
+                            );
+                    });
                 })
                 ->paginate(20);
 
-            return response($part, 200);
+            return response()->json($part, 200);
         } catch (Exception $e) {
-            return response([
+            return response()->json([
                 'message' => 'Não foi possível obter a peça',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -141,7 +148,9 @@ class PartController extends Controller
                 return response($validator->errors(), 400);
             }
 
-            $part = Part::create($data);
+            $validated = $validator->validated();
+
+            $part = Part::create($validated);
             $part->load('category');
 
             return response($part);

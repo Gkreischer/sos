@@ -44,31 +44,28 @@ class EquipmentController extends Controller
     public function store(Request $request)
     {
         try {
-            //
-            $data = $request->all();
 
-            // Make validation with Validator
-            $validator = Validator::make($data, [
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'category_id' => 'required|exists:categories,id',
+                'user_id' => 'nullable|exists:users,id',
             ]);
 
             if ($validator->fails()) {
                 return response($validator->errors(), 400);
             }
 
-            if (!isset($data['user_id'])) {
-                $data['user_id'] = auth('sanctum')->user()->id;
-            }
+            $validated = $validator->validated();
 
-            $equipment = Equipment::create($data);
+            $validated['user_id'] ??= auth('sanctum')->user()->id;
+
+            $equipment = Equipment::create($validated);
 
             Cache::tags('equipments-list')->flush();
             Cache::tags('customer-equipments-list')->flush();
 
-
-            $equipment->load(['category',  'user']);
+            $equipment->load(['category', 'user']);
 
             return response($equipment, 201);
         } catch (\Exception $e) {
@@ -106,46 +103,72 @@ class EquipmentController extends Controller
     public function getEquipmentByFilter(Request $request)
     {
         try {
-            $description = trim($request->description ?? '');
+            $description = trim($request->input('description', ''));
             $page = $request->input('page', 1);
 
-            $searchKey = !empty($description) ? md5($description) : 'all';
+            $searchKey = !empty($description)
+                ? md5($description)
+                : 'all';
+
             $cacheKey = "equipments:filter:{$searchKey}:page:{$page}";
 
-            $equipments = Cache::tags('equipments-list')->remember($cacheKey, now()->addMinutes(5), function () use ($description) {
-                return Equipment::query()
-                    ->select(
-                        'equipments.id',
-                        'equipments.name',
-                        'equipments.description',
-                        'equipments.category_id',
-                        'equipments.user_id',
-                        'equipments.obs',
-                        'equipments.created_at'
-                    )
-                    ->with([
-                        'category:id,name',
-                        'user:id,name'
-                    ])
-                    ->when(!empty($description), function ($query) use ($description) {
-                        $query->where(function ($q) use ($description) {
-                            $q->where('equipments.name', 'LIKE', '%' . $description . '%')
-                                ->orWhereHas('category', function ($q2) use ($description) {
-                                    $q2->where('name', 'LIKE', '%' . $description . '%');
-                                })
-                                ->orWhereHas('user', function ($q2) use ($description) {
-                                    $q2->where('name', 'LIKE', '%' . $description . '%');
-                                });
-                        });
-                    })
-                    ->orderBy('equipments.created_at', 'desc')
-                    ->paginate(20)
-                    ->toArray(); // Converte para array garantindo que salve com sucesso no seu Redis
-            });
+            $equipments = Cache::tags('equipments-list')->remember(
+                $cacheKey,
+                now()->addMinutes(5),
+                function () use ($description) {
+                    return Equipment::query()
+                        ->select(
+                            'equipments.id',
+                            'equipments.name',
+                            'equipments.description',
+                            'equipments.category_id',
+                            'equipments.user_id',
+                            'equipments.obs',
+                            'equipments.created_at'
+                        )
+                        ->with([
+                            'category:id,name',
+                            'user:id,name'
+                        ])
+                        ->when(
+                            !empty($description),
+                            function ($query) use ($description) {
+                                $query->where(function ($q) use ($description) {
 
-            return response($equipments, 200);
-        } catch (\Exception $e) { // Corrigido para \Exception global por segurança
-            return response([
+                                    // Busca pelo nome do equipamento
+                                    $q->whereRaw(
+                                        'unaccent(equipments.name) ILIKE unaccent(?)',
+                                        ["%{$description}%"]
+                                    )
+
+                                        // Busca pela categoria
+                                        ->orWhereHas('category', function ($q2) use ($description) {
+                                            $q2->whereRaw(
+                                                'unaccent(name) ILIKE unaccent(?)',
+                                                ["%{$description}%"]
+                                            );
+                                        })
+
+                                        // Busca pelo usuário
+                                        ->orWhereHas('user', function ($q2) use ($description) {
+                                            $q2->whereRaw(
+                                                'unaccent(name) ILIKE unaccent(?)',
+                                                ["%{$description}%"]
+                                            );
+                                        });
+                                });
+                            }
+                        )
+                        ->orderByDesc('equipments.created_at')
+                        ->orderByDesc('equipments.id')
+                        ->paginate(20)
+                        ->toArray();
+                }
+            );
+
+            return response()->json($equipments, 200);
+        } catch (\Exception $e) {
+            return response()->json([
                 'message' => 'Não foi possível obter os equipamentos',
                 'error' => $e->getMessage()
             ], 500);
@@ -164,19 +187,21 @@ class EquipmentController extends Controller
             // Make validation with Validator
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'description' => 'string|max:255|nullable',
+                'description' => 'string|nullable',
                 'category_id' => 'required|exists:categories,id',
                 'user_id' => 'required|exists:users,id',
-                'obs' => 'string|max:255|nullable',
+                'obs' => 'string|nullable',
             ]);
 
             if ($validator->fails()) {
                 return response($validator->errors(), 400);
             }
 
+            $validated = $validator->validated();
+
             $equipment = Equipment::findOrFail($id);
 
-            $equipment->update($data);
+            $equipment->update($validated);
 
             Cache::tags('equipments-list')->flush();
             Cache::tags('customer-equipments-list')->flush();
@@ -350,41 +375,56 @@ class EquipmentController extends Controller
                 ], 404);
             }
 
-            $description = trim($request->description ?? '');
+            $description = trim($request->input('description', ''));
 
             $cacheKey = 'equipments:customer:filter:' . $user->id . ':' . $description;
 
-            $equipmentsCache = Cache::tags('customer-equipments-list')->remember($cacheKey, now()->addMinutes(5), function () use ($user, $description) {
-                $equipments = $user->equipments()
-                    ->select(
-                        'equipments.id',
-                        'equipments.name',
-                        'equipments.description',
-                        'equipments.category_id',
-                        'equipments.obs',
-                        'equipments.created_at'
-                    )
-                    ->with([
-                        'category:id,name',
-                    ])
-                    ->when($description !== '', function ($query) use ($description) {
-                        $query->where(function ($query) use ($description) {
-                            $query->where('equipments.name', 'LIKE', "%{$description}%")
-                                ->orWhereHas('category', function ($query) use ($description) {
-                                    $query->where('name', 'LIKE', "%{$description}%");
+            $equipmentsCache = Cache::tags('customer-equipments-list')->remember(
+                $cacheKey,
+                now()->addMinutes(5),
+                function () use ($user, $description) {
+
+                    return $user->equipments()
+                        ->select(
+                            'equipments.id',
+                            'equipments.name',
+                            'equipments.description',
+                            'equipments.category_id',
+                            'equipments.obs',
+                            'equipments.created_at'
+                        )
+                        ->with([
+                            'category:id,name',
+                        ])
+                        ->when(
+                            !empty($description),
+                            function ($query) use ($description) {
+                                $query->where(function ($q) use ($description) {
+
+                                    // Busca pelo nome do equipamento
+                                    $q->whereRaw(
+                                        'unaccent(equipments.name) ILIKE unaccent(?)',
+                                        ["%{$description}%"]
+                                    )
+
+                                        // Busca pelo nome da categoria
+                                        ->orWhereHas('category', function ($category) use ($description) {
+                                            $category->whereRaw(
+                                                'unaccent(name) ILIKE unaccent(?)',
+                                                ["%{$description}%"]
+                                            );
+                                        });
                                 });
-                        });
-                    })
-                    ->orderBy('equipments.created_at', 'desc')
-                    ->paginate(20);
+                            }
+                        )
+                        ->orderByDesc('equipments.created_at')
+                        ->paginate(20);
+                }
+            );
 
-                return $equipments;
-            });
-
-
-            return response($equipmentsCache, 200);
+            return response()->json($equipmentsCache, 200);
         } catch (\Exception $e) {
-            return response([
+            return response()->json([
                 'message' => 'Não foi possível obter os equipamentos',
                 'error' => $e->getMessage()
             ], 500);

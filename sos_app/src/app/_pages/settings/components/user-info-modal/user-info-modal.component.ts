@@ -190,6 +190,9 @@ export class UserInfoModalComponent implements OnInit {
   }
 
   verifyCep() {
+    if (!this.userForm.get('cep')?.value) {
+      return;
+    }
     this.cepService.getCep(this.userForm.get('cep')?.value).subscribe((res) => {
       if (res) {
         console.log(res);

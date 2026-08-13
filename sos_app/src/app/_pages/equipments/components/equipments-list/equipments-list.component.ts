@@ -20,17 +20,17 @@ import {
   IonSpinner,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonNote,
   IonText,
+  IonNote,
 } from '@ionic/angular/standalone';
-
+import { addIcons } from 'ionicons';
+import { person } from 'ionicons/icons';
 @Component({
   selector: 'app-equipments-list',
   templateUrl: './equipments-list.component.html',
   styleUrls: ['./equipments-list.component.scss'],
   imports: [
     IonText,
-    IonNote,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonSpinner,
@@ -43,6 +43,7 @@ import {
     IonCard,
     IonItem,
     AsyncPipe,
+    IonNote,
   ],
 })
 export class EquipmentsListComponent {
@@ -58,6 +59,7 @@ export class EquipmentsListComponent {
   isLoading$ = this.loadingService.isLoading$;
 
   constructor() {
+    addIcons({ person });
     effect((onCleanup) => {
       const filters = this.filters();
 

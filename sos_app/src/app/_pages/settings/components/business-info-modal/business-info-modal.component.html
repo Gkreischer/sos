@@ -8,7 +8,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+@let businesInfo = this.businessInfo$ | async;
 <ion-content data-cy="business-info-modal">
   <ion-card>
     <ion-card-content>
@@ -17,18 +17,18 @@
         (ngSubmit)="businessAlreadyExists ? update() : submit()"
       >
         <ion-grid>
-          @if (this.form.get("image")?.value) {
+          @if (businesInfo) {
             <ion-row>
               <ion-col class="ion-flex ion-justify-content-center">
                 <ion-card class="custom-width">
-                  <ion-img [src]="form.get('image')?.value"></ion-img>
+                  <ion-img [src]="businesInfo.image"></ion-img>
                 </ion-card>
               </ion-col>
             </ion-row>
           }
           <ion-row class="ion-text-center">
             <ion-col>
-              <ion-button (click)="selectImage()">
+              <ion-button (click)="takePicture()">
                 <ion-icon name="camera"></ion-icon>
                 <ion-label>Selecionar foto</ion-label>
               </ion-button>

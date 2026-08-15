@@ -76,7 +76,7 @@ O sistema utiliza Docker Compose para orquestrar todos os serviços necessários
 
 ## ⚙️ Configuração
 
-### 1. Banco de Dados MariaDB
+### 1. Banco de Dados Postgresql
 No arquivo `pgsql.example.env`, você precisa alterar a senha do usuário `sos` e renomear para `pgsql.env`:
 
 ```env

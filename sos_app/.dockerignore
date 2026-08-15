@@ -1,0 +1,16 @@
+# .dockerignore for sos_app Dockerfile
+node_modules/
+npm-debug.log
+Dockerfile
+.dockerignore
+.git/
+.gitignore
+*.md
+.env
+.vscode/
+__pycache__/
+*.pyc
+.pytest_cache/
+coverage/
+dist/
+www/

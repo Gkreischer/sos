@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonApp,
   IonRouterOutlet,
@@ -13,6 +13,7 @@ import { LoginService } from 'shared';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { NotificationService } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

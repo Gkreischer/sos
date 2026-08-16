@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import { Observable } from 'rxjs';
 import { CategoryInterface } from 'shared';
 import { CategoryService } from 'src/app/_services/category.service';
@@ -21,6 +21,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories-list',
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.scss'],

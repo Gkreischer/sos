@@ -1,4 +1,4 @@
-import { Component, inject, effect, OnInit } from '@angular/core';
+import {Component, inject, effect, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import {
   IonCard,
@@ -14,6 +14,7 @@ import {
 } from '@ionic/angular/standalone';
 import { CurrencyPipe } from '@angular/common';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-customer-revenue-list',
   imports: [
     IonNote,

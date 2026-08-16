@@ -1,13 +1,13 @@
-import { Component, signal } from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy, effect, inject, DestroyRef} from '@angular/core';
 import { Observable } from 'rxjs';
 import { PartInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
 import { PartModalComponent } from '../part-modal/part-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
-import { effect, inject } from '@angular/core';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { LoadingService } from 'shared';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonInfiniteScroll,
   IonCard,
@@ -27,6 +27,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-parts-list',
   templateUrl: './parts-list.component.html',
   styleUrls: ['./parts-list.component.scss'],
@@ -62,18 +63,24 @@ export class PartsListComponent {
 
   isLoading$ = this.loadingService.isLoading$;
 
-  constructor() {
-    effect((onCleanup) => {
+    private destroyRef = inject(DestroyRef);
+
+constructor() {
+    this.getParts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res) => {
+      if (res.current_page >= res.last_page) {
+        this.infiniteScroll.set(false);
+      }
+    });
+
+    // Watch for filter changes and reset
+    effect(() => {
       this.partsPage = 1;
       this.infiniteScroll.set(true);
       const partFilters = this.partService.partFilters();
-      const subscription = this.getParts().subscribe((res) => {
+      this.getParts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res) => {
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }
-      });
-      onCleanup(() => {
-        subscription.unsubscribe();
       });
     });
   }
@@ -83,8 +90,8 @@ export class PartsListComponent {
   }
 
   getAll() {
-    this.partService.getParts().subscribe(() => {
-      this.parts = this.partService.parts;
+    this.partService.getParts(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res) => {
+      this.infiniteScroll.set(res.current_page >= res.last_page);
     });
   }
 
@@ -97,8 +104,6 @@ export class PartsListComponent {
 
     this.getParts().subscribe({
       next: (res) => {
-        this.parts = this.partService.parts;
-
         if (res.current_page >= res.last_page) {
           this.infiniteScroll.set(false);
         }

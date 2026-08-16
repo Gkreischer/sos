@@ -8,8 +8,15 @@
 </ion-header>
 
 <ion-content data-cy="equipments-page">
-  <app-equipment-filter></app-equipment-filter>
-  <app-equipments-list></app-equipments-list>
+  @defer (on viewport) {
+    <app-equipment-filter></app-equipment-filter>
+    <app-equipments-list></app-equipments-list>
+  } @placeholder {
+    <div class="ion-padding ion-text-center">
+      <ion-spinner></ion-spinner>
+      <p>Carregando equipamentos...</p>
+    </div>
+  }
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="openModal()" color="tertiary">
       <ion-icon name="add-sharp"></ion-icon>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonGrid,
   IonRow,
@@ -41,6 +41,7 @@ import { PhotoService } from 'shared';
 import { filter, take, exhaustMap } from 'rxjs';
 import { CepService } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile-info',
   imports: [
     IonNote,

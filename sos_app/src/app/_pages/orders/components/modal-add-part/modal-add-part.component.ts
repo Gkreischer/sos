@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import { SearchbarCustomEvent } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { PartInterface } from 'shared';
@@ -34,6 +34,7 @@ import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-modal-add-part',
   templateUrl: './modal-add-part.component.html',
   styleUrls: ['./modal-add-part.component.scss'],

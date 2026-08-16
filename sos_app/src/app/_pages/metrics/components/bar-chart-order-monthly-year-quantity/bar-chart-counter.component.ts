@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import {Component, effect, inject, OnInit, AfterViewInit, ChangeDetectionStrategy, viewChild} from '@angular/core';
 import { ChartData } from 'chart.js';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import zoomPlugin from 'chartjs-plugin-zoom';
@@ -17,6 +17,7 @@ import {
 Chart.register(zoomPlugin);
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-bar-chart-counter',
   templateUrl: './bar-chart-counter.component.html',
   styleUrls: ['./bar-chart-counter.component.scss'],
@@ -29,11 +30,11 @@ Chart.register(zoomPlugin);
     BaseChartDirective,
   ],
 })
-export class BarChartCounterComponent implements OnInit {
+export class BarChartCounterComponent implements OnInit, AfterViewInit {
   metricsService = inject(MetricsService);
+  chart = viewChild.required(BaseChartDirective);
 
   barChartOptions = barChartOptions;
-
   barChartType = chartTypes.bar;
 
   public barChartData: ChartData<'bar'> = {
@@ -56,6 +57,11 @@ export class BarChartCounterComponent implements OnInit {
     this.getOrdersByMonthMetrics();
   }
 
+  ngAfterViewInit() {
+    // Force chart update after view init (needed for @defer + OnPush)
+    this.updateChart();
+  }
+
   getOrdersByMonthMetrics() {
     const period = {
       startDate: this.metricsService.startDate,
@@ -64,15 +70,17 @@ export class BarChartCounterComponent implements OnInit {
     this.metricsService
       .getOrdersCountByMonthMetrics(period)
       .subscribe((data) => {
-        this.barChartData = {
-          labels: data.map((item) => item.month),
-          datasets: [
-            {
-              data: data.map((item) => item.count),
-              label: 'Quantidade de OS por mês e ano',
-            },
-          ],
-        };
+        // Mutate data instead of replacing to work with OnPush + Chart.js
+        this.barChartData.labels = data.map((item) => item.month);
+        this.barChartData.datasets[0].data = data.map((item) => item.count);
+        this.updateChart();
       });
+  }
+
+  private updateChart() {
+    const chartDirective = this.chart();
+    if (chartDirective?.chart) {
+      chartDirective.chart.update();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
@@ -28,6 +28,7 @@ import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { LoginService } from 'shared';
 import { IonInputPasswordToggle } from '@ionic/angular/standalone';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-user-password-modal',
   standalone: true,
   templateUrl: './user-password-modal.component.html',

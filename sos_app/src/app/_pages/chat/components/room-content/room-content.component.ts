@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonList,
   IonLabel,
@@ -43,6 +43,7 @@ import { RoomModalComponent } from './../room-modal/room-modal.component';
 import { addIcons } from 'ionicons';
 import { addSharp, trashSharp, pencilSharp, arrowBack } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-room-content',
   templateUrl: './room-content.component.html',
   styleUrls: ['./room-content.component.scss'],

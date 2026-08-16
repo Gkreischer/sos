@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -58,6 +58,7 @@ import {
   trash,
 } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-room-modal',
   templateUrl: './room-modal.component.html',
   styleUrls: ['./room-modal.component.scss'],

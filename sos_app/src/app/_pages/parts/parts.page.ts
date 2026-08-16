@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartModalComponent } from './components/part-modal/part-modal.component';
 import { PartFilterComponent } from './components/part-filter/part-filter.component';
@@ -15,26 +15,30 @@ import {
   IonFabButton,
   IonIcon,
   IonMenuButton,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addSharp } from 'ionicons/icons';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-parts',
   templateUrl: './parts.page.html',
   styleUrls: ['./parts.page.scss'],
   imports: [
-    IonIcon,
-    IonFabButton,
-    IonFab,
-    IonContent,
-    IonButtons,
-    IonTitle,
-    IonToolbar,
-    IonHeader,
-    PartFilterComponent,
-    PartsListComponent,
-    IonMenuButton,
-  ],
+      IonIcon,
+      IonSpinner,
+      IonFabButton,
+      IonFab,
+      IonContent,
+      IonButtons,
+      IonTitle,
+      IonToolbar,
+      IonHeader,
+      PartFilterComponent,
+      PartsListComponent,
+      IonMenuButton,
+    ],
 })
 export class PartsPage implements ViewWillEnter {
   modalService = inject(ModalService);

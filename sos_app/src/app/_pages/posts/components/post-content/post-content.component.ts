@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { PostInterface } from 'shared';
 import {
   IonHeader,
@@ -38,6 +38,7 @@ import { ToastService } from 'src/app/_services/toast.service';
 import { addIcons } from 'ionicons';
 import { arrowBack } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-post-content',
   templateUrl: './post-content.component.html',
   styleUrls: ['./post-content.component.scss'],

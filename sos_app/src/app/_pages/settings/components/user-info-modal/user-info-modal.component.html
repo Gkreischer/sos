@@ -14,18 +14,18 @@
     <ion-card-content>
       @if (this.user | async) {
         <form [formGroup]="userForm" (ngSubmit)="updateUser()">
-          @if (this.userForm.get("image")?.value) {
-            <ion-row>
-              <ion-col>
-                <ion-card>
-                  <ion-img
-                    width="25%"
-                    [src]="userForm.get('image')?.value"
-                  ></ion-img>
-                </ion-card>
-              </ion-col>
-            </ion-row>
-          }
+          @if (avatarPreview()) {
+                      <ion-row>
+                        <ion-col>
+                          <ion-card>
+                            <ion-img
+                              width="25%"
+                              [src]="avatarPreview()"
+                            ></ion-img>
+                          </ion-card>
+                        </ion-col>
+                      </ion-row>
+                    }
           <ion-row class="ion-text-center">
             <ion-col>
               <ion-button (click)="takePicture()">

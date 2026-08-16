@@ -8,6 +8,13 @@
 </ion-header>
 
 <ion-content>
-  <app-ticket-filter></app-ticket-filter>
-  <app-tickets-list></app-tickets-list>
+  @defer (on viewport) {
+    <app-ticket-filter></app-ticket-filter>
+    <app-tickets-list></app-tickets-list>
+  } @placeholder {
+    <div class="ion-padding ion-text-center">
+      <ion-spinner></ion-spinner>
+      <p>Carregando chamados...</p>
+    </div>
+  }
 </ion-content>

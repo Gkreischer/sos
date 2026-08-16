@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import {Component, inject, OnInit, signal, effect, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -32,6 +32,7 @@ import {
 import { addIcons } from 'ionicons';
 import { search } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-filter',
   templateUrl: './order-filter.component.html',
   styleUrls: ['./order-filter.component.scss'],

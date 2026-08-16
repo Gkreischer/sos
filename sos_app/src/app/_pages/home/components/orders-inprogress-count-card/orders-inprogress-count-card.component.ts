@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import {
   IonSkeletonText,
@@ -12,6 +12,7 @@ import {
 import { addIcons } from 'ionicons';
 import { hourglass } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-inprogress-count-card',
   imports: [
     IonItem,

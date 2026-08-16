@@ -1,4 +1,4 @@
-import { Component, effect, OnInit } from '@angular/core';
+import {Component, effect, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { inject } from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { CurrencyPipe } from '@angular/common';
@@ -16,6 +16,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-technician-data-list',
   templateUrl: './technician-data-list.component.html',
   styleUrls: ['./technician-data-list.component.scss'],

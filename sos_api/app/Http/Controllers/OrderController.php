@@ -276,7 +276,7 @@ class OrderController extends Controller
         try {
 
             $order = DB::transaction(function () use ($request, $data) {
-                $data['user_id'] = auth('sanctum')->user()->id;
+                $data['attendant_id'] = auth('sanctum')->user()->id;
                 $order = Order::create($data);
 
                 if (!empty($data['ticket_id'])) {

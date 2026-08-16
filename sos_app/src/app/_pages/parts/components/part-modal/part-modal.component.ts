@@ -1,10 +1,11 @@
-import {
-  AfterViewInit,
+import {AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
   inject,
-} from '@angular/core';
+  ChangeDetectionStrategy,
+  signal,
+  computed} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -57,6 +58,7 @@ import { addIcons } from 'ionicons';
 import { camera, arrowBack, trash } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-part-modal',
   templateUrl: './part-modal.component.html',
   styleUrls: ['./part-modal.component.scss'],
@@ -107,6 +109,10 @@ export class PartModalComponent implements OnInit {
 
   partSubscription!: Subscription;
 
+  // Signal for picture preview reactivity
+  private imageSignal = signal<string | null>(null);
+  imagePreview = computed(() => this.imageSignal() || this.formPart?.get('image')?.value || null);
+
   priceMask: MaskitoOptions = priceMask;
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
@@ -130,6 +136,11 @@ export class PartModalComponent implements OnInit {
         ...part,
         price: maskitoTransform(part.price.toString(), priceMask),
       });
+      // Use image from part, or fallback to service's cached parts
+      const image = part.image || this.partService.getCachedImage(this.partId);
+      if (image) {
+        this.imageSignal.set(image);
+      }
     });
   }
 
@@ -200,6 +211,7 @@ export class PartModalComponent implements OnInit {
       return;
     }
     this.formPart.get('image')?.setValue(response.imagePath);
+    this.imageSignal.set(response.imagePath);
     this.toastService.presentToast(response.message, 'bottom', 3000, 'success');
   }
 
@@ -218,7 +230,9 @@ export class PartModalComponent implements OnInit {
       return;
     }
 
-    this.formPart.get('image')?.setValue(image.webviewPath);
+    const webviewPath = image.webviewPath || '';
+    this.formPart.get('image')?.setValue(webviewPath);
+    this.imageSignal.set(webviewPath);
   }
 
   async confirmDelete() {

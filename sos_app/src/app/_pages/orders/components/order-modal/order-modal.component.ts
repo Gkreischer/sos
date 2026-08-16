@@ -4,6 +4,10 @@ import {
   inject,
   OnInit,
   viewChild,
+  ChangeDetectionStrategy,
+  computed,
+  linkedSignal,
+  signal,
 } from '@angular/core';
 import {
   FormArray,
@@ -87,6 +91,7 @@ import { EquipmentOrderHistoryModalComponent } from '../equipment-order-history-
 import { TicketInterface } from 'shared';
 import { LoginService } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-modal',
   templateUrl: './order-modal.component.html',
   styleUrls: ['./order-modal.component.scss'],
@@ -158,6 +163,55 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   priceMask = priceMask;
   dateMask = dateMask;
 
+  // Use form valueChanges to trigger computed updates
+  private formChanges = signal(0);
+
+  // Signal for pictures preview reactivity
+  private picturesSignal = signal<string[]>([]);
+  picturesPreview = computed(() => {
+    const pics = this.picturesSignal();
+    if (pics.length > 0) return pics;
+    return (
+      this.pictures?.controls
+        .map((c) => c.get('webPath')?.value || c.get('path')?.value)
+        .filter(Boolean) || []
+    );
+  });
+
+  // Computed signals for derived state (replaces getters)
+  totalPartsPrice = computed(() => {
+    this.formChanges(); // Trigger recomputation when form changes
+    const partsArray = this.parts;
+    if (!partsArray) return 0;
+    return partsArray.controls.reduce((total: number, part: any) => {
+      const quantity = this.moneyService.parse(part.get('quantity')?.value);
+      const price = this.moneyService.parse(part.get('price')?.value);
+      return total + quantity * price;
+    }, 0);
+  });
+
+  servicePrice = computed(() => {
+    this.formChanges();
+    return this.moneyService.parse(this.orderForm?.get('service_price')?.value);
+  });
+
+  discount = computed(() => {
+    this.formChanges();
+    return this.moneyService.parse(this.orderForm?.get('discount')?.value);
+  });
+
+  totalPrice = computed(() => {
+    this.formChanges();
+    return this.totalPartsPrice() + this.servicePrice() - this.discount();
+  });
+
+  // linkedSignal: when orderId changes, reset form state
+  // Note: linkedSignal API - source is a function returning the source value
+  // resetFormOnOrderChange = linkedSignal(() => this.orderId ?? 0, () => {
+  //   this.orderForm?.reset();
+  //   this.patchFormTotalPrice();
+  // });
+
   public signaturePadOptions: NgSignaturePadOptions = {
     minWidth: 5,
     canvasWidth: 500,
@@ -209,27 +263,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     return this.orderForm.get('parts') as FormArray;
   }
 
-  get totalPartsPrice() {
-    return this.parts.controls.reduce((total, part) => {
-      const quantity = this.moneyService.parse(part.get('quantity')?.value);
-      const price = this.moneyService.parse(part.get('price')?.value);
-
-      return total + quantity * price;
-    }, 0);
-  }
-
-  get servicePrice() {
-    return this.moneyService.parse(this.orderForm.get('service_price')?.value);
-  }
-
-  get discount(): number {
-    return this.moneyService.parse(this.orderForm.get('discount')?.value);
-  }
-
-  get totalPrice() {
-    return this.totalPartsPrice + this.servicePrice - this.discount;
-  }
-
   ngAfterViewInit() {
     this.signaturePad()!.changeBackgroundColor('#61C2FF');
     this.signaturePad()!.clear();
@@ -277,6 +310,13 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
       discount: [0],
       pictures: this.formBuilder.array([]),
     });
+
+    // Subscribe to form changes to trigger computed signal updates
+    this.orderForm.valueChanges.subscribe(() => {
+      this.formChanges.update((v) => v + 1);
+    });
+
+    console.log(this.loginService.userSubject.value?.id);
   }
 
   get pictures() {
@@ -291,6 +331,10 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
         format: [picture.format],
       }),
     );
+    // Trigger computed update for FormArray changes
+    this.formChanges.update((v) => v + 1);
+    // Update pictures preview signal
+    this.picturesSignal.update((arr) => [...arr, picture.webPath || '']);
   }
 
   disabledSelectForDeliveredStatus() {
@@ -305,8 +349,8 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
   patchFormTotalPrice() {
     this.orderForm &&
       this.orderForm.patchValue({
-        parts_price: this.totalPartsPrice,
-        total_price: this.totalPrice.toFixed(2),
+        parts_price: this.totalPartsPrice(),
+        total_price: this.totalPrice().toFixed(2),
       });
   }
 
@@ -325,6 +369,8 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
         }),
       );
     });
+    // Trigger computed update for FormArray changes
+    this.formChanges.update((v) => v + 1);
   }
 
   addPictures(pictures: PictureInterface[]) {
@@ -338,6 +384,11 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
         }),
       );
     });
+    // Update pictures preview signal
+    this.picturesSignal.update((arr) => [
+      ...arr,
+      ...pictures.map((p) => p.path || p.webPath || ''),
+    ]);
   }
 
   addPart(part: PartInterface) {
@@ -349,10 +400,14 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
         price: [part.price, [Validators.required]],
       }),
     );
+    // Trigger computed update for FormArray changes
+    this.formChanges.update((v) => v + 1);
   }
 
   removePart(index: number) {
     this.parts.removeAt(index);
+    // Trigger computed update for FormArray changes
+    this.formChanges.update((v) => v + 1);
   }
 
   getUserEquipments() {
@@ -423,6 +478,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     if (this.ticket) {
       orderData.ticket_id = this.ticket.id;
     }
+    console.log(orderData);
     this.orderService
       .create(orderData, this.pictures.value)
       .subscribe((order) => {

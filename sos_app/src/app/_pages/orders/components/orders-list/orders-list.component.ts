@@ -1,4 +1,4 @@
-import { Component, inject, Signal, signal } from '@angular/core';
+import { Component, inject, Signal, signal, ChangeDetectionStrategy, effect, DestroyRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
@@ -9,11 +9,11 @@ import { map } from 'rxjs';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 
 import { OrderFilterInterface } from 'shared';
-import { effect } from '@angular/core';
 import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { LoadingService } from 'shared';
 import { addIcons } from 'ionicons';
 import { calendar, hardwareChip, person } from 'ionicons/icons';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonCard,
   IonCardHeader,
@@ -34,6 +34,7 @@ import {
   selector: 'app-orders-list',
   templateUrl: './orders-list.component.html',
   styleUrls: ['./orders-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IonIcon,
     IonInfiniteScrollContent,
@@ -63,30 +64,40 @@ export class OrdersListComponent {
     this.orderService.orderFilters;
 
   isLoading$ = this.loadingService.isLoading$;
+  private destroyRef = inject(DestroyRef);
+  
   constructor() {
-    addIcons({
-      calendar,
-      hardwareChip,
-      person,
-    });
-    effect((onCleanup) => {
-      const filters = this.orderFilters();
-
-      this.ordersPage = 1;
-      this.infiniteScroll.set(true);
-
-      const subscription = this.orderService
-        .getAll(this.ordersPage, filters ?? undefined)
+      addIcons({
+        calendar,
+        hardwareChip,
+        person,
+      });
+      this.orderService
+        .getAll(this.ordersPage, this.orderFilters())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((res) => {
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
         });
-      onCleanup(() => {
-        subscription.unsubscribe();
+
+      // Watch for filter changes and reset
+      effect(() => {
+        const filters = this.orderFilters();
+
+        this.ordersPage = 1;
+        this.infiniteScroll.set(true);
+
+        this.orderService
+          .getAll(this.ordersPage, filters ?? undefined)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((res) => {
+            if (res.current_page >= res.last_page) {
+              this.infiniteScroll.set(false);
+            }
+          });
       });
-    });
-  }
+    }
 
   openModal(order: OrderInterface) {
     this.modalService.openModal(
@@ -97,15 +108,16 @@ export class OrdersListComponent {
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
-    this.ordersPage++;
+      this.ordersPage++;
 
-    this.orderService
-      .getAll(this.ordersPage, this.orderService.orderFilters())
-      .subscribe((res) => {
-        event.target.complete();
-        if (res.current_page >= res.last_page) {
-          this.infiniteScroll.set(false);
-        }
-      });
-  }
+      this.orderService
+        .getAll(this.ordersPage, this.orderService.orderFilters())
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((res) => {
+          event.target.complete();
+          if (res.current_page >= res.last_page) {
+            this.infiniteScroll.set(false);
+          }
+        });
+    }
 }

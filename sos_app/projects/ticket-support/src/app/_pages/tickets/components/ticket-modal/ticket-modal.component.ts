@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { ModalService } from 'shared';
 import {
   IonTitle,
@@ -41,6 +41,7 @@ import { EquipmentService } from '@ticket/app/_services/equipment.service';
 import { EquipmentInterface } from 'shared';
 import { TicketInterface } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ticket-modal',
   imports: [
     IonNote,

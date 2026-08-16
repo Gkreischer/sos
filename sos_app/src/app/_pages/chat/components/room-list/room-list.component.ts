@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, OnInit, signal, ChangeDetectionStrategy} from '@angular/core';
 import { RoomService } from 'src/app/_services/room.service';
 import { inject } from '@angular/core';
 import { RoomInterface } from 'shared';
@@ -26,6 +26,7 @@ import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { RoomContentComponent } from './../room-content/room-content.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-room-list',
   templateUrl: './room-list.component.html',
   styleUrls: ['./room-list.component.scss'],

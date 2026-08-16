@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import {
   IonCard,
@@ -13,6 +13,7 @@ import {
 import { addIcons } from 'ionicons';
 import { peopleSharp } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-total-clients-count-card',
   imports: [
     IonLabel,

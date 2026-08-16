@@ -1,11 +1,11 @@
-import {
-  Component,
+import {Component,
   inject,
   OnInit,
   effect,
   Signal,
   signal,
-} from '@angular/core';
+  ChangeDetectionStrategy,
+  DestroyRef} from '@angular/core';
 import {
   IonCard,
   IonCardContent,
@@ -33,8 +33,10 @@ import { addIcons } from 'ionicons';
 import { person, calendar } from 'ionicons/icons';
 import { TicketFilterInterface } from 'shared';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-tickets-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IonText,
     IonInfiniteScrollContent,
@@ -71,29 +73,38 @@ export class TicketsListComponent {
   ticketsPage: number = 1;
   infiniteScroll = signal(true);
 
-  constructor() {
-    addIcons({
-      person,
-      calendar,
-    });
-    effect((onCleanup) => {
-      const filters = this.ticketFilters();
+    private destroyRef = inject(DestroyRef);
 
-      this.ticketsPage = 1;
-      this.infiniteScroll.set(true);
-
-      const subscription = this.ticketService
-        .getAll(this.ticketsPage, filters ?? undefined)
+constructor() {
+      addIcons({
+        person,
+        calendar,
+      });
+      this.ticketService
+        .getAll(this.ticketsPage, this.ticketFilters())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((res) => {
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
         });
-      onCleanup(() => {
-        subscription.unsubscribe();
+
+      // Watch for filter changes and reset
+      effect(() => {
+        const filters = this.ticketFilters();
+        this.ticketsPage = 1;
+        this.infiniteScroll.set(true);
+
+        this.ticketService
+          .getAll(this.ticketsPage, filters ?? undefined)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((res) => {
+            if (res.current_page >= res.last_page) {
+              this.infiniteScroll.set(false);
+            }
+          });
       });
-    });
-  }
+    }
 
   openModalTicket(ticket: TicketInterface) {
     this.modalService.openModal(TicketModalComponent, { ticketId: ticket.id });

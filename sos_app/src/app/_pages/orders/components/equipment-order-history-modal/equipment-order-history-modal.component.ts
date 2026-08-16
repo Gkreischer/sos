@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -38,6 +38,7 @@ import { CurrencyPipe } from '@angular/common';
 import { OrderModalComponent } from 'src/app/_pages/orders/components/order-modal/order-modal.component';
 import { LoadingService } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-equipment-order-history-modal',
   imports: [
     IonSpinner,

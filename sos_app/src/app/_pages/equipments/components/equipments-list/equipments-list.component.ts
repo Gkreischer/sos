@@ -1,13 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import {Component, inject, signal, ChangeDetectionStrategy, effect, DestroyRef} from '@angular/core';
 import { Observable } from 'rxjs';
 import { EquipmentInterface } from 'shared';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { EquipmentModalComponent } from '../equipment-modal/equipment-modal.component';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
-import { effect } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from 'shared';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonItem,
   IonCard,
@@ -26,6 +26,7 @@ import {
 import { addIcons } from 'ionicons';
 import { person } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-equipments-list',
   templateUrl: './equipments-list.component.html',
   styleUrls: ['./equipments-list.component.scss'],
@@ -58,24 +59,33 @@ export class EquipmentsListComponent {
   filters = this.equipmentService.equipmentFilter;
   isLoading$ = this.loadingService.isLoading$;
 
-  constructor() {
-    addIcons({ person });
-    effect((onCleanup) => {
-      const filters = this.filters();
+    private destroyRef = inject(DestroyRef);
 
+constructor() {
+    addIcons({ person });
+    this.equipmentService
+      .getEquipments(this.equipmentsPage, this.filters())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        if (res.current_page >= res.last_page) {
+          this.infiniteScroll.set(false);
+        }
+      });
+
+    // Watch for filter changes and reset
+    effect(() => {
+      const filters = this.filters();
       this.equipmentsPage = 1;
       this.infiniteScroll.set(true);
-
-      const subscription = this.equipmentService
+      
+      this.equipmentService
         .getEquipments(this.equipmentsPage, filters)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((res) => {
           if (res.current_page >= res.last_page) {
             this.infiniteScroll.set(false);
           }
         });
-      onCleanup(() => {
-        subscription.unsubscribe();
-      });
     });
   }
 

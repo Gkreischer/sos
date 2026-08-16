@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonCard,
   IonCardHeader,
@@ -24,6 +24,7 @@ import { TicketService } from 'src/app/_services/ticket.service';
 import { addIcons } from 'ionicons';
 import { search } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ticket-filter',
   imports: [
     IonIcon,

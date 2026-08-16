@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { ActivatedRoute } from '@angular/router';
 import { inject } from '@angular/core';
@@ -7,6 +7,7 @@ import { IonGrid, IonRow, IonCol, IonButton } from '@ionic/angular/standalone';
 import { NgxPrintDirective } from 'ngx-print';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-qrcode-print',
   standalone: true,
   templateUrl: './qrcode-print.component.html',

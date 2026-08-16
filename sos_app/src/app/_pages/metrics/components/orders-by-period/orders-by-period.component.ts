@@ -1,6 +1,6 @@
-import { Component, inject, effect, signal, OnDestroy } from '@angular/core';
+import {Component, inject, effect, signal, OnDestroy, ChangeDetectionStrategy, DestroyRef} from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonItem,
   IonList,
@@ -39,6 +39,7 @@ import { OrderModalComponent } from 'src/app/_pages/orders/components/order-moda
 import { SpreadSheetService } from 'src/app/_services/spreadsheet.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-by-period',
   imports: [
     IonCardTitle,
@@ -69,9 +70,10 @@ export class OrdersByPeriodComponent {
   spreadSheetService = inject(SpreadSheetService);
   ordersByPeriod$ = this.metricsService.ordersByPeriod;
 
-  subscription?: Subscription;
   infiniteScroll = signal(true);
   page: number = 1;
+  
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     addIcons({
@@ -82,7 +84,10 @@ export class OrdersByPeriodComponent {
       cloudDownload,
       bagHandle,
     });
-    effect((onCleanup) => {
+    this.getOrdersByPeriod().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+
+    // Watch for date changes and reset
+    effect(() => {
       const startDate = this.metricsService.startDate;
       const endDate = this.metricsService.endDate;
 
@@ -90,27 +95,21 @@ export class OrdersByPeriodComponent {
       this.infiniteScroll.set(true);
 
       if (startDate && endDate) {
-        this.getOrdersByPeriod();
+        this.getOrdersByPeriod().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
       }
-
-      onCleanup(() => {
-        this.subscription?.unsubscribe();
-      });
     });
   }
 
   getOrdersByPeriod() {
-    this.subscription = this.metricsService
-      .getOrdersByPeriod({
-        startDate: this.metricsService.startDate,
-        endDate: this.metricsService.endDate,
-      })
-      .subscribe();
+    return this.metricsService.getOrdersByPeriod({
+      startDate: this.metricsService.startDate,
+      endDate: this.metricsService.endDate,
+    }, this.page);
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.page++;
-    this.subscription = this.metricsService
+    this.metricsService
       .getOrdersByPeriod(
         {
           startDate: this.metricsService.startDate,
@@ -118,6 +117,7 @@ export class OrdersByPeriodComponent {
         },
         this.page,
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((res) => {
         event.target.complete();
         if (res.current_page >= res.last_page) {

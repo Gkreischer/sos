@@ -22,7 +22,7 @@ class Order extends Model
 
     protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician', 'attendant'];
 
-    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature', 'uid'];
+    protected $fillable = ['title', 'status', 'attendant_id', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature', 'uid'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -37,7 +37,7 @@ class Order extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function equipment(): BelongsTo

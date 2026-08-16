@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -32,6 +32,7 @@ import { OrderModalComponent } from '../order-modal/order-modal.component';
 import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order-client-history',
   templateUrl: './order-client-history.component.html',
   styleUrls: ['./order-client-history.component.scss'],

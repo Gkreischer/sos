@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import {Component, signal, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
@@ -37,6 +37,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],

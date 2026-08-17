@@ -1,0 +1,28 @@
+# Act configuration for local GitHub Actions testing (Podman)
+# Usage: act -j <job-name> --secret-file .secrets
+
+# Platform/image configuration
+-P ubuntu-latest=catthehacker/ubuntu:act-22.04
+-P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+-P ubuntu-20.04=catthehacker/ubuntu:act-20.04
+
+# Secrets file
+--secret-file .secrets
+
+# Environment variables for act
+--env-file .env.act
+
+# Container options - use podman socket
+--container-daemon-socket unix:///run/user/1000/podman/podman.sock
+
+# Reuse containers for faster runs
+--reuse
+
+# Remove containers after run
+--rm
+
+# Verbose output
+--verbose
+
+# Default job to run (can be overridden)
+-j ci-summary

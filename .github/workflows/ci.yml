@@ -13,16 +13,6 @@ on:
 
   workflow_dispatch:
 
-env:
-  # Frontend
-  NODE_VERSION: '22'
-  NPM_CACHE_KEY: ${{ runner.os }}-node-${{ hashFiles('sos_app/package-lock.json') }}
-  # Backend
-  PHP_VERSION: '8.5'
-  COMPOSER_CACHE_KEY: ${{ runner.os }}-composer-${{ hashFiles('sos_api/composer.lock') }}
-  # Act detection - set to 'true' when running locally with act
-  ACT: ${{ vars.ACT == 'true' || github.actor == 'nektos/act' }}
-
 jobs:
   # ============================================
   # FRONTEND JOBS (Angular/Ionic)
@@ -41,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: sos_app/package-lock.json
 
@@ -64,7 +54,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: sos_app/package-lock.json
 
@@ -78,7 +68,7 @@ jobs:
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
-        if: ${{ always() && !env.ACT }}
+        if: always()
         with:
           flags: frontend
           files: ./coverage/sos/lcov.info
@@ -98,7 +88,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: sos_app/package-lock.json
 
@@ -110,20 +100,12 @@ jobs:
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
-        if: ${{ !env.ACT }}
         with:
           name: frontend-build
           path: |
             sos_app/www/browser
             sos_app/dist/ticket-support/browser
           retention-days: 7
-
-      - name: List build output (act)
-        if: ${{ env.ACT }}
-        run: |
-          echo "Build output:"
-          ls -la www/browser/
-          ls -la dist/ticket-support/browser/
 
   frontend-e2e:
     name: Frontend - E2E Tests (Cypress)
@@ -132,7 +114,7 @@ jobs:
     defaults:
       run:
         working-directory: sos_app
-    if: ${{ !env.ACT }}
+    if: github.actor != 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -140,7 +122,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: sos_app/package-lock.json
 
@@ -198,17 +180,17 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: '8.5'
           extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
           coverage: none
           tools: composer:v2
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4
-        if: ${{ !env.ACT }}
+        if: github.actor != 'nektos/act'
         with:
           path: vendor
-          key: ${{ env.COMPOSER_CACHE_KEY }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('sos_api/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -231,17 +213,17 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: '8.5'
           extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
           coverage: none
           tools: composer:v2
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4
-        if: ${{ !env.ACT }}
+        if: github.actor != 'nektos/act'
         with:
           path: vendor
-          key: ${{ env.COMPOSER_CACHE_KEY }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('sos_api/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -262,6 +244,7 @@ jobs:
     defaults:
       run:
         working-directory: sos_api
+    if: github.actor != 'nektos/act'
     services:
       postgres:
         image: postgres:16-alpine
@@ -294,17 +277,17 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: '8.5'
           extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
           coverage: xdebug
           tools: composer:v2
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4
-        if: ${{ !env.ACT }}
+        if: github.actor != 'nektos/act'
         with:
           path: vendor
-          key: ${{ env.COMPOSER_CACHE_KEY }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('sos_api/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -336,7 +319,7 @@ jobs:
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
-        if: ${{ always() && !env.ACT }}
+        if: always()
         with:
           flags: backend
           files: ./coverage/clover.xml
@@ -352,7 +335,7 @@ jobs:
     defaults:
       run:
         working-directory: sos_api
-    if: ${{ env.ACT }}
+    if: github.actor == 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -360,7 +343,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: '8.5'
           extensions: mbstring, pdo, pdo_sqlite, sodium, pcntl
           coverage: xdebug
           tools: composer:v2
@@ -373,7 +356,7 @@ jobs:
           cp .env.example .env.testing
           php artisan key:generate --env=testing
           sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env.testing
-          sed -i 's/DB_DATABASE=.*/DB_DATABASE=\:memory:/' .env.testing
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env.testing
           sed -i 's/CACHE_DRIVER=.*/CACHE_DRIVER=array/' .env.testing
           sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env.testing
           sed -i 's/SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env.testing
@@ -394,7 +377,7 @@ jobs:
     name: Docker - Build Images
     runs-on: ubuntu-latest
     needs: [frontend-build, backend-lint, backend-test]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && !env.ACT
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && github.actor != 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -472,7 +455,7 @@ jobs:
     name: Docker - Build Images (Act)
     runs-on: ubuntu-latest
     needs: [frontend-build, backend-lint, backend-test-act]
-    if: ${{ env.ACT }}
+    if: github.actor == 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -513,7 +496,7 @@ jobs:
   security-scan:
     name: Security - Dependency Scan
     runs-on: ubuntu-latest
-    if: ${{ !env.ACT }}
+    if: github.actor != 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -554,7 +537,7 @@ jobs:
   security-scan-act:
     name: Security - Dependency Scan (Act)
     runs-on: ubuntu-latest
-    if: ${{ env.ACT }}
+    if: github.actor == 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -568,8 +551,12 @@ jobs:
       - name: Backend - Composer audit
         working-directory: sos_api
         run: |
-          composer install --prefer-dist --no-interaction --no-progress
-          composer audit --no-dev || true
+          if command -v composer &> /dev/null; then
+            composer install --prefer-dist --no-interaction --no-progress
+            composer audit --no-dev || true
+          else
+            echo "Composer not available, skipping backend audit"
+          fi
 
   # ============================================
   # SUMMARY
@@ -579,7 +566,7 @@ jobs:
     name: CI Summary
     runs-on: ubuntu-latest
     needs: [frontend-lint, frontend-test, frontend-build, frontend-e2e, backend-lint, backend-static-analysis, backend-test, docker-build, security-scan]
-    if: ${{ always() && !env.ACT }}
+    if: always() && github.actor != 'nektos/act'
     steps:
       - name: Check job statuses
         run: |
@@ -618,7 +605,7 @@ jobs:
     name: CI Summary (Act)
     runs-on: ubuntu-latest
     needs: [frontend-lint, frontend-test, frontend-build, backend-lint, backend-static-analysis, backend-test-act, docker-build-act, security-scan-act]
-    if: ${{ always() && env.ACT }}
+    if: always() && github.actor == 'nektos/act'
     steps:
       - name: Check job statuses
         run: |

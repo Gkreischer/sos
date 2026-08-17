@@ -1,0 +1,314 @@
+# Act-specific CI workflow for local testing
+# This workflow is simplified to work with 'act' locally
+# Usage: act -W .github/workflows/ci-act.yml -j <job-name> --secret-file .secrets
+
+name: CI (Act)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  PHP_VERSION: '8.5'
+  ACT: 'true'
+
+jobs:
+  # ============================================
+  # FRONTEND JOBS (Angular/Ionic)
+  # ============================================
+
+  frontend-lint:
+    name: Frontend - Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sos_app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+  frontend-test:
+    name: Frontend - Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sos_app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chrome for testing (act)
+        if: env.ACT == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          echo "CHROME_BIN=/usr/bin/google-chrome-stable" >> $GITHUB_ENV
+
+      - name: Run unit tests
+        run: npm run test -- --code-coverage --watch=false --browsers=ChromeHeadlessNoSandbox
+        env:
+          CI: true
+          CHROME_BIN: /usr/bin/google-chrome-stable
+
+  frontend-build:
+    name: Frontend - Build
+    runs-on: ubuntu-latest
+    needs: [frontend-lint, frontend-test]
+    defaults:
+      run:
+        working-directory: sos_app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sos_app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build:all
+
+      - name: List build output
+        run: |
+          echo "Build output:"
+          ls -la www/browser/
+          ls -la dist/ticket-support/browser/
+
+  # ============================================
+  # BACKEND JOBS (Laravel 12)
+  # ============================================
+
+  backend-lint:
+    name: Backend - Lint (Pint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run Pint (code style)
+        run: ./vendor/bin/pint --test
+
+  backend-static-analysis:
+    name: Backend - Static Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPStan (if available)
+        run: |
+          if [ -f vendor/bin/phpstan ]; then
+            ./vendor/bin/phpstan analyse --memory-limit=512M
+          else
+            echo "PHPStan not installed, skipping..."
+          fi
+
+  backend-test:
+    name: Backend - Tests (SQLite for speed)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_sqlite, sodium, pcntl
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare test environment (SQLite)
+        run: |
+          cp .env.example .env.testing
+          php artisan key:generate --env=testing
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env.testing
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env.testing
+          sed -i 's/CACHE_DRIVER=.*/CACHE_DRIVER=array/' .env.testing
+          sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env.testing
+          sed -i 's/SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env.testing
+
+      - name: Run migrations
+        run: php artisan migrate --env=testing --force
+
+      - name: Run Pest tests
+        run: ./vendor/bin/pest --coverage
+        env:
+          XDEBUG_MODE: coverage
+
+  # ============================================
+  # DOCKER BUILD (Local, no push)
+  # ============================================
+
+  docker-build:
+    name: Docker - Build Images (Local)
+    runs-on: ubuntu-latest
+    needs: [frontend-build, backend-lint, backend-test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API image (local)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: sos_api/docker/Dockerfile
+          push: false
+          tags: sos-api:act-test
+          load: true
+
+      - name: Build Frontend image (local)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: sos_app/Dockerfile
+          push: false
+          tags: sos-frontend:act-test
+          load: true
+
+      - name: Verify images
+        run: |
+          docker images sos-api:act-test sos-frontend:act-test
+
+  # ============================================
+  # SECURITY SCANS (Simplified)
+  # ============================================
+
+  security-scan:
+    name: Security - Dependency Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Frontend - npm audit
+        working-directory: sos_app
+        run: |
+          npm ci
+          npm audit --audit-level=moderate || true
+
+      - name: Backend - Composer audit
+        working-directory: sos_api
+        run: |
+          if command -v composer &> /dev/null; then
+            composer install --prefer-dist --no-interaction --no-progress
+            composer audit --no-dev || true
+          else
+            echo "Composer not available, skipping backend audit"
+          fi
+
+  # ============================================
+  # SUMMARY
+  # ============================================
+
+  ci-summary:
+    name: CI Summary (Act)
+    runs-on: ubuntu-latest
+    needs: [frontend-lint, frontend-test, frontend-build, backend-lint, backend-static-analysis, backend-test, docker-build, security-scan]
+    if: always()
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "Frontend Lint: ${{ needs.frontend-lint.result }}"
+          echo "Frontend Test: ${{ needs.frontend-test.result }}"
+          echo "Frontend Build: ${{ needs.frontend-build.result }}"
+          echo "Backend Lint: ${{ needs.backend-lint.result }}"
+          echo "Backend Static Analysis: ${{ needs.backend-static-analysis.result }}"
+          echo "Backend Test: ${{ needs.backend-test.result }}"
+          echo "Docker Build: ${{ needs.docker-build.result }}"
+          echo "Security Scan: ${{ needs.security-scan.result }}"
+
+          # Fail if any required job failed
+          if [[ "${{ needs.frontend-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-test.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-build.result }}" != "success" ]] || \
+             [[ "${{ needs.backend-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.backend-test.result }}" != "success" ]]; then
+            exit 1
+          fi
+
+      - name: Success message
+        if: success()
+        run: echo "✅ All Act CI checks passed!"
+
+      - name: Failure message
+        if: failure()
+        run: echo "❌ Some Act CI checks failed!"

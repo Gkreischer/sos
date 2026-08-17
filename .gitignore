@@ -34,6 +34,7 @@ sos_app/cypress/downloads/
 Thumbs.db
 
 .secrets
+.env.act
 
 
 

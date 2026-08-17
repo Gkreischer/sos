@@ -19,7 +19,10 @@
     "cypress:run": "cypress run",
     "start:tickets": "ionic serve --port=9004 --project=ticket-support --configuration=development",
     "build:all": "npm run build && ng build ticket-support --configuration=production --base-href /ticket-support/",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "cypress:open:tickets": "ng run ticket-support:cypress-open",
+    "cypress:run:tickets": "ng run ticket-support:cypress-run",
+    "e2e:tickets": "ng run ticket-support:e2e"
   },
   "dependencies": {
     "@almothafar/angular-signature-pad": "^9.0.0",

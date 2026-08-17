@@ -9,14 +9,14 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 # Copia os arquivos de dependências
-COPY package*.json ./
-COPY capacitor-barcode-scanner-3.1.0.tgz ./
+COPY sos_app/package*.json ./
+COPY sos_app/capacitor-barcode-scanner-3.1.0.tgz ./
 
 # Instala as dependências
 RUN npm ci
 
 # Copia o restante da aplicação
-COPY . .
+COPY sos_app/ ./
 
 # Executa o build de produção para ambos os projetos
 RUN npm run build:all
@@ -30,7 +30,7 @@ FROM nginx:stable-alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copia a configuração do nginx from project root
-COPY ../docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY sos_app/default.conf /etc/nginx/conf.d/default.conf
 
 # Copia os arquivos gerados pelo Angular
 COPY --from=build /app/www/browser /usr/share/nginx/html

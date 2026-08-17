@@ -7,6 +7,7 @@ export * from './lib/config/app.config';
 export * from './lib/_interfaces/BusinessInfoInterface';
 export * from './lib/_interfaces/CepInterface';
 export * from './lib/_interfaces/CategoryInterface';
+export * from './lib/_interfaces/ImageInterface';
 export * from './lib/_interfaces/CountInterface';
 export * from './lib/_interfaces/EquipmentFilterInterface';
 export * from './lib/_interfaces/EquipmentInterface';

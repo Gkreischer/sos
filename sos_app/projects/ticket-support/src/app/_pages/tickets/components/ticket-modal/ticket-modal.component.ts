@@ -1,4 +1,9 @@
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from 'shared';
 import {
   IonTitle,
@@ -44,7 +49,6 @@ import { TicketInterface } from 'shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ticket-modal',
   imports: [
-    IonNote,
     IonChip,
     IonLabel,
     IonCardContent,
@@ -66,7 +70,6 @@ import { TicketInterface } from 'shared';
     IonSelect,
     IonSelectOption,
     DatePipe,
-    IonText,
   ],
   templateUrl: './ticket-modal.component.html',
   styleUrl: './ticket-modal.component.scss',

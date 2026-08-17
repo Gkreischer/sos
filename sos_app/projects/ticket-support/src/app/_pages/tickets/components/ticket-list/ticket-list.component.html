@@ -1,6 +1,6 @@
 @let tickets = tickets$ | async;
 @let isLoading = isLoading$ | async;
-<ion-card>
+<ion-card data-cy="tickets-list">
   <ion-card-header>
     <ion-card-title>Lista de chamados</ion-card-title>
   </ion-card-header>
@@ -42,7 +42,7 @@
             </ion-label>
           </ion-item>
         } @empty {
-          <ion-item lines="none">
+          <ion-item lines="none" data-cy="empty-tickets-message">
             <ion-label>
               <p>Nenhum chamado cadastrado</p>
             </ion-label>

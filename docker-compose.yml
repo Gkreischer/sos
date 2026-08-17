@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/laravel/Dockerfile
+      dockerfile: sos_api/docker/Dockerfile
 
     image: sos-api:latest
 
@@ -37,7 +37,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: docker/nginx/Dockerfile
+      dockerfile: sos_app/Dockerfile
 
     image: sos-frontend:latest
     container_name: sos-nginx

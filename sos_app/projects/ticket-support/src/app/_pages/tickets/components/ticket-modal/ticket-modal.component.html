@@ -12,7 +12,7 @@
 @let isLoading = isLoading$ | async;
 @let equipments = equipments$ | async;
 @let ticket = ticket$ | async;
-<ion-content color="medium">
+<ion-content color="medium" data-cy="ticket-modal">
   <ion-card>
     <ion-card-content>
       <form [formGroup]="form" (ngSubmit)="submit()">

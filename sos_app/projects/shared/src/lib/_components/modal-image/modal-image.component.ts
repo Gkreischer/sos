@@ -37,6 +37,7 @@ export class ModalImageComponent {
 
   constructor() {
     addIcons({ close });
+    console.log(this.imageUrl());
   }
 
   closeModal() {

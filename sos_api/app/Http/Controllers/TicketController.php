@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewTicket;
+use App\Models\OrderStatus;
 use App\Models\Ticket;
+use App\OrderStatusEnum;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Events\NewTicket;
-use App\Models\OrderStatus;
-use App\OrderStatusEnum;
 
 class TicketController extends Controller
 {
@@ -20,8 +20,9 @@ class TicketController extends Controller
     {
         try {
             $tickets = Ticket::paginate(20);
+
             return response($tickets);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => $e->getMessage(),
             ], 500);
@@ -33,11 +34,11 @@ class TicketController extends Controller
         $status_id = $request->status_id;
         $search_term = trim($request->search);
 
-        $start_date = !empty($request->start_date)
+        $start_date = ! empty($request->start_date)
             ? Carbon::createFromFormat('d/m/Y', trim($request->start_date))->startOfDay()
             : null;
 
-        $end_date = !empty($request->end_date)
+        $end_date = ! empty($request->end_date)
             ? Carbon::createFromFormat('d/m/Y', trim($request->end_date))->endOfDay()
             : null;
 
@@ -67,7 +68,7 @@ class TicketController extends Controller
 
             // Filtro por texto
             ->when(
-                !empty($search_term),
+                ! empty($search_term),
                 function ($query) use ($search_term) {
                     $query->where(function ($q) use ($search_term) {
 
@@ -108,7 +109,7 @@ class TicketController extends Controller
 
             // Maior ou igual à data inicial
             ->when(
-                $start_date && !$end_date,
+                $start_date && ! $end_date,
                 function ($query) use ($start_date) {
                     $query->where(
                         'tickets.created_at',
@@ -120,7 +121,7 @@ class TicketController extends Controller
 
             // Menor ou igual à data final
             ->when(
-                !$start_date && $end_date,
+                ! $start_date && $end_date,
                 function ($query) use ($end_date) {
                     $query->where(
                         'tickets.created_at',
@@ -152,7 +153,7 @@ class TicketController extends Controller
             if ($validators->fails()) {
                 return response([
                     'message' => 'Não foi possível salvar o chamado',
-                    'error' => $validators->errors()
+                    'error' => $validators->errors(),
                 ], 400);
             }
             $data['user_id'] = auth('sanctum')->user()->id;
@@ -160,11 +161,12 @@ class TicketController extends Controller
             $ticket = Ticket::create($data);
             $ticket->load(['user:id,name', 'status:id,name']);
             broadcast(new NewTicket($ticket));
+
             return response($ticket);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível salvar o chamado',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -181,7 +183,7 @@ class TicketController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar o chamado',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -201,15 +203,16 @@ class TicketController extends Controller
             if ($validators->fails()) {
                 return response([
                     'message' => 'Não foi possível salvar o ticket',
-                    'error' => $validators->errors()
+                    'error' => $validators->errors(),
                 ], 400);
             }
             $ticket = $ticket->update($data);
+
             return response($ticket);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível atualizar o ticket',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -229,11 +232,12 @@ class TicketController extends Controller
             $tickets = Ticket::with('order')->where('user_id', $user_id)
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
+
             return response($tickets);
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar os tickets',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

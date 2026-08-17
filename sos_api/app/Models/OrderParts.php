@@ -23,7 +23,7 @@ class OrderParts extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Material de ordem ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Material de ordem '.__("activity.events.{$eventName}"));
     }
 
     public function order(): BelongsTo

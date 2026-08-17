@@ -11,100 +11,151 @@ on:
       - main
       - develop
 
-jobs:
-  ci:
-    name: Build, Test and E2E
-    runs-on: ubuntu-latest
+  workflow_dispatch:
 
+env:
+  # Frontend
+  NODE_VERSION: '22'
+  NPM_CACHE_KEY: ${{ runner.os }}-node-${{ hashFiles('sos_app/package-lock.json') }}
+  # Backend
+  PHP_VERSION: '8.5'
+  COMPOSER_CACHE_KEY: ${{ runner.os }}-composer-${{ hashFiles('sos_api/composer.lock') }}
+  # Act detection - set to 'true' when running locally with act
+  ACT: ${{ vars.ACT == 'true' || github.actor == 'nektos/act' }}
+
+jobs:
+  # ============================================
+  # FRONTEND JOBS (Angular/Ionic)
+  # ============================================
+
+  frontend-lint:
+    name: Frontend - Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Frontend
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
           cache-dependency-path: sos_app/package-lock.json
 
-      # Backend
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.5
-          extensions: mbstring, pdo, pdo_mysql, redis, sodium
-          coverage: none
-
-      - name: Install frontend dependencies
-        working-directory: sos_app
+      - name: Install dependencies
         run: npm ci
 
-      - name: Install backend dependencies
-        working-directory: sos_api
-        run: composer install --prefer-dist --no-interaction --no-progress
-
-      - name: Prepare environment files
-        run: |
-          cp ./sos_api/.env.ci.example ./sos_api/.env
-          cp ./mariadb.example.env ./mariadb.env
-          sed -i "s|APP_KEY=.*|APP_KEY=$(php -r 'echo "base64:".base64_encode(random_bytes(32));')|" ./sos_api/.env
-
-      - name: Start application
-        working-directory: sos_api
-        run: docker compose up -d --build
-
-      - name: Wait for Laravel
-        run: |
-          timeout 180 bash -c '
-          until curl -fs http://localhost:9003 > /dev/null; do
-            echo "Waiting for Laravel..."
-            sleep 5
-          done
-          '
-      - name: Show container status
-        if: failure()
-        working-directory: sos_api
-        run: |
-          docker compose ps
-
-      - name: Show app logs
-        if: failure()
-        working-directory: sos_api
-        run: |
-          docker compose logs app
-
-      - name: Show Laravel log
-        if: failure()
-        working-directory: sos_api
-        run: |
-          docker compose exec -T app cat storage/logs/laravel.log || true
-
-      - name: Show artisan error
-        if: failure()
-        working-directory: sos_api
-        run: |
-          docker compose exec -T app php artisan about || true
-
-      - name: Run migrations
-        working-directory: sos_api
-        run: |
-          docker compose exec -T app php artisan migrate --force
-
-      - name: Frontend lint
-        working-directory: sos_app
+      - name: Run lint
         run: npm run lint
 
-      - name: Build Angular
+  frontend-test:
+    name: Frontend - Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
         working-directory: sos_app
-        run: npm run build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install Cypress dependencies
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sos_app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test -- --code-coverage --watch=false
+        env:
+          CI: true
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: ${{ always() && !env.ACT }}
+        with:
+          flags: frontend
+          files: ./coverage/sos/lcov.info
+          fail_ci_if_error: false
+
+  frontend-build:
+    name: Frontend - Build
+    runs-on: ubuntu-latest
+    needs: [frontend-lint, frontend-test]
+    defaults:
+      run:
+        working-directory: sos_app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sos_app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build:all
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: ${{ !env.ACT }}
+        with:
+          name: frontend-build
+          path: |
+            sos_app/www/browser
+            sos_app/dist/ticket-support/browser
+          retention-days: 7
+
+      - name: List build output (act)
+        if: ${{ env.ACT }}
+        run: |
+          echo "Build output:"
+          ls -la www/browser/
+          ls -la dist/ticket-support/browser/
+
+  frontend-e2e:
+    name: Frontend - E2E Tests (Cypress)
+    runs-on: ubuntu-latest
+    needs: frontend-build
+    defaults:
+      run:
+        working-directory: sos_app
+    if: ${{ !env.ACT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sos_app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Cypress system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
 
-      - name: Run Cypress
+      - name: Build frontend for E2E
+        run: npm run build:all
+
+      - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6
         with:
           working-directory: sos_app
@@ -112,11 +163,487 @@ jobs:
           start: npm run start:ci
           wait-on: http://localhost:8100
           wait-on-timeout: 120
+          browser: chrome
 
-      - name: Show container logs
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
         if: failure()
-        run: docker compose logs
+        with:
+          name: cypress-screenshots
+          path: sos_app/cypress/screenshots
+          retention-days: 7
 
-      - name: Stop containers
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v4
         if: always()
-        run: docker compose down -v
+        with:
+          name: cypress-videos
+          path: sos_app/cypress/videos
+          retention-days: 7
+
+  # ============================================
+  # BACKEND JOBS (Laravel 12)
+  # ============================================
+
+  backend-lint:
+    name: Backend - Lint (Pint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        if: ${{ !env.ACT }}
+        with:
+          path: vendor
+          key: ${{ env.COMPOSER_CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run Pint (code style)
+        run: ./vendor/bin/pint --test
+
+  backend-static-analysis:
+    name: Backend - Static Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        if: ${{ !env.ACT }}
+        with:
+          path: vendor
+          key: ${{ env.COMPOSER_CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPStan (if available)
+        run: |
+          if [ -f vendor/bin/phpstan ]; then
+            ./vendor/bin/phpstan analyse --memory-limit=512M
+          else
+            echo "PHPStan not installed, skipping..."
+          fi
+
+  backend-test:
+    name: Backend - Unit & Feature Tests (Pest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: sos_test
+          POSTGRES_USER: sos
+          POSTGRES_PASSWORD: sos
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U sos -d sos_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_pgsql, redis, sodium, pcntl
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        if: ${{ !env.ACT }}
+        with:
+          path: vendor
+          key: ${{ env.COMPOSER_CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare test environment
+        run: |
+          cp .env.example .env.testing
+          php artisan key:generate --env=testing
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env.testing
+          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env.testing
+          sed -i 's/DB_PORT=.*/DB_PORT=5432/' .env.testing
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=sos_test/' .env.testing
+          sed -i 's/DB_USERNAME=.*/DB_USERNAME=sos/' .env.testing
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=sos/' .env.testing
+          sed -i 's/CACHE_DRIVER=.*/CACHE_DRIVER=array/' .env.testing
+          sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env.testing
+          sed -i 's/SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env.testing
+          sed -i 's/REDIS_HOST=.*/REDIS_HOST=127.0.0.1/' .env.testing
+
+      - name: Run migrations
+        run: php artisan migrate --env=testing --force
+
+      - name: Run Pest tests
+        run: ./vendor/bin/pest --coverage --min=80
+        env:
+          XDEBUG_MODE: coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: ${{ always() && !env.ACT }}
+        with:
+          flags: backend
+          files: ./coverage/clover.xml
+          fail_ci_if_error: false
+
+  # ============================================
+  # ACT-SPECIFIC BACKEND TEST (uses sqlite for speed)
+  # ============================================
+
+  backend-test-act:
+    name: Backend - Tests (Act/SQLite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sos_api
+    if: ${{ env.ACT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, pdo, pdo_sqlite, sodium, pcntl
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare test environment (SQLite)
+        run: |
+          cp .env.example .env.testing
+          php artisan key:generate --env=testing
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env.testing
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=\:memory:/' .env.testing
+          sed -i 's/CACHE_DRIVER=.*/CACHE_DRIVER=array/' .env.testing
+          sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env.testing
+          sed -i 's/SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env.testing
+
+      - name: Run migrations
+        run: php artisan migrate --env=testing --force
+
+      - name: Run Pest tests
+        run: ./vendor/bin/pest --coverage
+        env:
+          XDEBUG_MODE: coverage
+
+  # ============================================
+  # DOCKER BUILD & DEPLOY PREP
+  # ============================================
+
+  docker-build:
+    name: Docker - Build Images
+    runs-on: ubuntu-latest
+    needs: [frontend-build, backend-lint, backend-test]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && !env.ACT
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for API
+        id: meta-api
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/sos-api
+            ghcr.io/${{ github.repository }}/sos-api
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: sos_api/docker/Dockerfile
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta-api.outputs.tags }}
+          labels: ${{ steps.meta-api.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract metadata for Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/sos-frontend
+            ghcr.io/${{ github.repository }}/sos-frontend
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: sos_app/Dockerfile
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ============================================
+  # ACT DOCKER BUILD (local, no push)
+  # ============================================
+
+  docker-build-act:
+    name: Docker - Build Images (Act)
+    runs-on: ubuntu-latest
+    needs: [frontend-build, backend-lint, backend-test-act]
+    if: ${{ env.ACT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API image (local)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: sos_api/docker/Dockerfile
+          push: false
+          tags: sos-api:act-test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Frontend image (local)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: sos_app/Dockerfile
+          push: false
+          tags: sos-frontend:act-test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify images
+        run: |
+          docker images sos-api:act-test sos-frontend:act-test
+
+  # ============================================
+  # SECURITY SCANS
+  # ============================================
+
+  security-scan:
+    name: Security - Dependency Scan
+    runs-on: ubuntu-latest
+    if: ${{ !env.ACT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Frontend audit
+      - name: Frontend - npm audit
+        working-directory: sos_app
+        run: |
+          npm ci
+          npm audit --audit-level=moderate
+
+      # Backend audit
+      - name: Backend - Composer audit
+        working-directory: sos_api
+        run: |
+          composer install --prefer-dist --no-interaction --no-progress
+          composer audit --no-dev || true
+
+      # Trivy container scan (if docker images built)
+      - name: Trivy Container Scan
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/${{ github.repository }}/sos-api:latest,ghcr.io/${{ github.repository }}/sos-frontend:latest'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ============================================
+  # ACT SECURITY SCAN (simplified)
+  # ============================================
+
+  security-scan-act:
+    name: Security - Dependency Scan (Act)
+    runs-on: ubuntu-latest
+    if: ${{ env.ACT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Frontend - npm audit
+        working-directory: sos_app
+        run: |
+          npm ci
+          npm audit --audit-level=moderate || true
+
+      - name: Backend - Composer audit
+        working-directory: sos_api
+        run: |
+          composer install --prefer-dist --no-interaction --no-progress
+          composer audit --no-dev || true
+
+  # ============================================
+  # SUMMARY
+  # ============================================
+
+  ci-summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [frontend-lint, frontend-test, frontend-build, frontend-e2e, backend-lint, backend-static-analysis, backend-test, docker-build, security-scan]
+    if: ${{ always() && !env.ACT }}
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "Frontend Lint: ${{ needs.frontend-lint.result }}"
+          echo "Frontend Test: ${{ needs.frontend-test.result }}"
+          echo "Frontend Build: ${{ needs.frontend-build.result }}"
+          echo "Frontend E2E: ${{ needs.frontend-e2e.result }}"
+          echo "Backend Lint: ${{ needs.backend-lint.result }}"
+          echo "Backend Static Analysis: ${{ needs.backend-static-analysis.result }}"
+          echo "Backend Test: ${{ needs.backend-test.result }}"
+          echo "Docker Build: ${{ needs.docker-build.result }}"
+          echo "Security Scan: ${{ needs.security-scan.result }}"
+
+          # Fail if any required job failed
+          if [[ "${{ needs.frontend-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-test.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-build.result }}" != "success" ]] || \
+             [[ "${{ needs.backend-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.backend-test.result }}" != "success" ]]; then
+            exit 1
+          fi
+
+      - name: Success message
+        if: success()
+        run: echo "✅ All CI checks passed!"
+
+      - name: Failure message
+        if: failure()
+        run: echo "❌ Some CI checks failed!"
+
+  # ============================================
+  # ACT SUMMARY
+  # ============================================
+
+  ci-summary-act:
+    name: CI Summary (Act)
+    runs-on: ubuntu-latest
+    needs: [frontend-lint, frontend-test, frontend-build, backend-lint, backend-static-analysis, backend-test-act, docker-build-act, security-scan-act]
+    if: ${{ always() && env.ACT }}
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "Frontend Lint: ${{ needs.frontend-lint.result }}"
+          echo "Frontend Test: ${{ needs.frontend-test.result }}"
+          echo "Frontend Build: ${{ needs.frontend-build.result }}"
+          echo "Backend Lint: ${{ needs.backend-lint.result }}"
+          echo "Backend Static Analysis: ${{ needs.backend-static-analysis.result }}"
+          echo "Backend Test (Act): ${{ needs.backend-test-act.result }}"
+          echo "Docker Build (Act): ${{ needs.docker-build-act.result }}"
+          echo "Security Scan (Act): ${{ needs.security-scan-act.result }}"
+
+          # Fail if any required job failed
+          if [[ "${{ needs.frontend-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-test.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-build.result }}" != "success" ]] || \
+             [[ "${{ needs.backend-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.backend-test-act.result }}" != "success" ]]; then
+            exit 1
+          fi
+
+      - name: Success message
+        if: success()
+        run: echo "✅ All Act CI checks passed!"
+
+      - name: Failure message
+        if: failure()
+        run: echo "❌ Some Act CI checks failed!"

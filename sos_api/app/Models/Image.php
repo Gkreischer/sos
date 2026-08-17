@@ -17,17 +17,17 @@ class Image extends Model
         'part_id',
     ];
 
-    public function equipment() : BelongsTo
+    public function equipment(): BelongsTo
     {
         return $this->belongsTo(Equipment::class);
     }
 
-    public function part() : BelongsTo
+    public function part(): BelongsTo
     {
         return $this->belongsTo(Part::class);
     }
 
-    public function order() : BelongsTo
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }

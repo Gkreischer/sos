@@ -14,7 +14,7 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'content'
+        'content',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -24,7 +24,7 @@ class Post extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Comunicado ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Comunicado '.__("activity.events.{$eventName}"));
     }
 
     public function user()

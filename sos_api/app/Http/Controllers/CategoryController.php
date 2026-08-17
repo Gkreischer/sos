@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -22,13 +23,12 @@ class CategoryController extends Controller
                 return Category::orderBy('name', 'asc')->get()->toArray();
             });
 
-
             return response($categories);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Categories not found',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -57,11 +57,11 @@ class CategoryController extends Controller
             Cache::tags('categories-list')->flush();
 
             return response($category, 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Category not created',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -78,11 +78,11 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
 
             return response($category);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Category not found',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -113,13 +113,12 @@ class CategoryController extends Controller
 
             Cache::tags('categories-list')->flush();
 
-
             return response($category, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Category not updated',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -139,16 +138,15 @@ class CategoryController extends Controller
 
             Cache::tags('categories-list')->flush();
 
-
             return response($category, 204);
         }
         // Make an exception for QueryException
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             if ($e->getCode() === '23000') {
                 return response(
                     [
                         'message' => 'Não foi possível deletar a categoria pois ela já está sendo utilizada',
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ],
                     422
                 );
@@ -157,7 +155,7 @@ class CategoryController extends Controller
             return response(
                 [
                     'message' => 'Não foi possível deletar a categoria',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 422
             );

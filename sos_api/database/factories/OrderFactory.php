@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
-use App\Models\Equipment;
-use App\Models\OrderStatus;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Enums\UserTypeEnum;
+use App\Models\Equipment;
+use App\Models\Order;
+use App\Models\OrderStatus;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
+ * @extends Factory<Order>
  */
 class OrderFactory extends Factory
 {

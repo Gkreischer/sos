@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class ImageSeeder extends Seeder
 {
@@ -26,7 +25,7 @@ class ImageSeeder extends Seeder
                 'name' => 'test',
                 'path' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyX7-jVcQX29dow6EIxZeZupwBcc36ZLUSwg&usqp=CAU',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
             ],
         ]);
 

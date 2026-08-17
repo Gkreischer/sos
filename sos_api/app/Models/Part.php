@@ -29,7 +29,7 @@ class Part extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Material ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Material '.__("activity.events.{$eventName}"));
     }
 
     protected $casts = [

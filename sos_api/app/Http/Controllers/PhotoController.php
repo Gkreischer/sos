@@ -13,6 +13,7 @@ class PhotoController extends Controller
             $photo = $request->file('image');
             $path = $photo->store('public/images');
             $publicPath = Storage::url($path);
+
             return response([
                 'imagePath' => url($publicPath),
                 'message' => 'Foto salva com sucesso',
@@ -21,7 +22,7 @@ class PhotoController extends Controller
             return response([
                 'message' => 'Não foi possível salvar a foto',
                 'error' => $e->getMessage(),
-                500
+                500,
             ]);
         }
     }

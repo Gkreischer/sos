@@ -19,7 +19,7 @@ class BusinessInfoController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as configurações',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -55,7 +55,7 @@ class BusinessInfoController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível criar a configuração',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -82,9 +82,8 @@ class BusinessInfoController extends Controller
                 'image' => Storage::url($path),
             ]);
 
-
             return response($business);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Não foi possível atualizar a imagem',
                 'error' => $e->getMessage(),

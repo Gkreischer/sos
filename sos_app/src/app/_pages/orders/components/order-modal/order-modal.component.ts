@@ -130,7 +130,6 @@ import { LoginService } from 'shared';
     IonInput,
     IonSelect,
     IonTextarea,
-    JsonPipe,
   ],
 })
 export class OrderModalComponent implements OnInit, AfterViewInit {
@@ -315,8 +314,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     this.orderForm.valueChanges.subscribe(() => {
       this.formChanges.update((v) => v + 1);
     });
-
-    console.log(this.loginService.userSubject.value?.id);
   }
 
   get pictures() {
@@ -610,7 +607,7 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
 
   showImage(picture: PictureInterface) {
     this.modalService.openModal(ModalImageComponent, {
-      imageUrl: picture.path,
+      imageUrl: picture,
     });
   }
 

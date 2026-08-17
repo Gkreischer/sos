@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewRoom;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
-
-use App\Events\NewRoom;
 
 class RoomController extends Controller
 {
@@ -18,15 +17,15 @@ class RoomController extends Controller
         try {
             $rooms = Room::with('creator:id,name,image,created_at')->orderBy('created_at', 'desc')
                 ->paginate(20);
+
             return response($rooms);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível encontrar as salas',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -37,17 +36,17 @@ class RoomController extends Controller
             $user = auth('sanctum')->user();
 
             // Correção na validação (o 'if' original tinha parênteses desalinhados que quebravam a lógica)
-            if (!$request->has('name') || !$request->has('private')) {
+            if (! $request->has('name') || ! $request->has('private')) {
                 return response([
                     'message' => 'Não foi possível criar a sala',
-                    'error' => 'Verifique o nome da sala e a privacidade da sala'
+                    'error' => 'Verifique o nome da sala e a privacidade da sala',
                 ], 400);
             }
 
             $room = Room::create([
                 'name' => $request->input('name'),
                 'private' => $request->input('private'),
-                'created_by' => $user->id
+                'created_by' => $user->id,
             ]);
 
             // 1. Vincula o criador da sala
@@ -58,7 +57,7 @@ class RoomController extends Controller
                 // Se vier array de objetos, use 'users.*.id'. Se vier array de IDs simples, use apenas 'users'
                 $userIds = $request->input('users.*.id') ?? $request->input('users');
 
-                if (!empty($userIds)) {
+                if (! empty($userIds)) {
                     $room->users()->syncWithoutDetaching($userIds);
                 }
             }
@@ -70,7 +69,7 @@ class RoomController extends Controller
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível criar a sala',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -81,15 +80,15 @@ class RoomController extends Controller
     public function show(int $id)
     {
         try {
-            // No 'users:', você define as colunas. 
+            // No 'users:', você define as colunas.
             // OBRIGATÓRIO: 'id' deve estar incluso para o Laravel conseguir fazer o vínculo da tabela pivô!
             $room = Room::with(['users:id,name,image', 'messages', 'creator:id,name,image'])->findOrFail($id);
 
             // Validação de privacidade (continua funcionando igual)
-            if ($room->private && !$room->users->contains(auth('sanctum')->user())) {
+            if ($room->private && ! $room->users->contains(auth('sanctum')->user())) {
                 return response([
                     'message' => 'Não foi possível obter informações da sala',
-                    'error' => 'Você não pode ver informações da sala'
+                    'error' => 'Você não pode ver informações da sala',
                 ], 403);
             }
 
@@ -102,7 +101,7 @@ class RoomController extends Controller
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível encontrar a sala',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -114,10 +113,10 @@ class RoomController extends Controller
     public function update(Request $request, int $id)
     {
         try {
-            if (!$request->has('name') || !$request->has('private')) {
+            if (! $request->has('name') || ! $request->has('private')) {
                 return response([
                     'message' => 'Não foi possível atualizar a sala',
-                    'error' => 'Verifique o nome e a privacidade da sala'
+                    'error' => 'Verifique o nome e a privacidade da sala',
                 ], 400);
             }
 
@@ -128,7 +127,7 @@ class RoomController extends Controller
             if ($room->created_by != $user->id) {
                 return response([
                     'message' => 'Não foi possível atualizar a sala',
-                    'error' => 'Você não tem permissão para atualizar esta sala.'
+                    'error' => 'Você não tem permissão para atualizar esta sala.',
                 ], 403); // HTTP 403 Forbidden é o correto aqui
             }
 
@@ -136,7 +135,7 @@ class RoomController extends Controller
             if ($request->has('users')) {
                 $userIds = $request->input('users.*.id') ?? $request->input('users');
 
-                if (!empty($userIds)) {
+                if (! empty($userIds)) {
                     $room->users()->syncWithoutDetaching($userIds);
                 }
             }
@@ -144,11 +143,12 @@ class RoomController extends Controller
             // Atualiza os dados da sala
             $room->update($request->only('name', 'private'));
             $room->load(['users:id,name,image', 'messages', 'creator:id,name,image']);
+
             return response($room);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível atualizar a sala',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -165,16 +165,17 @@ class RoomController extends Controller
             if ($room->created_by != $user->id) {
                 return response([
                     'message' => 'Não foi possível excluir a sala',
-                    'error' => 'Você não pode excluir a sala que você não criou'
+                    'error' => 'Você não pode excluir a sala que você não criou',
                 ]);
             }
             $roomCopy = $room;
             $room->delete();
+
             return response($roomCopy);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível excluir a sala',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -185,23 +186,24 @@ class RoomController extends Controller
             if (empty($request->input('room_id'))) {
                 return response([
                     'message' => 'Não foi possível encontrar as mensagens',
-                    'error' => 'A sala não foi informada'
+                    'error' => 'A sala não foi informada',
                 ], 400);
             }
             $room = Room::findOrFail($request->input('room_id'));
-            if ($room->private && !$room->users->contains(auth('sanctum')->user())) {
+            if ($room->private && ! $room->users->contains(auth('sanctum')->user())) {
                 return response([
                     'message' => 'Você não foi convidado para esta sala',
-                    'error' => 'Você não pode ver as mensagens da sala'
+                    'error' => 'Você não pode ver as mensagens da sala',
                 ], 403);
             }
             $messages = $room->messages;
             $messages->load('user:id,name,image');
+
             return response($messages);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível encontrar as mensagens',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -212,22 +214,23 @@ class RoomController extends Controller
             if (empty($request->input('room_id'))) {
                 return response([
                     'message' => 'Não foi possível encontrar os usuários',
-                    'error' => 'A sala não foi informada'
+                    'error' => 'A sala não foi informada',
                 ], 400);
             }
             $room = Room::findOrFail($request->input('room_id'));
-            if ($room->private && !$room->users->contains(auth('sanctum')->user())) {
+            if ($room->private && ! $room->users->contains(auth('sanctum')->user())) {
                 return response([
                     'message' => 'Não foi possível encontrar os usuários',
-                    'error' => 'Você não pode ver os usuários da sala'
+                    'error' => 'Você não pode ver os usuários da sala',
                 ], 403);
             }
             $users = $room->users;
+
             return response($users);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível encontrar os usuários',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -238,7 +241,7 @@ class RoomController extends Controller
             if (empty($request->input('room_id') || empty($request->input('users_id')))) {
                 return response([
                     'message' => 'Não foi possível bloquear os usuários',
-                    'error' => 'A sala ou o usuário não foram informados'
+                    'error' => 'A sala ou o usuário não foram informados',
                 ], 400);
             }
             $room = Room::findOrFail($request->input('room_id'));
@@ -246,7 +249,7 @@ class RoomController extends Controller
             if ($room->created_by != auth('sanctum')->user()->id) {
                 return response([
                     'message' => 'Não foi possível bloquear os usuários',
-                    'error' => 'Somente o administrador da sala pode bloquear usuários'
+                    'error' => 'Somente o administrador da sala pode bloquear usuários',
                 ], 403);
             }
 
@@ -256,12 +259,12 @@ class RoomController extends Controller
             }
 
             return response([
-                'message' => 'Usuários bloqueados com sucesso'
+                'message' => 'Usuários bloqueados com sucesso',
             ]);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível bloquear os usuários',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -272,7 +275,7 @@ class RoomController extends Controller
             if (empty($request->input('room_id')) || empty($request->input('users_id'))) {
                 return response([
                     'message' => 'Não foi possível desbloquear os usuários',
-                    'error' => 'A sala não foi informada'
+                    'error' => 'A sala não foi informada',
                 ], 400);
             }
             $room = Room::findOrFail($request->input('room_id'));
@@ -280,7 +283,7 @@ class RoomController extends Controller
             if ($room->created_by != auth('sanctum')->user()->id) {
                 return response([
                     'message' => 'Não foi possível bloquear os usuários',
-                    'error' => 'Somente o administrador da sala pode bloquear usuários'
+                    'error' => 'Somente o administrador da sala pode bloquear usuários',
                 ], 403);
             }
 
@@ -291,12 +294,12 @@ class RoomController extends Controller
             }
 
             return response([
-                'message' => 'Usuários desbloqueados com sucesso'
+                'message' => 'Usuários desbloqueados com sucesso',
             ]);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível desbloquear os usuários',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

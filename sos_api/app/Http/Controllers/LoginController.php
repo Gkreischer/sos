@@ -3,18 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\UserType;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -24,14 +20,14 @@ class LoginController extends Controller
 
         if (! Auth::attempt($credentials)) {
             return response([
-                'message' => 'Credenciais inválidas'
+                'message' => 'Credenciais inválidas',
             ], 401);
         }
 
         $request->session()->regenerate();
 
         return response([
-            'user' => $request->user()->load('type')
+            'user' => $request->user()->load('type'),
         ]);
     }
 
@@ -66,7 +62,7 @@ class LoginController extends Controller
     {
         try {
 
-            if (!$request->user_id) {
+            if (! $request->user_id) {
                 $user = $request->user();
             } else {
                 $user = User::findOrFail($request->user_id);
@@ -74,7 +70,7 @@ class LoginController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'password' => 'required|string|min:8|max:255|confirmed',
-                'password_confirmation' => 'required|string|min:8|max:255'
+                'password_confirmation' => 'required|string|min:8|max:255',
             ]);
 
             if ($validator->fails()) {

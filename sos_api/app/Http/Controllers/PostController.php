@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -18,14 +18,14 @@ class PostController extends Controller
             $description = trim($request->input('description', ''));
             $page = $request->get('page', 1);
 
-            $cacheKey = 'posts_description_' . $description . '_page_' . $page;
+            $cacheKey = 'posts_description_'.$description.'_page_'.$page;
 
             $posts = Cache::tags('posts-list')->remember(
                 $cacheKey,
                 now()->addMinutes(5),
                 function () use ($description) {
                     return Post::query()
-                        ->when(!empty($description), function ($query) use ($description) {
+                        ->when(! empty($description), function ($query) use ($description) {
                             $query->where(function ($q) use ($description) {
                                 $q->whereRaw(
                                     'unaccent(title) ILIKE unaccent(?)',
@@ -87,6 +87,7 @@ class PostController extends Controller
     {
         try {
             $post = Post::findOrFail($id);
+
             return response($post);
         } catch (\Exception $e) {
             return response([
@@ -95,7 +96,6 @@ class PostController extends Controller
             ], 500);
         }
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -129,6 +129,7 @@ class PostController extends Controller
             $post->load('user');
             Cache::tags('posts-list')->flush();
             Cache::tags('last-posts')->flush();
+
             return response($post);
         } catch (\Exception $e) {
             return response([
@@ -157,6 +158,7 @@ class PostController extends Controller
             $post->delete();
             Cache::tags('posts-list')->flush();
             Cache::tags('last-posts')->flush();
+
             return response($postCopy);
         } catch (\Exception $e) {
             return response([
@@ -181,6 +183,7 @@ class PostController extends Controller
                         ->toArray();
                 }
             );
+
             return response($postsCache);
         } catch (\Exception $e) {
             return response([

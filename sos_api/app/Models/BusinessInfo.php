@@ -35,6 +35,6 @@ class BusinessInfo extends Model
             ->logExcept(['password', 'remember_token'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Empresa ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Empresa '.__("activity.events.{$eventName}"));
     }
 }

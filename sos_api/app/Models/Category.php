@@ -22,7 +22,7 @@ class Category extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Categoria ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Categoria '.__("activity.events.{$eventName}"));
     }
 
     public function equipments()

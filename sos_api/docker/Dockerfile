@@ -34,6 +34,6 @@ RUN mkdir -p \
 
 RUN chown -R www-data:www-data /var/www/html
 
-COPY ./cont-init.d /etc/cont-init.d
+COPY ./sos_api/docker/01-migrate.sh /etc/cont-init.d/01-migrate.sh
 
 RUN chmod +x /etc/cont-init.d/*.sh

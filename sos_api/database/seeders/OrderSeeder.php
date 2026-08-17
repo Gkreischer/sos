@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class OrderSeeder extends Seeder
 {
@@ -28,7 +28,7 @@ class OrderSeeder extends Seeder
             'technician_id' => 1,
             'status_id' => 1,
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => Carbon::now()
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

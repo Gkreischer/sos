@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ViewWillEnter } from '@ionic/angular';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
-import { OrderModalComponent } from './components/order-modal/order-modal.component';
+// Defer heavy modal component
+// import { OrderModalComponent } from './components/order-modal/order-modal.component';
 
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
@@ -23,6 +24,7 @@ import { addIcons } from 'ionicons';
 import { addSharp, qrCode } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-order',
   templateUrl: './order.page.html',
   styleUrls: ['./order.page.scss'],
@@ -54,7 +56,10 @@ export class OrderPage implements ViewWillEnter {
   }
 
   addOrder() {
-    this.modalService.openModal(OrderModalComponent);
+    // Dynamically import the heavy modal component
+    import('./components/order-modal/order-modal.component').then((m) => {
+      this.modalService.openModal(m.OrderModalComponent);
+    });
   }
 
   async getBarcode() {
@@ -63,8 +68,8 @@ export class OrderPage implements ViewWillEnter {
       return;
     }
 
-    await this.modalService.openModal(OrderModalComponent, {
-      orderId,
+    import('./components/order-modal/order-modal.component').then((m) => {
+      this.modalService.openModal(m.OrderModalComponent, { orderId });
     });
   }
 }

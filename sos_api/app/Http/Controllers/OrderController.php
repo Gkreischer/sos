@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Ticket;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
@@ -19,11 +19,12 @@ class OrderController extends Controller
         try {
 
             $orders = Order::orderBy('created_at', 'desc')->paginate(20);
+
             return response($orders);
         } catch (Exception $e) {
             return response([
                 'message' => 'Nao foi possivel carregar as ordens de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 404);
         }
     }
@@ -38,7 +39,7 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar a ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 404);
         }
     }
@@ -61,7 +62,7 @@ class OrderController extends Controller
 
                     // Remove peças que não existem mais
                     $order->parts()
-                        ->when(!empty($ids), function ($query) use ($ids) {
+                        ->when(! empty($ids), function ($query) use ($ids) {
                             $query->whereNotIn('id', $ids);
                         })
                         ->when(empty($ids), function ($query) {
@@ -112,7 +113,7 @@ class OrderController extends Controller
 
             return response([
                 'message' => 'Não foi possível atualizar a ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 404);
         }
     }
@@ -123,14 +124,14 @@ class OrderController extends Controller
             $status_id = $request->status_id;
             $search_term = trim($request->search ?? '');
 
-            $start_date = !empty($request->start_date)
+            $start_date = ! empty($request->start_date)
                 ? Carbon::createFromFormat(
                     'd/m/Y',
                     trim($request->start_date)
                 )->startOfDay()
                 : null;
 
-            $end_date = !empty($request->end_date)
+            $end_date = ! empty($request->end_date)
                 ? Carbon::createFromFormat(
                     'd/m/Y',
                     trim($request->end_date)
@@ -149,7 +150,7 @@ class OrderController extends Controller
                 ->with([
                     'user:id,name',
                     'equipment:id,name',
-                    'status:id,name'
+                    'status:id,name',
                 ])
 
                 // Filtro por status
@@ -165,7 +166,7 @@ class OrderController extends Controller
 
                 // Filtro por texto
                 ->when(
-                    !empty($search_term),
+                    ! empty($search_term),
                     function ($query) use ($search_term) {
                         $query->where(function ($q) use ($search_term) {
 
@@ -207,7 +208,7 @@ class OrderController extends Controller
 
                 // Maior ou igual à data inicial
                 ->when(
-                    $start_date && !$end_date,
+                    $start_date && ! $end_date,
                     function ($query) use ($start_date) {
                         $query->where(
                             'orders.created_at',
@@ -219,7 +220,7 @@ class OrderController extends Controller
 
                 // Menor ou igual à data final
                 ->when(
-                    !$start_date && $end_date,
+                    ! $start_date && $end_date,
                     function ($query) use ($end_date) {
                         $query->where(
                             'orders.created_at',
@@ -276,10 +277,10 @@ class OrderController extends Controller
         try {
 
             $order = DB::transaction(function () use ($request, $data) {
-                $data['user_id'] = auth('sanctum')->user()->id;
+                $data['attendant_id'] = auth('sanctum')->user()->id;
                 $order = Order::create($data);
 
-                if (!empty($data['ticket_id'])) {
+                if (! empty($data['ticket_id'])) {
                     $ticket = Ticket::findOrFail($data['ticket_id']);
 
                     $order->ticket()->save($ticket);
@@ -330,7 +331,7 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar a ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 404);
         }
     }

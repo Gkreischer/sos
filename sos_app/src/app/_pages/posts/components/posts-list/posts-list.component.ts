@@ -1,4 +1,4 @@
-import { Component, signal, inject, effect } from '@angular/core';
+import {Component, signal, inject, effect, ChangeDetectionStrategy} from '@angular/core';
 import { PostService } from 'src/app/_services/post.service';
 import {
   IonCard,
@@ -19,6 +19,7 @@ import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PostContentModalComponent } from '../post-content/post-content.component';
 import { PostInterface } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-posts-list',
   templateUrl: './posts-list.component.html',
   styleUrls: ['./posts-list.component.scss'],

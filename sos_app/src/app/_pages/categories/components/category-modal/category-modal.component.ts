@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -34,6 +34,7 @@ import {
 import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',
   styleUrls: ['./category-modal.component.scss'],

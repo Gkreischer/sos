@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Events\NewNotification;
+use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
@@ -19,7 +19,7 @@ class NotificationController extends Controller
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível enviar a mensagem',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

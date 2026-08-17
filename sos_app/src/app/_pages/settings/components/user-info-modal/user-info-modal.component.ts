@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, signal, computed} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -43,6 +43,7 @@ import { addIcons } from 'ionicons';
 import { camera, arrowBack } from 'ionicons/icons';
 import { CepService } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-user-info-modal',
   templateUrl: './user-info-modal.component.html',
   styleUrls: ['./user-info-modal.component.scss'],
@@ -89,6 +90,10 @@ export class UserInfoModalComponent implements OnInit {
 
   isLoading$: Observable<boolean> = this.loadingService.isLoading$;
 
+  // Signal for avatar preview reactivity
+  private avatarSignal = signal<string | null>(null);
+  avatarPreview = computed(() => this.avatarSignal() || this.userForm?.get('image')?.value || null);
+
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();
 
@@ -110,6 +115,9 @@ export class UserInfoModalComponent implements OnInit {
         user.phone = maskitoTransform(user.phone, phoneMask);
         user.cep = maskitoTransform(user.cep, cepMask);
         this.userForm.patchValue(user);
+        if (user.image) {
+          this.avatarSignal.set(user.image);
+        }
       }
     });
   }
@@ -173,6 +181,10 @@ export class UserInfoModalComponent implements OnInit {
     if (!picture) {
       return;
     }
+
+    const webPath = picture.webPath || '';
+    this.userForm.get('image')?.setValue(webPath);
+    this.avatarSignal.set(webPath);
 
     this.userService.updateAvatarImage(picture).subscribe();
   }

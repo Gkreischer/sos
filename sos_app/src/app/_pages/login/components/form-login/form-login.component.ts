@@ -1,19 +1,13 @@
-import {
-  Component,
+import {Component,
   OnInit,
   inject,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-} from '@angular/core';
-import type { Animation } from '@ionic/angular/standalone';
+  ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AnimationController } from '@ionic/angular';
 import { LoginService } from 'shared';
 import { UserLoginInterface } from 'shared';
 import { Observable } from 'rxjs';
@@ -35,6 +29,7 @@ import {
   IonInput,
 } from '@ionic/angular/standalone';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-form-login',
   templateUrl: './form-login.component.html',
   styleUrls: ['./form-login.component.scss'],
@@ -52,42 +47,22 @@ import {
   ],
   standalone: true,
 })
-export class FormLoginComponent implements OnInit, AfterViewInit {
+export class FormLoginComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   loginService = inject(LoginService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   menuController = inject(MenuController);
   loadingService = inject(LoadingService);
-  animationController = inject(AnimationController);
 
   loginForm!: FormGroup;
   loginData: Observable<UserLoginInterface | null> = this.loginService.user;
   isLoading$ = this.loadingService.isLoading$;
 
-  private animation!: Animation;
-  @ViewChild(IonCard, { read: ElementRef })
-  card!: ElementRef<HTMLIonCardElement>;
-
   constructor() {}
 
   ngOnInit() {
     this.mountForm();
-  }
-
-  ngAfterViewInit() {
-    this.fadeInCardAnimation();
-  }
-
-  fadeInCardAnimation() {
-    this.animation = this.animationController
-      .create()
-      .addElement(this.card.nativeElement)
-      .duration(1000)
-      .fromTo('transform', 'translateX(-50px)', 'translateX(0)')
-      .fromTo('opacity', '0', '1');
-
-    this.animation.play();
   }
 
   mountForm() {

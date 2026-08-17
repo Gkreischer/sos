@@ -4,8 +4,8 @@ namespace Database\Factories;
 
 use App\Models\OrderStatus;
 use App\Models\Ticket;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Ticket>
@@ -24,6 +24,7 @@ class TicketFactory extends Factory
             ->inRandomOrder()
             ->first();
         $user->load('equipments');
+
         return [
             'status_id' => OrderStatus::all()->random()->id,
             'user_id' => $user->id,

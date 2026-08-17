@@ -12,32 +12,89 @@
     <ion-row>
       <ion-col> </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col size="12" sizeXl="4">
-        <app-bar-chart-counter></app-bar-chart-counter>
-      </ion-col>
-      <ion-col size="12" sizeXl="4">
-        <app-pie-order-by-status-between-periods></app-pie-order-by-status-between-periods>
-      </ion-col>
-      <ion-col size="12" sizeXl="4">
-        <app-line-chart-total-price-between-periods></app-line-chart-total-price-between-periods>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12" sizeXl="4">
-        <app-revenue-values-list></app-revenue-values-list>
-      </ion-col>
-      <ion-col size="12" sizeXl="4">
-        <app-technician-data-list></app-technician-data-list>
-      </ion-col>
-      <ion-col size="12" sizeXl="4">
-        <app-customer-revenue-list></app-customer-revenue-list>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12">
-        <app-orders-by-period></app-orders-by-period>
-      </ion-col>
-    </ion-row>
+    @defer (on viewport) {
+      <ion-row>
+        <ion-col size="12" sizeXl="4">
+          <app-bar-chart-counter></app-bar-chart-counter>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <app-pie-order-by-status-between-periods></app-pie-order-by-status-between-periods>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <app-line-chart-total-price-between-periods></app-line-chart-total-price-between-periods>
+        </ion-col>
+      </ion-row>
+    } @placeholder {
+      <ion-row>
+        <ion-col size="12" sizeXl="4">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando gráfico...</p>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando gráfico...</p>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando gráfico...</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    }
+    @defer (on viewport) {
+      <ion-row>
+        <ion-col size="12" sizeXl="4">
+          <app-revenue-values-list></app-revenue-values-list>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <app-technician-data-list></app-technician-data-list>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <app-customer-revenue-list></app-customer-revenue-list>
+        </ion-col>
+      </ion-row>
+    } @placeholder {
+      <ion-row>
+        <ion-col size="12" sizeXl="4">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando lista...</p>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando lista...</p>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeXl="4">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando lista...</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    }
+    @defer (on viewport) {
+      <ion-row>
+        <ion-col size="12">
+          <app-orders-by-period></app-orders-by-period>
+        </ion-col>
+      </ion-row>
+    } @placeholder {
+      <ion-row>
+        <ion-col size="12">
+          <div class="ion-padding ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Carregando pedidos...</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    }
   </ion-grid>
 </ion-content>

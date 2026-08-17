@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
+use App\Enums\UserTypeEnum;
+use App\Models\Equipment;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\User;
@@ -9,9 +12,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Enums\OrderStatusEnum;
-use App\Models\Equipment;
-use App\Enums\UserTypeEnum;
 
 class MetricController extends Controller
 {
@@ -29,13 +29,13 @@ class MetricController extends Controller
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
             $cacheKey = 'metrics:order:count_by_month:'
-                . $request->startDate . ':'
-                . $request->endDate;
+                .$request->startDate.':'
+                .$request->endDate;
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -48,7 +48,7 @@ class MetricController extends Controller
                         'orderParts',
                         'images',
                         'status',
-                        'technician'
+                        'technician',
                     ])
                         ->selectRaw("
                         TO_CHAR(created_at, 'YYYY-MM') as month,
@@ -67,7 +67,7 @@ class MetricController extends Controller
 
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 404);
         }
     }
@@ -83,13 +83,13 @@ class MetricController extends Controller
 
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
             $statuses = OrderStatus::all();
 
-            $cacheKey = 'metrics:order:status_type:' . $request->startDate . ':' . $request->endDate;
+            $cacheKey = 'metrics:order:status_type:'.$request->startDate.':'.$request->endDate;
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -102,11 +102,11 @@ class MetricController extends Controller
                         $metrics[$status->name] = $status->orders()
                             ->where(function ($query) use ($startDate, $endDate) {
 
-                                if (!empty($startDate)) {
+                                if (! empty($startDate)) {
                                     $query->where('created_at', '>=', $startDate);
                                 }
 
-                                if (!empty($endDate)) {
+                                if (! empty($endDate)) {
                                     $query->where('created_at', '<=', $endDate);
                                 }
                             })
@@ -117,13 +117,12 @@ class MetricController extends Controller
                 }
             );
 
-
             return response($metrics);
         } catch (Exception $e) {
 
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -142,13 +141,13 @@ class MetricController extends Controller
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
             $cacheKey = 'metrics:order:total_price:'
-                . $request->startDate . ':'
-                . $request->endDate;
+                .$request->startDate.':'
+                .$request->endDate;
 
             $cache = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -161,7 +160,7 @@ class MetricController extends Controller
                         'orderParts',
                         'images',
                         'status',
-                        'technician'
+                        'technician',
                     ])
                         ->selectRaw("
                         TO_CHAR(created_at, 'YYYY-MM') as month,
@@ -180,7 +179,7 @@ class MetricController extends Controller
 
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -196,11 +195,11 @@ class MetricController extends Controller
 
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
-            $cacheKey = 'metrics:order:revenue:' . $request->startDate . ':' . $request->endDate;
+            $cacheKey = 'metrics:order:revenue:'.$request->startDate.':'.$request->endDate;
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -214,11 +213,11 @@ class MetricController extends Controller
                     foreach ($orderStatuses as $status) {
                         $revenue[$status->name] = $status->orders()
                             ->where(function ($query) use ($startDate, $endDate) {
-                                if (!empty($startDate)) {
+                                if (! empty($startDate)) {
                                     $query->where('created_at', '>=', $startDate);
                                 }
 
-                                if (!empty($endDate)) {
+                                if (! empty($endDate)) {
                                     $query->where('created_at', '<=', $endDate);
                                 }
                             })
@@ -233,7 +232,7 @@ class MetricController extends Controller
             $metrics = array_map(function ($key, $value) {
                 return [
                     'name' => $key,
-                    'revenue' => $value
+                    'revenue' => $value,
                 ];
             }, array_keys($metrics), $metrics);
 
@@ -242,7 +241,7 @@ class MetricController extends Controller
 
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -261,14 +260,14 @@ class MetricController extends Controller
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
             $cacheKey = 'metrics:order:technician:'
-                . str_replace('/', '-', $request->startDate)
-                . ':'
-                . str_replace('/', '-', $request->endDate);
+                .str_replace('/', '-', $request->startDate)
+                .':'
+                .str_replace('/', '-', $request->endDate);
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -282,7 +281,7 @@ class MetricController extends Controller
                             $query->where('status_id', OrderStatusEnum::FINISHED->value)
                                 ->whereBetween('created_at', [
                                     $startDate,
-                                    $endDate
+                                    $endDate,
                                 ]);
                         })
 
@@ -291,9 +290,9 @@ class MetricController extends Controller
                                 $query->where('status_id', OrderStatusEnum::FINISHED->value)
                                     ->whereBetween('created_at', [
                                         $startDate,
-                                        $endDate
+                                        $endDate,
                                     ]);
-                            }
+                            },
                         ])
 
                         ->withSum([
@@ -301,9 +300,9 @@ class MetricController extends Controller
                                 $query->where('status_id', OrderStatusEnum::FINISHED->value)
                                     ->whereBetween('created_at', [
                                         $startDate,
-                                        $endDate
+                                        $endDate,
                                     ]);
-                            }
+                            },
                         ], 'total_price')
 
                         ->get()
@@ -314,10 +313,10 @@ class MetricController extends Controller
             );
 
             return response($metrics, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -331,11 +330,11 @@ class MetricController extends Controller
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
-            $cacheKey = 'metrics:order:equipment:' . $request->startDate . ':' . $request->endDate;
+            $cacheKey = 'metrics:order:equipment:'.$request->startDate.':'.$request->endDate;
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -357,7 +356,7 @@ class MetricController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -365,8 +364,6 @@ class MetricController extends Controller
     public function getPendingOrdersCount()
     {
         try {
-
-
 
             $cacheKey = 'metrics:orders:pending:count';
 
@@ -384,7 +381,7 @@ class MetricController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -392,8 +389,6 @@ class MetricController extends Controller
     public function getInProgressOrdersCount()
     {
         try {
-
-
 
             $cacheKey = 'metrics:orders:inprogress:count';
 
@@ -411,7 +406,7 @@ class MetricController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -431,11 +426,12 @@ class MetricController extends Controller
                 }
 
             );
+
             return response(['result' => $metrics]);
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -454,14 +450,14 @@ class MetricController extends Controller
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de clientes',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
             $cacheKey = 'metrics:order:customers:'
-                . str_replace('/', '-', $request->startDate)
-                . ':'
-                . str_replace('/', '-', $request->endDate);
+                .str_replace('/', '-', $request->startDate)
+                .':'
+                .str_replace('/', '-', $request->endDate);
 
             $metrics = Cache::tags('metrics')->remember(
                 $cacheKey,
@@ -474,7 +470,7 @@ class MetricController extends Controller
                             $query->where('status_id', OrderStatusEnum::FINISHED->value)
                                 ->whereBetween('created_at', [
                                     $startDate,
-                                    $endDate
+                                    $endDate,
                                 ]);
                         })
                         ->withCount([
@@ -482,22 +478,23 @@ class MetricController extends Controller
                                 $query->where('status_id', OrderStatusEnum::FINISHED->value)
                                     ->whereBetween('created_at', [
                                         $startDate,
-                                        $endDate
+                                        $endDate,
                                     ]);
-                            }
+                            },
                         ])
                         ->withSum([
                             'orders as total_revenue' => function ($query) use ($startDate, $endDate) {
                                 $query->where('status_id', OrderStatusEnum::FINISHED->value)
                                     ->whereBetween('created_at', [
                                         $startDate,
-                                        $endDate
+                                        $endDate,
                                     ]);
-                            }
+                            },
                         ], 'total_price')
                         ->get()
                         ->map(function ($customer) {
                             $customer->total_revenue = $customer->total_revenue ?? 0;
+
                             return $customer;
                         })
                         ->sortByDesc('total_revenue')
@@ -507,10 +504,10 @@ class MetricController extends Controller
             );
 
             return response($metrics, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de clientes',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -533,7 +530,7 @@ class MetricController extends Controller
             if (empty($startDate) || empty($endDate)) {
                 return response([
                     'message' => 'Não foi possível obter as métricas de ordem de serviço',
-                    'error' => 'Necessário informar um período'
+                    'error' => 'Necessário informar um período',
                 ], 400);
             }
 
@@ -556,14 +553,14 @@ class MetricController extends Controller
                         'user',
                         'equipment',
                         'status',
-                        'parts'
+                        'parts',
                     ])
                         ->whereBetween('created_at', [
                             $startDate,
-                            $endDate
+                            $endDate,
                         ])
                         ->when(
-                            !empty($description),
+                            ! empty($description),
                             function ($query) use ($description) {
                                 $query->where(function ($q) use ($description) {
 
@@ -592,7 +589,7 @@ class MetricController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar as métricas de ordem de serviço',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

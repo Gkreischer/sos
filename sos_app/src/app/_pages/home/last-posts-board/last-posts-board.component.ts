@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonCard,
@@ -26,6 +26,7 @@ import { TourAnchorIonPopoverDirective } from 'ngx-ui-tour-ionic';
 import { addIcons } from 'ionicons';
 import { library } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-user-posts-board',
   templateUrl: './last-posts-board.component.html',
   styleUrls: ['./last-posts-board.component.scss'],

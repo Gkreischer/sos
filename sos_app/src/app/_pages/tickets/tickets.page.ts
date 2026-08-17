@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -7,27 +7,30 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
+  IonMenuButton,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { TicketsListComponent } from './components/tickets-list/tickets-list.component';
 import { TicketFilterComponent } from './components/ticket-filter/ticket-filter.component';
-import { IonMenuButton } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-tickets',
   templateUrl: './tickets.page.html',
   styleUrls: ['./tickets.page.scss'],
   standalone: true,
   imports: [
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    CommonModule,
-    FormsModule,
-    TicketsListComponent,
-    TicketFilterComponent,
-    IonMenuButton,
-  ],
+      IonButtons,
+      IonContent,
+      IonHeader,
+      IonTitle,
+      IonToolbar,
+      CommonModule,
+      FormsModule,
+      IonMenuButton,
+      IonSpinner,
+      TicketsListComponent,
+      TicketFilterComponent,
+    ],
 })
 export class TicketsPage {}

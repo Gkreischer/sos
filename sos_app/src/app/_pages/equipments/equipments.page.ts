@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { EquipmentModalComponent } from './components/equipment-modal/equipment-modal.component';
@@ -16,26 +16,30 @@ import {
   IonIcon,
   IonFab,
   IonFabButton,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addSharp } from 'ionicons/icons';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-equipments',
   templateUrl: './equipments.page.html',
   styleUrls: ['./equipments.page.scss'],
   imports: [
-    IonIcon,
-    EquipmentFilterComponent,
-    EquipmentsListComponent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonMenuButton,
-    IonContent,
-    IonFab,
-    IonFabButton,
-  ],
+      IonIcon,
+      IonSpinner,
+      EquipmentFilterComponent,
+      EquipmentsListComponent,
+      IonHeader,
+      IonToolbar,
+      IonTitle,
+      IonButtons,
+      IonMenuButton,
+      IonContent,
+      IonFab,
+      IonFabButton,
+    ],
 })
 export class EquipmentsPage implements ViewWillEnter, ViewWillLeave {
   modalService = inject(ModalService);

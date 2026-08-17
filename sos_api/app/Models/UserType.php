@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Models\Role;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Permission\Models\Role;
 
 class UserType extends Model
 {
     use HasFactory, LogsActivity;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -23,7 +23,7 @@ class UserType extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Tipo de usuário ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Tipo de usuário '.__("activity.events.{$eventName}"));
     }
 
     public function users()

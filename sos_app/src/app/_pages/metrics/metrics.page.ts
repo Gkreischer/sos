@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-import {} from 'projects/shared/src/lib/_masks/dateMask';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { MetricFilterComponent } from './components/metric-filter/metric-filter.component';
 import { BarChartCounterComponent } from './components/bar-chart-order-monthly-year-quantity/bar-chart-counter.component';
@@ -23,11 +22,14 @@ import {
   IonRow,
   IonCol,
   IonMenuButton,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { OrdersByPeriodComponent } from './components/orders-by-period/orders-by-period.component';
 import { ViewDidLeave } from '@ionic/angular';
 import { MetricsService } from 'src/app/_services/metrics.service';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-metrics',
   templateUrl: './metrics.page.html',
   styleUrls: ['./metrics.page.scss'],
@@ -41,6 +43,7 @@ import { MetricsService } from 'src/app/_services/metrics.service';
     IonButtons,
     IonToolbar,
     IonHeader,
+    IonSpinner,
     MetricFilterComponent,
     BarChartCounterComponent,
     PieOrderByStatusBetweenPeriodsComponent,

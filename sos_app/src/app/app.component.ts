@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -80,6 +80,7 @@ interface AppPage {
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IonText,
     RouterLinkActive,

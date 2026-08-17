@@ -2,17 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserTypeEnum;
 use App\Models\Category;
 use App\Models\Equipment;
 use App\Models\Order;
-use Illuminate\Database\Seeder;
 use App\Models\Part;
-use App\Models\User;
 use App\Models\Post;
 use App\Models\Room;
 use App\Models\Ticket;
-use App\Models\UserType;
-use App\Enums\UserTypeEnum;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,19 +28,19 @@ class DatabaseSeeder extends Seeder
         $customers = User::factory()
             ->count(60)
             ->create([
-                'type_id' => UserTypeEnum::CLIENT->value
+                'type_id' => UserTypeEnum::CLIENT->value,
             ]);
 
         $attendants = User::factory()
             ->count(5)
             ->create([
-                'type_id' => UserTypeEnum::ATTENDANT->value
+                'type_id' => UserTypeEnum::ATTENDANT->value,
             ]);
 
         $technicians = User::factory()
             ->count(5)
             ->create([
-                'type_id' => UserTypeEnum::TECHNICIAN->value
+                'type_id' => UserTypeEnum::TECHNICIAN->value,
             ]);
         Category::factory()->count(20)->create();
 
@@ -58,7 +57,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             OrderStatusSeeder::class,
         ]);
-
 
         Order::factory()->count(100)->create();
 

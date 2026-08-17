@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
-use App\Enums\UserTypeEnum;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -29,7 +30,7 @@ class UserController extends Controller
             return response(
                 [
                     'message' => 'Não foi possível obter os usuários',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 500
             );
@@ -50,7 +51,7 @@ class UserController extends Controller
             return response(
                 [
                     'message' => 'Não foi possível obter o usuário',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 500
             );
@@ -67,20 +68,20 @@ class UserController extends Controller
 
             $data = $request->all();
 
-            if (!empty($data['password']) && !empty($data['password_confirmation']) && $data['password'] != $data['password_confirmation'] && strlen($data['password']) >= 8 && strlen($data['password_confirmation']) >= 8) {
+            if (! empty($data['password']) && ! empty($data['password_confirmation']) && $data['password'] != $data['password_confirmation'] && strlen($data['password']) >= 8 && strlen($data['password_confirmation']) >= 8) {
                 return response([
                     'message' => 'A confirmação da senha não confere',
-                    'error' => 'A confirmação da senha não confere'
+                    'error' => 'A confirmação da senha não confere',
                 ], 400);
             }
 
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-                'cpf' => 'nullable|string|max:14|unique:users,cpf,' . $id,
+                'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+                'cpf' => 'nullable|string|max:14|unique:users,cpf,'.$id,
                 'fantasy_name' => 'nullable|string|max:255',
                 'corporate_name' => 'nullable|string|max:255',
-                'cnpj' => 'nullable|string|max:18|unique:users,cnpj,' . $id,
+                'cnpj' => 'nullable|string|max:18|unique:users,cnpj,'.$id,
                 'cep' => 'required|string|max:9',
                 'address' => 'required|string|max:255',
                 'phone' => 'required|string|max:255',
@@ -109,7 +110,7 @@ class UserController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível atualizar o usuário',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -131,12 +132,12 @@ class UserController extends Controller
             return response($userCopy, 200);
         }
         // Make an exception for QueryException
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             if ($e->getCode() === '23000') {
                 return response(
                     [
                         'message' => 'Não foi possível deletar o usuário pois ele já está sendo utilizado ',
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ],
                     422
                 );
@@ -145,7 +146,7 @@ class UserController extends Controller
             return response(
                 [
                     'message' => 'Não foi possível deletar o usuário',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 422
             );
@@ -173,7 +174,7 @@ class UserController extends Controller
                 'state' => 'required|string|max:2',
                 'country' => 'required|string|max:255',
                 'password' => 'nullable|string|min:8|max:255|confirmed',
-                'password_confirmation' => 'nullable|string|min:8|max:255'
+                'password_confirmation' => 'nullable|string|min:8|max:255',
             ]);
 
             if ($validator->fails()) {
@@ -182,8 +183,7 @@ class UserController extends Controller
 
             $validated = $validator->validated();
 
-
-            if (!empty($data['password']) && !empty($data['password_confirmation'])) {
+            if (! empty($data['password']) && ! empty($data['password_confirmation'])) {
                 $validated['password'] = Hash::make($validated['password']);
             }
 
@@ -197,7 +197,7 @@ class UserController extends Controller
 
             return response([
                 'message' => 'Não foi possível criar o usuário',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -213,7 +213,7 @@ class UserController extends Controller
                 $data,
                 [
                     'description' => 'max:255|string|nullable',
-                    'type_id' => 'nullable|integer'
+                    'type_id' => 'nullable|integer',
                 ]
             );
 
@@ -223,7 +223,7 @@ class UserController extends Controller
 
             $query = User::query();
 
-            if (!empty($data['description'])) {
+            if (! empty($data['description'])) {
                 $search = $data['description'];
 
                 $query->where(function ($q) use ($search) {
@@ -248,19 +248,18 @@ class UserController extends Controller
                 });
             }
 
-            if (!empty($data['type_id'])) {
+            if (! empty($data['type_id'])) {
                 $query->whereHas('type', function ($q) use ($data) {
                     $q->where('id', $data['type_id']);
                 });
             }
 
-
             $descriptionFilter = $data['description'] ?? 'none';
             $typeFilter = $data['type_id'] ?? 'none';
             $cacheKey = "users:filter:{$descriptionFilter}:type:{$typeFilter}:page:{$page}";
 
-            $users = Cache::tags('users-list')->remember($cacheKey, now()->addMinutes(5), function () use ($query, $descriptionFilter, $typeFilter) {
-                /** @var \Illuminate\Database\Eloquent\Builder $query */
+            $users = Cache::tags('users-list')->remember($cacheKey, now()->addMinutes(5), function () use ($query) {
+                /** @var Builder $query */
                 return $query->with('type')->orderByDesc('created_at')->orderBy('id')->paginate(20)->toArray();
             });
 
@@ -268,7 +267,7 @@ class UserController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível obter o usuário',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -298,7 +297,7 @@ class UserController extends Controller
             $user->load('type');
 
             return response($user);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível atualizar a imagem',
                 'error' => $e->getMessage(),

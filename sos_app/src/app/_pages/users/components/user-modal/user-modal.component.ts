@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -50,6 +50,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.scss'],

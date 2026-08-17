@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonCard,
   IonCardTitle,
@@ -20,6 +20,7 @@ import { SettingService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-welcome',
   imports: [
     IonChip,

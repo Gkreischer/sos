@@ -16,7 +16,7 @@ return [
 
     // 2. RECOMENDAÇÃO: Quando 'supports_credentials' é true, usar '*' no allowed_origins pode falhar em alguns navegadores.
     // É mais seguro colocar a URL exata do seu Angular.
-    'allowed_origins' => ['http://localhost:8100', 'http://localhost:4200', 'http://localhost', 'http://localhost:9003', 'https://localhost',],
+    'allowed_origins' => ['http://localhost:8100', 'http://localhost:4200', 'http://localhost', 'http://localhost:9003', 'https://localhost'],
 
     'allowed_origins_patterns' => [],
 

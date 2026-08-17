@@ -75,6 +75,11 @@ export class PartService {
       )
       .pipe(
         tap((part) => {
+          // Preserve image from local cache if backend doesn't return it
+          const cachedPart = this.partsSubject.value.find(p => p.id === id);
+          if (cachedPart?.image && !part.image) {
+            part.image = cachedPart.image;
+          }
           return this.partSubject.next(part);
         }),
         catchError(this.errorService.handleError),
@@ -94,6 +99,12 @@ export class PartService {
       );
   }
 
+  // Get cached image for a part by ID
+  getCachedImage(id: number): string | undefined {
+    const part = this.partsSubject.value.find(p => p.id === id);
+    return part?.image;
+  }
+
   update(part: PartInterface, id: number) {
     return this.http
       .put<PartInterface>(
@@ -103,6 +114,14 @@ export class PartService {
       )
       .pipe(
         tap((partReceived) => {
+          // ALWAYS preserve the submitted image if it exists, regardless of backend response
+          // This handles cases where backend doesn't return image or returns different field name
+          if (part.image && (partReceived.image === undefined || partReceived.image === null || partReceived.image === '')) {
+            partReceived.image = part.image;
+          } else if (part.image && partReceived.image !== part.image) {
+            // Force the submitted image to take precedence
+            partReceived.image = part.image;
+          }
           const newParts = this.partsSubject.value.map((part) => {
             if (part.id === partReceived.id) {
               return partReceived;
@@ -120,6 +139,14 @@ export class PartService {
       .post<PartInterface>(`${environment.baseUrl}/parts`, part, httpOptions)
       .pipe(
         tap((partReceived) => {
+          // ALWAYS preserve the submitted image if it exists, regardless of backend response
+          // This handles cases where backend doesn't return image or returns different field name
+          if (part.image && (partReceived.image === undefined || partReceived.image === null || partReceived.image === '')) {
+            partReceived.image = part.image;
+          } else if (part.image && partReceived.image !== part.image) {
+            // Force the submitted image to take precedence
+            partReceived.image = part.image;
+          }
           const newParts = [partReceived, ...this.partsSubject.value];
           return this.partsSubject.next(newParts);
         }),

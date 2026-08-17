@@ -4,9 +4,9 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 
 class NewNotification implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
@@ -19,7 +19,7 @@ class NewNotification implements ShouldBroadcast, ShouldDispatchAfterCommit
     public function broadcastOn(): array
     {
         return [
-            new Channel('notifications')
+            new Channel('notifications'),
         ];
     }
 

@@ -14,7 +14,6 @@
 </ion-header>
 
 <ion-content>
-  {{ orderForm.value | json }}
   <form [formGroup]="orderForm">
     <ion-grid>
       <ion-row>
@@ -201,18 +200,15 @@
                   </ion-col>
                 </ion-row>
                 <ion-row>
-                  @let pictures = orderForm.get("pictures")?.value;
-                  @if (pictures && pictures.length > 0) {
-                    @for (picture of pictures; track $index) {
+                  @if (picturesPreview().length > 0) {
+                    @for (picture of picturesPreview(); track $index) {
                       <ion-col size="6" sizeMd="4">
                         <ion-card
                           class="ion-no-margin"
                           [button]="true"
                           (click)="showImage(picture)"
                         >
-                          <ion-img
-                            [src]="picture.path || picture.webPath"
-                          ></ion-img>
+                          <ion-img [src]="picture"></ion-img>
                         </ion-card>
                       </ion-col>
                     }
@@ -353,19 +349,19 @@
                       >Valor total da OS</ion-label
                     >
                     <ion-label slot="end" class="ion-text-end">
-                      {{ totalPrice | currency: "R$" }}
+                      {{ totalPrice() | currency: "R$" }}
                     </ion-label>
                   </ion-item>
                   <ion-item>
                     <ion-label class="ion-text-bold">Desconto</ion-label>
                     <ion-label slot="end" class="ion-text-end">
-                      {{ discount | currency: "R$" }}
+                      {{ discount() | currency: "R$" }}
                     </ion-label>
                   </ion-item>
                   <ion-item>
                     <ion-label class="ion-text-bold">Valor total</ion-label>
                     <ion-label slot="end" class="ion-text-end">
-                      {{ totalPrice | currency: "R$" }}
+                      {{ totalPrice() | currency: "R$" }}
                     </ion-label>
                   </ion-item>
                 </ion-list>
@@ -454,7 +450,7 @@
                             </ion-text></strong
                           >
                           <ion-text color="dark">{{
-                            totalPartsPrice | currency: "R$"
+                            totalPartsPrice() | currency: "R$"
                           }}</ion-text>
                         </p>
                       } @else {

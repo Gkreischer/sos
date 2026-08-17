@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\UserType;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        if (!User::where('email', 'admin@localhost')->exists()) {
+        if (! User::where('email', 'admin@localhost')->exists()) {
             $user = User::create([
                 'name' => 'admin',
                 'email' => 'admin@localhost',

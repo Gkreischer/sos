@@ -24,6 +24,12 @@
       "sourceType": "github",
       "skillPath": "skills/ionic-angular/SKILL.md",
       "computedHash": "b54258cdbf0810b2d6e60fbdf546575cbf729eff87c7378af74d445528e8647d"
+    },
+    "laravel-specialist": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/laravel-specialist/SKILL.md",
+      "computedHash": "d58e2ed3488398cb94a039f25b9d270e55dc434e16102abff9035608bec3db90"
     }
   }
 }

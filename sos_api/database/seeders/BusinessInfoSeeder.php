@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\BusinessInfo;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BusinessInfoSeeder extends Seeder
@@ -25,7 +24,7 @@ class BusinessInfoSeeder extends Seeder
             'cep' => '01234567',
             'country' => 'Brasil',
             'website' => 'https://sos.com.br',
-            'image' => 'https://picsum.photos/200/300'
+            'image' => 'https://picsum.photos/200/300',
         ]);
     }
 }

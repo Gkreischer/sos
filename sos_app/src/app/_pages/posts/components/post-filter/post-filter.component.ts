@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonCard,
   IonButton,
@@ -17,6 +17,7 @@ import { PostService } from 'src/app/_services/post.service';
 import { LoadingService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-post-filter',
   templateUrl: './post-filter.component.html',
   styleUrls: ['./post-filter.component.scss'],

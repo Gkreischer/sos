@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import {Component, signal, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { TicketService } from 'shared';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -25,6 +25,7 @@ import { addIcons } from 'ionicons';
 import { calendar } from 'ionicons/icons';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ticket-list',
   imports: [
     IonInfiniteScrollContent,

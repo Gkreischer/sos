@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import {Component, inject, OnInit, effect, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,6 +26,7 @@ import { AsyncPipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { search } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-equipment-filter',
   templateUrl: './equipment-filter.component.html',
   styleUrls: ['./equipment-filter.component.scss'],

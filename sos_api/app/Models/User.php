@@ -3,20 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
-
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, LogsActivity;
+    use HasApiTokens, HasFactory, HasRoles, LogsActivity, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -43,7 +42,7 @@ class User extends Authenticatable
         'country',
         'image',
         'password',
-        'type_id'
+        'type_id',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -54,7 +53,7 @@ class User extends Authenticatable
             ->logExcept(['password', 'remember_token'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Usuário ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Usuário '.__("activity.events.{$eventName}"));
     }
 
     /**
@@ -65,7 +64,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'pivot'
+        'pivot',
     ];
 
     /**
@@ -81,10 +80,9 @@ class User extends Authenticatable
     protected function phone(): Attribute
     {
         return Attribute::make(
-            set: fn(string $value) => $this->attributes['phone'] = preg_replace('/[^0-9]/', '', $value),
+            set: fn (string $value) => $this->attributes['phone'] = preg_replace('/[^0-9]/', '', $value),
         );
     }
-
 
     public function equipments(): HasMany
     {

@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import JsBarcode from 'jsbarcode';
 import { ActivatedRoute } from '@angular/router';
 import { inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { NgxPrintDirective } from 'ngx-print';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-barcode-print',
   standalone: true,
   templateUrl: './barcode-print.component.html',
-  styleUrl: './barcode-print.component.css',
+  styleUrl: './barcode-print.component.scss',
   imports: [NgxPrintDirective],
 })
 export class BarcodePrintComponent implements OnInit {

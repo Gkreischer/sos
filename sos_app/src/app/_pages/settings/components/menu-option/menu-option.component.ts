@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { BusinessInfoModalComponent } from '../business-info-modal/business-info-modal.component';
 import { UserInfoModalComponent } from '../user-info-modal/user-info-modal.component';
@@ -12,6 +12,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-menu-option',
   templateUrl: './menu-option.component.html',
   styleUrls: ['./menu-option.component.scss'],

@@ -20,11 +20,11 @@
     <ion-card-content>
       <form [formGroup]="formPart" (ngSubmit)="!partId ? submit() : update()">
         <ion-grid>
-          @if (this.formPart.get("image")?.value) {
+          @if (imagePreview()) {
             <ion-row>
               <ion-col class="ion-flex ion-justify-content-center">
                 <ion-card class="width__50">
-                  <ion-img [src]="formPart.get('image')?.value"></ion-img>
+                  <ion-img [src]="imagePreview()"></ion-img>
                 </ion-card>
               </ion-col>
             </ion-row>

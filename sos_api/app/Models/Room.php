@@ -28,7 +28,7 @@ class Room extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Sala ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Sala '.__("activity.events.{$eventName}"));
     }
 
     public function messages()

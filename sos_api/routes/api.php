@@ -1,22 +1,22 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\BusinessInfoController;
-use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MetricController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\PhotoController;
-use App\Http\Controllers\MetricController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTypeController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\RoomController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\ActivityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,9 +30,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::middleware(['json.response'])->group(function () {
-
 
     Route::prefix('v1')->group(function () {
         Route::controller(LoginController::class)->group(function () {

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrderStatus extends Model
@@ -14,12 +13,11 @@ class OrderStatus extends Model
     protected $table = 'order_status';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
-    public function orders() : HasMany
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'status_id', 'id');
     }
-
 }

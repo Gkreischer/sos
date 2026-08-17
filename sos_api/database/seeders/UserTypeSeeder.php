@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\UserType;
+use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
 class UserTypeSeeder extends Seeder

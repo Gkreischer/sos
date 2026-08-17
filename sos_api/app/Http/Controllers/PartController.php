@@ -6,8 +6,9 @@ use App\Models\Part;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class PartController extends Controller
 {
@@ -17,7 +18,7 @@ class PartController extends Controller
 
             $data = $request->all();
 
-            $parts = Part::where('name', 'like', '%' . $data['search'] . '%')->get();
+            $parts = Part::where('name', 'like', '%'.$data['search'].'%')->get();
 
             return response($parts);
         } catch (Exception $e) {
@@ -85,7 +86,7 @@ class PartController extends Controller
             });
 
             return response($part, 200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return response([
                 'message' => 'Os dados fornecidos são inválidos.',
                 'errors' => $e->errors(),
@@ -95,7 +96,7 @@ class PartController extends Controller
                 'message' => 'Peça não encontrada',
                 'error' => $e->getMessage(),
             ], 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Erro ao atualizar a peça',
                 'error' => $e->getMessage(),
@@ -109,7 +110,7 @@ class PartController extends Controller
             $description = trim($request->input('description', ''));
 
             $part = Part::query()
-                ->when(!empty($description), function ($query) use ($description) {
+                ->when(! empty($description), function ($query) use ($description) {
                     $query->where(function ($q) use ($description) {
                         $q->whereRaw(
                             'unaccent(name) ILIKE unaccent(?)',
@@ -157,7 +158,7 @@ class PartController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível criar a peça',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

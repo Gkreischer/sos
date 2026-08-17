@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   IonButton,
   IonIcon,
@@ -40,6 +40,7 @@ import { send } from 'ionicons/icons';
 import TicketStatus from 'src/app/_enums/ticketStatus';
 import { OrderModalComponent } from 'src/app/_pages/orders/components/order-modal/order-modal.component';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ticket-modal',
   imports: [
     IonText,

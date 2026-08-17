@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivityService } from 'src/app/_services/activity.service';
 import { ActivityInterface } from 'src/app/_interfaces/ActivityInterface';
 import { Observable } from 'rxjs';
@@ -33,6 +39,7 @@ import {
 import { LoadingService } from 'shared';
 import { InfiniteScrollCustomEvent } from '@ionic/core';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-activity-list',
   imports: [
     IonInfiniteScrollContent,
@@ -107,6 +114,7 @@ export class ActivityListComponent implements OnInit {
     this.infiniteScroll.set(true);
 
     this.activityService.getActivities(this.ticketsPage).subscribe((res) => {
+      console.log(res);
       if (res.current_page >= res.last_page) {
         this.infiniteScroll.set(false);
       }

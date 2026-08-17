@@ -8,8 +8,15 @@
 </ion-header>
 
 <ion-content>
-  <app-part-filter></app-part-filter>
-  <app-parts-list></app-parts-list>
+  @defer (on viewport) {
+    <app-part-filter></app-part-filter>
+    <app-parts-list></app-parts-list>
+  } @placeholder {
+    <div class="ion-padding ion-text-center">
+      <ion-spinner></ion-spinner>
+      <p>Carregando materiais...</p>
+    </div>
+  }
 </ion-content>
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button (click)="addPart()" color="tertiary">

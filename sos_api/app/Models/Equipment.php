@@ -20,7 +20,7 @@ class Equipment extends Model
         'image',
         'category_id',
         'user_id',
-        'obs'
+        'obs',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -30,7 +30,7 @@ class Equipment extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Equipamento ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Equipamento '.__("activity.events.{$eventName}"));
     }
 
     protected $with = [

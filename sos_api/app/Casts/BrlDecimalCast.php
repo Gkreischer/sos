@@ -3,7 +3,6 @@
 namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Illuminate\Database\Eloquent\Model;
 
 class BrlDecimalCast implements CastsAttributes
 {
@@ -19,10 +18,14 @@ class BrlDecimalCast implements CastsAttributes
 
     private function brlToDecimal(?string $value): ?string
     {
-        if ($value === null) return null;
+        if ($value === null) {
+            return null;
+        }
 
         $value = trim($value);
-        if ($value === '') return null;
+        if ($value === '') {
+            return null;
+        }
 
         // 1. Remove qualquer caractere que não seja número, ponto, vírgula ou sinal de menos
         $value = preg_replace('/[^\d,.\-]/', '', $value);
@@ -44,11 +47,11 @@ class BrlDecimalCast implements CastsAttributes
         }
 
         // 5. Valida se o PHP agora entende como um número limpo
-        if (!is_numeric($value)) {
+        if (! is_numeric($value)) {
             throw new \InvalidArgumentException("Valor inválido: {$value}");
         }
 
         // Retorna formatado estritamente como decimal para o banco de dados (ex: 4555555.00)
-        return number_format((float)$value, 2, '.', '');
+        return number_format((float) $value, 2, '.', '');
     }
 }

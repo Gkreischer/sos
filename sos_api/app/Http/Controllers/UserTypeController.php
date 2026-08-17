@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserType;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 
 class UserTypeController extends Controller
 {
@@ -16,11 +16,12 @@ class UserTypeController extends Controller
         try {
 
             $userTypes = UserType::all('id', 'name');
+
             return response($userTypes);
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível obter o tipo de usuário',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

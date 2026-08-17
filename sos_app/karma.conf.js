@@ -33,21 +33,21 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: process.env.CI ? ["ChromeHeadless"] : ["Chrome"],
-    customLaunchers: process.env.CI
-      ? {
-          ChromeHeadless: {
-            base: "Chrome",
-            flags: [
-              "--headless=new",
-              "--no-sandbox",
-              "--disable-gpu",
-              "--disable-translate",
-              "--disable-extensions",
-            ],
-          },
-        }
-      : undefined,
+    browsers: process.env.CI ? ["ChromeHeadlessNoSandbox"] : ["Chrome"],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: "Chrome",
+        flags: [
+          "--headless",
+          "--no-sandbox",
+          "--disable-gpu",
+          "--disable-translate",
+          "--disable-extensions",
+          "--disable-dev-shm-usage",
+          "--remote-debugging-port=9222"
+        ],
+      },
+    },
     singleRun: true,
     restartOnFileChange: false,
   });

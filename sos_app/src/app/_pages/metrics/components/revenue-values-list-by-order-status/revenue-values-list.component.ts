@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import {Component, effect, inject, ChangeDetectionStrategy} from '@angular/core';
 import { ChartData, ChartType } from 'chart.js';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { BaseChartDirective } from 'ng2-charts';
@@ -16,6 +16,7 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-revenue-values-list',
   templateUrl: './revenue-values-list.component.html',
   styleUrls: ['./revenue-values-list.component.scss'],

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -40,6 +40,7 @@ import { addIcons } from 'ionicons';
 import { camera, arrowBack } from 'ionicons/icons';
 import { CepService } from 'shared';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-business-info-modal',
   templateUrl: './business-info-modal.component.html',
   styleUrls: ['./business-info-modal.component.scss'],

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -30,7 +30,7 @@ class Ticket extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Chamado ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Chamado '.__("activity.events.{$eventName}"));
     }
 
     public function user(): BelongsTo

@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-
 
 class OrderPartSeeder extends Seeder
 {
@@ -22,7 +20,7 @@ class OrderPartSeeder extends Seeder
             'quantity' => 1.00,
             'price' => 100.00,
             'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

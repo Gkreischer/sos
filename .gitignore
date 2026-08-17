@@ -33,9 +33,8 @@ sos_app/cypress/downloads/
 .DS_Store
 Thumbs.db
 
-mariadb.env
-production.env
+.secrets
 
 
-mariadb.example.env
-sos_api/.env.example
+
+

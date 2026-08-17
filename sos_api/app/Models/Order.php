@@ -3,26 +3,23 @@
 namespace App\Models;
 
 use App\Casts\BrlDecimalCast;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Ramsey\Uuid\Uuid;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Order extends Model
 {
-    use HasFactory, LogsActivity, HasUuids;
-
+    use HasFactory, HasUuids, LogsActivity;
 
     protected $with = ['user', 'equipment', 'parts', 'pictures', 'status', 'technician', 'attendant'];
 
-    protected $fillable = ['title', 'status', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature', 'uid'];
+    protected $fillable = ['title', 'status', 'attendant_id', 'description', 'obs', 'technician_id',  'user_id', 'equipment_id',  'service_price', 'parts_price', 'total_price', 'status_id', 'discount', 'service_description', 'diagnostic', 'signature', 'uid'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -32,12 +29,12 @@ class Order extends Model
             ->logExcept(['signature'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
-            ->setDescriptionForEvent(fn(string $eventName) => 'Ordem ' . __("activity.events.{$eventName}"));
+            ->setDescriptionForEvent(fn (string $eventName) => 'Ordem '.__("activity.events.{$eventName}"));
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function equipment(): BelongsTo

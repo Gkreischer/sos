@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { PostService } from 'src/app/_services/post.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
@@ -28,6 +28,7 @@ import { addIcons } from 'ionicons';
 import { arrowBack } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-post-modal-add-edit',
   standalone: true,
   templateUrl: './post-modal-add-edit.component.html',

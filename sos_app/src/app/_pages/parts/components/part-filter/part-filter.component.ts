@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import {Component, inject, OnInit, effect, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -25,6 +25,7 @@ import {
 import { addIcons } from 'ionicons';
 import { search } from 'ionicons/icons';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-part-filter',
   templateUrl: './part-filter.component.html',
   styleUrls: ['./part-filter.component.scss'],

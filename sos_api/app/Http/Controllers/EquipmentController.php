@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Cache;
-use App\Models\User;
 use App\Models\Order;
+use App\Models\User;
+use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class EquipmentController extends Controller
 {
@@ -23,7 +23,7 @@ class EquipmentController extends Controller
             $page = request()->input('page', 1);
 
             // Cria uma chave única por página (ex: equipments_page_1, equipments_page_2)
-            $cacheKey = 'equipments_page_' . $page;
+            $cacheKey = 'equipments_page_'.$page;
 
             $equipmentsCache = Cache::tags('equipments-list')->remember($cacheKey, now()->addMinutes(5), function () {
                 return Equipment::orderBy('created_at', 'desc')->paginate(20)->toArray();
@@ -33,7 +33,7 @@ class EquipmentController extends Controller
         } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível carregar os equipamentos',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -68,11 +68,11 @@ class EquipmentController extends Controller
             $equipment->load(['category', 'user']);
 
             return response($equipment, 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Equipment not created',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -89,11 +89,11 @@ class EquipmentController extends Controller
             $equipment = Equipment::findOrFail($id);
 
             return response($equipment, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Equipment not found',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -106,7 +106,7 @@ class EquipmentController extends Controller
             $description = trim($request->input('description', ''));
             $page = $request->input('page', 1);
 
-            $searchKey = !empty($description)
+            $searchKey = ! empty($description)
                 ? md5($description)
                 : 'all';
 
@@ -128,10 +128,10 @@ class EquipmentController extends Controller
                         )
                         ->with([
                             'category:id,name',
-                            'user:id,name'
+                            'user:id,name',
                         ])
                         ->when(
-                            !empty($description),
+                            ! empty($description),
                             function ($query) use ($description) {
                                 $query->where(function ($q) use ($description) {
 
@@ -167,13 +167,14 @@ class EquipmentController extends Controller
             );
 
             return response()->json($equipments, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Não foi possível obter os equipamentos',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
     /**
      * Update the specified resource in storage.
      */
@@ -206,16 +207,15 @@ class EquipmentController extends Controller
             Cache::tags('equipments-list')->flush();
             Cache::tags('customer-equipments-list')->flush();
 
-
             // Recarrega as relações após a atualização
             $equipment->load(['category', 'user']);
 
             return response($equipment, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Equipamento não foi atualizado',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -240,13 +240,13 @@ class EquipmentController extends Controller
         } catch (QueryException $e) {
             return response([
                 'message' => 'Equipamento já possui ordem de serviço associada',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response(
                 [
                     'message' => 'Erro ao deletar o equipamento',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 404
             );
@@ -263,7 +263,7 @@ class EquipmentController extends Controller
             return response(
                 [
                     'message' => 'Erro ao obter os equipamentos do usuario',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 500
             );
@@ -276,7 +276,7 @@ class EquipmentController extends Controller
             /** @var User $user */
             $user = auth('sanctum')->user();
 
-            $cacheKey = 'equipments:customer:' . $user->id;
+            $cacheKey = 'equipments:customer:'.$user->id;
 
             $equipmentsCache = Cache::tags('customer-equipments-list')->remember($cacheKey, now()->addMinutes(5), function () use ($user) {
                 return $user->equipments()->orderBy('created_at', 'desc')->paginate(20);
@@ -287,7 +287,7 @@ class EquipmentController extends Controller
             return response(
                 [
                     'message' => 'Erro ao obter os equipamentos do usuario',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 500
             );
@@ -300,10 +300,10 @@ class EquipmentController extends Controller
             /** @var User $user */
             $user = auth('sanctum')->user();
 
-            if (!isset($user)) {
+            if (! isset($user)) {
                 return response([
                     'message' => 'Sem permissão de acesso',
-                    'error' => 'Usuário sem permissão'
+                    'error' => 'Usuário sem permissão',
                 ], 404);
             }
             $equipment = $user->equipments()->findOrFail($id);
@@ -313,7 +313,7 @@ class EquipmentController extends Controller
             return response(
                 [
                     'message' => 'Erro ao obter os equipamentos do usuario',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 500
             );
@@ -326,10 +326,10 @@ class EquipmentController extends Controller
             /** @var User $user */
             $user = auth('sanctum')->user();
 
-            if (!isset($user)) {
+            if (! isset($user)) {
                 return response([
                     'message' => 'Sem permissão de acesso',
-                    'error' => 'Usuário sem permissão'
+                    'error' => 'Usuário sem permissão',
                 ], 404);
             }
 
@@ -355,7 +355,7 @@ class EquipmentController extends Controller
             return response(
                 [
                     'message' => 'Erro ao atualizar o equipamento do usuario',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ],
                 500
             );
@@ -368,16 +368,16 @@ class EquipmentController extends Controller
             /** @var User $user */
             $user = auth('sanctum')->user();
 
-            if (!isset($user)) {
+            if (! isset($user)) {
                 return response([
                     'message' => 'Sem permissão de acesso',
-                    'error' => 'Usuário sem permissão'
+                    'error' => 'Usuário sem permissão',
                 ], 404);
             }
 
             $description = trim($request->input('description', ''));
 
-            $cacheKey = 'equipments:customer:filter:' . $user->id . ':' . $description;
+            $cacheKey = 'equipments:customer:filter:'.$user->id.':'.$description;
 
             $equipmentsCache = Cache::tags('customer-equipments-list')->remember(
                 $cacheKey,
@@ -397,7 +397,7 @@ class EquipmentController extends Controller
                             'category:id,name',
                         ])
                         ->when(
-                            !empty($description),
+                            ! empty($description),
                             function ($query) use ($description) {
                                 $query->where(function ($q) use ($description) {
 
@@ -423,10 +423,10 @@ class EquipmentController extends Controller
             );
 
             return response()->json($equipmentsCache, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Não foi possível obter os equipamentos',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -439,11 +439,12 @@ class EquipmentController extends Controller
             $equipment = $user->equipments()->findOrFail($id);
             $equipment->delete();
             Cache::tags('customer-equipments-list')->flush();
+
             return response($equipment, 204);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível excluir o equipamento',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -456,11 +457,12 @@ class EquipmentController extends Controller
                 ->where('equipment_id', $id)
                 ->orderBy('created_at')
                 ->paginate(20);
+
             return response($orders);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response([
                 'message' => 'Não foi possível obter o histórico do equipamento',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

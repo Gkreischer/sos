@@ -1,4 +1,4 @@
-@let info = businessInfo | async;
+@let info = businessInfo$ | async;
 
 <div class="ion-flex ion-justify-content-center">
   <button
@@ -47,7 +47,7 @@
         <p>Erro ao carregar os dados da empresa</p>
       }
       <hr />
-      @let order = orderInfo | async;
+      @let order = orderInfo$ | async;
       @if (order) {
         <div class="order-info">
           <p><strong>Informações da Ordem de Serviço</strong></p>

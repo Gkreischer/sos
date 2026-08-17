@@ -39,3 +39,6 @@ Thumbs.db
 
 
 
+.github/workflows/ci-act.yml
+.env.act
+.actrc

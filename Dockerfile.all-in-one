@@ -5,14 +5,14 @@
 # ============================================================
 #
 # PERSISTENT VOLUMES:
-# - /var/lib/postgresql/15/main  -> PostgreSQL database data
+# - /var/lib/postgresql/18/main  -> PostgreSQL database data
 # - /var/lib/redis               -> Redis data (RDB snapshots)
 #
 # To persist data across container restarts, mount these volumes:
-#   docker run -v sos-postgres:/var/lib/postgresql/15/main -v sos-redis:/var/lib/redis ...
+#   docker run -v sos-postgres:/var/lib/postgresql/18/main -v sos-redis:/var/lib/redis ...
 # Or with docker-compose:
 #   volumes:
-#     - postgres_data:/var/lib/postgresql/15/main
+#     - postgres_data:/var/lib/postgresql/18/main
 #     - redis_data:/var/lib/redis
 
 # ============================================================
@@ -85,6 +85,7 @@ FROM docker.io/library/debian:bookworm-slim AS runtime
 
 # Install system dependencies
 # Note: Laravel requires PHP 8.5+, so we add the sury repository
+# PostgreSQL 18 from official PostgreSQL APT repository
 RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release \
     ca-certificates \
@@ -93,6 +94,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
+    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/pgdg.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] https://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
     && apt-get update && apt-get install -y --no-install-recommends \
     # PHP 8.5 & extensions
     php8.5 \
@@ -111,9 +114,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # php8.5-pcntl is built into PHP core, not a separate package
     # Nginx
     nginx \
-    # PostgreSQL (bookworm has postgresql-15)
-    postgresql-15 \
-    postgresql-client-15 \
+    # PostgreSQL 18 from PGDG repository
+    postgresql-18 \
+    postgresql-client-18 \
     # Redis
     redis-server \
     # Supervisord for process management
@@ -191,48 +194,51 @@ RUN mkdir -p /var/log/nginx
 # Configure PostgreSQL
 # ============================================================
 # PostgreSQL data directory
-RUN mkdir -p /var/lib/postgresql/15/main \
-    && chown -R postgres:postgres /var/lib/postgresql/15/main \
-    && chmod 700 /var/lib/postgresql/15/main
+RUN mkdir -p /var/lib/postgresql/18/main \
+    && chown -R postgres:postgres /var/lib/postgresql/18/main \
+    && chmod 700 /var/lib/postgresql/18/main
 
 # Define volume for PostgreSQL data persistence
 # This ensures database data survives container restarts/recreates
-VOLUME ["/var/lib/postgresql/15/main"]
+VOLUME ["/var/lib/postgresql/18/main"]
 
 # PostgreSQL config - allow local connections without password for superuser
-RUN echo "local   all             postgres                                trust\n\
-local   all             all                                     md5\n\
-host    all             all             127.0.0.1/32            md5\n\
-host    all             all             ::1/128                 md5\n\
-" > /etc/postgresql/15/main/pg_hba.conf
+RUN cat > /etc/postgresql/18/main/pg_hba.conf << 'EOF'
+local   all             postgres                                trust
+local   all             all                                     md5
+host    all             all             127.0.0.1/32            md5
+host    all             all             ::1/128                 md5
+EOF
 
 # Create pg_ident.conf
-RUN echo "# MAPNAME       SYSTEM-USERNAME         PG-USERNAME\n\
-" > /etc/postgresql/15/main/pg_ident.conf
+RUN cat > /etc/postgresql/18/main/pg_ident.conf << 'EOF'
+# MAPNAME       SYSTEM-USERNAME         PG-USERNAME
+EOF
 
 # Create run directory for PostgreSQL
 RUN mkdir -p /var/run/postgresql && chown postgres:postgres /var/run/postgresql
 
 # PostgreSQL main config - listen on localhost only
-RUN echo "listen_addresses = 'localhost'\n\
-port = 5432\n\
-max_connections = 100\n\
-shared_buffers = 128MB\n\
-effective_cache_size = 512MB\n\
-maintenance_work_mem = 64MB\n\
-checkpoint_completion_target = 0.9\n\
-wal_buffers = 16MB\n\
-default_statistics_target = 100\n\
-random_page_cost = 1.1\n\
-effective_io_concurrency = 200\n\
-work_mem = 4MB\n\
-min_wal_size = 1GB\n\
-max_wal_size = 4GB\n\
-hba_file = '/etc/postgresql/15/main/pg_hba.conf'\n\
-ident_file = '/etc/postgresql/15/main/pg_ident.conf'\n\
-external_pid_file = '/var/run/postgresql/15-main.pid'\n\
-unix_socket_directories = '/var/run/postgresql'\n\
-" > /etc/postgresql/15/main/postgresql.conf
+RUN cat > /etc/postgresql/18/main/postgresql.conf << 'EOF'
+listen_addresses = 'localhost'
+port = 5432
+max_connections = 100
+shared_buffers = 128MB
+effective_cache_size = 512MB
+maintenance_work_mem = 64MB
+checkpoint_completion_target = 0.9
+wal_buffers = 16MB
+default_statistics_target = 100
+random_page_cost = 1.1
+effective_io_concurrency = 200
+work_mem = 4MB
+min_wal_size = 1GB
+max_wal_size = 4GB
+hba_file = '/etc/postgresql/18/main/pg_hba.conf'
+ident_file = '/etc/postgresql/18/main/pg_ident.conf'
+external_pid_file = '/var/run/postgresql/18-main.pid'
+unix_socket_directories = '/var/run/postgresql'
+EOF
 
 
 # ============================================================

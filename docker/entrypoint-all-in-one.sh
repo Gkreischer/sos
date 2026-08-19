@@ -48,9 +48,9 @@ echo "   APP_ENV=${APP_ENV}"
 echo "🐘 Initializing PostgreSQL..."
 
 # Check if PostgreSQL data directory is already initialized
-if [ ! -f /var/lib/postgresql/15/main/PG_VERSION ]; then
+if [ ! -f /var/lib/postgresql/18/main/PG_VERSION ]; then
     echo "   Initializing new PostgreSQL cluster..."
-    su - postgres -c "/usr/lib/postgresql/15/bin/initdb -D /var/lib/postgresql/15/main --auth-local=trust --auth-host=md5"
+    su - postgres -c "/usr/lib/postgresql/18/bin/initdb -D /var/lib/postgresql/18/main --auth-local=trust --auth-host=md5"
     echo "   PostgreSQL cluster initialized."
 else
     echo "   PostgreSQL cluster already exists."
@@ -63,7 +63,7 @@ mkdir -p /var/log/supervisor
 chown postgres:postgres /var/log/supervisor
 
 # Start PostgreSQL in background for setup (not using pg_ctl which has issues)
-su - postgres -c "/usr/lib/postgresql/15/bin/postgres -D /var/lib/postgresql/15/main -c config_file=/etc/postgresql/15/main/postgresql.conf -c hba_file=/etc/postgresql/15/main/pg_hba.conf -c ident_file=/etc/postgresql/15/main/pg_ident.conf -c external_pid_file=/var/run/postgresql/15-main.pid -c unix_socket_directories=/var/run/postgresql" > /var/log/supervisor/postgresql_setup.log 2>&1 &
+su - postgres -c "/usr/lib/postgresql/18/bin/postgres -D /var/lib/postgresql/18/main -c config_file=/etc/postgresql/18/main/postgresql.conf -c hba_file=/etc/postgresql/18/main/pg_hba.conf -c ident_file=/etc/postgresql/18/main/pg_ident.conf -c external_pid_file=/var/run/postgresql/18-main.pid -c unix_socket_directories=/var/run/postgresql" > /var/log/supervisor/postgresql_setup.log 2>&1 &
 POSTGRES_PID=$!
 
 # Start Redis temporarily for setup
@@ -183,7 +183,7 @@ redis-cli shutdown 2>/dev/null || true
 sleep 1
 
 # Ensure no postgres processes remain
-pkill -f "postgres.*15/main" 2>/dev/null || true
+pkill -f "postgres.*18/main" 2>/dev/null || true
 sleep 1
 
 # ============================================================

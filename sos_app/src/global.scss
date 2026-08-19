@@ -361,3 +361,7 @@ ion-select[required]::part(label)::after {
   content: "*";
   color: var(--ion-color-danger);
 }
+
+#logout-button-item::part(native) {
+  padding-left: 0 !important;
+}

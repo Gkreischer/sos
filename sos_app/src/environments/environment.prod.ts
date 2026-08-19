@@ -9,7 +9,7 @@ export const environment = {
   storageUrl: '/storage',
   authEndpoint: '/broadcasting/auth',
 
-  reverbKey: 'GENERATEYOUROWNKEY',
+  reverbKey: 'WFBts8xvsdwQRDY2',
 
   wsHost: hostname,
   wsPort: Number(port),

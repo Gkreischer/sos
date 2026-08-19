@@ -1,4 +1,4 @@
-import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonApp,
   IonRouterOutlet,
@@ -10,7 +10,7 @@ import {
 import { addIcons } from 'ionicons';
 import { home, person, contract, exit, hardwareChip } from 'ionicons/icons';
 import { LoginService } from 'shared';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { NotificationService } from 'shared';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

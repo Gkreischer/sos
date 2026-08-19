@@ -63,7 +63,7 @@ class RoomController extends Controller
             }
 
             $room->load('creator:id,name,image');
-            broadcast(new NewRoom($room));
+            broadcast(new NewRoom($room))->toOthers();
 
             return response(['success' => true, 'room' => $room]);
         } catch (\Exception $e) {

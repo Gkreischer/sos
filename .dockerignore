@@ -5,27 +5,35 @@
 
 **/node_modules
 **/vendor
-
-sos_api/public/storage
-
 **/.angular
-
-**/storage/logs
-**/storage/framework
+**/dist
+**/www
 
 **/cypress/videos
 **/cypress/screenshots
 
+sos_api/public/storage
+
+**/storage/logs
+**/storage/framework
+
+**/bootstrap/cache/*.php
+
 **/.env
+**/.env.*
+!**/.env.example
 
 **/*.log
-
 **/.DS_Store
 **/Thumbs.db
-
 **/composer.phar
 
-bootstrap/cache/*.php
+**/.cache
+**/.npm
+**/.eslintcache
+**/.stylelintcache
 
-sos_api/bootstrap/cache/*.php
-!sos_api/bootstrap/cache/.gitignore
+*.tmp
+*.temp
+*.swp
+*~

@@ -35,8 +35,6 @@ export const appConfig: ApplicationConfig = {
       provide: APP_CONFIG,
       useValue: {
         baseUrl: environment.baseUrl,
-        reverbPort: environment.reverbPort,
-        reverbHost: environment.reverbHost,
         reverbKey: environment.reverbKey,
         wsPort: environment.wsPort,
         wsHost: environment.wsHost,

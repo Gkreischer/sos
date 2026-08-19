@@ -36,9 +36,8 @@ module.exports = function (config) {
     browsers: process.env.CI ? ["ChromeHeadlessNoSandbox"] : ["Chrome"],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
-        base: "Chrome",
+        base: "ChromeHeadless",
         flags: [
-          "--headless",
           "--no-sandbox",
           "--disable-gpu",
           "--disable-translate",

@@ -19,12 +19,12 @@
             "allowedCommonJsDependencies": [
               "jsbarcode",
               "pusher-js",
-              "hammerjs"
+              "hammerjs",
+              "angular-csv-ext/dist/Angular-csv",
+              "xlsx-js-style"
             ],
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -39,10 +39,7 @@
                 "output": "./svg"
               }
             ],
-            "styles": [
-              "src/global.scss",
-              "src/theme/variables.scss"
-            ],
+            "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": [],
             "browser": "src/main.ts"
           },
@@ -121,9 +118,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
@@ -139,10 +134,7 @@
                 "output": "./svg"
               }
             ],
-            "styles": [
-              "src/global.scss",
-              "src/theme/variables.scss"
-            ],
+            "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": []
           },
           "configurations": {
@@ -155,10 +147,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "cypress-run": {
@@ -223,13 +212,15 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/ticket-support/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/ticket-support/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
-              "pusher-js"
+              "jsbarcode",
+              "pusher-js",
+              "hammerjs",
+              "angular-csv-ext/dist/Angular-csv",
+              "xlsx-js-style"
             ],
             "assets": [
               {
@@ -306,10 +297,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/ticket-support/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -393,10 +381,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/shared/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
       }

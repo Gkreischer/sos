@@ -64,6 +64,10 @@
                     <ion-select-option [value]="category.id">{{
                       category.name
                     }}</ion-select-option>
+                  } @empty {
+                    <ion-select-option disabled value=""
+                      >Cadastre uma categoria em "Categorias"</ion-select-option
+                    >
                   }
                 </ion-select>
               }

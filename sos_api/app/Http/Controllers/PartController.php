@@ -18,7 +18,7 @@ class PartController extends Controller
 
             $data = $request->all();
 
-            $parts = Part::where('name', 'like', '%'.$data['search'].'%')->get();
+            $parts = Part::where('name', 'like', '%' . $data['search'] . '%')->get();
 
             return response($parts);
         } catch (Exception $e) {
@@ -68,12 +68,12 @@ class PartController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string|max:255',
-                    'description' => 'nullable|string|max:255',
+                    'description' => 'nullable|string|max:1024',
                     'price' => 'required|string',
                     'category_id' => 'required|numeric',
                     'created_at' => 'nullable|date',
                     'updated_at' => 'nullable|date',
-                    'image' => 'string|nullable|url',
+                    'image' => 'string|nullable',
                 ]);
 
                 $validatedData = $validator->validate();
@@ -124,9 +124,9 @@ class PartController extends Controller
                 })
                 ->paginate(20);
 
-            return response()->json($part, 200);
+            return response($part, 200);
         } catch (Exception $e) {
-            return response()->json([
+            return response([
                 'message' => 'Não foi possível obter a peça',
                 'error' => $e->getMessage(),
             ], 500);
@@ -139,10 +139,11 @@ class PartController extends Controller
             $data = $request->all();
 
             $validator = Validator::make($data, [
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string|max:255',
+                'name' => 'required|string|max:256',
+                'description' => 'nullable|string|max:1024',
                 'price' => 'required|string',
                 'category_id' => 'required|numeric',
+                'image' => 'string|nullable',
             ]);
 
             if ($validator->fails()) {

@@ -1,34 +1,37 @@
 {
   "/api": {
-    "target": "http://localhost:9003",
+    "target": "http://127.0.0.1:8080",
     "secure": false,
     "changeOrigin": true
   },
 
   "/storage": {
-    "target": "http://localhost:9003",
+    "target": "http://127.0.0.1:8080",
     "secure": false,
     "changeOrigin": true
   },
 
   "/broadcasting": {
-    "target": "http://localhost:9003",
+    "target": "http://127.0.0.1:8080",
     "secure": false,
     "changeOrigin": true
   },
+
   "/images": {
-    "target": "http://localhost:9003",
+    "target": "http://127.0.0.1:8080",
     "secure": false,
     "changeOrigin": true
   },
+
   "/app": {
-    "target": "ws://localhost:9003",
+    "target": "ws://127.0.0.1:8080",
     "ws": true,
     "secure": false,
     "changeOrigin": true
   },
+
   "/sanctum": {
-    "target": "http://localhost:9003",
+    "target": "http://127.0.0.1:8080",
     "secure": false,
     "changeOrigin": true
   }

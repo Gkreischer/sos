@@ -41,7 +41,7 @@ import {
 import { TicketService } from 'shared';
 import { LoadingService } from 'shared';
 import { Observable } from 'rxjs';
-import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { EquipmentService } from '@ticket/app/_services/equipment.service';
 import { EquipmentInterface } from 'shared';
 import { TicketInterface } from 'shared';

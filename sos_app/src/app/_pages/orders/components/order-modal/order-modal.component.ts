@@ -38,7 +38,7 @@ import { MoneyService } from 'src/app/_shared/utils/services/money.service';
 import { Router } from '@angular/router';
 import { dateMask } from 'projects/shared/src/lib/_masks/dateMask';
 import { ModalImageComponent } from 'shared';
-import { AsyncPipe, CurrencyPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MaskitoDirective } from '@maskito/angular';
 import { LoadingService } from 'shared';
 import { OrderClientHistoryComponent } from '../order-client-history/order-client-history.component';
@@ -475,7 +475,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     if (this.ticket) {
       orderData.ticket_id = this.ticket.id;
     }
-    console.log(orderData);
     this.orderService
       .create(orderData, this.pictures.value)
       .subscribe((order) => {

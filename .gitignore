@@ -42,3 +42,4 @@ Thumbs.db
 .github/workflows/ci-act.yml
 .env.act
 .actrc
+sos_api/.env.example

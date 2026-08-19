@@ -1,36 +1,30 @@
 name: sos
 
 services:
-  app:
+  backend:
     build:
       context: .
       dockerfile: sos_api/docker/Dockerfile
-
-    image: sos-api:latest
-
+    image: sos-backend:latest
     container_name: sos-backend
-
     restart: unless-stopped
-
+    ports:
+      - "8080:8080"
     environment:
-        LARAVEL_ENABLE_QUEUE_WORKER: 1
-        LARAVEL_ENABLE_SCHEDULER: 1
-        LARAVEL_ENABLE_REVERB: 1
-
+      LARAVEL_ENABLE_QUEUE_WORKER: 1
+      LARAVEL_ENABLE_SCHEDULER: 1
+      LARAVEL_ENABLE_REVERB: 1
     depends_on:
       pgsql:
         condition: service_healthy
-
       redis:
         condition: service_healthy
-
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
-
     networks:
       - sos
 
@@ -47,7 +41,7 @@ services:
       - "9003:80"
 
     depends_on:
-      app:
+      backend:
         condition: service_healthy
 
     networks:
@@ -57,20 +51,18 @@ services:
     image: docker.io/library/postgres:18.4-alpine
     container_name: sos-pgsql
     restart: unless-stopped
-
+    ports:
+      - "5432:5432"
     env_file:
       - pgsql.env
-
     volumes:
       - pgsql_data:/var/lib/postgresql/18/docker
-
     healthcheck:
-        test: ["CMD-SHELL", "pg_isready"]
-        interval: 10s
-        timeout: 5s
-        retries: 10
-        start_period: 10s
-
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     networks:
       - sos
 
@@ -78,6 +70,8 @@ services:
     image: docker.io/library/redis:latest
     container_name: sos-redis
     restart: unless-stopped
+    ports:
+      - "6379:6379"
 
     volumes:
       - redis_data:/data
@@ -90,7 +84,7 @@ services:
 
     networks:
       - sos
-      
+
 volumes:
   pgsql_data:
   redis_data:

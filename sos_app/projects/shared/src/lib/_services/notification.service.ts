@@ -34,8 +34,6 @@ export class NotificationService {
 
       disableStats: true,
 
-      cluster: '',
-
       authorizer: (channel) => {
         return {
           authorize: (socketId, callback) => {

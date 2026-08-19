@@ -1,11 +1,13 @@
-import {AfterViewInit,
+import {
+  AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
   inject,
   ChangeDetectionStrategy,
   signal,
-  computed} from '@angular/core';
+  computed,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -56,7 +58,6 @@ import {
 
 import { addIcons } from 'ionicons';
 import { camera, arrowBack, trash } from 'ionicons/icons';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-part-modal',
@@ -111,7 +112,9 @@ export class PartModalComponent implements OnInit {
 
   // Signal for picture preview reactivity
   private imageSignal = signal<string | null>(null);
-  imagePreview = computed(() => this.imageSignal() || this.formPart?.get('image')?.value || null);
+  imagePreview = computed(
+    () => this.imageSignal() || this.formPart?.get('image')?.value || null,
+  );
 
   priceMask: MaskitoOptions = priceMask;
 

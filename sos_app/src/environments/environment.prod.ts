@@ -1,3 +1,7 @@
+const protocol = window.location.protocol;
+const hostname = window.location.hostname;
+const port = window.location.port || (protocol === 'https:' ? '443' : '80');
+
 export const environment = {
   production: true,
 
@@ -6,12 +10,10 @@ export const environment = {
   authEndpoint: '/broadcasting/auth',
 
   reverbKey: 'GENERATEYOUROWNKEY',
-  reverbHost: 'localhost',
-  reverbPort: 8080,
+
+  wsHost: hostname,
+  wsPort: Number(port),
+  wsScheme: protocol === 'https:' ? 'wss' : 'ws',
 
   cepUrl: 'https://viacep.com.br/ws',
-
-  wsHost: window.location.hostname,
-  wsPort: 9003,
-  wsScheme: window.location.protocol === 'https:' ? 'wss' : 'ws',
 };

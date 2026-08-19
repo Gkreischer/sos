@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -273,8 +278,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getUser();
   }
-
-  verifyDevide() {}
 
   getUser() {
     this.user$.subscribe((user) => {

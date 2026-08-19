@@ -2,59 +2,51 @@
 # This file is used by the deploy workflow for production deployments
 
 services:
-  app:
-    image: ghcr.io/${{ github.repository }}/sos-api:${API_VERSION:-latest}
-    container_name: sos-api-prod
+  backend:
+    image: docker.io/gustavokreischer/sos-backend:latest
+    container_name: sos-backend
     restart: unless-stopped
-    deploy:
-      replicas: 2
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
-      rollback_config:
-        parallelism: 1
-        delay: 10s
-        order: stop-first
+    ports:
+      - "8080:8080"
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
       LOG_CHANNEL: stack
       LOG_LEVEL: error
-      
+
       DB_CONNECTION: pgsql
       DB_HOST: pgsql
       DB_PORT: 5432
       DB_DATABASE: sos
       DB_USERNAME: sos
-      DB_PASSWORD: ${PRODUCTION_DB_PASSWORD}
-      
+      DB_PASSWORD: 8jPV9RnEPJWjRaEX
+
       CACHE_DRIVER: redis
       FILESYSTEM_DISK: local
       QUEUE_CONNECTION: redis
-      
+
       SESSION_DRIVER: redis
       SESSION_LIFETIME: 120
-      
+
       BROADCAST_CONNECTION: reverb
-      REVERB_APP_ID: ${PRODUCTION_REVERB_APP_ID}
-      REVERB_APP_KEY: ${PRODUCTION_REVERB_APP_KEY}
-      REVERB_APP_SECRET: ${PRODUCTION_REVERB_APP_SECRET}
+      REVERB_APP_ID: 7402573693556011
+      REVERB_APP_KEY: 7710384340660512
+      REVERB_APP_SECRET: sTVk8HJE4VXAV2hM
       REVERB_HOST: "0.0.0.0"
       REVERB_PORT: 8080
       REVERB_SCHEME: http
-      
+
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      
+
       LARAVEL_ENABLE_QUEUE_WORKER: "1"
       LARAVEL_ENABLE_SCHEDULER: "1"
       LARAVEL_ENABLE_REVERB: "1"
-      
+
       # Sanctum / CORS
-      SANCTUM_STATEFUL_DOMAINS: "sos.example.com,www.sos.example.com"
-      SESSION_DOMAIN: ".sos.example.com"
-      
+      SANCTUM_STATEFUL_DOMAINS: "ordermservico.dpdns.org"
+      SESSION_DOMAIN: ".ordermservico.dpdns.org"
+
     depends_on:
       pgsql:
         condition: service_healthy
@@ -69,51 +61,40 @@ services:
     networks:
       - sos-prod
 
-  nginx:
-    image: ghcr.io/${{ github.repository }}/sos-frontend:${FRONTEND_VERSION:-latest}
-    container_name: sos-frontend-prod
+  frontend:
+    image: docker.io/gustavokreischer/sos-frontend:latest
+    container_name: sos-frontend
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./ssl:/etc/nginx/ssl:ro
-      - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - "9003:80"
     depends_on:
-      app:
+      backend:
         condition: service_healthy
     networks:
       - sos-prod
 
   pgsql:
-    image: postgres:16-alpine
-    container_name: sos-pgsql-prod
+    image: postgres:18-alpine
+    container_name: sos-pgsql
     restart: unless-stopped
     environment:
       POSTGRES_DB: sos
       POSTGRES_USER: sos
-      POSTGRES_PASSWORD: ${PRODUCTION_DB_PASSWORD}
+      POSTGRES_PASSWORD: 8jPV9RnEPJWjRaEX
     volumes:
-      - pgsql_prod_data:/var/lib/postgresql/data
-      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+      - pgsql_prod_data:/var/lib/postgresql/18/docker
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U sos -d sos"]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 512M
     networks:
       - sos-prod
 
   redis:
     image: redis:7-alpine
-    container_name: sos-redis-prod
+    container_name: sos-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
@@ -123,12 +104,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
     networks:
       - sos-prod
 

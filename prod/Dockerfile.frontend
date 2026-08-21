@@ -1,0 +1,26 @@
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Dependências
+COPY sos_app/package*.json ./
+
+# Pacotes locais .tgz usados pelo package.json
+COPY sos_app/*.tgz ./
+
+RUN npm install
+
+# Código completo do projeto
+COPY sos_app/ ./
+
+# Gera as duas interfaces
+RUN npm run build:all
+
+# O resultado será copiado para o volume pelo CMD
+CMD ["sh", "-c", "\
+    set -e; \
+    rm -rf /output/*; \
+    mkdir -p /output/ticket-support /output/main; \
+    cp -a /app/dist/ticket-support/browser/. /output/ticket-support/; \
+    cp -a /app/www/browser/. /output/main/; \
+"]

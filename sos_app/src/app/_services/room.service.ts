@@ -43,7 +43,21 @@ export class RoomService {
   }
 
   addRoomInList(room: RoomInterface) {
-    this.roomsSubject.next([room, ...this.roomsSubject.value]);
+    const rooms = this.roomsSubject.value;
+
+    const index = rooms.findIndex((r) => r.id === room.id);
+
+    // Sala já existe: atualiza
+    if (index !== -1) {
+      const updatedRooms = [...rooms];
+      updatedRooms[index] = room;
+
+      this.roomsSubject.next(updatedRooms);
+      return;
+    }
+
+    // Sala nova: adiciona no início
+    this.roomsSubject.next([room, ...rooms]);
   }
 
   getAll(numPage?: number) {
@@ -54,12 +68,17 @@ export class RoomService {
       .pipe(
         tap((res) => {
           if (numPage && numPage > 1) {
-            return this.roomsSubject.next([
-              ...this.roomsSubject.value,
-              ...res.data,
-            ]);
+            const roomsMap = new Map(
+              this.roomsSubject.value.map((room) => [room.id, room]),
+            );
+
+            res.data.forEach((room) => {
+              roomsMap.set(room.id, room);
+            });
+
+            this.roomsSubject.next([...roomsMap.values()]);
           } else {
-            return this.roomsSubject.next(res.data);
+            this.roomsSubject.next(res.data);
           }
         }),
         catchError(this.errorService.handleError),
@@ -78,7 +97,12 @@ export class RoomService {
   create(room: RoomInterface) {
     return this.http
       .post<RoomInterface>(`${environment.baseUrl}/rooms`, room)
-      .pipe(tap(), catchError(this.errorService.handleError));
+      .pipe(
+        tap((res) => {
+          this.addRoomInList(res);
+        }),
+        catchError(this.errorService.handleError),
+      );
   }
 
   update(roomId: number, room: RoomInterface) {

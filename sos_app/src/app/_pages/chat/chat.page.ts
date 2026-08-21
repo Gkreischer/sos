@@ -52,12 +52,12 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
   roomService = inject(RoomService);
   notificationService = inject(NotificationService);
   userService = inject(UserService);
+
   constructor() {
     addIcons({ addSharp });
   }
 
   ionViewWillEnter() {
-    this.getAllRooms();
     this.listenPrivateChannel();
   }
 
@@ -66,15 +66,11 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
   }
 
   async openModalAddRoom() {
-    let role = await this.modalService.openModal(RoomModalComponent);
+    const role = await this.modalService.openModal(RoomModalComponent);
 
     if (role === 'backdrop') {
       this.userService.usersSubject.next(null);
     }
-  }
-
-  getAllRooms() {
-    this.roomService.getAll(1).subscribe();
   }
 
   listenPrivateChannel() {
@@ -88,6 +84,6 @@ export class ChatPage implements ViewWillEnter, ViewWillLeave {
   }
 
   leaveChannel() {
-    this.notificationService.leave('rooms');
+    this.notificationService.leavePrivate('rooms');
   }
 }

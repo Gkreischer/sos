@@ -65,7 +65,7 @@ class RoomController extends Controller
             $room->load('creator:id,name,image');
             broadcast(new NewRoom($room))->toOthers();
 
-            return response(['success' => true, 'room' => $room]);
+            return response($room);
         } catch (\Exception $e) {
             return response([
                 'message' => 'Não foi possível criar a sala',

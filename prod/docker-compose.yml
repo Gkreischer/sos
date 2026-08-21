@@ -1,0 +1,181 @@
+services:
+  # Laravel API Service
+  api:
+    build:
+      context: ..
+      dockerfile: sos_api/docker/Dockerfile
+    container_name: sos-api
+    restart: unless-stopped
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=sos
+      - DB_USERNAME=sos
+      - DB_PASSWORD=${DB_PASSWORD:-sos_password}
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - BROADCAST_CONNECTION=reverb
+      - REVERB_HOST=reverb
+      - REVERB_PORT=8080
+      - REVERB_SCHEME=http
+      - LARAVEL_ENABLE_QUEUE_WORKER=1
+      - LARAVEL_ENABLE_SCHEDULER=1
+      - LARAVEL_ENABLE_REVERB=1
+      # PHP-FPM: listen on TCP port 9000 (overrides default Unix socket)
+      - PHP_LISTEN=9000
+    volumes:
+      - api-storage:/var/www/html/storage
+      - api-bootstrap-cache:/var/www/html/bootstrap/cache
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - sos-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost/api/health || curl -f http://localhost/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+  # PostgreSQL Database
+  postgres:
+    build:
+      context: ..
+      dockerfile: docker/pgsql/Dockerfile
+    container_name: sos-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=sos
+      - POSTGRES_DB=sos
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-sos_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/18/main
+    networks:
+      - sos-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sos"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 10
+
+  # Redis Cache/Queue/Broadcast
+  redis:
+    build:
+      context: ..
+      dockerfile: docker/redis/Dockerfile
+    container_name: sos-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/var/lib/redis
+    networks:
+      - sos-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  # Reverb WebSocket Server
+  reverb:
+    build:
+      context: ..
+      dockerfile: sos_api/docker/Dockerfile
+    container_name: sos-reverb
+    restart: unless-stopped
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=sos
+      - DB_USERNAME=sos
+      - DB_PASSWORD=${DB_PASSWORD:-sos_password}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REVERB_HOST=0.0.0.0
+      - REVERB_PORT=8080
+      - REVERB_SCHEME=http
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - sos-network
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:8080 || nc -z localhost 8080"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+  frontend-builder:
+    build:
+      context: ..
+      dockerfile: prod/Dockerfile.frontend
+    container_name: sos-frontend-builder
+    restart: "no"
+    volumes:
+      - ionic-dist:/output
+    networks:
+      - sos-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: sos-nginx
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro,Z
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro,Z
+
+      - ionic-dist:/var/www/ionic:ro
+
+      - ../sos_api/public:/var/www/laravel-public:ro,Z
+
+    depends_on:
+      api:
+        condition: service_started
+
+      reverb:
+        condition: service_started
+
+      frontend-builder:
+        condition: service_completed_successfully
+
+    networks:
+      - sos-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  api-storage:
+  api-bootstrap-cache:
+  ionic-dist:
+
+networks:
+  sos-network:
+    driver: bridge

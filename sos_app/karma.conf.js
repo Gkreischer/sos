@@ -33,7 +33,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: process.env.CI ? ["ChromeHeadlessNoSandbox"] : ["Chrome"],
+    browsers: process.env.CI ? ["ChromeHeadless"] : ["Chrome"],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: "ChromeHeadless",
@@ -43,7 +43,7 @@ module.exports = function (config) {
           "--disable-translate",
           "--disable-extensions",
           "--disable-dev-shm-usage",
-          "--remote-debugging-port=9222"
+          "--remote-debugging-port=9222",
         ],
       },
     },

@@ -9,7 +9,7 @@ Sistema completo de gerenciamento de ordens de serviço com backend Laravel, fro
 O SOS permite gestão completa de ordens de serviço com:
 - **Código de barras** para identificação rápida
 - **Dashboard de métricas** com gráficos interativos
-- **Painel externo** para clientes verificarem status (porta 9004)
+- **Painel externo** para clientes verificarem status
 - **Notificações em tempo real** via Laravel Reverb
 - **Histórico de clientes e equipamentos**
 
@@ -54,7 +54,6 @@ sos/
 ### Portas Expostas
 
 - **9003** → Interface administrativa (nginx serve frontend + proxy API)
-- **9004** → Painel externo de tickets (subpath `/ticket-support/`)
 
 ---
 

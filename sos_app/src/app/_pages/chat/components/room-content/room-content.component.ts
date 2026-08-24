@@ -1,4 +1,9 @@
-import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   IonList,
   IonLabel,
@@ -139,6 +144,8 @@ export class RoomContentComponent implements OnInit {
   }
 
   enterChannelRoom() {
+    console.log('ENTRANDO NO CANAL:', `room.${this.room!.id}`);
+
     this.notificationService.listenPrivate(
       `room.${this.room!.id}`,
       '.message.sent',

@@ -16,6 +16,8 @@ sos_api/.env
 # Node
 sos_app/node_modules/
 
+node_modules
+
 # Build Angular/Ionic
 sos_app/www/
 sos_app/.angular/

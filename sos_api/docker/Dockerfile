@@ -2,6 +2,7 @@ FROM docker.io/shinsenter/laravel:php8.5-alpine
 
 ENV LARAVEL_ENABLE_REVERB=1
 ENV LARAVEL_ENABLE_QUEUE_WORKER=1
+ENV LARAVEL_ENABLE_SCHEDULER=1
 
 WORKDIR /var/www/html
 
@@ -14,7 +15,6 @@ RUN composer install \
 
 COPY ./sos_api .
 
-# Remova os caches DEPOIS do COPY
 RUN rm -f bootstrap/cache/*.php
 
 RUN cp .env.example .env

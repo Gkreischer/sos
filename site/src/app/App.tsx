@@ -219,7 +219,7 @@ export default function App() {
               href="#contato"
               className="px-4 py-2 text-sm text-white border border-blue-500 rounded hover:bg-blue-500 transition-colors font-medium"
             >
-              Acessar demonstração
+              Entrar em contato
             </a>
           </div>
 

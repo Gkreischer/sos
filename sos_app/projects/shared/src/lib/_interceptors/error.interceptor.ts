@@ -21,16 +21,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           toastService.presentToast(
             `${err.status} - ${message}`,
             'bottom',
-            3000,
-            'danger',
-          );
-          return throwError(() => err);
-
-        case 0:
-          toastService.presentToast(
-            'Não foi possível conectar ao servidor.',
-            'bottom',
-            3000,
+            4000,
             'danger',
           );
           return throwError(() => err);
@@ -39,7 +30,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       toastService.presentToast(
         `${err.status} - ${message}`,
         'bottom',
-        3000,
+        4000,
         'danger',
       );
 

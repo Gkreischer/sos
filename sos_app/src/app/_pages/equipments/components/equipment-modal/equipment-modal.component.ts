@@ -1,4 +1,9 @@
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,7 +18,7 @@ import { UsersListComponent } from 'src/app/_pages/users/components/users-list/u
 import { CategoryService } from 'src/app/_services/category.service';
 import { EquipmentService } from 'src/app/_services/equipment.service';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { AsyncPipe } from '@angular/common';
 import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { LoadingService } from 'shared';

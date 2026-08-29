@@ -27,7 +27,6 @@ export class CepService {
         tap((data) => {
           this.resultSubject.next(data);
         }),
-        catchError(this.errorService.handleError),
       );
   }
 }

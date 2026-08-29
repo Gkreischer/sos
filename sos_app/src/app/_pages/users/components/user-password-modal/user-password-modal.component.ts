@@ -1,4 +1,9 @@
-import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
@@ -22,7 +27,7 @@ import {
 } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
 import { UserService } from 'src/app/_services/user.service';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { LoginService } from 'shared';

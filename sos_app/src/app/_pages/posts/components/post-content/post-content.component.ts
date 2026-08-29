@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { PostInterface } from 'shared';
 import {
   IonHeader,
@@ -34,7 +34,7 @@ import { AsyncPipe } from '@angular/common';
 import { PostService } from 'src/app/_services/post.service';
 import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { PostModalAddEditComponent } from '../post-modal-add-edit/post-modal-add-edit.component';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { addIcons } from 'ionicons';
 import { arrowBack } from 'ionicons/icons';
 @Component({

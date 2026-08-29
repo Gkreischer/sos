@@ -64,7 +64,7 @@ import {
   earSharp,
 } from 'ionicons/icons';
 import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
-import { ToastService } from './_services/toast.service';
+import { ToastService } from 'shared';
 import { PhotoService } from '../../projects/shared/src/lib/_services/photo.service';
 import { NotificationService } from 'shared';
 import { UserLoginInterface } from '../../projects/shared/src/lib/_interfaces/UserLoginInterface';

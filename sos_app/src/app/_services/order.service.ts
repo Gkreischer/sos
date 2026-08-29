@@ -8,6 +8,7 @@ import { OrderFilterInterface } from 'shared';
 import { PaginateInterface } from 'shared';
 import { inject } from '@angular/core';
 import { PictureInterface } from 'shared';
+import { ToastService } from 'shared';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -17,6 +18,7 @@ const httpOptions = {
 export class OrderService {
   http = inject(HttpClient);
   errorService = inject(ErrorService);
+  toastService = inject(ToastService);
 
   private ordersSubject: BehaviorSubject<OrderInterface[]> =
     new BehaviorSubject<OrderInterface[]>([]);

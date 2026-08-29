@@ -26,7 +26,7 @@ import { PartInterface } from 'shared';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PartService } from 'src/app/_services/part.service';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { priceMask } from 'projects/shared/src/lib/_masks/priceMask';
 import { AsyncPipe } from '@angular/common';

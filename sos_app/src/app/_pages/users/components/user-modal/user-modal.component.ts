@@ -1,5 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,7 +20,7 @@ import { UserTypeInterface } from 'shared';
 import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { CategoryService } from 'src/app/_services/category.service';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { UserService } from 'src/app/_services/user.service';
 import { CepService } from 'projects/shared/src/lib/_services/cep.service';
 import { cnpjMask } from 'projects/shared/src/lib/_masks/cnpjMask';
@@ -27,7 +32,6 @@ import { MaskitoDirective } from '@maskito/angular';
 import { addIcons } from 'ionicons';
 import { arrowBack, trash } from 'ionicons/icons';
 import { LoadingService } from 'shared';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { UserPasswordModalComponent } from './../user-password-modal/user-password-modal.component';
 import {
   IonHeader,
@@ -240,15 +244,18 @@ export class UserModalComponent implements OnInit {
       return;
     }
     this.cepService.getCep(this.userForm.get('cep')?.value).subscribe((res) => {
-      if (res) {
-        this.userForm.patchValue({
-          cep: res.cep,
-          state: res.uf,
-          city: res.localidade,
-          address: res.logradouro,
-          district: res.bairro,
-        });
+      if (!res) {
+        return;
       }
+      if (res.erro === 'true') {
+        return;
+      }
+      this.userForm.patchValue({
+        state: res.uf,
+        city: res.localidade,
+        address: res.logradouro,
+        district: res.bairro,
+      });
     });
   }
 

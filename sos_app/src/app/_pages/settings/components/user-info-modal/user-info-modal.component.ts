@@ -1,4 +1,10 @@
-import {Component, OnInit, ChangeDetectionStrategy, signal, computed} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -17,7 +23,7 @@ import { cepMask } from 'projects/shared/src/lib/_masks/cepMask';
 import { cpfMask } from 'projects/shared/src/lib/_masks/cpfMask';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
 import { phoneMask } from 'projects/shared/src/lib/_masks/phoneMask';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { MaskitoDirective } from '@maskito/angular';
 import { AsyncPipe } from '@angular/common';
@@ -92,7 +98,9 @@ export class UserInfoModalComponent implements OnInit {
 
   // Signal for avatar preview reactivity
   private avatarSignal = signal<string | null>(null);
-  avatarPreview = computed(() => this.avatarSignal() || this.userForm?.get('image')?.value || null);
+  avatarPreview = computed(
+    () => this.avatarSignal() || this.userForm?.get('image')?.value || null,
+  );
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as unknown as HTMLIonInputElement).getInputElement();

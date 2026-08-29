@@ -21,7 +21,6 @@ sos_api/public/storage
 
 **/.env
 **/.env.*
-!**/.env.example
 
 **/*.log
 **/.DS_Store

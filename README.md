@@ -2,11 +2,16 @@
 
 Sistema completo de gerenciamento de ordens de serviço com backend Laravel, frontend Ionic/Angular e deploy via Docker Compose.
 
+## 🎥 Demonstração
+
+[![Demonstração do sistema](https://img.youtube.com/vi/ABC123XYZ/maxresdefault.jpg)](https://youtu.be/rtTGnlMTqZA)
+
 ---
 
 ## 📋 Visão Geral
 
 O SOS permite gestão completa de ordens de serviço com:
+
 - **Código de barras** para identificação rápida
 - **Dashboard de métricas** com gráficos interativos
 - **Painel externo** para clientes verificarem status
@@ -17,12 +22,12 @@ O SOS permite gestão completa de ordens de serviço com:
 
 ## 🛠️ Tecnologias
 
-| Camada | Tecnologias |
-|--------|-------------|
-| **Backend** | PHP 8.5, Laravel 12, PostgreSQL 18, Redis, Laravel Reverb, Sanctum |
-| **Frontend** | Angular 20, Ionic 8, Capacitor, Chart.js, ngx-charts |
-| **Deploy** | Docker Compose (prod/), Nginx, Multi-stage builds |
-| **Qualidade** | Pest (testes), Pint (lint), ESLint, Cypress (E2E) |
+| Camada        | Tecnologias                                                        |
+| ------------- | ------------------------------------------------------------------ |
+| **Backend**   | PHP 8.5, Laravel 12, PostgreSQL 18, Redis, Laravel Reverb, Sanctum |
+| **Frontend**  | Angular 20, Ionic 8, Capacitor, Chart.js, ngx-charts               |
+| **Deploy**    | Docker Compose (prod/), Nginx, Multi-stage builds                  |
+| **Qualidade** | Pest (testes), Pint (lint), ESLint, Cypress (E2E)                  |
 
 ---
 
@@ -43,13 +48,13 @@ sos/
 
 ### Serviços (docker-compose.yml)
 
-| Serviço | Imagem | Porta | Descrição |
-|---------|--------|-------|-----------|
-| **nginx** | nginx:alpine | 9003:80 | Proxy reverso + serve frontend |
-| **api** | shinsenter/laravel:php8.5-alpine | 80 (interno) | Laravel + Reverb + Queue + Scheduler |
-| **postgres** | postgres:18.4-alpine | 5432 (interno) | Banco de dados principal |
-| **redis** | redis:alpine | 6379 (interno) | Cache, sessões, filas |
-| **frontend** | node:22-alpine | — | Build do Angular/Ionic (stage) |
+| Serviço      | Imagem                           | Porta          | Descrição                            |
+| ------------ | -------------------------------- | -------------- | ------------------------------------ |
+| **nginx**    | nginx:alpine                     | 9003:80        | Proxy reverso + serve frontend       |
+| **api**      | shinsenter/laravel:php8.5-alpine | 80 (interno)   | Laravel + Reverb + Queue + Scheduler |
+| **postgres** | postgres:18.4-alpine             | 5432 (interno) | Banco de dados principal             |
+| **redis**    | redis:alpine                     | 6379 (interno) | Cache, sessões, filas                |
+| **frontend** | node:22-alpine                   | —              | Build do Angular/Ionic (stage)       |
 
 ### Portas Expostas
 
@@ -60,6 +65,7 @@ sos/
 ## 🚀 Deploy com Docker Compose (ou Podman)
 
 ### Pré-requisitos
+
 - **Docker** 24+ / **Podman** 4+ com compose
 - Porta 9003 livre no host
 
@@ -94,9 +100,9 @@ podman compose -f prod/docker-compose.yml up -d --build
 
 ### 4. Acesse
 
-| Interface | URL |
-|-----------|-----|
-| **Admin** | http://localhost:9003 |
+| Interface          | URL                                   |
+| ------------------ | ------------------------------------- |
+| **Admin**          | http://localhost:9003                 |
 | **Painel Externo** | http://localhost:9003/ticket-support/ |
 
 ---
@@ -136,13 +142,13 @@ REDIS_PORT=6379
 
 ### Volumes Persistidos
 
-| Volume | Conteúdo |
-|--------|----------|
-| `postgres_data` | Dados do PostgreSQL |
-| `redis_data` | Cache/filas do Redis |
-| `api-storage` | `storage/` do Laravel |
-| `api-bootstrap-cache` | Cache de bootstrap do Laravel |
-| `frontend` | Build estático do Angular/Ionic |
+| Volume                | Conteúdo                        |
+| --------------------- | ------------------------------- |
+| `postgres_data`       | Dados do PostgreSQL             |
+| `redis_data`          | Cache/filas do Redis            |
+| `api-storage`         | `storage/` do Laravel           |
+| `api-bootstrap-cache` | Cache de bootstrap do Laravel   |
+| `frontend`            | Build estático do Angular/Ionic |
 
 ---
 

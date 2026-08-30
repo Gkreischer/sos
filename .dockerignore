@@ -20,7 +20,7 @@ sos_api/public/storage
 **/bootstrap/cache/*.php
 
 **/.env
-**/.env.*
+!**/.env.exampple
 
 **/*.log
 **/.DS_Store

@@ -6,24 +6,24 @@
     <ion-card-title class="ion-justify-content-around">
       Ordens por período
     </ion-card-title>
-    @if (ordersByPeriod$.length > 0) {
-      <div class="ion-flex ion-justify-content-end">
-        <ion-button
-          (click)="generateOrderByPeriodMetricCSV()"
-          class="ion-margin-start"
-        >
-          <ion-icon color="white" name="cloud-download"></ion-icon>
-          Gerar .csv
-        </ion-button>
-        <ion-button
-          (click)="generateOrderByPeriodMetricXLSX()"
-          class="ion-margin-start"
-        >
-          <ion-icon color="white" name="cloud-download"></ion-icon>
-          Gerar .xlsx
-        </ion-button>
-      </div>
-    }
+    <div class="ion-flex ion-justify-content-end">
+      <ion-button
+        (click)="generateOrderByPeriodMetricCSV()"
+        class="ion-margin-start"
+        [disabled]="ordersByPeriod$().length == 0"
+      >
+        <ion-icon color="white" name="cloud-download"></ion-icon>
+        Gerar .csv
+      </ion-button>
+      <ion-button
+        (click)="generateOrderByPeriodMetricXLSX()"
+        class="ion-margin-start"
+        [disabled]="ordersByPeriod$().length == 0"
+      >
+        <ion-icon color="white" name="cloud-download"></ion-icon>
+        Gerar .xlsx
+      </ion-button>
+    </div>
   </ion-card-header>
   <ion-card-content>
     <ion-grid>

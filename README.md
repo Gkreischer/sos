@@ -4,7 +4,7 @@ Sistema completo de gerenciamento de ordens de serviço com backend Laravel, fro
 
 ## 🎥 Demonstração
 
-[![Demonstração do sistema](https://img.youtube.com/vi/rtTGnlMTqZA/maxresdefault.jpg)](https://youtu.be/rtTGnlMTqZA)
+[![Demonstração do sistema](https://img.youtube.com/vi/ZrbIOm732Lk/maxresdefault.jpg)](https://youtu.be/rtTGnlMTqZA)
 
 ---
 

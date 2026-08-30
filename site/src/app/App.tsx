@@ -372,137 +372,17 @@ export default function App() {
           </div>
 
           {/* Mock OS Card */}
-          <div className="hidden lg:block relative">
-            <div
-              className="absolute -inset-4 rounded-2xl opacity-20 blur-2xl"
-              style={{ background: "#4988c4" }}
-            />
-            <div
-              className="relative rounded-xl overflow-hidden border border-white/10"
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                backdropFilter: "blur(16px)",
-              }}
-            >
-              {/* Header */}
-              <div
-                className="px-5 py-3 border-b border-white/10 flex items-center justify-between"
-                style={{ background: "rgba(0,0,0,0.2)" }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-red-400" />
-                  <div className="w-2 h-2 rounded-full bg-yellow-400" />
-                  <div className="w-2 h-2 rounded-full bg-green-400" />
-                </div>
-                <span className="text-blue-300 text-xs font-['JetBrains_Mono']">
-                  OS #2024-0847
-                </span>
-                <span
-                  className="text-xs px-2 py-0.5 rounded-full text-green-300 border border-green-500/40"
-                  style={{ background: "rgba(52,211,153,0.1)" }}
-                >
-                  Em Andamento
-                </span>
-              </div>
-
-              <div className="p-5 space-y-4">
-                {/* Client */}
-                <div className="flex items-start gap-3">
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                    style={{ background: "#4988c4" }}
-                  >
-                    MR
-                  </div>
-                  <div>
-                    <div className="text-white font-semibold text-sm">
-                      Marco Rodrigues
-                    </div>
-                    <div className="text-blue-300 text-xs">
-                      (11) 98765-4321 · Notebook Dell Inspiron
-                    </div>
-                  </div>
-                </div>
-
-                {/* Barcode mock */}
-                <div
-                  className="rounded-lg p-3 flex items-center gap-3 border border-white/10"
-                  style={{ background: "rgba(0,0,0,0.15)" }}
-                >
-                  <QrCode size={28} className="text-blue-400 shrink-0" />
-                  <div>
-                    <div className="text-white text-xs font-['JetBrains_Mono'] tracking-widest">
-                      ||||||||||||||||||||||||||
-                    </div>
-                    <div className="text-blue-300 text-xs font-['JetBrains_Mono']">
-                      2024084700000001
-                    </div>
-                  </div>
-                </div>
-
-                {/* Progress */}
-                <div>
-                  <div className="flex justify-between text-xs text-blue-300 mb-2">
-                    <span>Progresso da OS</span>
-                    <span>75%</span>
-                  </div>
-                  <div
-                    className="h-1.5 rounded-full overflow-hidden"
-                    style={{ background: "rgba(255,255,255,0.1)" }}
-                  >
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: "75%",
-                        background:
-                          "linear-gradient(to right, #4988c4, #7ab0d8)",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Steps mini */}
-                <div className="grid grid-cols-4 gap-2">
-                  {[
-                    { label: "Recebido", done: true },
-                    { label: "Diagnóstico", done: true },
-                    { label: "Execução", done: true },
-                    { label: "Entrega", done: false },
-                  ].map((s) => (
-                    <div key={s.label} className="text-center">
-                      <div
-                        className="w-6 h-6 rounded-full mx-auto mb-1 flex items-center justify-center border"
-                        style={{
-                          background: s.done ? "#4988c4" : "transparent",
-                          borderColor: s.done
-                            ? "#4988c4"
-                            : "rgba(255,255,255,0.2)",
-                        }}
-                      >
-                        {s.done && (
-                          <CheckCircle size={12} className="text-white" />
-                        )}
-                      </div>
-                      <div className="text-blue-300 text-xs leading-tight">
-                        {s.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Notification */}
-                <div
-                  className="rounded-lg p-3 border border-blue-500/20 flex items-center gap-2"
-                  style={{ background: "rgba(73,136,196,0.1)" }}
-                >
-                  <Bell size={14} className="text-blue-400 shrink-0" />
-                  <span className="text-blue-200 text-xs">
-                    Cliente notificado — peça aprovada
-                  </span>
-                  <span className="ml-auto text-blue-400 text-xs">há 5min</span>
-                </div>
-              </div>
-            </div>
+          <div>
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/ZrbIOm732Lk?si=pSGrCP1w5l8t0vFX"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
           </div>
         </div>
       </section>

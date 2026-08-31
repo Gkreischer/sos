@@ -1,151 +1,224 @@
 # SOS - Sistema de Ordem de Serviço
 
-Sistema de gerenciamento de ordens de serviço baseado em Laravel (backend) e Ionic com Angular (frontend), utilizando Docker Compose para deploy.
+<p align="center">
+  <img src="./sos_app/resources/icon.png" alt="Logo do SOS">
+</p>
 
-## 📋 Descrição
+Sistema completo de gerenciamento de ordens de serviço com backend Laravel, frontend Ionic/Angular e deploy via Docker Compose.
 
-O SOS é um sistema completo de gerenciamento de ordens de serviço que permite:
+## 🎥 Demonstração
 
-- Gestão de ordens de serviço com código de barras
-- Visualização de métricas e estatísticas
-- Acompanhamento de histórico de clientes e equipamentos
-- Painel externo para verificação de ordens (porta 9004)
-- Sistema de notificações em tempo real via Reverb/Pusher
-- Banco de dados PostgreSQL
+[![Demonstração do sistema](https://img.youtube.com/vi/ZrbIOm732Lk/maxresdefault.jpg)](https://youtu.be/ZrbIOm732Lk)
 
-## 🏗️ Estrutura do Projeto
+---
+
+## 📋 Visão Geral
+
+O SOS permite gestão completa de ordens de serviço com:
+
+- **Código de barras** para identificação rápida
+- **Dashboard de métricas** com gráficos interativos
+- **Painel externo** para clientes verificarem status
+- **Notificações em tempo real** via Laravel Reverb
+- **Histórico de clientes e equipamentos**
+
+---
+
+## 🛠️ Tecnologias
+
+| Camada        | Tecnologias                                                        |
+| ------------- | ------------------------------------------------------------------ |
+| **Backend**   | PHP 8.5, Laravel 12, PostgreSQL 18, Redis, Laravel Reverb, Sanctum |
+| **Frontend**  | Angular 20, Ionic 8, Capacitor, Chart.js, ngx-charts               |
+| **Deploy**    | Docker Compose (prod/), Nginx, Multi-stage builds                  |
+| **Qualidade** | Pest (testes), Pint (lint), ESLint, Cypress (E2E)                  |
+
+---
+
+## 🏗️ Arquitetura
 
 ```
-.
-├── docker/                    # Arquivos de configuração Docker
-├── docker-compose.yml          # Composição dos serviços Docker
-├── pgsql.env                 # Configuração do banco de dados MariaDB
-├── sos_api/                    # Backend Laravel
-│   ├── app/                    # Código da aplicação
-│   ├── config/                 # Configurações
-│   ├── database/         # Migrations e seeds
-│   └── ...                     # Outros diretórios Laravel
-└── sos_app/                    # Frontend Ionic com Angular
-    ├── src/                    # Código fonte Angular
-    ├── projects/             # Projetos do Ionic
-    └── ...                     # Outros arquivos do frontend
+sos/
+├── prod/                    # Docker Compose de produção
+│   ├── docker-compose.yml   # Orquestração dos serviços
+│   ├── default.conf         # Configuração Nginx
+│   └── Dockerfile.frontend  # Build do frontend (Angular + Ionic)
+├── sos_api/                 # Backend Laravel
+│   ├── docker/Dockerfile    # Imagem da API
+│   └── docker/01-migrate.sh # Inicialização (migrate + seed)
+├── sos_app/                 # Frontend Ionic/Angular
+└── .dockerignore            # Otimização do build context
 ```
 
-## 🚀 Recursos Principais
+### Serviços (docker-compose.yml)
 
-- **Leitura de Código de Barras**: Escaneamento de códigos para identificação de ordens de serviço
-- **Dashboard de Métricas**: Visualização de estatísticas e indicadores de desempenho
-- **Painel Externo**: Interface pública para clientes verificarem o status de suas ordens (porta 9004)
-- **Notificações em Tempo Real**: Utilizando Reverb/Pusher para atualizações instantâneas
-- **Gestão Completa**: Criação, edição, visualização e acompanhamento de ordens de serviço
-- **Histórico de cliente e equipamento**: Acompanhe todas as ordens feitas com poucos cliques
-
-## 🛠️ Tecnologias Utilizadas
-
-### Backend (Laravel)
-- PHP 8.5
-- Laravel Framework
-- PostgreSQL
-- Redis
-- Reverb (para broadcasting)
-- Docker Compose
-
-### Frontend (Ionic com Angular)
-- Ionic Framework
-- Angular
-- Capacitor
-- Barcode Scanner
-
-## 🗄️ Banco de Dados
-
-[📊 Visualizar diagrama no dbdiagram.io](https://dbdiagram.io/d/SOS-631b5dd70911f91ba5744380)
-
-## 🐳 Deploy com Docker Compose
-
-O sistema utiliza Docker Compose para orquestrar todos os serviços necessários:
-
-### Serviços
-- **app**: Backend Laravel
-- **nginx**: Servidor web para frontend
-- **pgsql**: Banco de dados MariaDB
-- **redis**: Cache e filas
+| Serviço      | Imagem                           | Porta          | Descrição                            |
+| ------------ | -------------------------------- | -------------- | ------------------------------------ |
+| **nginx**    | nginx:alpine                     | 9003:80        | Proxy reverso + serve frontend       |
+| **api**      | shinsenter/laravel:php8.5-alpine | 80 (interno)   | Laravel + Reverb + Queue + Scheduler |
+| **postgres** | postgres:18.4-alpine             | 5432 (interno) | Banco de dados principal             |
+| **redis**    | redis:alpine                     | 6379 (interno) | Cache, sessões, filas                |
+| **frontend** | node:22-alpine                   | —              | Build do Angular/Ionic (stage)       |
 
 ### Portas Expostas
-- **9003**: Interface administrativa do sistema
-- **9004**: Painel externo para verificação de ordens (clientes)
 
-## ⚙️ Configuração
+- **9003** → Interface administrativa (nginx serve frontend + proxy API)
 
-### 1. Banco de Dados Postgresql
-No arquivo `pgsql.example.env`, você precisa alterar a senha do usuário `sos` e renomear para `pgsql.env`:
+---
 
-```env
-POSTGRES_USER=sos
-POSTGRES_DB=sos
-POSTGRES_PASSWORD=CHANGEYOURPASSWORD
-```
+## 🚀 Deploy com Docker Compose (ou Podman)
 
-### 2. Configuração do Backend Laravel
-No arquivo `sos_api/.env`, você precisa alterar as seguintes variáveis:
+### Pré-requisitos
 
-```env
-APP_KEY=GENERATEYOUROWNKEY
-DB_PASSWORD=NOVA_SENHA_BANCO
-REVERB_APP_ID=RANDOMNUMBER
-REVERB_APP_KEY=GENERATEYOUROWNKEY (use a mesma key em environment.prod.ts, na pasta sos_app)
-REVERB_APP_SECRET=GENERATEYOUROWNSECRET
-```
+- **Docker** 24+ / **Podman** 4+ com compose
+- Porta 9003 livre no host
 
-## 🚀 Inicialização
+### 1. Clone e prepare
 
-1. Clone o repositório:
 ```bash
 git clone <url-do-repositorio>
 cd sos
 ```
 
-2. Inicie os serviços com Docker Compose:
+### 2. Configure variáveis de ambiente
+
 ```bash
-docker-compose up -d
+# Backend
+cp sos_api/.env.example sos_api/.env
+# Edite sos_api/.env com suas chaves:
+#   APP_KEY=base64:...
+#   REVERB_APP_KEY=...
+#   REVERB_APP_SECRET=...
+#   DB_PASSWORD=senha_segura
 ```
 
-3. Acesse os serviços:
-- Interface administrativa: http://localhost:9003
-- Painel externo: http://localhost:9004
+### 3. Suba a stack
 
-## 📝 Observações
-
-- O sistema foi configurado para rodar em modo de produção
-- Para desenvolvimento, configure o `.env` com `APP_ENV=local` e `APP_DEBUG=true`
-- O painel externo permite verificação pública de ordens de serviço
-- O sistema suporta leitura de código de barras para identificação rápida de ordens
-- Métricas e estatísticas são apresentadas em dashboards interativos
-
-## 🔧 Manutenção
-
-### Atualizando dependências
 ```bash
-# Backend Laravel
-cd sos_api
-composer install --no-dev
+# Docker
+docker compose -f prod/docker-compose.yml up -d --build
 
-# Frontend Ionic
-cd sos_app
-npm install
+# Podman (mesmo comando)
+podman compose -f prod/docker-compose.yml up -d --build
 ```
 
-### Backup do banco de dados
-```bash
-docker exec -it sos-pgsql pg_dump -U sos -d sos > backup_sos.sql
+### 4. Acesse
+
+| Interface          | URL                                   |
+| ------------------ | ------------------------------------- |
+| **Admin**          | http://localhost:9003                 |
+| **Painel Externo** | http://localhost:9003/ticket-support/ |
+
+---
+
+## ⚙️ Configuração Detalhada
+
+### Variáveis Obrigatórias (sos_api/.env)
+
+```env
+APP_NAME=SOSDB
+APP_ENV=production
+APP_KEY=base64:GERE_COM_php_artisan_key:generate
+APP_DEBUG=false
+
+DB_CONNECTION=pgsql
+DB_HOST=postgres
+DB_PORT=5432
+DB_DATABASE=sos
+DB_USERNAME=sos
+DB_PASSWORD=SUA_SENHA_SEGURA
+
+REVERB_APP_ID=123456
+REVERB_APP_KEY=CHAVE_UNICA_DO_APP
+REVERB_APP_SECRET=SEGREDO_DO_APP
+REVERB_HOST=127.0.0.1
+REVERB_PORT=8080
+REVERB_SCHEME=http
+
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+REDIS_HOST=redis
+REDIS_PORT=6379
 ```
 
-### Logs dos serviços
+> **Nota**: Use a mesma `REVERB_APP_KEY` no frontend (`sos_app/src/environments/environment.prod.ts`).
+
+### Volumes Persistidos
+
+| Volume                | Conteúdo                        |
+| --------------------- | ------------------------------- |
+| `postgres_data`       | Dados do PostgreSQL             |
+| `redis_data`          | Cache/filas do Redis            |
+| `api-storage`         | `storage/` do Laravel           |
+| `api-bootstrap-cache` | Cache de bootstrap do Laravel   |
+| `frontend`            | Build estático do Angular/Ionic |
+
+---
+
+## 🔧 Operações Comuns
+
 ```bash
-docker logs sos-backend
-docker logs sos-nginx
-docker logs sos-pgsql
+# Ver logs
+docker compose -f prod/docker-compose.yml logs -f api
+docker compose -f prod/docker-compose.yml logs -f nginx
+
+# Backup do banco
+docker exec sos-postgres pg_dump -U sos -d sos > backup_$(date +%F).sql
+
+# Restaurar backup
+cat backup.sql | docker exec -i sos-postgres psql -U sos -d sos
+
+# Executar comandos artisan
+docker exec sos-api php artisan migrate:status
+docker exec sos-api php artisan queue:restart
+docker exec sos-api php artisan optimize
+
+# Rebuild apenas frontend
+docker compose -f prod/docker-compose.yml build frontend
+docker compose -f prod/docker-compose.yml up -d frontend nginx
+
+# Parar tudo
+docker compose -f prod/docker-compose.yml down
+
+# Parar + remover volumes (CUIDADO: apaga dados)
+docker compose -f prod/docker-compose.yml down -v
 ```
+
+---
+
+## 🏥 Health Checks
+
+Todos os serviços possuem health checks configurados:
+
+```bash
+# Status geral
+docker compose -f prod/docker-compose.yml ps
+
+# Verificação manual
+curl -f http://localhost:9003/api/health   # API
+curl -f http://localhost:9003/health       # Nginx + Frontend
+```
+
+---
+
+## 🔒 Segurança
+
+- Containers rodam como usuário não-root (`www-data` / `node`)
+- Nginx limita upload a 100MB
+- Variáveis sensíveis apenas via `.env` (nunca commite)
+- Reverb WebSocket isolado na rede interna
+- PostgreSQL/Redis não expostos no host
+
+---
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+MIT License - veja [LICENSE](LICENSE)
+
+---
+
+## 👨‍💻 Autor
+
+**Gustavo Kreischer de Almeida**  
+Sistema SOS v0.9

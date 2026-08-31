@@ -1,4 +1,9 @@
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,7 +17,7 @@ import { cnpjMask } from 'projects/shared/src/lib/_masks/cnpjMask';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { PhotoService } from 'projects/shared/src/lib/_services/photo.service';
 import { SettingService } from 'shared';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { MaskitoDirective } from '@maskito/angular';
 import { Observable } from 'rxjs';
 import { LoadingService } from 'shared';

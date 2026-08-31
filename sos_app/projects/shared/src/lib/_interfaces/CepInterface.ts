@@ -1,4 +1,5 @@
 export interface CepInterface {
+  erro?: string;
   cep: string;
   logradouro: string;
   complemento: string;

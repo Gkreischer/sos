@@ -4,7 +4,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { MenuController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { inject } from '@angular/core';
@@ -64,7 +64,7 @@ import {
   earSharp,
 } from 'ionicons/icons';
 import { TourIonPopoverModule } from 'ngx-ui-tour-ionic';
-import { ToastService } from './_services/toast.service';
+import { ToastService } from 'shared';
 import { PhotoService } from '../../projects/shared/src/lib/_services/photo.service';
 import { NotificationService } from 'shared';
 import { UserLoginInterface } from '../../projects/shared/src/lib/_interfaces/UserLoginInterface';
@@ -124,7 +124,12 @@ export class AppComponent implements OnInit, OnDestroy {
   user!: Observable<UserInterface | null>;
 
   public appPages: AppPage[] = [
-    { title: 'Home', url: '/home', icon: 'home', id: 'button-sidebar-home' },
+    {
+      title: 'Home',
+      url: '/home',
+      icon: 'home',
+      id: 'button-sidebar-home',
+    },
     {
       title: 'Categorias',
       url: '/categorias',
@@ -159,6 +164,7 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: 'contract',
       id: 'button-sidebar-chamados',
       tourAnchor: 'menu.tickets',
+
       badge: 0,
     },
     {
@@ -167,6 +173,7 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: 'chatbubbles',
       id: 'button-sidebar-chat',
       tourAnchor: 'menu.chat',
+
       badge: 0,
     },
     {
@@ -174,6 +181,7 @@ export class AppComponent implements OnInit, OnDestroy {
       url: '/usuarios',
       icon: 'people',
       id: 'button-sidebar-usuarios',
+
       tourAnchor: 'menu.users',
     },
     {
@@ -280,11 +288,21 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   getUser() {
-    this.user$.subscribe((user) => {
+    this.user$.subscribe(async (user) => {
       if (user) {
         this.listenPrivateChannels();
+        this.disableAdminMenus(user);
       }
     });
+  }
+
+  disableAdminMenus(user: UserInterface) {
+    const isAdminMenuItem = ['Relatórios', 'Configurações', 'Logs'];
+    if (user.type.name !== 'Administrador') {
+      isAdminMenuItem.forEach((item) => {
+        this.appPages = this.appPages.filter((p) => p.title !== item);
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -300,12 +318,6 @@ export class AppComponent implements OnInit, OnDestroy {
   listenPrivateChannels() {
     this.listeners.forEach(({ channel, event, callback }) => {
       this.notificationService.listenPrivate(channel, event, callback);
-    });
-  }
-
-  hideElementsMenuByTypeUser(user: UserLoginInterface) {
-    this.appPages = this.appPages.filter((page) => {
-      return page.title !== 'Relatórios' && page.title !== 'Configurações';
     });
   }
 

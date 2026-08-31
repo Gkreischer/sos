@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -40,7 +40,7 @@ import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { RoomInterface } from 'shared';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { LoadingService } from 'shared';
 import { UserInterface } from 'shared';
 import { FormArray } from '@angular/forms';

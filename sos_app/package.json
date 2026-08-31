@@ -2,7 +2,7 @@
   "name": "SOS",
   "version": "0.9",
   "author": "Gustavo Kreischer de Almeida",
-  "homepage": "https://ionicframework.com/",
+  "homepage": "https://gkreischer.github.io/sos/",
   "private": true,
   "scripts": {
     "ng": "ng",
@@ -106,7 +106,7 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3"
   },
-  "description": "An Ionic project",
+  "description": "Sistema de ordens de serviço",
   "trustedDependencies": [
     "@parcel/watcher",
     "cypress",

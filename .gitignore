@@ -45,3 +45,5 @@ Thumbs.db
 .env.act
 .actrc
 sos_api/.env.example
+sos_api/.env.example
+sos_app/src/environments/environment.prod.ts

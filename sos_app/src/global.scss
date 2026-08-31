@@ -333,9 +333,15 @@ ion-button {
   --border-radius: 15px !important;
 }
 
-@media screen and (min-width: 1366px) {
+@media screen and (max-width: 1366px) {
   ion-fab {
     transform: translateX(-15px);
+  }
+}
+
+@media screen and (min-width: 1367px) {
+  ion-fab {
+    transform: translateX(-5px);
   }
 }
 

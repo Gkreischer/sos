@@ -29,7 +29,7 @@ import { OrderInterface } from 'shared';
 import { AlertService } from 'projects/shared/src/lib/_services/alert.service';
 import { ModalAddPartComponent } from '../modal-add-part/modal-add-part.component';
 import { PartInterface } from 'shared';
-import { ToastService } from 'src/app/_services/toast.service';
+import { ToastService } from 'shared';
 import { OrderStatusService } from 'src/app/_services/order-status.service';
 import { OrderStatusInterface } from 'shared';
 import { MaskitoElementPredicate, maskitoTransform } from '@maskito/core';
@@ -478,12 +478,6 @@ export class OrderModalComponent implements OnInit, AfterViewInit {
     this.orderService
       .create(orderData, this.pictures.value)
       .subscribe((order) => {
-        this.toastService.presentToast(
-          'Ordem criada com sucesso',
-          'bottom',
-          4000,
-          'success',
-        );
         this.modalService.closeModal(
           this.ticket ? (orderData.order_id = order.id) : null,
           'confirm',

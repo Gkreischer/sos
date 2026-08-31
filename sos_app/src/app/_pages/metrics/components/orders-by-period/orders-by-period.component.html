@@ -6,24 +6,24 @@
     <ion-card-title class="ion-justify-content-around">
       Ordens por período
     </ion-card-title>
-    @if (ordersByPeriod$.length > 0) {
-      <div class="ion-flex ion-justify-content-end">
-        <ion-button
-          (click)="generateOrderByPeriodMetricCSV()"
-          class="ion-margin-start"
-        >
-          <ion-icon color="white" name="cloud-download"></ion-icon>
-          Gerar .csv
-        </ion-button>
-        <ion-button
-          (click)="generateOrderByPeriodMetricXLSX()"
-          class="ion-margin-start"
-        >
-          <ion-icon color="white" name="cloud-download"></ion-icon>
-          Gerar .xlsx
-        </ion-button>
-      </div>
-    }
+    <div class="ion-flex ion-justify-content-end">
+      <ion-button
+        (click)="generateOrderByPeriodMetricCSV()"
+        class="ion-margin-start"
+        [disabled]="ordersByPeriod$().length === 0"
+      >
+        <ion-icon color="white" name="cloud-download"></ion-icon>
+        Gerar .csv
+      </ion-button>
+      <ion-button
+        (click)="generateOrderByPeriodMetricXLSX()"
+        class="ion-margin-start"
+        [disabled]="ordersByPeriod$().length === 0"
+      >
+        <ion-icon color="white" name="cloud-download"></ion-icon>
+        Gerar .xlsx
+      </ion-button>
+    </div>
   </ion-card-header>
   <ion-card-content>
     <ion-grid>
@@ -34,17 +34,10 @@
               <ion-card
                 button="true"
                 (click)="openOrderModal(order)"
-                class="{{
-                  order.status_id === 1
-                    ? 'danger'
-                    : order.status_id === 2
-                      ? 'warning'
-                      : order.status_id === 3
-                        ? 'success'
-                        : order.status_id === 4
-                          ? 'dark'
-                          : 'light'
-                }} ion-no-margin ion-card-hover"
+                [class]="
+                  orderStatusColors[order.status_id] +
+                  ' ion-no-margin ion-card-hover'
+                "
               >
                 <ion-card-content>
                   <ion-list>

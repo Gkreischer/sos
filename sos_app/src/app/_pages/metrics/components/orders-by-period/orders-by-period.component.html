@@ -34,17 +34,10 @@
               <ion-card
                 button="true"
                 (click)="openOrderModal(order)"
-                class="{{
-                  order.status_id === 1
-                    ? 'danger'
-                    : order.status_id === 2
-                      ? 'warning'
-                      : order.status_id === 3
-                        ? 'success'
-                        : order.status_id === 4
-                          ? 'dark'
-                          : 'light'
-                }} ion-no-margin ion-card-hover"
+                [class]="
+                  orderStatusColors[order.status_id] +
+                  ' ion-no-margin ion-card-hover'
+                "
               >
                 <ion-card-content>
                   <ion-list>

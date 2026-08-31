@@ -90,3 +90,5 @@ export * from './lib/_pages/not-found/not-found.component';
 export * from './lib/_enum/OrderTypeEnum';
 
 export * from './lib/_tests/test-providers';
+
+export * from './lib/_records/OrderStatusColorRecord';

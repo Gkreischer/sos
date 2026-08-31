@@ -33,7 +33,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
 
     autoWatch: false,
-    singleRun: true,
+    singleRun: true, // Garante que o processo feche após os testes no CI
 
     browsers: ["ChromeHeadlessNoSandbox"],
 

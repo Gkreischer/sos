@@ -1,4 +1,12 @@
-import {Component, inject, effect, signal, OnDestroy, ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import {
+  Component,
+  inject,
+  effect,
+  signal,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { MetricsService } from 'src/app/_services/metrics.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -37,7 +45,7 @@ import { OrderInterface } from 'shared';
 import { ModalService } from 'projects/shared/src/lib/_services/modal.service';
 import { OrderModalComponent } from 'src/app/_pages/orders/components/order-modal/order-modal.component';
 import { SpreadSheetService } from 'src/app/_services/spreadsheet.service';
-
+import { orderStatusColors } from 'shared';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-orders-by-period',
@@ -72,7 +80,9 @@ export class OrdersByPeriodComponent {
 
   infiniteScroll = signal(true);
   page: number = 1;
-  
+
+  orderStatusColors = orderStatusColors;
+
   private destroyRef = inject(DestroyRef);
 
   constructor() {
@@ -84,7 +94,9 @@ export class OrdersByPeriodComponent {
       cloudDownload,
       bagHandle,
     });
-    this.getOrdersByPeriod().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.getOrdersByPeriod()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
 
     // Watch for date changes and reset
     effect(() => {
@@ -95,16 +107,21 @@ export class OrdersByPeriodComponent {
       this.infiniteScroll.set(true);
 
       if (startDate && endDate) {
-        this.getOrdersByPeriod().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.getOrdersByPeriod()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe();
       }
     });
   }
 
   getOrdersByPeriod() {
-    return this.metricsService.getOrdersByPeriod({
-      startDate: this.metricsService.startDate,
-      endDate: this.metricsService.endDate,
-    }, this.page);
+    return this.metricsService.getOrdersByPeriod(
+      {
+        startDate: this.metricsService.startDate,
+        endDate: this.metricsService.endDate,
+      },
+      this.page,
+    );
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {

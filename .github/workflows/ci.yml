@@ -75,7 +75,6 @@ jobs:
           files: ./sos_app/coverage/sos/lcov.info
           fail_ci_if_error: false
 
-
   frontend-build:
     name: Frontend - Build
     runs-on: ubuntu-latest
@@ -116,7 +115,6 @@ jobs:
     defaults:
       run:
         working-directory: sos_app
-    if: github.actor != 'nektos/act'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -169,7 +167,7 @@ jobs:
     name: Docker - Build Images
     runs-on: ubuntu-latest
     needs: [frontend-build]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && github.actor != 'nektos/act'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -248,7 +246,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       [frontend-lint, frontend-test, frontend-build, frontend-e2e, docker-build]
-    if: always() && github.actor != 'nektos/act'
+    if: always()
     steps:
       - name: Check job statuses
         run: |

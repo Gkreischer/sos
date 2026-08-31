@@ -1,5 +1,9 @@
 # SOS - Sistema de Ordem de Serviço
 
+<p align="center">
+  <img src="./sos_app/resources/icon.png" alt="Logo do SOS">
+</p>
+
 Sistema completo de gerenciamento de ordens de serviço com backend Laravel, frontend Ionic/Angular e deploy via Docker Compose.
 
 ## 🎥 Demonstração

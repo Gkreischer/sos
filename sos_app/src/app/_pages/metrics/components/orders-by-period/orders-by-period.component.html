@@ -10,7 +10,7 @@
       <ion-button
         (click)="generateOrderByPeriodMetricCSV()"
         class="ion-margin-start"
-        [disabled]="ordersByPeriod$().length == 0"
+        [disabled]="ordersByPeriod$().length === 0"
       >
         <ion-icon color="white" name="cloud-download"></ion-icon>
         Gerar .csv
@@ -18,7 +18,7 @@
       <ion-button
         (click)="generateOrderByPeriodMetricXLSX()"
         class="ion-margin-start"
-        [disabled]="ordersByPeriod$().length == 0"
+        [disabled]="ordersByPeriod$().length === 0"
       >
         <ion-icon color="white" name="cloud-download"></ion-icon>
         Gerar .xlsx

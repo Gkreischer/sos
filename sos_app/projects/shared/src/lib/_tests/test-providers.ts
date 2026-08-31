@@ -14,7 +14,6 @@ export const testProviders: (Provider | EnvironmentProviders)[] = [
     provide: APP_CONFIG,
     useValue: {
       baseUrl: environment.baseUrl,
-      reverbKey: environment.reverbKey,
       wsPort: environment.wsPort,
       wsHost: environment.wsHost,
       wsScheme: environment.wsScheme,

@@ -8,7 +8,7 @@ export const environment = {
   storageUrl: '/storage',
   authEndpoint: '/broadcasting/auth',
 
-
+  reverbKey: 'GENERATE_YOUR_OWN_KEY',
   wsHost: hostname,
   wsPort: 9003,
   wsScheme: protocol === 'https:' ? 'wss' : 'ws',

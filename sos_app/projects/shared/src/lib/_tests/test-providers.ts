@@ -18,6 +18,7 @@ export const testProviders: (Provider | EnvironmentProviders)[] = [
       wsHost: environment.wsHost,
       wsScheme: environment.wsScheme,
       authEndpoint: environment.authEndpoint,
+      reverbKey: environment.reverbKey,
     },
   },
 ];

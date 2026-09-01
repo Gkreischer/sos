@@ -374,10 +374,9 @@ export default function App() {
           {/* Mock OS Card */}
           <div>
             <iframe
-              className="youtube-video"
               width="100%"
-              height="350px"
-              src="https://www.youtube.com/embed/mWjkY7IZWWk?si=JRqKnKtc7ym8o9BQ"
+              height="350"
+              src="https://www.youtube.com/embed/vQ5LvASg0Us?si=7_8DNESFLG87VbMW"
               title="YouTube video player"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

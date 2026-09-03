@@ -4,7 +4,7 @@ export const environment = {
   baseUrl: '/api/v1',
   storageUrl: '/storage',
 
-  reverbKey: 'dv8upx8egffloafurncb',
+  reverbKey: 'CHANGEYOURKEY',
 
   authEndpoint: '/broadcasting/auth',
 

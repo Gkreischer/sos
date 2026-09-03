@@ -6,7 +6,7 @@ export const environment = {
 
   authEndpoint: '/broadcasting/auth',
 
-  reverbKey: 'GENERATEYOUROWNKEY',
+  reverbKey: 'CHANGEYOURKEY',
 
   wsHost: window.location.hostname,
   wsPort: 9003,

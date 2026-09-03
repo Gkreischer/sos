@@ -137,6 +137,23 @@ jobs:
       - name: Build frontend for E2E
         run: npm run build:all
 
+      - name: Start mock API backend
+        run: |
+          nohup node cypress/mock-api.mjs > /tmp/mock-api.log 2>&1 &
+          echo $! > /tmp/mock-api.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:9003/api/v1/user/verify > /dev/null; then
+              echo "Mock API is ready"
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:9003/api/v1/user/verify > /dev/null || {
+            echo "Mock API failed to start"
+            cat /tmp/mock-api.log
+            exit 1
+          }
+
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6
         with:
@@ -146,6 +163,13 @@ jobs:
           wait-on: http://localhost:8100
           wait-on-timeout: 120
           browser: chrome
+
+      - name: Stop mock API backend
+        if: always()
+        run: |
+          if [ -f /tmp/mock-api.pid ]; then
+            kill "$(cat /tmp/mock-api.pid)" 2>/dev/null || true
+          fi
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v4
